@@ -38,7 +38,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -50,7 +50,7 @@
         
           <a class="main-nav-link" href="/archives">归档</a>
         
-          <a class="main-nav-link" href="/about">关于</a>
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
         
       </nav>
       
@@ -65,81 +65,6 @@
 </header>
       <div class="outer">
         <section id="main">
-  
-    <article id="post-nginx+php+php-fpm调试" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2013/02/14/nginx+php+php-fpm调试/" class="article-date">
-  <time datetime="2013-02-14T10:28:51.000Z" itemprop="datePublished">2013-02-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/nginx/">nginx</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2013/02/14/nginx+php+php-fpm调试/">nginx-fpm调试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- Table of Contents -->
-        
-        <a id="more"></a>
-<p>netstat命令详解</p>
-<p><a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html" target="_blank" rel="external">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html</a></p>
-<p>Ps命令详解</p>
-<p><a href="http://www.cnblogs.com/wangkangluo1/archive/2011/09/23/2185938.html" target="_blank" rel="external">http://www.cnblogs.com/wangkangluo1/archive/2011/09/23/2185938.html</a></p>
-<p>调试用到命令：</p>
-<p>ps -ef |grep php</p>
-<p>./php71-fpm reload</p>
-<p>cd /usr/local/etc/php/7.1/php-fpm.d/</p>
-<p> vi www.conf</p>
-<p>Nginx.conf</p>
-<p>可以拆分成sites-available和sites-enabled目录，然后available通过软连接到enabled，<br>在nginx.conf文件中，include进来enabled这个目录下的文件。</p>
-<p>看来必须要学习下shell脚本语言了。</p>
-<hr>
-
-<p>可以安装多个php版本，如Mac自带的php56，用brew安装的php70，php71，安装nginx的话，还需要安装php-fpm，这里nginx需要在server中include绑定不同的php-fpm。</p>
-<p>php-fpm</p>
-<p>php-fpm是mac下自带的软件, 而且兼容不同的PHP版本, 不用额外安装, 但是fpm是需要配置的, 在/private/etc下有个模板, 执行</p>
-<p>cd /usr/local/etc/php/7.1/php-fpm.d<br>cp www.conf</p>
-<pre><code>修改php-fpm.conf中的listen行, 
-</code></pre><p>将listen = 127.0.0.1改为listen = /tmp/php-fpm.sock,<br>这样运行php-fpm后就会生成/tmp/php-fpm.sock文件,<br> nginx可以与这个socket文件交互了(当然也可以用默认的监听端口的方式,<br> 但是指定socket的方式可以避免端口占用的问题, 我认为要放心一些)<br>    修改error_log项, 改为error_log = /usr/local/var/log/php-fpm.log<br>    修改pid项, 改为pid = /usr/local/var/run/php-fpm.pid, pid文件记录fpm的pid, 后续可以用cat /usr/local/var/run/php-fpm.pid的方式获得pid<br>    sudo php-fpm, 大功告成!</p>
-<p>注意：不要再root权限下安装东西。</p>
-<p>几个关键的目录：</p>
-<p>/usr/local/sbin  : php-fpm.conf</p>
-<p>/usr/local/etc/php/7.1/php-fpm.d  : www.conf</p>
-<p>有时间，学习下php-fpm和nginx的原理</p>
-<p>套接字的配置：</p>
-<p><a href="http://blog.csdn.net/pcyph/article/details/46513521" target="_blank" rel="external">http://blog.csdn.net/pcyph/article/details/46513521</a></p>
-<p><a href="http://www.vcaptain.com/?id=15" target="_blank" rel="external">http://www.vcaptain.com/?id=15</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://martist.cn/2013/02/14/nginx+php+php-fpm调试/" data-id="cj89jua45000rsf2n1njkvni9" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
   
     <article id="post-MySQL 数据库索引（一）（转载整理" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -167,76 +92,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
+        <p>：-}
         
-        <a id="more"></a>
-<h3 id="MySQL单列索引和联合索引"><a href="#MySQL单列索引和联合索引" class="headerlink" title="MySQL单列索引和联合索引"></a>MySQL单列索引和联合索引</h3><p>所有的MySQL列类型能被索引。在相关的列上的使用索引是改进SELECT操作性能的最好方法。<br>一个表最多可有16个索引。最大索引长度是256个字节，尽管这可以在编译MySQL时被改变。<br>对于CHAR和VARCHAR列，你可以索引列的前缀。这更快并且比索引整个列需要较少的磁盘空间。在CREATE TABLE语句中索引列前缀的语法看起来像这样：   </p>
-<pre><code>KEY index_name (col_name(length))
-</code></pre><p>下面的例子为name列的头10个字符创建一个索引：</p>
-<pre><code>mysql&gt; CREATE TABLE test (
-name CHAR(200) NOT NULL,
-KEY index_name (name(10)));
-</code></pre><p>对于BLOB和TEXT列，你必须索引列的前缀，你不能索引列的全部。</p>
-<h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>MySQL能在多个列上创建索引。一个索引可以由最多15个列组成。（在CHAR和VARCHAR列上，你也可以使用列的前缀作为一个索引的部分)。</p>
-<p>一个多重列索引可以认为是包含通过合并(concatenate)索引列值创建的值的一个排序数组。      </p>
-<p>当你为在一个WHERE子句索引的第一列指定已知的数量时，MySQL以这种方式使用多重列索引使得查询非常快速，即使你不为其他列指定值。      </p>
-<p>假定一张表使用下列说明创建：     </p>
-<pre><code> mysql&gt; CREATE TABLE test (
- id INT NOT NULL,
- last_name CHAR(30) NOT NULL,
-first_name CHAR(30) NOT NULL,
-PRIMARY KEY (id),
-INDEX name (last_name,first_name));
-</code></pre><p>那么索引name是一个在last_name和first_name上的索引，这个索引将被用于在last_name或last_name和first_name的一个已知范围内指定值的查询，因此，name索引将使用在下列查询中：</p>
-<pre><code>mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”;
-
-mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
-AND first_name=”Michael”;
-
-mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
-AND (first_name=”Michael” OR first_name=”Monty”);
-
-mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
-AND first_name &gt;=”M” AND first_name &lt; &quot;N&quot;;
-</code></pre><p>然而，name索引将不用在下列询问中：</p>
-<pre><code>mysql&gt; SELECT * FROM test WHERE first_name=”Michael”;
-
-mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
-OR first_name=”Michael”;
-</code></pre><p>创建一个多列索引：</p>
-<pre><code>CREATE TABLE test (  
-    id         INT NOT NULL,  
-    last_name  CHAR(30) NOT NULL,  
-    first_name CHAR(30) NOT NULL,  
-    PRIMARY KEY (id),  
-    INDEX name (last_name,first_name)  
-);  
-</code></pre><p>创建多个索引：</p>
-<pre><code>CREATE TABLE test (  
-    id         INT NOT NULL,  
-    last_name  CHAR(30) NOT NULL,  
-    first_name CHAR(30) NOT NULL,  
-    PRIMARY KEY (id),  
-    INDEX name (last_name),  
-     INDEX_2 name (first_name)  
-);  
-</code></pre><p>当查询语句的条件中包含last_name 和 first_name时，<br>例如：</p>
-<pre><code>SELECT * FROM test WHERE last_name=&apos;Kun&apos; AND first_name=&apos;Li&apos;;  
-</code></pre><p>sql会先过滤出last_name符合条件的记录，在其基础上再过滤first_name符合条件的记录。那如果我们分别在last_name和first_name上创建两个列索引，mysql的处理方式就不一样了，它会选择一个最严格的索引来进行检索，可以理解为检索能力最强的那个索引来检索，另外一个利用不上了，这样效果就不如多列索引了。<br>但是多列索引的利用也是需要条件的，以下形式的查询语句能够利用上多列索引：</p>
-<pre><code>SELECT * FROM test WHERE last_name=&apos;Widenius&apos;;
-SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND first_name=&apos;Michael&apos;;
-SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND (first_name=&apos;Michael&apos; OR first_name=&apos;Monty&apos;);
-SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND first_name &gt;=&apos;M&apos; AND first_name &lt; &apos;N&apos;;
-</code></pre><p>以下形式的查询语句利用不上多列索引：</p>
-<pre><code>SELECT * FROM test WHERE first_name=&apos;Michael&apos;;
-SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Michael&apos;;
-</code></pre><p>多列建索引比对每个列分别建索引更有优势，因为索引建立得越多就越占磁盘空间，在更新数据的时候速度会更慢。另外建立多列索引时，顺序也是需要注意的，应该将严格的索引放在前面，这样筛选的力度会更大，效率更高。</p>
-<p>整理转载出处：<br><a href="http://blog.chinaunix.net/uid-29305839-id-4257512.html" target="_blank" rel="external">haibintown的ChinaUnix博客</a><br><a href="http://www.sphinxsearch.org/archives/32" target="_blank" rel="external">Sphinx 中文站</a>      </p>
-
+          <p class="article-more-link">
+            <a href="/2013/02/14/MySQL 数据库索引（一）（转载整理/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2013/02/14/MySQL 数据库索引（一）（转载整理/" data-id="cj89jua3k0005sf2nda82slfb" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2013/02/14/MySQL 数据库索引（一）（转载整理/" data-id="cj89kga970005452npdeofnvd" class="article-share-link">Share</a>
       
       
       
@@ -250,10 +115,59 @@ SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Mich
 
 
   
+    <article id="post-About Me" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2012/01/01/About Me/" class="article-date">
+  <time datetime="2011-12-31T16:00:00.000Z" itemprop="datePublished">2012-01-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/自我介绍/">自我介绍</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2012/01/01/About Me/">About Me</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>：-}
+        
+          <p class="article-more-link">
+            <a href="/2012/01/01/About Me/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2012/01/01/About Me/" data-id="cj89kga960004452ntnlevp5j" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/人生/">人生</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感悟/">感悟</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
   </nav>
 </section>
            
@@ -271,13 +185,9 @@ SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Mich
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
+    <h3 class="widget-title recent-posts">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2100/01/01/About Me/">About Me</a>
-          </li>
         
           <li>
             <a href="/2017/04/04/马闯：创业公司必经之路[3]/">entrepreneurship公司必经之路（三）</a>
@@ -293,6 +203,10 @@ SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Mich
         
           <li>
             <a href="/2017/03/20/SEO排名的影响因素/">SEO影响因素</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/linux常用命令/">linux常用命令</a>
           </li>
         
       </ul>
@@ -317,10 +231,10 @@ SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Mich
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;youemail@outlook.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -332,7 +246,7 @@ SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Mich
   
     <a href="/archives" class="mobile-nav-link">归档</a>
   
-    <a href="/about" class="mobile-nav-link">关于</a>
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
   
 </nav>
     <img class="back-to-top-btn" src="/images/fly-to-top.png"/>

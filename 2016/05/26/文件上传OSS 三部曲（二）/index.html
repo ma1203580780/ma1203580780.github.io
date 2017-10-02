@@ -5,22 +5,22 @@
   
   <title>文件上传OSS三部曲（二） | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文讲解如何讲解客户端文件上传aliOSS。要点签名在服务端（php）完成，然后直接通过表单上传到OSS 。背景每个用OSS的用户，都会用到上传。由于是网页上传，其中包括一些APP里面的html5页面，对上传的需求很强烈，很多人采用的做法是用户在浏览器／APP上传到应用服务器，然后应用服务器再把文件上传到OSS。  这种方法有三个缺点，第一：上传慢，先上传到应用服务器，再上传到OSS，网络传送多">
+  <meta name="description" content="：-}">
 <meta name="keywords" content="php">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件上传OSS三部曲（二）">
 <meta property="og:url" content="http://martist.cn/2016/05/26/文件上传OSS 三部曲（二）/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="本文讲解如何讲解客户端文件上传aliOSS。要点签名在服务端（php）完成，然后直接通过表单上传到OSS 。背景每个用OSS的用户，都会用到上传。由于是网页上传，其中包括一些APP里面的html5页面，对上传的需求很强烈，很多人采用的做法是用户在浏览器／APP上传到应用服务器，然后应用服务器再把文件上传到OSS。  这种方法有三个缺点，第一：上传慢，先上传到应用服务器，再上传到OSS，网络传送多">
+<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/e796006d97c90765aa0bb498b70495c2.png">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/863ca729c4b943e6ae34516ed461b18e.png">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/3ada2871d6b39a6a1ee765410dbe52b8.png">
-<meta property="og:updated_time" content="2017-10-01T23:27:23.000Z">
+<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传OSS三部曲（二）">
-<meta name="twitter:description" content="本文讲解如何讲解客户端文件上传aliOSS。要点签名在服务端（php）完成，然后直接通过表单上传到OSS 。背景每个用OSS的用户，都会用到上传。由于是网页上传，其中包括一些APP里面的html5页面，对上传的需求很强烈，很多人采用的做法是用户在浏览器／APP上传到应用服务器，然后应用服务器再把文件上传到OSS。  这种方法有三个缺点，第一：上传慢，先上传到应用服务器，再上传到OSS，网络传送多">
+<meta name="twitter:description" content="：-}">
 <meta name="twitter:image" content="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
@@ -48,7 +48,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -60,7 +60,7 @@
         
           <a class="main-nav-link" href="/archives">归档</a>
         
-          <a class="main-nav-link" href="/about">关于</a>
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
         
       </nav>
       
@@ -102,7 +102,7 @@
       
         <!-- Table of Contents -->
         
-        <a id="more"></a>
+        <p>：-} <a id="more"></a></p>
 <p>本文讲解如何讲解客户端文件上传aliOSS。<br><strong>要点</strong><br>签名在服务端（php）完成，然后直接通过表单上传到OSS 。<br><strong>背景</strong><br>每个用OSS的用户，都会用到上传。由于是网页上传，其中包括一些APP里面的html5页面，对上传的需求很强烈，很多人采用的做法是用户在浏览器／APP上传到应用服务器，然后应用服务器再把文件上传到OSS。<br><img src="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png" alt=""></p>
 <blockquote>
 <p>这种方法有三个<strong>缺点</strong>，<br>第一：上传慢，先上传到应用服务器，再上传到OSS，网络传送多了一倍，而且OSS是采用BGP带宽，能保证各地各运营商的速度。<br>第二：扩展性不好，如果后续用户多了，应用服务器会成为瓶颈。<br>第三：费用高，因为OSS上传流量是免费的。如果数据直传到OSS，不走应用服务器。那么将能省下几台应用服务器。 </p>
@@ -150,7 +150,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/05/26/文件上传OSS 三部曲（二）/" data-id="cj89jua50001xsf2nz01313uu" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2016/05/26/文件上传OSS 三部曲（二）/" data-id="cj89kgaa2001x452nh4jau1zc" class="article-share-link">Share</a>
       
       
       
@@ -160,52 +160,11 @@
   </div>
   
     
- <script src="/jquery/jquery.min.js"></script>
-  <div id="random_posts">
-    <h2>推荐文章</h2>
-    <div class="random_posts_ul">
-      <script>
-          var random_count =4
-          var site = {BASE_URI:'/'};
-          function load_random_posts(obj) {
-              var arr=site.posts;
-              if (!obj) return;
-              // var count = $(obj).attr('data-count') || 6;
-              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
-              arr = arr.slice(0, random_count);
-              var html = '<ul>';
-            
-              for(var j=0;j<arr.length;j++){
-                var item=arr[j];
-                html += '<li><strong>' + 
-                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
-                (item.title || item.uri) + '</a></strong>';
-                if(item.excerpt){
-                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
-                }
-                html +='</li>';
-                
-              }
-              $(obj).html(html + '</ul>');
-          }
-          $('.random_posts_ul').each(function () {
-              var c = this;
-              if (!site.posts || !site.posts.length){
-                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
-              } 
-               else{
-                load_random_posts(c);
-              }
-          });
-      </script>
-    </div>
-  </div>
-
     
 <nav id="article-nav">
   
     <a href="/2016/07/24/同步与异步，阻塞与非阻塞/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           同步与异步，阻塞和非阻塞
@@ -215,7 +174,7 @@
   
   
     <a href="/2016/05/22/文件上传OSS三部曲（一）/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">文件上传OSS三部曲（一）</div>
     </a>
   
@@ -254,13 +213,9 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
+    <h3 class="widget-title recent-posts">Recent Posts</h3>
     <div class="widget">
       <ul>
-        
-          <li>
-            <a href="/2100/01/01/About Me/">About Me</a>
-          </li>
         
           <li>
             <a href="/2017/04/04/马闯：创业公司必经之路[3]/">entrepreneurship公司必经之路（三）</a>
@@ -276,6 +231,10 @@
         
           <li>
             <a href="/2017/03/20/SEO排名的影响因素/">SEO影响因素</a>
+          </li>
+        
+          <li>
+            <a href="/2016/12/30/linux常用命令/">linux常用命令</a>
           </li>
         
       </ul>
@@ -300,10 +259,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;youemail@outlook.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -315,7 +274,7 @@
   
     <a href="/archives" class="mobile-nav-link">归档</a>
   
-    <a href="/about" class="mobile-nav-link">关于</a>
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
   
 </nav>
     <img class="back-to-top-btn" src="/images/fly-to-top.png"/>

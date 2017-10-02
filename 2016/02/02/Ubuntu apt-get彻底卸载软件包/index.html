@@ -5,18 +5,18 @@
   
   <title>ubuntu apt-get彻底卸载 | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="如果你关注搜索到这篇文章，那么我可以合理怀疑你被apt-get的几个卸载命令有点搞晕了。 apt-get的卸载相关的命令有remove/purge/autoremove/clean/autoclean等。具体来说： apt-get purge / apt-get –purge remove删除已安装包（不保留配置文件)。如软件包a，依赖软件包b，则执行该命令会删除a，而且不保留配置文件 apt-">
+  <meta name="description" content="：-}">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ubuntu apt-get彻底卸载">
 <meta property="og:url" content="http://martist.cn/2016/02/02/Ubuntu apt-get彻底卸载软件包/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="如果你关注搜索到这篇文章，那么我可以合理怀疑你被apt-get的几个卸载命令有点搞晕了。 apt-get的卸载相关的命令有remove/purge/autoremove/clean/autoclean等。具体来说： apt-get purge / apt-get –purge remove删除已安装包（不保留配置文件)。如软件包a，依赖软件包b，则执行该命令会删除a，而且不保留配置文件 apt-">
+<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-01T23:17:40.000Z">
+<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ubuntu apt-get彻底卸载">
-<meta name="twitter:description" content="如果你关注搜索到这篇文章，那么我可以合理怀疑你被apt-get的几个卸载命令有点搞晕了。 apt-get的卸载相关的命令有remove/purge/autoremove/clean/autoclean等。具体来说： apt-get purge / apt-get –purge remove删除已安装包（不保留配置文件)。如软件包a，依赖软件包b，则执行该命令会删除a，而且不保留配置文件 apt-">
+<meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -55,7 +55,7 @@
         
           <a class="main-nav-link" href="/archives">归档</a>
         
-          <a class="main-nav-link" href="/about">关于</a>
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
         
       </nav>
       
@@ -97,7 +97,7 @@
       
         <!-- Table of Contents -->
         
-        <a id="more"></a>
+        <p>：-} <a id="more"></a></p>
 <p>如果你关注搜索到这篇文章，那么我可以合理怀疑你被apt-get的几个卸载命令有点搞晕了。</p>
 <p>apt-get的卸载相关的命令有<code>remove/purge/autoremove/clean/autoclean</code>等。具体来说：</p>
 <p><code>apt-get purge / apt-get –purge remove</code><br>删除已安装包（不保留配置文件)。<br>如软件包a，依赖软件包b，则执行该命令会删除a，而且不保留配置文件</p>
@@ -113,7 +113,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/02/02/Ubuntu apt-get彻底卸载软件包/" data-id="cj89jua3q000esf2npbyijzzf" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2016/02/02/Ubuntu apt-get彻底卸载软件包/" data-id="cj89kga9c000e452npnb1vnko" class="article-share-link">Share</a>
       
       
       
@@ -123,52 +123,11 @@
   </div>
   
     
- <script src="/jquery/jquery.min.js"></script>
-  <div id="random_posts">
-    <h2>推荐文章</h2>
-    <div class="random_posts_ul">
-      <script>
-          var random_count =4
-          var site = {BASE_URI:'/'};
-          function load_random_posts(obj) {
-              var arr=site.posts;
-              if (!obj) return;
-              // var count = $(obj).attr('data-count') || 6;
-              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
-              arr = arr.slice(0, random_count);
-              var html = '<ul>';
-            
-              for(var j=0;j<arr.length;j++){
-                var item=arr[j];
-                html += '<li><strong>' + 
-                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
-                (item.title || item.uri) + '</a></strong>';
-                if(item.excerpt){
-                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
-                }
-                html +='</li>';
-                
-              }
-              $(obj).html(html + '</ul>');
-          }
-          $('.random_posts_ul').each(function () {
-              var c = this;
-              if (!site.posts || !site.posts.length){
-                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
-              } 
-               else{
-                load_random_posts(c);
-              }
-          });
-      </script>
-    </div>
-  </div>
-
     
 <nav id="article-nav">
   
     <a href="/2016/03/14/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           nginx+php-fpm的502问题解决记录
@@ -178,7 +137,7 @@
   
   
     <a href="/2015/12/14/同源政策/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">同源策略</div>
     </a>
   
@@ -213,7 +172,7 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#删除软件及其配置文件"><span class="toc-number">1.</span> <span class="toc-text">删除软件及其配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除没用的依赖包"><span class="toc-number">2.</span> <span class="toc-text">删除没用的依赖包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#此时dpkg的列表中有“rc”状态的软件包，可以执行如下命令做最后清理："><span class="toc-number">3.</span> <span class="toc-text">此时dpkg的列表中有“rc”状态的软件包，可以执行如下命令做最后清理：</span></a></li></ol>
           </div>
@@ -245,10 +204,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;youemail@outlook.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -260,7 +219,7 @@
   
     <a href="/archives" class="mobile-nav-link">归档</a>
   
-    <a href="/about" class="mobile-nav-link">关于</a>
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
   
 </nav>
     <img class="back-to-top-btn" src="/images/fly-to-top.png"/>

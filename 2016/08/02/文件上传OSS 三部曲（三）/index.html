@@ -5,18 +5,18 @@
   
   <title>文件上传OSS三部曲（三） | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+  <meta name="description" content="：-}">
 <meta name="keywords" content="php">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件上传OSS三部曲（三）">
 <meta property="og:url" content="http://martist.cn/2016/08/02/文件上传OSS 三部曲（三）/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-01T16:11:04.000Z">
+<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传OSS三部曲（三）">
-<meta name="twitter:description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+<meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -55,7 +55,7 @@
         
           <a class="main-nav-link" href="/archives">归档</a>
         
-          <a class="main-nav-link" href="/about">关于</a>
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
         
       </nav>
       
@@ -97,7 +97,7 @@
       
         <!-- Table of Contents -->
         
-        <a id="more"></a>
+        <p>：-} <a id="more"></a></p>
 <p>最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。<br>因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。<br>首先下载<a href="http://ueditor.baidu.com" target="_blank" rel="external">ueditor</a>。<br>在这里没有使用组件化开发，因为富文本编辑器一般不会有什么巨大的漏洞，用户能实现常用的编辑文字和添加样式的功能即可。只需在页面引入几个js文件即可使用。<br><strong>示例：</strong></p>
 <h3 id="1-blade模板载入编辑器"><a href="#1-blade模板载入编辑器" class="headerlink" title="1.blade模板载入编辑器"></a>1.blade模板载入编辑器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot; src=&quot;&#123;&#123;asset(&apos;ueditor/ueditor.config.js&apos;)&#125;&#125;&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot; src=&quot;&#123;&#123;asset(&apos;ueditor/ueditor.all.min.js&apos;)&#125;&#125;&quot;&gt; &lt;/script&gt;</div><div class="line">&lt;script id=&quot;content&quot; name=&quot;content&quot; type=&quot;text/plain&quot;&gt;</div><div class="line">@if(!empty($new))</div><div class="line">&#123;!! $new-&gt;content !!&#125;</div><div class="line">@endif</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;!-- 实例化编辑器 --&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">UE.getEditor(&apos;content&apos;,&#123;</div><div class="line">initialFrameWidth : 800,</div><div class="line">initialFrameHeight : 400,</div><div class="line"></div><div class="line">&#125;);</div><div class="line">var ue = UE.getEditor(&apos;content&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
 <p>将你编辑后需要保存的的内容添加name属性在id=content的<code>&lt;script&gt;</code>标签内。   </p>
@@ -238,7 +238,7 @@ class OSS
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/08/02/文件上传OSS 三部曲（三）/" data-id="cj89jua4y001vsf2njhe4jlhv" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2016/08/02/文件上传OSS 三部曲（三）/" data-id="cj89kgaa1001v452nd2cvpun0" class="article-share-link">Share</a>
       
       
       
@@ -248,52 +248,11 @@ class OSS
   </div>
   
     
- <script src="/jquery/jquery.min.js"></script>
-  <div id="random_posts">
-    <h2>推荐文章</h2>
-    <div class="random_posts_ul">
-      <script>
-          var random_count =4
-          var site = {BASE_URI:'/'};
-          function load_random_posts(obj) {
-              var arr=site.posts;
-              if (!obj) return;
-              // var count = $(obj).attr('data-count') || 6;
-              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
-              arr = arr.slice(0, random_count);
-              var html = '<ul>';
-            
-              for(var j=0;j<arr.length;j++){
-                var item=arr[j];
-                html += '<li><strong>' + 
-                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
-                (item.title || item.uri) + '</a></strong>';
-                if(item.excerpt){
-                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
-                }
-                html +='</li>';
-                
-              }
-              $(obj).html(html + '</ul>');
-          }
-          $('.random_posts_ul').each(function () {
-              var c = this;
-              if (!site.posts || !site.posts.length){
-                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
-              } 
-               else{
-                load_random_posts(c);
-              }
-          });
-      </script>
-    </div>
-  </div>
-
     
 <nav id="article-nav">
   
     <a href="/2016/08/02/大负载高并发网站的前期准备/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           大并发高负载网站的前期准备
@@ -303,7 +262,7 @@ class OSS
   
   
     <a href="/2016/08/01/创业圈，什么是“天派”“地派”？/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">entrepreneurship圈，什么事天派和地派</div>
     </a>
   
@@ -338,7 +297,7 @@ class OSS
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-blade模板载入编辑器"><span class="toc-number">1.</span> <span class="toc-text">1.blade模板载入编辑器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-配置"><span class="toc-number">2.</span> <span class="toc-text">2.配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-添加oss-php"><span class="toc-number">3.</span> <span class="toc-text">3.添加oss.php</span></a></li></ol>
           </div>
@@ -370,10 +329,10 @@ class OSS
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;youemail@outlook.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -385,7 +344,7 @@ class OSS
   
     <a href="/archives" class="mobile-nav-link">归档</a>
   
-    <a href="/about" class="mobile-nav-link">关于</a>
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
   
 </nav>
     <img class="back-to-top-btn" src="/images/fly-to-top.png"/>

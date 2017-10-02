@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="ubuntu的用户权限">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-01T23:19:24.000Z">
+<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ubuntu的用户和用户组">
 <meta name="twitter:description" content="ubuntu的用户权限">
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -55,7 +55,7 @@
         
           <a class="main-nav-link" href="/archives">归档</a>
         
-          <a class="main-nav-link" href="/about">关于</a>
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
         
       </nav>
       
@@ -97,7 +97,7 @@
       
         <!-- Table of Contents -->
         
-        <a id="more"></a>
+        <p>：-} <a id="more"></a></p>
 <p>在创建用户时，需要为新建用户指定一用户组，如果不指定其用户所属的工作组，自动会生成一个与用户名同名的工作组。创建用户user1的时候指定其所属工作组users，例：useradd –g users user1</p>
 <h3 id="一、创建用户："><a href="#一、创建用户：" class="headerlink" title="一、创建用户："></a>一、创建用户：</h3><p><strong>1、使用命令 useradd</strong><br>例：<br><code>useradd user1</code><br>——创建用户user1<br>    useradd –e 12/30/2009 user2——创建user2,指定有效期2009-12-30到期<br>    用户的缺省UID从500向后顺序增加，500以下作为系统保留账号，可以指定UID，<br>例：<code>useradd –u 600 user3</code></p>
 <p><strong>2、使用 passwd 命令为新建用户设置密码</strong><br>例：<code>passwd user1</code><br>注意：没有设置密码的用户不能使用。</p>
@@ -141,7 +141,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2015/10/12/添加或删除ubuntu用户和组/" data-id="cj89jua520022sf2njoyz7doq" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2015/10/12/添加或删除ubuntu用户和组/" data-id="cj89kgaa40022452n4ytnk4ge" class="article-share-link">Share</a>
       
       
       
@@ -151,52 +151,11 @@
   </div>
   
     
- <script src="/jquery/jquery.min.js"></script>
-  <div id="random_posts">
-    <h2>推荐文章</h2>
-    <div class="random_posts_ul">
-      <script>
-          var random_count =4
-          var site = {BASE_URI:'/'};
-          function load_random_posts(obj) {
-              var arr=site.posts;
-              if (!obj) return;
-              // var count = $(obj).attr('data-count') || 6;
-              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
-              arr = arr.slice(0, random_count);
-              var html = '<ul>';
-            
-              for(var j=0;j<arr.length;j++){
-                var item=arr[j];
-                html += '<li><strong>' + 
-                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
-                (item.title || item.uri) + '</a></strong>';
-                if(item.excerpt){
-                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
-                }
-                html +='</li>';
-                
-              }
-              $(obj).html(html + '</ul>');
-          }
-          $('.random_posts_ul').each(function () {
-              var c = this;
-              if (!site.posts || !site.posts.length){
-                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
-              } 
-               else{
-                load_random_posts(c);
-              }
-          });
-      </script>
-    </div>
-  </div>
-
     
 <nav id="article-nav">
   
     <a href="/2015/10/30/端口作用和范围/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           端口的作用和范围
@@ -206,7 +165,7 @@
   
   
     <a href="/2015/03/22/悲观锁与乐观锁/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">乐观锁与悲观锁</div>
     </a>
   
@@ -241,7 +200,7 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、创建用户："><span class="toc-number">1.</span> <span class="toc-text">一、创建用户：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、用户组："><span class="toc-number">2.</span> <span class="toc-text">二、用户组：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何创建ubuntu新用户？"><span class="toc-number">3.</span> <span class="toc-text">如何创建ubuntu新用户？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何删除ubuntu用户？"><span class="toc-number">4.</span> <span class="toc-text">如何删除ubuntu用户？</span></a></li></ol>
           </div>
@@ -273,10 +232,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;youemail@outlook.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -288,7 +247,7 @@
   
     <a href="/archives" class="mobile-nav-link">归档</a>
   
-    <a href="/about" class="mobile-nav-link">关于</a>
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
   
 </nav>
     <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
