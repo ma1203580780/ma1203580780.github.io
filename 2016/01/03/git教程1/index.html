@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>git教程(一) | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git教程(一)">
+<meta property="og:url" content="http://martist.cn/2016/01/03/git教程1/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-02T09:12:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git教程(一)">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-git教程1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/03/git教程1/" class="article-date">
+  <time datetime="2016-01-03T13:30:50.000Z" itemprop="datePublished">2016-01-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/git/">git</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git教程(一)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>git是一款代码<strong>版本控制</strong>软件，目前已被广泛的使用。因此优雅的使用git已经成了开发者的必备技能。<br>区别于SVN，git的特点是<strong>去中心化</strong>。</p>
+<h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><pre><code>git log
+</code></pre><h2 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h2><pre><code>git status
+</code></pre><h2 id="增加文件到缓存区"><a href="#增加文件到缓存区" class="headerlink" title="增加文件到缓存区"></a>增加文件到缓存区</h2><pre><code>git add filename
+</code></pre><h2 id="提交更新"><a href="#提交更新" class="headerlink" title="提交更新"></a>提交更新</h2><pre><code>git commit -m &apos;update info&apos;
+</code></pre><h2 id="从仓库拉代码并合并"><a href="#从仓库拉代码并合并" class="headerlink" title="从仓库拉代码并合并"></a>从仓库拉代码并合并</h2><pre><code>git pull
+</code></pre><h2 id="向仓库master分支推代码"><a href="#向仓库master分支推代码" class="headerlink" title="向仓库master分支推代码"></a>向仓库master分支推代码</h2><pre><code>git push origin master
+</code></pre><h2 id="忽略不想提交的文件"><a href="#忽略不想提交的文件" class="headerlink" title="忽略不想提交的文件"></a>忽略不想提交的文件</h2><pre><code>vi .gitignore//修改 .gitignore ,增加相关文件名或目录，支持通配符
+</code></pre><h3 id="‘-’（警号）为注释-–-将被-Git-忽略"><a href="#‘-’（警号）为注释-–-将被-Git-忽略" class="headerlink" title="‘#’（警号）为注释 – 将被 Git 忽略"></a>‘#’（警号）为注释 – 将被 Git 忽略</h3><h3 id="文件忽略规则"><a href="#文件忽略规则" class="headerlink" title="文件忽略规则"></a>文件忽略规则</h3><pre><code>*.a       # 忽略所有 .a 结尾的文件
+!lib.a    # 但 lib.a 除外
+/TODO     # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+build/    # 忽略 build/ 目录下的所有文件
+doc/*.txt # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
+</code></pre><h3 id="清除本地缓存，重新提交，即可保证和-gitignore-规则一致"><a href="#清除本地缓存，重新提交，即可保证和-gitignore-规则一致" class="headerlink" title="清除本地缓存，重新提交，即可保证和 .gitignore 规则一致"></a>清除本地缓存，重新提交，即可保证和 .gitignore 规则一致</h3><pre><code>git rm -r --cached .
+</code></pre><p>##删除修改</p>
+<pre><code>git checkout filepath/filename
+</code></pre><h2 id="拉取所有更新"><a href="#拉取所有更新" class="headerlink" title="拉取所有更新"></a>拉取所有更新</h2><pre><code>git fetch
+</code></pre><h2 id="增加并切换到分支"><a href="#增加并切换到分支" class="headerlink" title="增加并切换到分支"></a>增加并切换到分支</h2><pre><code>git checkout -b branchname
+</code></pre><h2 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h2><pre><code>git merge origin/master
+</code></pre><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="1-用户信息"><a href="#1-用户信息" class="headerlink" title="1. 用户信息"></a>1. 用户信息</h3><p>你个人的用户名称和电子邮件地址，用户名可随意修改，git 用于记录是谁提交了更新，以及更新人的联系方式。</p>
+<pre><code>git config --global user.name &quot;Donly Chan&quot;
+git config --global user.email donly@example.com
+</code></pre><h3 id="2-差异分析工具"><a href="#2-差异分析工具" class="headerlink" title="2.差异分析工具"></a>2.差异分析工具</h3><p>在解决冲突时经常用到，一般为vimdiff</p>
+<pre><code>git config --global merge.tool vimdiff
+</code></pre><h3 id="3-自动高亮"><a href="#3-自动高亮" class="headerlink" title="3.自动高亮"></a>3.自动高亮</h3><p>很有用的颜色提示，因有些人不喜欢，所以默认是不开启的</p>
+<pre><code>git config --global color.ui auto
+</code></pre><h3 id="4-查看配置"><a href="#4-查看配置" class="headerlink" title="4.查看配置"></a>4.查看配置</h3><h4 id="查看所有配置"><a href="#查看所有配置" class="headerlink" title="查看所有配置"></a>查看所有配置</h4><pre><code>git config --list
+</code></pre><h4 id="查看某个配置"><a href="#查看某个配置" class="headerlink" title="查看某个配置"></a>查看某个配置</h4><pre><code>git config user.name
+</code></pre><h3 id="5-配置文件"><a href="#5-配置文件" class="headerlink" title="5.配置文件"></a>5.配置文件</h3><pre><code>/etc/gitconfig 对所有用户有效
+
+~/.gitconfig 对当前用户有效
+
+{工作目录}/.git/config 仅对当前项目有效
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/01/03/git教程1/" data-id="cj89yc78g0005vv2nwsldkvnn" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/04/git教程2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          git教程(二)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/12/14/同源政策/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">同源策略</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2016/01/03/git教程1/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#命令"><span class="toc-number">2.</span> <span class="toc-text">命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#日志"><span class="toc-number">2.1.</span> <span class="toc-text">日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#状态"><span class="toc-number">2.2.</span> <span class="toc-text">状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加文件到缓存区"><span class="toc-number">2.3.</span> <span class="toc-text">增加文件到缓存区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#提交更新"><span class="toc-number">2.4.</span> <span class="toc-text">提交更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从仓库拉代码并合并"><span class="toc-number">2.5.</span> <span class="toc-text">从仓库拉代码并合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#向仓库master分支推代码"><span class="toc-number">2.6.</span> <span class="toc-text">向仓库master分支推代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#忽略不想提交的文件"><span class="toc-number">2.7.</span> <span class="toc-text">忽略不想提交的文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#‘-’（警号）为注释-–-将被-Git-忽略"><span class="toc-number">2.7.1.</span> <span class="toc-text">‘#’（警号）为注释 – 将被 Git 忽略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件忽略规则"><span class="toc-number">2.7.2.</span> <span class="toc-text">文件忽略规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#清除本地缓存，重新提交，即可保证和-gitignore-规则一致"><span class="toc-number">2.7.3.</span> <span class="toc-text">清除本地缓存，重新提交，即可保证和 .gitignore 规则一致</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拉取所有更新"><span class="toc-number">2.8.</span> <span class="toc-text">拉取所有更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#增加并切换到分支"><span class="toc-number">2.9.</span> <span class="toc-text">增加并切换到分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并分支"><span class="toc-number">2.10.</span> <span class="toc-text">合并分支</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">2.11.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-用户信息"><span class="toc-number">2.11.1.</span> <span class="toc-text">1. 用户信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-差异分析工具"><span class="toc-number">2.11.2.</span> <span class="toc-text">2.差异分析工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-自动高亮"><span class="toc-number">2.11.3.</span> <span class="toc-text">3.自动高亮</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-查看配置"><span class="toc-number">2.11.4.</span> <span class="toc-text">4.查看配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#查看所有配置"><span class="toc-number">2.11.4.1.</span> <span class="toc-text">查看所有配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看某个配置"><span class="toc-number">2.11.4.2.</span> <span class="toc-text">查看某个配置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-配置文件"><span class="toc-number">2.11.5.</span> <span class="toc-text">5.配置文件</span></a></li></ol></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

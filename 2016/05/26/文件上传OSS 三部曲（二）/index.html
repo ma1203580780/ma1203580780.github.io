@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/e796006d97c90765aa0bb498b70495c2.png">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/863ca729c4b943e6ae34516ed461b18e.png">
 <meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/3ada2871d6b39a6a1ee765410dbe52b8.png">
-<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
+<meta property="og:updated_time" content="2017-10-02T04:57:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传OSS三部曲（二）">
 <meta name="twitter:description" content="：-}">
@@ -125,7 +125,7 @@
 <p>这里有一个关键的地方，PolicyText指定了该Policy 上传失效的最终时间。即在这个失效时间之前，都可以利用这个policy上传文件，所以没有必要每次上传，都去后端取签名。减少后端的压力。在这里我的设计是：初始化上传时，每上传一个文件后，取一次签名。然后再上传时，将当前时间跟签名时间对比，看是签名时间是否失效了。如果失效了，就重新取一次签名，如果没有失效就不取。这里就用到了第五个变量expire </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">now = timestamp = Date.parse(new Date()) / 1000;</div><div class="line">[color=#000000]//可以判断当前expire是否超过了当前时间,如果超过了当前时间,就重新取一下.3s 做为缓冲[/color]</div><div class="line">    if (expire &lt; now + 3)</div><div class="line">&#123;  </div><div class="line">　　   .....</div><div class="line">　　   phpUrl = &apos;./php/get.php&apos;</div><div class="line">　　   xmlhttp.open( &quot;GET&quot;, phpUrl, false );</div><div class="line">　　   xmlhttp.send( null );</div><div class="line">　　   ......</div><div class="line">&#125;</div><div class="line">return .</div></pre></td></tr></table></figure>
 <p> 再看一下上面policy 的内容比上面增加了starts-with, 这个指定此次上传的文件名，必须是user-dir开头（这个字符串，用户可以自己指定）<br>　为什么要增加这个的含义是：很多场景，一个应用一个bucket,不同用户的数据，为了防止数字覆盖，每个人上传到OSS，可以有特定的前缀。那么问题来了，那用户获取到这个policy后，是不是在失效期内，都能修改上传前缀，从而上传到别人的目录呢？所以，应用服务器可以在上传时就指定让用户传文件时，必须是某个前缀。如果用户拿到了policy他也没有办法上传别人的前缀上。保证了数据的安全性。 </p>
-<p> 代码下载：<a href=" http://blogxiao.oss-cn-shanghai.aliyuncs.com/oss-h5-upload-js-php.tar.gz" target="_blank" rel="external">Touch Me</a><br> <hr><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> 最近在做一个entrepreneurship公司网站的新闻模块，新闻视频采用了这种直传的方式。<br> 在这贴上我的代码好了<br> <strong>控制器：</strong></p>
+<p> 代码下载：<a href=" http://blogxiao.oss-cn-shanghai.aliyuncs.com/oss-h5-upload-js-php.tar.gz" target="_blank" rel="external">Touch Me</a><br> <hr><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> 最近在做一个创业公司网站的新闻模块，新闻视频采用了这种直传的方式。<br> 在这贴上我的代码好了<br> <strong>控制器：</strong></p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">     * 视频上传</div><div class="line">     * */</div><div class="line"></div><div class="line">    public function gmt_iso8601($time) &#123;</div><div class="line">        $dStr = date(&apos;Y-m-d H:i:s&apos;,$time);</div><div class="line">        $expiration = str_replace(&quot; &quot;,&quot;T&quot;,$dStr);</div><div class="line">       return $expiration.&quot;Z&quot;;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public function ueditor()&#123;</div><div class="line">        return view(&apos;admin.news.ueditor&apos;);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">    public function upload()</div><div class="line">    &#123;</div><div class="line">        $id= &apos;xxxxxxxxxxxxx;</div><div class="line">        $key= &apos;CCCCCCCCCCCCCCCC&apos;;</div><div class="line">        $host = &apos;http://youself.oss-cn-beijing.aliyuncs.com&apos;;</div><div class="line"></div><div class="line">       $now = time();</div><div class="line">        $expire = 30; //设置该policy超时时间是30s. 即这个policy过了这个有效时间，不能访问</div><div class="line">        $end = $now + $expire;</div><div class="line">        $expiration = $this-&gt;gmt_iso8601($end);</div><div class="line">        $dir = &apos;news/video/&apos;;</div><div class="line"></div><div class="line">        //最大文件大小.用户可以自己设置</div><div class="line">        $condition = array(0=&gt;&apos;content-length-range&apos;, 1=&gt;0, 2=&gt;1048576000);</div><div class="line">        $conditions[] = $condition;</div><div class="line"></div><div class="line">        //表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只为了安全起见,防止用户通过policy上传到别人的目录</div><div class="line">        $start = array(0=&gt;&apos;starts-with&apos;, 1=&gt;&apos;$key&apos;, 2=&gt;$dir);</div><div class="line">        $conditions[] = $start;</div><div class="line"></div><div class="line"></div><div class="line">        $arr = array(&apos;expiration&apos;=&gt;$expiration,&apos;conditions&apos;=&gt;$conditions);</div><div class="line">        //echo json_encode($arr);</div><div class="line">        //return;</div><div class="line">        $policy = json_encode($arr);</div><div class="line">        $base64_policy = base64_encode($policy);</div><div class="line">        $string_to_sign = $base64_policy;</div><div class="line">        $signature = base64_encode(hash_hmac(&apos;sha1&apos;, $string_to_sign, $key, true));</div><div class="line"></div><div class="line">        $response = array();</div><div class="line">        $response[&apos;accessid&apos;] = $id;</div><div class="line">        $response[&apos;host&apos;] = $host;</div><div class="line">        $response[&apos;policy&apos;] = $base64_policy;</div><div class="line">        $response[&apos;signature&apos;] = $signature;</div><div class="line">        $response[&apos;expire&apos;] = $end;</div><div class="line">        //这个参数是设置用户上传指定的前缀</div><div class="line">        $response[&apos;dir&apos;] = $dir;</div><div class="line">        echo json_encode($response);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p> <strong>blade模板</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> @section(&apos;script&apos;)</div><div class="line"> //引入js</div><div class="line">    &lt;script src=&apos;&#123;&#123; asset(&apos;js/htmlToOSS/lib/plupload-2.1.2/js/plupload.full.min.js&apos;)&#125;&#125;&apos;&gt;&lt;/script&gt;&quot; +</div><div class="line">    &quot;&lt;script src=&apos;&#123;&#123; asset(&apos;js/htmlToOSS/upload.js&apos;)&#125;&#125;&apos;&gt;&lt;/script&gt;</div><div class="line">@endsection</div><div class="line">```  </div><div class="line"></div><div class="line"> form表单：</div></pre></td></tr></table></figure></p>
 <p> <table class="table table-bordered table-striped table-hover"><br>                  <tr><br>                      <td><br>                      <div style="display:none"><br>                          <form name="theform"><br>                              <input type="radio" name="myradio" value="local_name" checked="true/"> 上传文件名字保持本地文件名字<br>                              <input type="radio" name="myradio" value="random_name"> 上传文件名字是随机文件名, 后缀保留<br>                          </form><br>                      </div></td></tr></table></p>
@@ -150,7 +150,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/05/26/文件上传OSS 三部曲（二）/" data-id="cj89lanip0022h72nuewkj6xv" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2016/05/26/文件上传OSS 三部曲（二）/" data-id="cj89ncega001wnq2n7rpsdtqv" class="article-share-link">分享</a>
       
       
       
@@ -220,23 +220,23 @@
       <ul>
         
           <li>
-            <a href="/2017/04/04/马闯：创业公司必经之路[3]/">entrepreneurship公司必经之路（三）</a>
+            <a href="/2017/04/08/git教程6/">git教程(六)</a>
           </li>
         
           <li>
-            <a href="/2017/03/29/马闯：创业公司必经之路[2]/">entrepreneurship公司必经之路（二）</a>
+            <a href="/2017/04/04/马闯：创业公司必经之路[3]/">创业公司必经之路（三）</a>
           </li>
         
           <li>
-            <a href="/2017/03/22/马闯：创业公司必经之路[1]/">entrepreneurship公司必经之路（一）</a>
+            <a href="/2017/03/29/马闯：创业公司必经之路[2]/">创业公司必经之路（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/22/马闯：创业公司必经之路[1]/">创业公司必经之路（一）</a>
           </li>
         
           <li>
             <a href="/2017/03/20/SEO排名的影响因素/">SEO影响因素</a>
-          </li>
-        
-          <li>
-            <a href="/2016/12/30/linux常用命令/">linux常用命令</a>
           </li>
         
       </ul>
