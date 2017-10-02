@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL数据库索引 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MySQL单列索引和联合索引所有的MySQL列类型能被索引。在相关的列上的使用索引是改进SELECT操作性能的最好方法。一个表最多可有16个索引。最大索引长度是256个字节，尽管这可以在编译MySQL时被改变。对于CHAR和VARCHAR列，你可以索引列的前缀。这更快并且比索引整个列需要较少的磁盘空间。在CREATE TABLE语句中索引列前缀的语法看起来像这样：    KEY index_na">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL数据库索引">
+<meta property="og:url" content="http://martist.cn/2013/02/14/MySQL 数据库索引（一）（转载整理/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="MySQL单列索引和联合索引所有的MySQL列类型能被索引。在相关的列上的使用索引是改进SELECT操作性能的最好方法。一个表最多可有16个索引。最大索引长度是256个字节，尽管这可以在编译MySQL时被改变。对于CHAR和VARCHAR列，你可以索引列的前缀。这更快并且比索引整个列需要较少的磁盘空间。在CREATE TABLE语句中索引列前缀的语法看起来像这样：    KEY index_na">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-01T16:11:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL数据库索引">
+<meta name="twitter:description" content="MySQL单列索引和联合索引所有的MySQL列类型能被索引。在相关的列上的使用索引是改进SELECT操作性能的最好方法。一个表最多可有16个索引。最大索引长度是256个字节，尽管这可以在编译MySQL时被改变。对于CHAR和VARCHAR列，你可以索引列的前缀。这更快并且比索引整个列需要较少的磁盘空间。在CREATE TABLE语句中索引列前缀的语法看起来像这样：    KEY index_na">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-MySQL 数据库索引（一）（转载整理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2013/02/14/MySQL 数据库索引（一）（转载整理/" class="article-date">
+  <time datetime="2013-02-14T10:28:51.000Z" itemprop="datePublished">2013-02-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL数据库索引
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<h3 id="MySQL单列索引和联合索引"><a href="#MySQL单列索引和联合索引" class="headerlink" title="MySQL单列索引和联合索引"></a>MySQL单列索引和联合索引</h3><p>所有的MySQL列类型能被索引。在相关的列上的使用索引是改进SELECT操作性能的最好方法。<br>一个表最多可有16个索引。最大索引长度是256个字节，尽管这可以在编译MySQL时被改变。<br>对于CHAR和VARCHAR列，你可以索引列的前缀。这更快并且比索引整个列需要较少的磁盘空间。在CREATE TABLE语句中索引列前缀的语法看起来像这样：   </p>
+<pre><code>KEY index_name (col_name(length))
+</code></pre><p>下面的例子为name列的头10个字符创建一个索引：</p>
+<pre><code>mysql&gt; CREATE TABLE test (
+name CHAR(200) NOT NULL,
+KEY index_name (name(10)));
+</code></pre><p>对于BLOB和TEXT列，你必须索引列的前缀，你不能索引列的全部。</p>
+<h4 id="多列索引"><a href="#多列索引" class="headerlink" title="多列索引"></a>多列索引</h4><p>MySQL能在多个列上创建索引。一个索引可以由最多15个列组成。（在CHAR和VARCHAR列上，你也可以使用列的前缀作为一个索引的部分)。</p>
+<p>一个多重列索引可以认为是包含通过合并(concatenate)索引列值创建的值的一个排序数组。      </p>
+<p>当你为在一个WHERE子句索引的第一列指定已知的数量时，MySQL以这种方式使用多重列索引使得查询非常快速，即使你不为其他列指定值。      </p>
+<p>假定一张表使用下列说明创建：     </p>
+<pre><code> mysql&gt; CREATE TABLE test (
+ id INT NOT NULL,
+ last_name CHAR(30) NOT NULL,
+first_name CHAR(30) NOT NULL,
+PRIMARY KEY (id),
+INDEX name (last_name,first_name));
+</code></pre><p>那么索引name是一个在last_name和first_name上的索引，这个索引将被用于在last_name或last_name和first_name的一个已知范围内指定值的查询，因此，name索引将使用在下列查询中：</p>
+<pre><code>mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”;
+
+mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
+AND first_name=”Michael”;
+
+mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
+AND (first_name=”Michael” OR first_name=”Monty”);
+
+mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
+AND first_name &gt;=”M” AND first_name &lt; &quot;N&quot;;
+</code></pre><p>然而，name索引将不用在下列询问中：</p>
+<pre><code>mysql&gt; SELECT * FROM test WHERE first_name=”Michael”;
+
+mysql&gt; SELECT * FROM test WHERE last_name=”Widenius”
+OR first_name=”Michael”;
+</code></pre><p>创建一个多列索引：</p>
+<pre><code>CREATE TABLE test (  
+    id         INT NOT NULL,  
+    last_name  CHAR(30) NOT NULL,  
+    first_name CHAR(30) NOT NULL,  
+    PRIMARY KEY (id),  
+    INDEX name (last_name,first_name)  
+);  
+</code></pre><p>创建多个索引：</p>
+<pre><code>CREATE TABLE test (  
+    id         INT NOT NULL,  
+    last_name  CHAR(30) NOT NULL,  
+    first_name CHAR(30) NOT NULL,  
+    PRIMARY KEY (id),  
+    INDEX name (last_name),  
+     INDEX_2 name (first_name)  
+);  
+</code></pre><p>当查询语句的条件中包含last_name 和 first_name时，<br>例如：</p>
+<pre><code>SELECT * FROM test WHERE last_name=&apos;Kun&apos; AND first_name=&apos;Li&apos;;  
+</code></pre><p>sql会先过滤出last_name符合条件的记录，在其基础上再过滤first_name符合条件的记录。那如果我们分别在last_name和first_name上创建两个列索引，mysql的处理方式就不一样了，它会选择一个最严格的索引来进行检索，可以理解为检索能力最强的那个索引来检索，另外一个利用不上了，这样效果就不如多列索引了。<br>但是多列索引的利用也是需要条件的，以下形式的查询语句能够利用上多列索引：</p>
+<pre><code>SELECT * FROM test WHERE last_name=&apos;Widenius&apos;;
+SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND first_name=&apos;Michael&apos;;
+SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND (first_name=&apos;Michael&apos; OR first_name=&apos;Monty&apos;);
+SELECT * FROM test WHERE last_name=&apos;Widenius&apos; AND first_name &gt;=&apos;M&apos; AND first_name &lt; &apos;N&apos;;
+</code></pre><p>以下形式的查询语句利用不上多列索引：</p>
+<pre><code>SELECT * FROM test WHERE first_name=&apos;Michael&apos;;
+SELECT * FROM test WHERE last_name=&apos;Widenius&apos; OR first_name=&apos;Michael&apos;;
+</code></pre><p>多列建索引比对每个列分别建索引更有优势，因为索引建立得越多就越占磁盘空间，在更新数据的时候速度会更慢。另外建立多列索引时，顺序也是需要注意的，应该将严格的索引放在前面，这样筛选的力度会更大，效率更高。</p>
+<p>整理转载出处：<br><a href="http://blog.chinaunix.net/uid-29305839-id-4257512.html" target="_blank" rel="external">haibintown的ChinaUnix博客</a><br><a href="http://www.sphinxsearch.org/archives/32" target="_blank" rel="external">Sphinx 中文站</a>      </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2013/02/14/MySQL 数据库索引（一）（转载整理/" data-id="cj89jua3k0005sf2nda82slfb" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2013/02/14/nginx+php+php-fpm调试/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          nginx-fpm调试
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL单列索引和联合索引"><span class="toc-number">1.</span> <span class="toc-text">MySQL单列索引和联合索引</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#多列索引"><span class="toc-number">1.1.</span> <span class="toc-text">多列索引</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

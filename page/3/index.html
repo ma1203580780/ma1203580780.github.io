@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="MARTIST">
+<meta property="og:url" content="http://martist.cn/page/3/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:locale" content="简体中文">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MARTIST">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-同源政策" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/12/14/同源政策/" class="article-date">
+  <time datetime="2015-12-13T16:00:00.000Z" itemprop="datePublished">2015-12-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/14/同源政策/">同源策略</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p></p><h3>含义</h3><p></p>
+<p>1995年，同源政策由 Netscape 公司引入浏览器。<br>目前，所有浏览器都实行这个政策。</p><br><p>最初，它的含义是指，A网页设置的 Cookie，B网页不能打开，除非这两个网页&quot;同源&quot;。所谓&quot;同源&quot;指的是&quot;三个相同&quot;。</p><blockquote><ul class=" list-paddingleft-2"><li><p>协议相同</p></li><li><p>域名相同</p></li><li><p>端口相同</p></li></ul></blockquote><p>举例来说，<code><a href="http://www.example.com/dir/page.html" target="_blank" rel="external">http://www.example.com/dir/page.html</a></code>这个网址，协议是<code>http://</code>，域名是<code>www.example.com</code>，端口是<code>80</code>（默认端口可以省略）。它的同源情况如下。</p><blockquote><ul class=" list-paddingleft-2"><li><p><code><a href="http://www.example.com/dir2/other.html" target="_blank" rel="external">http://www.example.com/dir2/other.html</a></code>：同源</p></li><li><p><code><a href="http://example.com/dir/other.html" target="_blank" rel="external">http://example.com/dir/other.html</a></code>：不同源（域名不同）</p></li><li><p><code><a href="http://v2.www.example.com/dir/other.html" target="_blank" rel="external">http://v2.www.example.com/dir/other.html</a></code>：不同源（域名不同）</p></li><li><p><code><a href="http://www.example.com:81/dir/other.html" target="_blank" rel="external">http://www.example.com:81/dir/other.html</a></code>：不同源（端口不同）</p></li></ul></blockquote><p>此处，请参考js大神阮一峰blog：<a href="http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2016/04/same-origin-policy.html</a></p>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/12/14/同源政策/" data-id="cj89jua4n001bsf2n09y14jpu" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-定时任务" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/03/定时任务/" class="article-date">
+  <time datetime="2015-11-03T13:30:50.000Z" itemprop="datePublished">2015-11-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/03/定时任务/">定时任务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>Linux 的定时任务，<br>我在docker环境 ubuntu 16.04系统中，在/etc/cron.d/目录下设置的。</p>
+<pre><code>*     *     * * *     root   php /var/www/exam/artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1 
+</code></pre><p>关于这个可以看：<a href="http://www.linuxidc.com/Linux/2015-08/121087.htm" target="_blank" rel="external">http://www.linuxidc.com/Linux/2015-08/121087.htm</a></p>
+<h3 id="一、启动Cron服务"><a href="#一、启动Cron服务" class="headerlink" title="一、启动Cron服务"></a>一、启动Cron服务</h3><p>基本上所有的Linux发行版在默认情况下都预安装了cron工具。即使未预装cron，也很简单，执行命令手动安装它：</p>
+<pre><code>root@Ubuntu-14:~# apt-get install cron
+</code></pre><p>接着检查cron服务的状态，默认情况它应该运行于后台。如果它未启动，那么可以手动启动此服务。</p>
+<pre><code>root@ubuntu-14:~# service cron start
+root@ubuntu-14:~# service cron status 
+cron start/running, process 1027
+</code></pre><h2 id="…"><a href="#…" class="headerlink" title="…"></a>…</h2><p>laravel学院： <a href="http://laravelacademy.org/post/6228.html" target="_blank" rel="external">http://laravelacademy.org/post/6228.html</a></p>
+<h2 id="…-1"><a href="#…-1" class="headerlink" title="…"></a>…</h2><p>博客：<a href="https://www.blog8090.com/laravel-ren-wu-diao-du-console/" target="_blank" rel="external">https://www.blog8090.com/laravel-ren-wu-diao-du-console/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/11/03/定时任务/" data-id="cj89jua4u001psf2nz6ngnccq" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-端口作用和范围" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/30/端口作用和范围/" class="article-date">
+  <time datetime="2015-10-29T16:00:00.000Z" itemprop="datePublished">2015-10-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/30/端口作用和范围/">端口的作用和范围</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>计算机“端口”可以认为是计算机与外界通讯交流的出口。</p>
+<p>其中硬件领域的端口又称接口，如：USB端口、串行端口等。</p>
+<p>软件领域的端口一般指网络中面向连接服务和无连接服务的通信协议端口，是一种抽象的软件结构，包括一些数据结构和I/O（基本输入输出）缓冲区。</p>
+<p>按端口号可分为3大类：</p>
+<p>（1）公认端口（Well Known Ports）</p>
+<p>从0到1023，它们紧密绑定（binding）于一些服务。通常这些端口的通讯明确表明了某种服务的协议。例如：80端口实际上总是HTTP通讯。</p>
+<p>（2）注册端口（Registered Ports）</p>
+<p>从1024到49151。它们松散地绑定于一些服务。也就是说有许多服务绑定于这些端口，这些端口同样用于许多其它目的。例如：许多系统处理动态端口从1024左右开始。</p>
+<p>（3）动态和/或私有端口（Dynamic and/or Private Ports）</p>
+<p>从49152到65535。理论上，不应为服务分配这些端口。实际上，机器通常从1024起分配动态端口。但也有例外：SUN的RPC端口从32768开始。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/10/30/端口作用和范围/" data-id="cj89jua58002asf2nfdrn6ay6" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-添加或删除ubuntu用户和组" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/12/添加或删除ubuntu用户和组/" class="article-date">
+  <time datetime="2015-10-12T04:30:56.000Z" itemprop="datePublished">2015-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/12/添加或删除ubuntu用户和组/">ubuntu的用户和用户组</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>在创建用户时，需要为新建用户指定一用户组，如果不指定其用户所属的工作组，自动会生成一个与用户名同名的工作组。创建用户user1的时候指定其所属工作组users，例：useradd –g users user1</p>
+<h3 id="一、创建用户："><a href="#一、创建用户：" class="headerlink" title="一、创建用户："></a>一、创建用户：</h3><p><strong>1、使用命令 useradd</strong><br>例：<br><code>useradd user1</code><br>——创建用户user1<br>    useradd –e 12/30/2009 user2——创建user2,指定有效期2009-12-30到期<br>    用户的缺省UID从500向后顺序增加，500以下作为系统保留账号，可以指定UID，<br>例：<code>useradd –u 600 user3</code></p>
+<p><strong>2、使用 passwd 命令为新建用户设置密码</strong><br>例：<code>passwd user1</code><br>注意：没有设置密码的用户不能使用。</p>
+<p><strong>3、命令 usermod 修改用户账户</strong><br>例：将用户 user1的登录名改为  u1，<br><code>usermod –l u1 user1</code><br>例：将用户 user1 加入到 users组中，<br><code>usermod –g users user1</code></p>
+<p>例：将用户 user1 目录改为/users/us1<br><code>usermod –d /users/us1 user1</code></p>
+<p><strong>4、使用命令 userdel 删除用户账户</strong><br>例：删除用户user2<br><code>userdel user2</code><br>例：删除用户 user3，同时删除他的工作目录<br><code>userdel –r user3</code></p>
+<p><strong>5、查看用户信息</strong><br>id命令查看一个用户的UID和GID, 例：查看user4的id<br>id user4<br>finger命令 ——可以查看用户的主目录、启动shell、用户名、地址、电话等信息<br>例：<code>finger user4</code></p>
+<h3 id="二、用户组："><a href="#二、用户组：" class="headerlink" title="二、用户组："></a>二、用户组：</h3><p><strong>6、命令 groupadd创建用户组</strong><br><code>groupadd –g 888 users</code><br>创建一个组users，其GID为888</p>
+<p><strong>7、命令 gpasswd为组添加用户</strong><br>只有root和组管理员能够改变组的成员：<br>例：把 user1加入users组<br><code>gpasswd –a user1 users</code><br>例：把 user1退出users组<br><code>gpasswd –d user1 users</code><br><strong>8、命令groupmod修改组</strong><br><code>groupmod –n user users</code><br>修改组名user为users</p>
+<p><strong>9、groupdel删除组</strong><br><code>groupdel users</code><br>删除组users</p>
+<p>ubuntu和windows一样，可以任意创建或者删除新的用户，windows下比较简单，ubuntu下需要使用命令，不过操作起来不是很繁琐，所以我尽量写的详细一些。</p>
+<h3 id="如何创建ubuntu新用户？"><a href="#如何创建ubuntu新用户？" class="headerlink" title="如何创建ubuntu新用户？"></a>如何创建ubuntu新用户？</h3><p>首先打开终端，输入：sudo adduser username，系统会提示以下信息：</p>
+<pre><code>正在添加用户“username”...
+
+正在添加新组“username”(1001)...
+
+正在添加新用户“username”(1001)到组“username”...
+
+创建主目录“/home/username”...
+
+ 正在从“/etc、skel”复制文件...
+
+ 输入新的 UNIX 口令：(此处大家注意，不是输入你当前用户的密码，而是输入你要创建新用户的密码)
+
+ 重新输入新的 UNIX 口令：(再输一次即可)
+
+ passwd：已成功更新密码
+
+ Changing the user information for username
+ Enter the new value, or press ENTER for the default
+ Full Name []: yangyang (输入新用户的名称)
+ Room Number []:
+ Work Phone []:
+ Home Phone []:
+ Other []:
+ 这个信息是否正确? [Y/n] y
+</code></pre><p>到了这一步，新用户已经添加成功了，此时我们可以打 ls /home查看一下，如果显示 username yang，侧代表用户创建成功。</p>
+<h3 id="如何删除ubuntu用户？"><a href="#如何删除ubuntu用户？" class="headerlink" title="如何删除ubuntu用户？"></a>如何删除ubuntu用户？</h3><p>ubuntu删除用户同样是在终端下操作的，需要注意的是，如果要删除的用户当前已登陆，是删除不掉的，必须注销掉当前用户切换为另一个用户下，才能删除。<br>举个例子，刚才我新建立了一个用户为 yang 的用户，例如我现在用用户 yang 登陆了桌面，此时如果我想删除 yang 这个用户，是删除不掉的。正确的操作方法是，我注销掉 yang，然后使用 root 登陆到桌面，再删除 yang 即可。     </p>
+<p>删除ubuntu用户的命令比较容易记：<code>sudo userdel username</code>，例如我想删除 yang ，则输入：<code>sudo userdel yang</code>，删除成功后，系统无任何提示。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/10/12/添加或删除ubuntu用户和组/" data-id="cj89jua520022sf2njoyz7doq" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-悲观锁与乐观锁" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/03/22/悲观锁与乐观锁/" class="article-date">
+  <time datetime="2015-03-21T16:00:00.000Z" itemprop="datePublished">2015-03-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/03/22/悲观锁与乐观锁/">乐观锁与悲观锁</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>在数据库的锁机制中介绍过，数据库管理系统（DBMS）中的并发控制的任务是确保在多个事务同时存取数据库中同一数据时不破坏事务的隔离性和统一性以及数据库的统一性。        </p>
+<p>乐观并发控制(乐观锁)和悲观并发控制（悲观锁）是并发控制主要采用的技术手段。          </p>
+<p>无论是悲观锁还是乐观锁，都是人们定义出来的概念，可以认为是一种思想。其实不仅仅是数据库系统中有乐观锁和悲观锁的概念，像memcache、hibernate、tair等都有类似的概念。              </p>
+<p>针对于不同的业务场景，应该选用不同的并发控制方式。所以，不要把乐观并发控制和悲观并发控制狭义的理解为DBMS中的概念，更不要把他们和数据中提供的锁机制（行锁、表锁、排他锁、共享锁）混为一谈。其实，在DBMS中，悲观锁正是利用数据库本身提供的锁机制来实现的。            </p>
+<p>下面来分别学习一下悲观锁和乐观锁。 </p>
+<h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><p>在关系数据库管理系统里，悲观并发控制（又名“悲观锁”，Pessimistic Concurrency Control，缩写“PCC”）是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。如果一个事务执行的操作都某行数据应用了锁，那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作。悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。    </p>
+<p>悲观锁，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度(悲观)，因此，在整个数据处理过程中，将数据处于锁定状态。 悲观锁的实现，往往依靠数据库提供的锁机制 （也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。       </p>
+<p>在数据库中，悲观锁的流程如下：<br>在对任意记录进行修改前，先尝试为该记录加上排他锁（exclusive locking）。              </p>
+<p>如果加锁失败，说明该记录正在被修改，那么当前查询可能要等待或者抛出异常。 具体响应方式由开发者根据实际需要决定。                  </p>
+<p>如果成功加锁，那么就可以对记录做修改，事务完成后就会解锁了。             </p>
+<p>其间如果有其他对该记录做修改或加排他锁的操作，都会等待我们解锁或直接抛出异常。            </p>
+<p><strong>   MySQL InnoDB中使用悲观锁   </strong><br>要使用悲观锁，我们必须关闭mysql数据库的自动提交属性，因为MySQL默认使用autocommit模式，也就是说，当你执行一个更新操作后，MySQL会立刻将结果进行提交。 set autocommit=0;             </p>
+<pre><code>//0.开始事务            
+begin;/begin work;/start transaction; (三者选一就可以)              
+//1.查询出商品信息               
+select status from t_goods where id=1 for update;              
+//2.根据商品信息生成订单                
+insert into t_orders (id,goods_id) values (null,1);              
+//3.修改商品status为2               
+update t_goods set status=2;              
+//4.提交事务             
+commit;/commit work;     
+</code></pre><p>上面的查询语句中，我们使用了 select…for update 的方式，这样就通过开启排他锁的方式实现了悲观锁。此时在t_goods表中，id为1的 那条数据就被我们锁定了，其它的事务必须等本次事务提交之后才能执行。这样我们可以保证当前的数据不会被其它事务修改。              </p>
+<p>上面我们提到，使用 select…for update 会把数据给锁住，不过我们需要注意一些锁的级别，MySQL InnoDB默认行级锁。行级锁都是基于索引的，如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住，这点需要注意。               </p>
+<p><strong>   优点与不足  </strong><br>悲观并发控制实际上是“先取锁再访问”的保守策略，为数据处理的安全提供了保证。但是在效率方面，处理加锁的机制会让数据库产生额外的开销，还有增加产生死锁的机会；另外，在只读型事务处理中由于不会产生冲突，也没必要使用锁，这样做只能增加系统负载；还有会降低了并行性，一个事务如果锁定了某行数据，其他事务就必须等待该事务处理完才可以处理那行数。                     </p>
+<h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><p>在关系数据库管理系统里，乐观并发控制（又名“乐观锁”，Optimistic Concurrency Control，缩写“OCC”）是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。如果其他事务有更新的话，正在提交的事务会进行回滚。乐观事务控制最早是由孔祥重（H.T.Kung）教授提出。          </p>
+<p>乐观锁（ Optimistic Locking ） 相对悲观锁而言，乐观锁假设认为数据一般情况下不会造成冲突，所以在数据进行提交更新的时候，才会正式对数据的冲突与否进行检测，如果发现冲突了，则让返回用户错误的信息，让用户决定如何去做。          </p>
+<p>相对于悲观锁，在对数据库进行处理的时候，乐观锁并不会使用数据库提供的锁机制。一般的实现乐观锁的方式就是记录数据版本。          </p>
+<p>数据版本,为数据增加的一个版本标识。当读取数据时，将版本标识的值一同读出，数据每更新一次，同时对版本标识进行更新。当我们提交更新的时候，判断数据库表对应记录的当前版本信息与第一次取出来的版本标识进行比对，如果数据库表当前版本号与第一次取出来的版本标识值相等，则予以更新，否则认为是过期数据。             </p>
+<p>实现数据版本有两种 <strong>  方式 </strong>   ，第一种是使用版本号，第二种是使用时间戳。            </p>
+<h2 id="使用版本号实现乐观锁"><a href="#使用版本号实现乐观锁" class="headerlink" title="使用版本号实现乐观锁"></a>使用版本号实现乐观锁</h2><p>使用版本号时，可以在数据初始化时指定一个版本号，每次对数据的更新操作都对版本号执行+1操作。并判断当前版本号是不是该数据的最新的版本号。             </p>
+<p>1.查询出商品信息       </p>
+<pre><code>select (status,status,version) from t_goods where id=#{id}      
+</code></pre><p>2.根据商品信息生成订单<br>3.修改商品status为2            </p>
+<pre><code>update t_goods             
+set status=2,version=version+1              
+where id=#{id} and version=#{version};             
+</code></pre><h2 id="优点与不足"><a href="#优点与不足" class="headerlink" title="优点与不足"></a>优点与不足</h2><p>乐观并发控制相信事务之间的数据竞争(data race)的概率是比较小的，因此尽可能直接做下去，直到提交的时候才去锁定，所以不会产生任何锁和死锁。但如果直接简单这么做，还是有可能会遇到不可预期的结果，例如两个事务都读取了数据库的某一行，经过修改以后写回数据库，这时就遇到了问题。     </p>
+<h2 id="引用自OPEN经验"><a href="#引用自OPEN经验" class="headerlink" title="引用自OPEN经验"></a>引用自<a href="http://www.open-open.com/lib/view/open1452046967245.html" target="_blank" rel="external">OPEN经验</a></h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/03/22/悲观锁与乐观锁/" data-id="cj89jua4v001qsf2ncdbx1gvt" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post- 鱼骨图实践" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/12/02/ 鱼骨图实践/" class="article-date">
+  <time datetime="2014-12-02T07:30:16.000Z" itemprop="datePublished">2014-12-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/常识/">常识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/12/02/ 鱼骨图实践/">鱼骨图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<blockquote>
+<p>鱼骨图是日本的管理大师石川馨先生发明出来的，所以又被叫做“石川图”。<br>鱼骨图的作用又是为了发现问题的“根本原因”，所以石川图又被称之为“因果图”。</p>
+</blockquote>
+<h2 id="什么是鱼骨图"><a href="#什么是鱼骨图" class="headerlink" title="什么是鱼骨图"></a>什么是鱼骨图</h2><p>鱼骨图与我们经常使用的MindManager工具是有异曲同工之妙的，当我们希望对一个问题建立整体的认识的时候，经常会借助MindManager强大的头脑风暴的能力，围绕着一个问题点进行发散与分析。</p>
+<p>相对MindManager相比，鱼骨图更加集中于分析影响问题的特性。我们通过头脑风暴找到导致这个问题的因素，并且将他们与特性值关联到一起，按照互相关联性整理成一个层次分明，条理清晰的图形，这个就是形状如同鱼骨（FishBone Diagram）的鱼骨图。</p>
+<p>在Mindmanager以及鱼骨图的绘制过程中，都离不开进行头脑风暴。那么什么是头脑风暴呢？头脑风暴应该是围绕着一个特定的问题，大家各抒己见不能跑题，会议发起者应当提供一个宽松的环境，会议参与人各抒己见提出新的观点，然后将所有人的意见集中记录起来，并且最终形成解决问题的思路。</p>
+<h2 id="良好的头脑风暴会议的实践"><a href="#良好的头脑风暴会议的实践" class="headerlink" title="良好的头脑风暴会议的实践"></a>良好的头脑风暴会议的实践</h2><p> <br>    1）会议发起人往往会在头脑风暴开始之前，将会议的议题与相关材料发送给与会人员，并且收集相关的意见，从而能够充分的调动各位与会人员的积极性。</p>
+<p> <br>    2）参与头脑风暴的人员人数也应当是被控制的，原则上最好是少于10人，如果有专家或者参与解决类似问题的人员，对问题的解决方案的提出是有积极推进作用的。</p>
+<p> <br>    3）会议的分工方面，应当有一个主持人，类似于Scrum Master的角色，从整体上控制整个会议的节奏，氛围，跑题是头脑风暴中不被允许的。另外，应当有一个记录人员来记录整个会议中有价值的信息。<br> <br>    4）会议纪律的强调，不允许有旁观者的出现，所有与会人员应当集中精力，积极投入到问题的讨论当中，不允许出现各自讨论的小团体。</p>
+<p> <br>    5）头脑风暴中，成员在不“跑题”的前提下，是可以自由畅谈，身份是一律平等的，而且不允许批评，即便批评是不可避免，也应当是在会议之后进行，头脑风暴将追求Idea的数量。</p>
+<p> <br>   6）会议时间的控制，原则上，会议的时间不会超过45分钟。</p>
+<h2 id="鱼骨图，通常有两种类型，原因分析型与对策分析型。"><a href="#鱼骨图，通常有两种类型，原因分析型与对策分析型。" class="headerlink" title="鱼骨图，通常有两种类型，原因分析型与对策分析型。"></a>鱼骨图，通常有两种类型，原因分析型与对策分析型。</h2><p>其中原因分析型通常要针对的问题是“为什么…”。而对策分析型则是针对“如何提高/改善…”类型的问题。原因分析性的鱼骨图，鱼头在右边，对策分析性的鱼骨图，鱼头在右边。</p>
+<h2 id="如何绘制鱼骨图？"><a href="#如何绘制鱼骨图？" class="headerlink" title="如何绘制鱼骨图？"></a>如何绘制鱼骨图？</h2><p><br>    1）首先，我们确定我们需要解决的问题，这个将要被解决的问题就是鱼头，然后在鱼头的旁边画出鱼骨图的主干，我们将会针对这个主干进行发散。</p>
+<p><br>    2）在主干骨上面书写几个原因或者对策，并且用长方形框起来，绘图的之后，应当尽可能的保证主干骨与大骨形成60度的夹角。现场问题：“人机料法环”，管理问题围绕“人事时地物”。</p>
+<p><br>    3）在大骨和主干骨中间，平行的画中骨与中骨用于描述事实，中骨上面可以发散出小骨，小骨用于支持中骨的结论，用于描述为什么会出现中骨这种情形。</p>
+<p><br>    4）当深入到一定的层次之后，视问题的具体情况是否继续，一般五层之内的就可以了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2014/12/02/ 鱼骨图实践/" data-id="cj89jua360000sf2nuw0petli" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/常识/">常识</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-mac开发使用小技巧" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/07/24/mac开发使用小技巧/" class="article-date">
+  <time datetime="2014-07-24T01:28:51.000Z" itemprop="datePublished">2014-07-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mac/">mac</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/07/24/mac开发使用小技巧/">mac系统快捷操作笔记（二）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<h3 id="把文件创建快捷方式到桌面，用软链接"><a href="#把文件创建快捷方式到桌面，用软链接" class="headerlink" title="把文件创建快捷方式到桌面，用软链接"></a>把文件创建快捷方式到桌面，用软链接</h3><pre><code>ln -s      
+</code></pre><p>apache虚拟主机配置在/etc/apache2/extra/httpd-vhosts.conf</p>
+<p>然后配置本身的/etc/hosts</p>
+<pre><code>127.0.0.1       chaoniu.com
+127.0.0.1       www.super.com
+</code></pre><p>apache开启重写 ，在/etc/apache/httpd.conf</p>
+<h3 id="打开注释："><a href="#打开注释：" class="headerlink" title="打开注释："></a>打开注释：</h3><pre><code>LoadModule rewrite_module libexec/apache2/mod_rewrite.so
+</code></pre><p>配置虚拟主机</p>
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerAdmin webmaster@dummy-host.example.com
+    DocumentRoot &quot;/www/chaoniu/public/&quot;
+    ServerName www.super.com
+    ServerAlias www.dummy-host.example.com
+    ErrorLog &quot;/private/var/log/apache2/www.1.com-error_log&quot;
+    CustomLog &quot;/private/var/log/apache2/www.1.com-access_log&quot; common
+&lt;/VirtualHost&gt;
+
+
+重启apache：sudo /usr/sbin/apachectl restart
+
+关闭apache：sudo /usr/sbin/apachectl stop
+
+开启apache：sudo /usr/sbin/apachectl start
+</code></pre><p>  安装Vue：</p>
+<pre><code>brew install node
+npm -v
+npm install -g vue-cli
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2014/07/24/mac开发使用小技巧/" data-id="cj89jua43000nsf2n0va2wkn3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-mac使用笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/07/22/mac使用笔记/" class="article-date">
+  <time datetime="2014-07-22T01:28:51.000Z" itemprop="datePublished">2014-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mac/">mac</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/07/22/mac使用笔记/">mac系统快捷操作笔记（一）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>1，magic鼠标可以作为整个触摸板使用，整个面板都可以左右上下滑动，并且有双击展示全部应用等等功能。<br>2，很多设置都在左上角，苹果标志的下拉菜单的偏好设置里面，包括连接蓝牙鼠标键盘，设置声音，日期格式，安装的应用程序权限，等等设置。<br>3，把文件创建快捷方式到桌面，用软链接 ln -s 它的路径 到  /User/machuang/Desktop。<br>4，在命令行中，<code>open ./</code>可以用finder打开当前文件目录。</p>
+<h3 id="Mac自带apache配置虚拟主机"><a href="#Mac自带apache配置虚拟主机" class="headerlink" title="Mac自带apache配置虚拟主机"></a>Mac自带apache配置虚拟主机</h3><p>配置文件在/etc/apache2/extratpd-vhosts.conf。</p>
+<p>然后配置本身的： <code>vi /etc/hosts</code></p>
+<pre><code>127.0.0.1       chaoniu.com
+127.0.0.1       api.chaoniu.com
+</code></pre><p>apache开启重写 ，在 <code>/etc/apache/httpd.conf</code></p>
+<p>打开这一行的注释：</p>
+<pre><code>LoadModule rewrite_module libexec/apache2/mod_rewrite.so
+</code></pre><p>配置虚拟主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;VirtualHost *:80&gt;</div><div class="line">  </div><div class="line">ServerAdmin webmaster@dummy-host.example.com</div><div class="line">  </div><div class="line">DocumentRoot &quot;/www/chaoniu/public/&quot;</div><div class="line"> </div><div class="line">ServerName www.super.com</div><div class="line"></div><div class="line">ServerAlias www.dummy-host.example.com</div><div class="line">   </div><div class="line">ErrorLog &quot;/private/var/log/apache2/www.1.com-error_log&quot;</div><div class="line">   </div><div class="line">CustomLog &quot;/private/var/log/apache2/www.1.com-access_log&quot; common</div><div class="line"></div><div class="line">&lt;/VirtualHost&gt;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2014/07/22/mac使用笔记/" data-id="cj89jua3t000lsf2n7a5sh8m3" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-2016即将过去，未来10年当如何" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2014/05/20/2016即将过去，未来10年当如何/" class="article-date">
+  <time datetime="2014-05-20T14:30:00.000Z" itemprop="datePublished">2014-05-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/人生阅历，/">人生阅历，</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2014/05/20/2016即将过去，未来10年当如何/">10年</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<h3 id="一：这10年，一定要有自己的方向"><a href="#一：这10年，一定要有自己的方向" class="headerlink" title="一：这10年，一定要有自己的方向"></a>一：这10年，一定要有自己的方向</h3><pre><code>1、没有方向感，是最要命的  
+2、不管起点有多低，都要坦然接受
+3、围绕自己的兴趣爱好选择职业
+4、做自己最擅长的事
+5、从最容易实现的目标开始做起
+</code></pre><h3 id="二：这10年，要做哪些准备？"><a href="#二：这10年，要做哪些准备？" class="headerlink" title="二：这10年，要做哪些准备？"></a>二：这10年，要做哪些准备？</h3><pre><code>1、要过语言关
+2、要有一样看家本领
+3、掌握工作的全部
+4、把知识变成能力
+5、向成功的人学习
+6、走在时代的最前沿
+7、随时记下一闪即逝的灵感
+</code></pre><h3 id="三：这10年，要培养的几种能力"><a href="#三：这10年，要培养的几种能力" class="headerlink" title="三：这10年，要培养的几种能力"></a>三：这10年，要培养的几种能力</h3><pre><code>1、会大会小会来事
+2、把话说到点子上
+3、抓住问题的关键
+4、不放弃，不抛弃
+5、控制自己的情绪和行为
+6、站在对方的位置上
+</code></pre><h3 id="四：这10年，要认识到的问题"><a href="#四：这10年，要认识到的问题" class="headerlink" title="四：这10年，要认识到的问题"></a>四：这10年，要认识到的问题</h3><pre><code>1、用出色的业绩树立自己的品牌
+2、世上的事，最怕认真二字
+3、任何时候，都保持一颗正直的心
+4、用双肩扛起自己的责任
+5、让更多的人记住你
+6、工作不仅仅是为了赚钱
+7、进入成功人的圈子
+</code></pre><h3 id="五：这10年，绝对不能浪费的东西"><a href="#五：这10年，绝对不能浪费的东西" class="headerlink" title="五：这10年，绝对不能浪费的东西"></a>五：这10年，绝对不能浪费的东西</h3><pre><code>1、抓住生活中的点滴空闲
+2、用心善待身边的每一个人
+3、把每份工作都当成历练自己的舞台
+4、端好信誉那个碗
+5、抓住擦身而过的机会
+</code></pre><h3 id="六：这10年，如何对待金钱？"><a href="#六：这10年，如何对待金钱？" class="headerlink" title="六：这10年，如何对待金钱？"></a>六：这10年，如何对待金钱？</h3><pre><code>1、成家成名之前，先成为有钱人
+2、能entrepreneurship就去entrepreneurship
+3、从小做起，一分钱也要赚
+4、随波逐流永远成不了富翁
+5、把废物变成宝贝
+6、先满足别人的需求
+7、在为客户服务上做文章 　
+    8、让钱在流动中升值
+</code></pre><h3 id="七：这10年，发展重心放在什么位置？"><a href="#七：这10年，发展重心放在什么位置？" class="headerlink" title="七：这10年，发展重心放在什么位置？"></a>七：这10年，发展重心放在什么位置？</h3><pre><code>1、抓住当下，做好手边的工作
+2、在细节上下功夫
+3、把时间和精力用在最能创造效益的地方
+4、注重个人的成长和积累
+5、成功之前做该做的事，成功之后做想做的事
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2014/05/20/2016即将过去，未来10年当如何/" data-id="cj89jua3e0001sf2nnaew4xqi" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/人生阅历/">人生阅历</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感悟/">感悟</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-nginx" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2013/03/20/nginx/" class="article-date">
+  <time datetime="2013-03-20T04:13:54.000Z" itemprop="datePublished">2013-03-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nginx/">nginx</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2013/03/20/nginx/">nginx入门</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><pre><code>brew search nginx
+brew install nginx
+</code></pre><h2 id="启动nginx"><a href="#启动nginx" class="headerlink" title="启动nginx"></a>启动nginx</h2><pre><code>sudo nginx 
+</code></pre><p>访问localhost:8080 发现已出现nginx的欢迎页面了。</p>
+<p>做个软连接</p>
+<pre><code>ln -s  /usr/local/sbin/nginx /usr/bin/nginx 
+</code></pre><p>常用的指令有：</p>
+<pre><code>nginx -V 查看版本，以及配置文件地址
+nginx -v 查看版本
+nginx -c filename 指定配置文件
+nginx -h 帮助
+</code></pre><p>#重新加载配置|重启|停止|退出 nginx</p>
+<pre><code>nginx -s reload|reopen|stop|quit
+</code></pre><p>#测试配置是否有语法错误</p>
+<pre><code>nginx -t
+</code></pre><p>查看nginx的进程pid，并杀死进程，但不要杀死父进程。</p>
+<pre><code>ps -ef | grep nginx
+</code></pre><p>如果杀死父进程。要执行这条命令，加载nginx.conf文件</p>
+<pre><code>nginx -c /usr/local/etc/nginx/nginx.conf 
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2013/03/20/nginx/" data-id="cj89jua49000tsf2nlo3dkcrf" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+
+
+  <nav id="page-nav">
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">下一页&raquo;</a>
+  </nav>
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2100/01/01/About Me/">About Me</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/04/马闯：创业公司必经之路[3]/">entrepreneurship公司必经之路（三）</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/29/马闯：创业公司必经之路[2]/">entrepreneurship公司必经之路（二）</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/22/马闯：创业公司必经之路[1]/">entrepreneurship公司必经之路（一）</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/20/SEO排名的影响因素/">SEO影响因素</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

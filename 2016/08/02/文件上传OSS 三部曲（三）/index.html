@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>文件上传OSS三部曲（三） | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传OSS三部曲（三）">
+<meta property="og:url" content="http://martist.cn/2016/08/02/文件上传OSS 三部曲（三）/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-01T16:11:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件上传OSS三部曲（三）">
+<meta name="twitter:description" content="最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。首先下载ueditor。在这里没有使用组件化">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-文件上传OSS 三部曲（三）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/02/文件上传OSS 三部曲（三）/" class="article-date">
+  <time datetime="2016-08-01T16:00:00.000Z" itemprop="datePublished">2016-08-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      文件上传OSS三部曲（三）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>最近在做这个新闻模块，编辑新闻的实现采用了ueditor富文本编辑器。<br>因为ueditor支持服务器本地存储上传文件（在新闻主题中插入的图片），和七牛云OSS存储，并不支持阿里云OSS存储，由于项目依托在阿里云的各种服务上，便于一个账号管理使用的阿里云OSS，没有使用七牛云，此时就需要我们的一些动手能力，给ueditor集成上对aliyunOSS的支持。<br>首先下载<a href="http://ueditor.baidu.com" target="_blank" rel="external">ueditor</a>。<br>在这里没有使用组件化开发，因为富文本编辑器一般不会有什么巨大的漏洞，用户能实现常用的编辑文字和添加样式的功能即可。只需在页面引入几个js文件即可使用。<br><strong>示例：</strong></p>
+<h3 id="1-blade模板载入编辑器"><a href="#1-blade模板载入编辑器" class="headerlink" title="1.blade模板载入编辑器"></a>1.blade模板载入编辑器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot; src=&quot;&#123;&#123;asset(&apos;ueditor/ueditor.config.js&apos;)&#125;&#125;&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot; src=&quot;&#123;&#123;asset(&apos;ueditor/ueditor.all.min.js&apos;)&#125;&#125;&quot;&gt; &lt;/script&gt;</div><div class="line">&lt;script id=&quot;content&quot; name=&quot;content&quot; type=&quot;text/plain&quot;&gt;</div><div class="line">@if(!empty($new))</div><div class="line">&#123;!! $new-&gt;content !!&#125;</div><div class="line">@endif</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;!-- 实例化编辑器 --&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">UE.getEditor(&apos;content&apos;,&#123;</div><div class="line">initialFrameWidth : 800,</div><div class="line">initialFrameHeight : 400,</div><div class="line"></div><div class="line">&#125;);</div><div class="line">var ue = UE.getEditor(&apos;content&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>将你编辑后需要保存的的内容添加name属性在id=content的<code>&lt;script&gt;</code>标签内。   </p>
+<h3 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h3><p>查看ueditor的./php/目录可知Uploader.class.php是它的上传文件工具类。对其进行改造。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"> /**</div><div class="line">     * 上传文件的主处理方法</div><div class="line">     * @return mixed</div><div class="line">     */</div><div class="line">    private function upFile()</div><div class="line">    &#123;</div><div class="line">        $file = $this-&gt;file = $_FILES[$this-&gt;fileField];</div><div class="line">        if (!$file) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_FILE_NOT_FOUND&quot;);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line">        if ($this-&gt;file[&apos;error&apos;]) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo($file[&apos;error&apos;]);</div><div class="line">            return;</div><div class="line">        &#125; else if (!file_exists($file[&apos;tmp_name&apos;])) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_TMP_FILE_NOT_FOUND&quot;);</div><div class="line">            return;</div><div class="line">        &#125; else if (!is_uploaded_file($file[&apos;tmp_name&apos;])) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_TMPFILE&quot;);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        $this-&gt;oriName = $file[&apos;name&apos;];</div><div class="line">        $this-&gt;fileSize = $file[&apos;size&apos;];</div><div class="line">        $this-&gt;fileType = $this-&gt;getFileExt();</div><div class="line">//        $this-&gt;fullName = $this-&gt;getFullName();</div><div class="line">        $this-&gt;filePath = $this-&gt;getFilePath();</div><div class="line">        $this-&gt;fileName = $this-&gt;getFileName();</div><div class="line">        $dirname = dirname($this-&gt;filePath);</div><div class="line"></div><div class="line">        //检查文件大小是否超出限制</div><div class="line">        if (!$this-&gt;checkSize()) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_SIZE_EXCEED&quot;);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //检查是否不允许的文件格式</div><div class="line">        if (!$this-&gt;checkType()) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_TYPE_NOT_ALLOWED&quot;);</div><div class="line">            return;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // //创建目录失败</div><div class="line">        // if (!file_exists($dirname) &amp;&amp; !mkdir($dirname, 0777, true)) &#123;</div><div class="line">        //     $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_CREATE_DIR&quot;);</div><div class="line">        //     return;</div><div class="line">        // &#125; else if (!is_writeable($dirname)) &#123;</div><div class="line">        //     $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_DIR_NOT_WRITEABLE&quot;);</div><div class="line">        //     return;</div><div class="line">        // &#125;</div><div class="line">        //</div><div class="line">        // //移动文件</div><div class="line">        // if (!(move_uploaded_file($file[&quot;tmp_name&quot;], $this-&gt;filePath) &amp;&amp; file_exists($this-&gt;filePath))) &#123; //移动失败</div><div class="line">        //     $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_FILE_MOVE&quot;);</div><div class="line">        // &#125; else &#123; //移动成功</div><div class="line">        //     $this-&gt;stateInfo = $this-&gt;stateMap[0];</div><div class="line">        // &#125;</div><div class="line">        //        include_once(&apos;../../../app/Services/oss.php&apos;);</div><div class="line">        //        \App\Services\OSS::upload($osspath, $serverpath);</div><div class="line">        include_once(&quot;oss.php&quot;);</div><div class="line">        //取得临时地址</div><div class="line">        $serverpath = $file[&quot;tmp_name&quot;];</div><div class="line">        //获得文件类型</div><div class="line">        $titles = $this-&gt;fileType;</div><div class="line">        //拼接文件名</div><div class="line">        $key = time() . rand(10000, 99999999) .$titles;</div><div class="line">        //上传文件夹路径</div><div class="line">        $osspath = &quot;news/content/&quot; . $key;</div><div class="line">        //上传结果</div><div class="line">        $result = OSS::upload($osspath, $serverpath);</div><div class="line">        //拼接url</div><div class="line">        $this-&gt;fullName = &apos;http://yourself-bucket-name.oss-cn-beijing.aliyuncs.com/&apos;.$osspath;</div><div class="line">        //判断结果，给定返回值。</div><div class="line">        if ($result) &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;stateMap[0];</div><div class="line">            &#125; else &#123;</div><div class="line">            $this-&gt;stateInfo = $this-&gt;getStateInfo(&quot;ERROR_FILE_MOVE&quot;);</div><div class="line">        &#125;</div><div class="line">				//上传后，删除临时文件</div><div class="line">       /* @unlink($file[&quot;tmp_name&quot;]);*/</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>此处要注意修改并维持页面回调当前上传文件的各项信息getFileInfo()方法内的参数。</p>
+<h3 id="3-添加oss-php"><a href="#3-添加oss-php" class="headerlink" title="3.添加oss.php"></a>3.添加oss.php</h3><p>在php的目录下新建oss.php文件，给ueditor添加阿里云oss的支持。  </p>
+<pre><code>&lt;?php
+/*
+  time: 2016-12-30
+  author: 马闯
+  blog: martist.cn
+*/
+require_once(&apos;../../../vendor/autoload.php&apos;);
+
+use JohnLui\AliyunOSS\AliyunOSS;
+
+class OSS
+{
+
+    private $ossClient;
+    private static $bucketName;
+    public $ossServer = &apos;http://oss-cn-beijing.aliyuncs.com&apos;;                   // 外网
+    public $ossServerInternal = &apos;http://oss-cn-beijing-internal.aliyuncs.com&apos;;       // 内网
+    public $AccessKeyId = &apos;wwwwwwwwwwww&apos;;                      // key
+    public $AccessKeySecret = &apos;wwwwwwwwwwwww&apos;;          // secret
+    public $BucketName = &apos;bucket&apos;;                // bucket
+    public function __construct($isInternal = false)
+    {
+        $serverAddress = $isInternal ? $this -&gt; ossServerInternal : $this -&gt; ossServer;
+        $this-&gt;ossClient = AliyunOSS::boot(
+            $serverAddress,
+            $this -&gt; AccessKeyId,
+            $this -&gt; AccessKeySecret
+        );
+    }
+
+    public static function upload($ossKey, $filePath)
+    {
+        $oss = new OSS(false); // 上传文件使用内网，免流量费
+        $oss-&gt;ossClient-&gt;setBucket(&apos;weiyuyan&apos;);
+        $res = $oss-&gt;ossClient-&gt;uploadFile($ossKey, $filePath);
+        return $res;
+    }
+
+    /**
+     * 直接把变量内容上传到oss
+     * @param $osskey
+     * @param $content
+     */
+    public static function uploadContent($osskey, $content)
+    {
+        $oss = new OSS(false); // 上传文件使用内网，免流量费
+        $oss-&gt;ossClient-&gt;setBucket($this -&gt; BucketName);
+        $oss-&gt;ossClient-&gt;uploadContent($osskey, $content);
+
+    }
+
+    /**
+     * 删除存储在oss中的文件
+     *
+     * @param string $ossKey 存储的key（文件路径和文件名）
+     * @return
+     */
+    public static function deleteObject($ossKey)
+    {
+        $oss = new OSS(false); // 上传文件使用内网，免流量费
+
+        return $oss-&gt;ossClient-&gt;deleteObject($this -&gt; BucketName, $ossKey);
+    }
+
+    /**
+     * 复制存储在阿里云OSS中的Object
+     *
+     * @param string $sourceBuckt 复制的源Bucket
+     * @param string $sourceKey - 复制的的源Object的Key
+     * @param string $destBucket - 复制的目的Bucket
+     * @param string $destKey - 复制的目的Object的Key
+     * @return Models\CopyObjectResult
+     */
+    public function copyObject($sourceBuckt, $sourceKey, $destBucket, $destKey)
+    {
+        $oss = new OSS(true); // 上传文件使用内网，免流量费
+
+        return $oss-&gt;ossClient-&gt;copyObject($sourceBuckt, $sourceKey, $destBucket, $destKey);
+    }
+
+    /**
+     * 移动存储在阿里云OSS中的Object
+     *
+     * @param string $sourceBuckt 复制的源Bucket
+     * @param string $sourceKey - 复制的的源Object的Key
+     * @param string $destBucket - 复制的目的Bucket
+     * @param string $destKey - 复制的目的Object的Key
+     * @return Models\CopyObjectResult
+     */
+    public function moveObject($sourceBuckt, $sourceKey, $destBucket, $destKey)
+    {
+        $oss = new OSS(true); // 上传文件使用内网，免流量费
+
+        return $oss-&gt;ossClient-&gt;moveObject($sourceBuckt, $sourceKey, $destBucket, $destKey);
+    }
+
+    public static function getUrl($ossKey)
+    {
+        $oss = new OSS();
+        $oss-&gt;ossClient-&gt;setBucket($this -&gt; BucketName);
+        return $oss-&gt;ossClient-&gt;getUrl($ossKey, new \DateTime(&quot;+1 day&quot;));
+    }
+
+    public static function createBucket($bucketName)
+    {
+        $oss = new OSS();
+        return $oss-&gt;ossClient-&gt;createBucket($bucketName);
+    }
+
+    public static function getAllObjectKey($bucketName)
+    {
+        $oss = new OSS();
+        return $oss-&gt;ossClient-&gt;getAllObjectKey($bucketName);
+    }
+
+    /**
+     * 获取指定Object的元信息
+     *
+     * @param  string $bucketName 源Bucket名称
+     * @param  string $key 存储的key（文件路径和文件名）
+     * @return object 元信息
+     */
+    public static function getObjectMeta($bucketName, $osskey)
+    {
+        $oss = new OSS();
+        return $oss-&gt;ossClient-&gt;getObjectMeta($bucketName, $osskey);
+    }
+
+}
+</code></pre><p>ok ! 这样便实现了在ueditor中集成阿里云oss文件上传的功能。<br><strong>Thanks</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/08/02/文件上传OSS 三部曲（三）/" data-id="cj89jua4y001vsf2njhe4jlhv" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/02/大负载高并发网站的前期准备/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          大并发高负载网站的前期准备
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/01/创业圈，什么是“天派”“地派”？/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">entrepreneurship圈，什么事天派和地派</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-blade模板载入编辑器"><span class="toc-number">1.</span> <span class="toc-text">1.blade模板载入编辑器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-配置"><span class="toc-number">2.</span> <span class="toc-text">2.配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-添加oss-php"><span class="toc-number">3.</span> <span class="toc-text">3.添加oss.php</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

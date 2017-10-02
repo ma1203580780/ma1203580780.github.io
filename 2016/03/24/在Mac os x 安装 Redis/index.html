@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Mac os x 安装 Redis | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="安装1、下载redis 安装包打开浏览器输入地址： http://download.redis.io/redis-stable.tar.gz  下载 redis 最新稳定安装包 mac os下载的文件默认会保存在Downloads 文件下. 2、编译&amp;amp;安装Redis打开终端进入Downloads目录: cd Downloads 解压刚才下载的Redis 安装包： tar xvzf red">
+<meta name="keywords" content="mac,redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Mac os x 安装 Redis">
+<meta property="og:url" content="http://martist.cn/2016/03/24/在Mac os x 安装 Redis/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="安装1、下载redis 安装包打开浏览器输入地址： http://download.redis.io/redis-stable.tar.gz  下载 redis 最新稳定安装包 mac os下载的文件默认会保存在Downloads 文件下. 2、编译&amp;amp;安装Redis打开终端进入Downloads目录: cd Downloads 解压刚才下载的Redis 安装包： tar xvzf red">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-01T16:11:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在Mac os x 安装 Redis">
+<meta name="twitter:description" content="安装1、下载redis 安装包打开浏览器输入地址： http://download.redis.io/redis-stable.tar.gz  下载 redis 最新稳定安装包 mac os下载的文件默认会保存在Downloads 文件下. 2、编译&amp;amp;安装Redis打开终端进入Downloads目录: cd Downloads 解压刚才下载的Redis 安装包： tar xvzf red">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-在Mac os x 安装 Redis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/03/24/在Mac os x 安装 Redis/" class="article-date">
+  <time datetime="2016-03-24T01:28:51.000Z" itemprop="datePublished">2016-03-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mac/">mac</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在Mac os x 安装 Redis
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="1、下载redis-安装包"><a href="#1、下载redis-安装包" class="headerlink" title="1、下载redis 安装包"></a>1、下载redis 安装包</h3><p>打开浏览器输入地址：</p>
+<pre><code>http://download.redis.io/redis-stable.tar.gz 
+</code></pre><p>下载 redis 最新稳定安装包</p>
+<p>mac os下载的文件默认会保存在Downloads 文件下.</p>
+<h3 id="2、编译-amp-安装Redis"><a href="#2、编译-amp-安装Redis" class="headerlink" title="2、编译&amp;安装Redis"></a>2、编译&amp;安装Redis</h3><p>打开终端进入Downloads目录:</p>
+<pre><code>cd Downloads
+</code></pre><p>解压刚才下载的Redis 安装包：</p>
+<pre><code>tar xvzf redis-stable.tar.gz
+</code></pre><p>在Downloads目录下会生成 redis-stable 目录，</p>
+<p>在终端进入这个目录：</p>
+<pre><code>cd redis-stable
+</code></pre><p>编译源代码：</p>
+<pre><code>make
+</code></pre><p>编译成功后会在 redis-stable/src 下生成 redis-server(redis 服务) 和 redis-cli (redis 命令行客户端),</p>
+<p>拷贝redis-server 和 redis-cli 到 /usr/local/bin/</p>
+<pre><code>sudo cp redis-server /usr/local/bin/
+
+sudo cp redis-cli /usr/local/bin/
+</code></pre><p>3、启动 </p>
+<pre><code>redis-server
+</code></pre><p>4、启动 redis-cli</p>
+<p>另打开终端窗口，输入：</p>
+<pre><code>redis-cli
+</code></pre><p>出现 </p>
+<pre><code>127.0.0.1:6379&gt; ，接着输入 ping, 如出现 
+
+127.0.0.1:6379&gt; ping
+
+PONG
+</code></pre><p>说明 redis 已正常工作</p>
+<p>5、常见问题</p>
+<p>如果redis server 启动几分钟后提示如下错误：</p>
+<pre><code>[35763] 04 Mar 01:51:47.088 * 1 changes in 900 seconds. Saving...
+[35763] 04 Mar 01:51:47.088 * Background saving started by pid 43313
+[43313] 04 Mar 01:51:47.088 # Failed opening .rdb for saving: Permission denied
+</code></pre><p>解决办法：关掉当前redis server , 利用 sudo redis-server 启动redis  </p>
+<h2 id="mac安装Redis可视化工具-Redis-Desktop-Manager"><a href="#mac安装Redis可视化工具-Redis-Desktop-Manager" class="headerlink" title="mac安装Redis可视化工具-Redis Desktop Manager"></a>mac安装Redis可视化工具-Redis Desktop Manager</h2><p>Redis是一个超精简的基于内存的键值对数据库(key-value)，一般对并发有一定要求的应用都用其储存session，乃至整个数据库。不过它公自带一个最小化的命令行式的数据库管理工具，有时侯使用起来并不方便。不过Github上面已经有了很多图形化的管理工具，而且都针对REDIS做了一些优化，如自动折叠带schema的key等。</p>
+<p>Redis Desktop Manager<br>一款基于Qt5的跨平台Redis桌面管理软件<br>支持: Windows 7+, Mac OS X 10.10+, Ubuntu 14+<br>特点： C++ 编写，响应迅速，性能好。但不支持数据库备份与恢复。</p>
+<p>安装方法</p>
+<p>1.安装brew cask :</p>
+<p>在终端中输入下面语句 回车</p>
+<pre><code>ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot; &lt; /dev/null 2&gt; /dev/null ; brew install caskroom/cask/brew-cask 2&gt; /dev/null
+</code></pre><p>可能会需要你的mac密码，输入即可<br>安装Redis Desktop Manager</p>
+<p>2.安装完cask之后，在终端中输入 回车</p>
+<pre><code>brew cask install rdm
+</code></pre><p>也可以去项目的github找最新的版本</p>
+<pre><code>https://github.com/uglide/RedisDesktopManager/releases/
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/03/24/在Mac os x 安装 Redis/" data-id="cj89jua4o001dsf2n3wpk6vqy" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mac/">mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/redis/">redis</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2016/05/19/七牛云jssdk应用总结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          七牛云js-sdk应用总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/14/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">nginx+php-fpm的502问题解决记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、下载redis-安装包"><span class="toc-number">1.1.</span> <span class="toc-text">1、下载redis 安装包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、编译-amp-安装Redis"><span class="toc-number">1.2.</span> <span class="toc-text">2、编译&安装Redis</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mac安装Redis可视化工具-Redis-Desktop-Manager"><span class="toc-number">2.</span> <span class="toc-text">mac安装Redis可视化工具-Redis Desktop Manager</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

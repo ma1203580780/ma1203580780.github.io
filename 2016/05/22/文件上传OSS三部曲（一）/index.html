@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>文件上传OSS三部曲（一） | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全和高可靠的云存储服务。RESTful API的平台无关性，容量和处理能力的弹性扩展，按实际容量付费真正使您专注于核心业务。    第一步，给大家普及下OSS大法好：    ___     __    _                                    ____    _____">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传OSS三部曲（一）">
+<meta property="og:url" content="http://martist.cn/2016/05/22/文件上传OSS三部曲（一）/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全和高可靠的云存储服务。RESTful API的平台无关性，容量和处理能力的弹性扩展，按实际容量付费真正使您专注于核心业务。    第一步，给大家普及下OSS大法好：    ___     __    _                                    ____    _____">
+<meta property="og:locale" content="简体中文">
+<meta property="og:image" content="http://img.alicdn.com/tps/TB1QMVOKXXXXXbwXFXXXXXXXXXX-32-32.png">
+<meta property="og:image" content="http://img.alicdn.com/tps/TB1oGFWKXXXXXbxXpXXXXXXXXXX-32-32.png">
+<meta property="og:image" content="http://img.alicdn.com/tps/TB1dOXJKXXXXXXvXVXXXXXXXXXX-32-32.png">
+<meta property="og:image" content="http://img.alicdn.com/tps/TB15S64KXXXXXcrXpXXXXXXXXXX-32-32.png">
+<meta property="og:image" content="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/PiBPGDxjng.png">
+<meta property="og:image" content="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/2MJbnCh088.png">
+<meta property="og:image" content="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/Kz3gAHij8I.png">
+<meta property="og:updated_time" content="2017-10-01T16:11:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件上传OSS三部曲（一）">
+<meta name="twitter:description" content="对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全和高可靠的云存储服务。RESTful API的平台无关性，容量和处理能力的弹性扩展，按实际容量付费真正使您专注于核心业务。    第一步，给大家普及下OSS大法好：    ___     __    _                                    ____    _____">
+<meta name="twitter:image" content="http://img.alicdn.com/tps/TB1QMVOKXXXXXbwXFXXXXXXXXXX-32-32.png">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-文件上传OSS三部曲（一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/22/文件上传OSS三部曲（一）/" class="article-date">
+  <time datetime="2016-05-21T16:00:00.000Z" itemprop="datePublished">2016-05-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      文件上传OSS三部曲（一）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p><strong>对象存储</strong>（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全和高可靠的云存储服务。RESTful API的平台无关性，容量和处理能力的弹性扩展，按实际容量付费真正使您专注于核心业务。   </p>
+<p>第一步，给大家普及下<strong>OSS大法好</strong>：  </p>
+<p><pre></pre></p>
+<pre><code>___     __    _                                    ____    _____   _____
+</code></pre><p>   /   |   / /   (<em>)   <strong>  </strong>  <strong>  </strong>   <strong>__          / </strong> \  / __</em>/  / <strong>_/<br>  / /| |  / /   / /   / / / / / / / /  / </strong> \        / / / /  _<em> \   __ \<br> / __</em> | / /   / /   / /<em>/ / / /</em>/ /  / / / /       / /<em>/ /  __</em>/ /  <strong><em>/ /<br>/</em>/  |<em>|/</em>/   /_/    \</strong>, /  _<em>,</em>/  /<em>/ /</em>/        _<strong>_/  /__</strong>/  /<strong><strong>/<br>                    /</strong></strong>/<br></p>
+<table><br><br>      <thead><br>      <tr><br>        <th style="width: 200px"></th><br>        <th><i class="icon-oss-big margin-right"></i>对象存储 OSS</th><br>        <th>自建服务器存储</th><br><br><br>      </tr><br>      </thead><br><br>      <tbody><br><br><br>      <tr><br>        <td style="width: 200px"><h3><img src="//img.alicdn.com/tps/TB1QMVOKXXXXXbwXFXXXXXXXXXX-32-32.png">可靠性</h3></td><br>        <td>服务可用性不低于<b>99.9%</b>。<br>规模自动扩展，不影响对外服务；<br>数据持久性不低于<b>99.99999999%</b>。数据自动<b>多重冗余备份</b></td><br>        <td>受限于硬件可靠性，易出问题，一旦出现磁盘坏道，容易出现不可逆转的数据丢失。<br>人工数据恢复困难、耗时、耗力。</td><br><br><br>      </tr><br><br>      <tr><br>        <td style="width: 200px"><h3><img src="//img.alicdn.com/tps/TB1oGFWKXXXXXbxXpXXXXXXXXXX-32-32.png">安全</h3></td><br>        <td>提供企业级<b>多层次安全防护</b>，多用户资源隔离机制;支持<b>跨区域复制、异地容灾</b>机制 <br>提供多种鉴权和授权机制及白名单、防盗链、主子账号功能</td><br>        <td>清洗和黑洞设备需要另外购买，价格昂贵<br>安全机制需要单独实现，开发和维护成本高</td><br><br><br>      </tr><br><br>      <tr><br>        <td style="width: 200px"><h3><img src="//img.alicdn.com/tps/TB1dOXJKXXXXXXvXVXXXXXXXXXX-32-32.png">成本</h3></td><br>        <td><b>高性价比</b>最低只需要0.14/GB/月<br><b>多线BGP</b>骨干网络，无带宽限制，<b>上行流量免费</b><br>无需运维人员与托管费用，<b>0成本运维</b></td><br>        <td>一次性投入高，资源利用率很低 <br>存储受硬盘容量限制，需人工扩容 <br>单线或双线接入速度慢，有带宽限制，峰值时期需人工扩容 <br>需专人运维，成本高</td><br><br><br>      </tr><br><br>      <tr><br>        <td style="width: 200px"><h3><img src="//img.alicdn.com/tps/TB15S64KXXXXXcrXpXXXXXXXXXX-32-32.png">数据处理能力</h3></td><br>        <td>提供图片处理、音视频转码、内容加速分发、鉴黄服务、归档服务等<b>多种数据增值服务</b>，并不断丰富中</td><br>        <td>需要额外采购，单独部署</td><br>                </tr><br>      </tbody><br>    </table>
+
+<p><br><br>OSS是什么？  它相对自建服务器存储优势在哪里？  我们怎么使用OSS？<br>一些详细深入的介绍，可见阿里云官网（在看完本文可以初步使用后，你再去深入了解，现在不要走吖吖吖）。<a href="https://www.aliyun.com/product/oss/" target="_blank" rel="external">Touch me</a><br><strong>环境：</strong><br>在lnmp环境下基于laravel5.1LTS框架。当然，该组件支持php任何框架。</p>
+<p><strong>安装：</strong>      </p>
+<pre><code>composer require &quot;johnlui/aliyun-oss&quot;      
+</code></pre><p><strong>配置：</strong><br>此处可参考作者推荐配置方式，详情请点击<a href="https://packagist.org/packages/johnlui/aliyun-oss" target="_blank" rel="external">Touch me</a><br>此处把composer链接引用过来，并贴上部分aliyunoss组件文章的部分代码，是为了让初学者不需要页面切换，只需要看一篇教程，就可以学到怎样使用OSS，增强可读性。<br><strong>构建 Service 文件：</strong><br>新建 app/services/OSS.php：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">namespace App\Services;</div><div class="line">use JohnLui\AliyunOSS\AliyunOSS;</div><div class="line">use Config;</div><div class="line">class OSS &#123;</div><div class="line">  private $ossClient;</div><div class="line">  public function __construct($isInternal = false)</div><div class="line">  &#123;</div><div class="line">    $serverAddress = $isInternal ? Config::get(&apos;app.ossServerInternal&apos;) : Config::get(&apos;app.ossServer&apos;);</div><div class="line">    $this-&gt;ossClient = AliyunOSS::boot(</div><div class="line">      $serverAddress,</div><div class="line">      Config::get(&apos;app.AccessKeyId&apos;),</div><div class="line">      Config::get(&apos;app.AccessKeySecret&apos;)</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">  public static function upload($ossKey, $filePath)</div><div class="line">  &#123;</div><div class="line">    $oss = new OSS(true); // 上传文件使用内网，免流量费</div><div class="line">    $oss-&gt;ossClient-&gt;setBucket(&apos;你的 bucket 名称&apos;);</div><div class="line">    return $oss-&gt;ossClient-&gt;uploadFile($ossKey, $filePath);</div><div class="line">  &#125;</div><div class="line">  /**</div><div class="line">   * 直接把变量内容上传到oss</div><div class="line">   * @param $osskey</div><div class="line">   * @param $content</div><div class="line">   */</div><div class="line">  public static function uploadContent($osskey,$content)</div><div class="line">  &#123;</div><div class="line">    $oss = new OSS(true); // 上传文件使用内网，免流量费</div><div class="line">    $oss-&gt;ossClient-&gt;setBucket(&apos;你的 bucket 名称&apos;);</div><div class="line">    return $oss-&gt;ossClient-&gt;uploadContent($osskey,$content);</div><div class="line">  &#125;</div><div class="line">  /**</div><div class="line">   * 删除存储在oss中的文件</div><div class="line">   *</div><div class="line">   * @param string $ossKey 存储的key（文件路径和文件名）</div><div class="line">   * @return</div><div class="line">   */</div><div class="line">  public static function deleteObject($ossKey)</div><div class="line">  &#123;</div><div class="line">      $oss = new OSS(true); // 上传文件使用内网，免流量费</div><div class="line">      return $oss-&gt;ossClient-&gt;deleteObject(&apos;你的 bucket 名称&apos;, $ossKey);</div><div class="line">  &#125;</div><div class="line">  /**</div><div class="line">   * 复制存储在阿里云OSS中的Object</div><div class="line">   *</div><div class="line">   * @param string $sourceBuckt 复制的源Bucket</div><div class="line">   * @param string $sourceKey - 复制的的源Object的Key</div><div class="line">   * @param string $destBucket - 复制的目的Bucket</div><div class="line">   * @param string $destKey - 复制的目的Object的Key</div><div class="line">   * @return Models\CopyObjectResult</div><div class="line">   */</div><div class="line">  public function copyObject($sourceBuckt, $sourceKey, $destBucket, $destKey)</div><div class="line">  &#123;</div><div class="line">      $oss = new OSS(true); // 上传文件使用内网，免流量费</div><div class="line">      return $oss-&gt;ossClient-&gt;copyObject($sourceBuckt, $sourceKey, $destBucket, $destKey);</div><div class="line">  &#125;</div><div class="line">  /**</div><div class="line">   * 移动存储在阿里云OSS中的Object</div><div class="line">   *</div><div class="line">   * @param string $sourceBuckt 复制的源Bucket</div><div class="line">   * @param string $sourceKey - 复制的的源Object的Key</div><div class="line">   * @param string $destBucket - 复制的目的Bucket</div><div class="line">   * @param string $destKey - 复制的目的Object的Key</div><div class="line">   * @return Models\CopyObjectResult</div><div class="line">   */</div><div class="line">  public function moveObject($sourceBuckt, $sourceKey, $destBucket, $destKey)</div><div class="line">  &#123;</div><div class="line">      $oss = new OSS(true); // 上传文件使用内网，免流量费</div><div class="line">      return $oss-&gt;ossClient-&gt;moveObject($sourceBuckt, $sourceKey, $destBucket, $destKey);</div><div class="line">  &#125;</div><div class="line">  public static function getUrl($ossKey)</div><div class="line">  &#123;</div><div class="line">    $oss = new OSS();</div><div class="line">    $oss-&gt;ossClient-&gt;setBucket(&apos;你的 bucket 名称&apos;);</div><div class="line">    return $oss-&gt;ossClient-&gt;getUrl($ossKey, new \DateTime(&quot;+1 day&quot;));</div><div class="line">  &#125;</div><div class="line">  public static function createBucket($bucketName)</div><div class="line">  &#123;</div><div class="line">    $oss = new OSS();</div><div class="line">    return $oss-&gt;ossClient-&gt;createBucket($bucketName);</div><div class="line">  &#125;</div><div class="line">  public static function getAllObjectKey($bucketName)</div><div class="line">  &#123;</div><div class="line">    $oss = new OSS();</div><div class="line">    return $oss-&gt;ossClient-&gt;getAllObjectKey($bucketName);</div><div class="line">  &#125;</div><div class="line">  /**</div><div class="line">   * 获取指定Object的元信息</div><div class="line">   * </div><div class="line">   * @param  string $bucketName 源Bucket名称</div><div class="line">   * @param  string $key 存储的key（文件路径和文件名）</div><div class="line">   * @return object 元信息</div><div class="line">   */</div><div class="line">  public static function getObjectMeta($bucketName, $osskey)</div><div class="line">  &#123;</div><div class="line">      $oss = new OSS();</div><div class="line">      return $oss-&gt;ossClient-&gt;getObjectMeta($bucketName, $osskey);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>放入自动加载：</strong><br>遵循 psr-0 的项目（如Laravel 4、CodeIgniter、TinyLara）中：<br>在 composer.json 中 autoload -&gt; classmap 处增加配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&quot;autoload&quot;: &#123;</div><div class="line">    &quot;classmap&quot;: [</div><div class="line">      &quot;app/services&quot;</div><div class="line">    ]</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>然后运行 <code>composer dump-autoload</code>。<br>遵循 psr-4 的项目（如 Laravel 5、Symfony）中：<br>无需配置，保证目录 App/Services 和命名空间 namespace App\Services; 一致即可自动加载。</p>
+<p><strong><em>注意：我们使用的laravel框架符合psr-4代码规范，所以这一步可省略。</em></strong> </p>
+<p><strong>增加相关配置</strong><br>作者建议在 app/config/app.php 中增加配置，本人建议在<em>app/config</em> 下面新建一个 <em>alioss.php</em> 文件然后在添加配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;?php  </div><div class="line">return [  </div><div class="line">    &apos;ossServer&apos; =&gt; env(&apos;ALIOSS_SERVER&apos;, null),                      // 外网</div><div class="line">    &apos;ossServerInternal&apos; =&gt; env(&apos;ALIOSS_SERVERINTERNAL&apos;, null),      // 内网</div><div class="line">    &apos;AccessKeyId&apos; =&gt; env(&apos;ALIOSS_KEYID&apos;, null),                     // key</div><div class="line">    &apos;AccessKeySecret&apos; =&gt; env(&apos;ALIOSS_KEYSECRET&apos;, null),             // secret</div><div class="line">    &apos;BucketName&apos; =&gt; env(&apos;ALIOSS_BUCKETNAME&apos;, null)                  // bucket</div><div class="line">];</div></pre></td></tr></table></figure></p>
+<p>根据laravel的生命周期可知，项目会首先加载<em>app/config</em>目录下文件，新建一个alioss.php便于和其他组件区分管理。<br>要去<strong>.env</strong>文件去配置。<br><strong>注意</strong>：<br>这里有一个大坑, 粗心的朋友一般不会发现, 在填写外网和公网配置的时候, 有的朋友直接在 OSS 管理控制台中把外网和内网一长串的链接复制走, 如下图:<br><img src="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/PiBPGDxjng.png" alt="坑！坑！坑！"><br>在这个组件中, 桶名称是需要额外填写的, 所以外网和内网哪儿, 只需要填写桶名后面的内容, 如图:<br><img src="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/2MJbnCh088.png" alt="坑！坑！坑！"><br>再有一点是填写外网和内网的时候需要加上 http:// 协议, 不然后面出错你又得掉坑半天出不来, 最终配置信息如下图:<br><img src="https://dn-phphub.qbox.me/uploads/images/201609/25/4430/Kz3gAHij8I.png" alt="坑！坑！坑！"></p>
+<p><strong>使用：</strong><br>首先引入命名空间 use App\Services\OSS;, 在 Laravel 5.1 中使用方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">use App\Services\OSS;</div><div class="line"></div><div class="line">// 上传一个文件</div><div class="line">OSS::upload(&apos;文件名&apos;, &apos;本地路径&apos;);</div><div class="line"></div><div class="line">// 打印出某个文件的外网链接</div><div class="line">echo OSS::getUrl(&apos;某个文件的名称&apos;);</div><div class="line"></div><div class="line">// 新增一个 Bucket。注意，Bucket 名称具有全局唯一性，也就是说跟其他人的 Bucket 名称也不能相同。</div><div class="line">OSS::createBucket(&apos;一个字符串&apos;);</div><div class="line"></div><div class="line">// 获取该 Bucket 中所有文件的文件名，返回 Array。</div><div class="line">OSS::getAllObjectKey(&apos;某个 Bucket 名称&apos;); </div><div class="line"></div><div class="line">// 指定 options 如：Content-Type 类型</div><div class="line">OSS::upload(&apos;文件名&apos;, &apos;文件路径&apos;, [</div><div class="line">    &apos;ContentType&apos; =&gt; &apos;application/pdf&apos;,</div><div class="line">    // ...</div><div class="line"></div><div class="line">])</div></pre></td></tr></table></figure></p>
+<p><strong>实际使用：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">public function store(Request $request)</div><div class="line">    &#123;</div><div class="line">        $input=$request-&gt;except(&apos;_token&apos;);</div><div class="line">//        dd($input);</div><div class="line">        // 获取表单提交的图片</div><div class="line">        $pic = $request-&gt;file(&apos;picture_url&apos;);</div><div class="line">        // 判断图片有效性</div><div class="line">//        dd($pic);</div><div class="line">        //如果有上传图片</div><div class="line">        if(!empty($pic))&#123;</div><div class="line">            if (!$pic-&gt;isValid()) &#123;</div><div class="line">                return back()-&gt;withErrors(&apos;上传图片无效..&apos;);</div><div class="line">            &#125;else&#123;</div><div class="line">                //获取后缀名</div><div class="line">                $titles = $pic-&gt;getClientOriginalExtension();</div><div class="line">                // 获取图片在临时文件中的地址</div><div class="line">                $picpath = $pic-&gt;getRealPath();</div><div class="line">                // 制作文件名</div><div class="line">                $key = time() . rand(10000, 99999999) . &apos;.&apos;.$titles;</div><div class="line">                //阿里 OSS 图片上传</div><div class="line">                $result = OSS::upload(&apos;news/&apos;.$key, $picpath);</div><div class="line"></div><div class="line">                if (!$result) return back()-&gt;withErrors(&apos;上传图片失败..&apos;);</div><div class="line">                $input[&apos;picture_url&apos;]=env(&apos;ALIOSS_ACCESS&apos;,&apos;http://weiyuyan.oss-cn-beijing.aliyuncs.com/&apos;).&apos;news/&apos;.$key;</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>附录：<br>官方其他的一些使用指南<a href="https://github.com/johnlui/AliyunOSS/blob/master/OSSExample.php" target="_blank" rel="external">Touch Me</a></p>
+<p><strong>Thanks</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/05/22/文件上传OSS三部曲（一）/" data-id="cj89jua530025sf2nt0ski13v" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2016/05/26/文件上传OSS 三部曲（二）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          文件上传OSS三部曲（二）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/19/七牛云jssdk应用总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">七牛云js-sdk应用总结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">可靠性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">成本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">数据处理能力</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ubuntu的用户和用户组 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ubuntu的用户权限">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu的用户和用户组">
+<meta property="og:url" content="http://martist.cn/2015/10/12/添加或删除ubuntu用户和组/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="ubuntu的用户权限">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-01T23:19:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ubuntu的用户和用户组">
+<meta name="twitter:description" content="ubuntu的用户权限">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-添加或删除ubuntu用户和组" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/12/添加或删除ubuntu用户和组/" class="article-date">
+  <time datetime="2015-10-12T04:30:56.000Z" itemprop="datePublished">2015-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ubuntu的用户和用户组
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <a id="more"></a>
+<p>在创建用户时，需要为新建用户指定一用户组，如果不指定其用户所属的工作组，自动会生成一个与用户名同名的工作组。创建用户user1的时候指定其所属工作组users，例：useradd –g users user1</p>
+<h3 id="一、创建用户："><a href="#一、创建用户：" class="headerlink" title="一、创建用户："></a>一、创建用户：</h3><p><strong>1、使用命令 useradd</strong><br>例：<br><code>useradd user1</code><br>——创建用户user1<br>    useradd –e 12/30/2009 user2——创建user2,指定有效期2009-12-30到期<br>    用户的缺省UID从500向后顺序增加，500以下作为系统保留账号，可以指定UID，<br>例：<code>useradd –u 600 user3</code></p>
+<p><strong>2、使用 passwd 命令为新建用户设置密码</strong><br>例：<code>passwd user1</code><br>注意：没有设置密码的用户不能使用。</p>
+<p><strong>3、命令 usermod 修改用户账户</strong><br>例：将用户 user1的登录名改为  u1，<br><code>usermod –l u1 user1</code><br>例：将用户 user1 加入到 users组中，<br><code>usermod –g users user1</code></p>
+<p>例：将用户 user1 目录改为/users/us1<br><code>usermod –d /users/us1 user1</code></p>
+<p><strong>4、使用命令 userdel 删除用户账户</strong><br>例：删除用户user2<br><code>userdel user2</code><br>例：删除用户 user3，同时删除他的工作目录<br><code>userdel –r user3</code></p>
+<p><strong>5、查看用户信息</strong><br>id命令查看一个用户的UID和GID, 例：查看user4的id<br>id user4<br>finger命令 ——可以查看用户的主目录、启动shell、用户名、地址、电话等信息<br>例：<code>finger user4</code></p>
+<h3 id="二、用户组："><a href="#二、用户组：" class="headerlink" title="二、用户组："></a>二、用户组：</h3><p><strong>6、命令 groupadd创建用户组</strong><br><code>groupadd –g 888 users</code><br>创建一个组users，其GID为888</p>
+<p><strong>7、命令 gpasswd为组添加用户</strong><br>只有root和组管理员能够改变组的成员：<br>例：把 user1加入users组<br><code>gpasswd –a user1 users</code><br>例：把 user1退出users组<br><code>gpasswd –d user1 users</code><br><strong>8、命令groupmod修改组</strong><br><code>groupmod –n user users</code><br>修改组名user为users</p>
+<p><strong>9、groupdel删除组</strong><br><code>groupdel users</code><br>删除组users</p>
+<p>ubuntu和windows一样，可以任意创建或者删除新的用户，windows下比较简单，ubuntu下需要使用命令，不过操作起来不是很繁琐，所以我尽量写的详细一些。</p>
+<h3 id="如何创建ubuntu新用户？"><a href="#如何创建ubuntu新用户？" class="headerlink" title="如何创建ubuntu新用户？"></a>如何创建ubuntu新用户？</h3><p>首先打开终端，输入：sudo adduser username，系统会提示以下信息：</p>
+<pre><code>正在添加用户“username”...
+
+正在添加新组“username”(1001)...
+
+正在添加新用户“username”(1001)到组“username”...
+
+创建主目录“/home/username”...
+
+ 正在从“/etc、skel”复制文件...
+
+ 输入新的 UNIX 口令：(此处大家注意，不是输入你当前用户的密码，而是输入你要创建新用户的密码)
+
+ 重新输入新的 UNIX 口令：(再输一次即可)
+
+ passwd：已成功更新密码
+
+ Changing the user information for username
+ Enter the new value, or press ENTER for the default
+ Full Name []: yangyang (输入新用户的名称)
+ Room Number []:
+ Work Phone []:
+ Home Phone []:
+ Other []:
+ 这个信息是否正确? [Y/n] y
+</code></pre><p>到了这一步，新用户已经添加成功了，此时我们可以打 ls /home查看一下，如果显示 username yang，侧代表用户创建成功。</p>
+<h3 id="如何删除ubuntu用户？"><a href="#如何删除ubuntu用户？" class="headerlink" title="如何删除ubuntu用户？"></a>如何删除ubuntu用户？</h3><p>ubuntu删除用户同样是在终端下操作的，需要注意的是，如果要删除的用户当前已登陆，是删除不掉的，必须注销掉当前用户切换为另一个用户下，才能删除。<br>举个例子，刚才我新建立了一个用户为 yang 的用户，例如我现在用用户 yang 登陆了桌面，此时如果我想删除 yang 这个用户，是删除不掉的。正确的操作方法是，我注销掉 yang，然后使用 root 登陆到桌面，再删除 yang 即可。     </p>
+<p>删除ubuntu用户的命令比较容易记：<code>sudo userdel username</code>，例如我想删除 yang ，则输入：<code>sudo userdel yang</code>，删除成功后，系统无任何提示。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2015/10/12/添加或删除ubuntu用户和组/" data-id="cj89jua520022sf2njoyz7doq" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+ <script src="/jquery/jquery.min.js"></script>
+  <div id="random_posts">
+    <h2>推荐文章</h2>
+    <div class="random_posts_ul">
+      <script>
+          var random_count =4
+          var site = {BASE_URI:'/'};
+          function load_random_posts(obj) {
+              var arr=site.posts;
+              if (!obj) return;
+              // var count = $(obj).attr('data-count') || 6;
+              for (var i, tmp, n = arr.length; n; i = Math.floor(Math.random() * n), tmp = arr[--n], arr[n] = arr[i], arr[i] = tmp);
+              arr = arr.slice(0, random_count);
+              var html = '<ul>';
+            
+              for(var j=0;j<arr.length;j++){
+                var item=arr[j];
+                html += '<li><strong>' + 
+                item.date + ':&nbsp;&nbsp;<a href="' + (site.BASE_URI+item.uri) + '">' + 
+                (item.title || item.uri) + '</a></strong>';
+                if(item.excerpt){
+                  html +='<div class="post-excerpt">'+item.excerpt+'</div>';
+                }
+                html +='</li>';
+                
+              }
+              $(obj).html(html + '</ul>');
+          }
+          $('.random_posts_ul').each(function () {
+              var c = this;
+              if (!site.posts || !site.posts.length){
+                  $.getJSON(site.BASE_URI + 'js/posts.js',function(json){site.posts = json;load_random_posts(c)});
+              } 
+               else{
+                load_random_posts(c);
+              }
+          });
+      </script>
+    </div>
+  </div>
+
+    
+<nav id="article-nav">
+  
+    <a href="/2015/10/30/端口作用和范围/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          端口的作用和范围
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/03/22/悲观锁与乐观锁/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">乐观锁与悲观锁</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、创建用户："><span class="toc-number">1.</span> <span class="toc-text">一、创建用户：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、用户组："><span class="toc-number">2.</span> <span class="toc-text">二、用户组：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何创建ubuntu新用户？"><span class="toc-number">3.</span> <span class="toc-text">如何创建ubuntu新用户？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何删除ubuntu用户？"><span class="toc-number">4.</span> <span class="toc-text">如何删除ubuntu用户？</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;youemail@outlook.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+  
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "e2fb4051c49842688ce669e634bc983f",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+    
+
+  
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
