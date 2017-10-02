@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -113,7 +113,7 @@ cron start/running, process 1027
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2015/11/03/定时任务/" data-id="cj89kga9x001p452nrfuohrrm" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2015/11/03/定时任务/" data-id="cj89lanik001ph72n7vxp27vy" class="article-share-link">分享</a>
       
       
       
@@ -127,7 +127,7 @@ cron start/running, process 1027
 <nav id="article-nav">
   
     <a href="/2015/12/14/同源政策/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
           同源策略
@@ -137,7 +137,7 @@ cron start/running, process 1027
   
   
     <a href="/2015/10/30/端口作用和范围/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">端口的作用和范围</div>
     </a>
   
@@ -154,6 +154,8 @@ cron start/running, process 1027
       <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
        
+            <div id="SOHUCS" sid="2015/11/03/定时任务/"> </div>
+    
       
       
   </div>
@@ -172,7 +174,7 @@ cron start/running, process 1027
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、启动Cron服务"><span class="toc-number">1.</span> <span class="toc-text">一、启动Cron服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#…"><span class="toc-number"></span> <span class="toc-text">…</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#…-1"><span class="toc-number"></span> <span class="toc-text">…</span></a>
           </div>
@@ -204,10 +206,10 @@ cron start/running, process 1027
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
@@ -235,19 +237,47 @@ window.onload = function() {
 </script>
       
 
-  
-    <script>
-      var cloudTieConfig = {
-        url: document.location.href, 
-        sourceId: "",
-        productKey: "e2fb4051c49842688ce669e634bc983f",
-        target: "cloud-tie-wrapper"
-      };
-    </script>
-    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
-    
 
-  
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
 
 
 
