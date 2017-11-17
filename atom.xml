@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2017-11-17T04:15:23.289Z</updated>
+  <updated>2017-11-17T04:56:34.268Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://martist.cn/2017/11/13/OpenStack%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://martist.cn/2017/11/13/OpenStack学习笔记/</id>
     <published>2017-11-12T16:00:00.000Z</published>
-    <updated>2017-11-17T04:15:23.289Z</updated>
+    <updated>2017-11-17T04:56:34.268Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h3 id="什么是openstack？"><a href="#什么是openstack？" class="headerlink" title="什么是openstack？"></a>什么是openstack？</h3><p>它是Rackspace和NASA共同发起的开源项目，本身是一系列开源软件项目的组合，它的功能是基础设施资源的系统管理平台。它可以有效的管理cpu，硬盘等资源。</p><h3 id="OpenStack-可以干嘛？"><a href="#OpenStack-可以干嘛？" class="headerlink" title="OpenStack 可以干嘛？"></a>OpenStack 可以干嘛？</h3><p>它就是一个IaaS的云平台软件。实际应用场景非常多，凡是IaaS可以应用的地方Openstack都可以做到。比如虚拟主机，出售计算资源，公司内部IT云计算解决方案等等。</p><h3 id="OpenStack的镜像一般用哪个？"><a href="#OpenStack的镜像一般用哪个？" class="headerlink" title="OpenStack的镜像一般用哪个？"></a>OpenStack的镜像一般用哪个？</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CirrOS</div><div class="line">http://download.cirros-cloud.net/</div><div class="line">user:cirros     password:cubswin:)</div><div class="line">glance image-create --name cirros --disk-format qcow2 --container-format bare &lt; cirros-0.3.4-x86_64-disk.img</div></pre></td></tr></table></figure><p>测试 OpenStack 服务是否完好一般都用 CIRROS，体积小巧，只有 10M，上面是我做的笔记，最后一个是 GLANCE 的上传命令。</p><h3 id="OpenStack-是用什么语言开发的？"><a href="#OpenStack-是用什么语言开发的？" class="headerlink" title="OpenStack 是用什么语言开发的？"></a>OpenStack 是用什么语言开发的？</h3><p>一般就是 Python  、Java，你要知道 OpenStack是一个软件包，它整合了其他的开源软件，所以还有其他语言。</p><h1 id="主要功能组件"><a href="#主要功能组件" class="headerlink" title="主要功能组件"></a>主要功能组件</h1><p>Horizon：UI模块</p><p>keystone： 身份服务模块</p><p>service：即 服务，如Nova，Swift等， 需要在keystone注册</p><p>endpoint：可以理解为一个服务暴露出来的访问点</p><p>identify： 服务验证身份凭证</p><p>token：访问资源的令牌。</p><p>Catalog：提供可供与断电发现的服务注册表。</p><p>policy：暴露了一个基于规则的身份验证引擎</p><h1 id="易购环境集成"><a href="#易购环境集成" class="headerlink" title="易购环境集成"></a>易购环境集成</h1><p>不同的组件集成到keystone中</p><h1 id="open-stack组件介绍"><a href="#open-stack组件介绍" class="headerlink" title="open-stack组件介绍"></a>open-stack组件介绍</h1><h2 id="nova组件"><a href="#nova组件" class="headerlink" title="nova组件"></a>nova组件</h2><p>主要功能包括：<br>    实例生命周期管理<br>    计算资源管理<br>    向外提供rest风格api<br><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack1.png" alt=""></p><h2 id="Glance组件"><a href="#Glance组件" class="headerlink" title="Glance组件"></a>Glance组件</h2><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack2.png" alt=""></p><h2 id="swift组件"><a href="#swift组件" class="headerlink" title="swift组件"></a>swift组件</h2><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack3.png" alt=""></p><h2 id="cinder组件"><a href="#cinder组件" class="headerlink" title="cinder组件"></a>cinder组件</h2><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack4.png" alt=""></p><h2 id="neutron组件"><a href="#neutron组件" class="headerlink" title="neutron组件"></a>neutron组件</h2><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack5.png" alt=""></p><h1 id="组件关系"><a href="#组件关系" class="headerlink" title="组件关系"></a>组件关系</h1><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack6.png" alt=""></p><h1 id="访问控制流程"><a href="#访问控制流程" class="headerlink" title="访问控制流程"></a>访问控制流程</h1><p><img src="https://github.com/ma1203580780/ma1203580780.github.io/blob/master/images/openstack7.png" alt=""></p><p>参考文章：<a href="http://www.imooc.com/article/8989" target="_blank" rel="external">我的自学 OpenStack 云平台 之路（一）_慕课手记</a></p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h3 id="什么是openstack？"><a href="#什么是openstack？" class="headerlink" title="什么是openstack？"></a>什么是openstack？</h3><p>它是Rackspace和NASA共同发起的开源项目，本身是一系列开源软件项目的组合，它的功能是基础设施资源的系统管理平台。它可以有效的管理cpu，硬盘等资源。</p><h3 id="OpenStack-可以干嘛？"><a href="#OpenStack-可以干嘛？" class="headerlink" title="OpenStack 可以干嘛？"></a>OpenStack 可以干嘛？</h3><p>它就是一个IaaS的云平台软件。实际应用场景非常多，凡是IaaS可以应用的地方Openstack都可以做到。比如虚拟主机，出售计算资源，公司内部IT云计算解决方案等等。</p><h3 id="OpenStack的镜像一般用哪个？"><a href="#OpenStack的镜像一般用哪个？" class="headerlink" title="OpenStack的镜像一般用哪个？"></a>OpenStack的镜像一般用哪个？</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CirrOS</div><div class="line">http://download.cirros-cloud.net/</div><div class="line">user:cirros     password:cubswin:)</div><div class="line">glance image-create --name cirros --disk-format qcow2 --container-format bare &lt; cirros-0.3.4-x86_64-disk.img</div></pre></td></tr></table></figure><p>测试 OpenStack 服务是否完好一般都用 CIRROS，体积小巧，只有 10M，上面是我做的笔记，最后一个是 GLANCE 的上传命令。</p><h3 id="OpenStack-是用什么语言开发的？"><a href="#OpenStack-是用什么语言开发的？" class="headerlink" title="OpenStack 是用什么语言开发的？"></a>OpenStack 是用什么语言开发的？</h3><p>一般就是 Python  、Java，你要知道 OpenStack是一个软件包，它整合了其他的开源软件，所以还有其他语言。</p><h1 id="主要功能组件"><a href="#主要功能组件" class="headerlink" title="主要功能组件"></a>主要功能组件</h1><p>Horizon：UI模块</p><p>keystone： 身份服务模块</p><p>service：即 服务，如Nova，Swift等， 需要在keystone注册</p><p>endpoint：可以理解为一个服务暴露出来的访问点</p><p>identify： 服务验证身份凭证</p><p>token：访问资源的令牌。</p><p>Catalog：提供可供与断电发现的服务注册表。</p><p>policy：暴露了一个基于规则的身份验证引擎</p><h1 id="易购环境集成"><a href="#易购环境集成" class="headerlink" title="易购环境集成"></a>易购环境集成</h1><p>不同的组件集成到keystone中</p><h1 id="open-stack组件介绍"><a href="#open-stack组件介绍" class="headerlink" title="open-stack组件介绍"></a>open-stack组件介绍</h1><h2 id="nova组件"><a href="#nova组件" class="headerlink" title="nova组件"></a>nova组件</h2><p>主要功能包括：<br>    实例生命周期管理<br>    计算资源管理<br>    向外提供rest风格api<br><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack1.png" alt=""></p><h2 id="Glance组件"><a href="#Glance组件" class="headerlink" title="Glance组件"></a>Glance组件</h2><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack2.png" alt=""></p><h2 id="swift组件"><a href="#swift组件" class="headerlink" title="swift组件"></a>swift组件</h2><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack3.png" alt=""></p><h2 id="cinder组件"><a href="#cinder组件" class="headerlink" title="cinder组件"></a>cinder组件</h2><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack4.png" alt=""></p><h2 id="neutron组件"><a href="#neutron组件" class="headerlink" title="neutron组件"></a>neutron组件</h2><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack5.png" alt=""></p><h1 id="组件关系"><a href="#组件关系" class="headerlink" title="组件关系"></a>组件关系</h1><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack6.png" alt=""></p><h1 id="访问控制流程"><a href="#访问控制流程" class="headerlink" title="访问控制流程"></a>访问控制流程</h1><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/openstack7.png" alt=""></p><p>参考文章：<a href="http://www.imooc.com/article/8989" target="_blank" rel="external">我的自学 OpenStack 云平台 之路（一）_慕课手记</a></p>]]></content>
     
     <summary type="html">
     
@@ -323,28 +323,6 @@
   </entry>
   
   <entry>
-    <title>创业公司必经之路（二）</title>
-    <link href="http://martist.cn/2017/03/29/%E9%A9%AC%E9%97%AF%EF%BC%9A%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF%5B2%5D/"/>
-    <id>http://martist.cn/2017/03/29/马闯：创业公司必经之路[2]/</id>
-    <published>2017-03-28T16:00:00.000Z</published>
-    <updated>2017-10-02T04:57:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h2><ul><li>投资人不要股份的年底分红，那才多少啊，更愿意升值后套现。</li><li>地派利润率高，不愿上市分钱。</li><li>天派现金流好，利于做大，然后上市套现。</li><li>上市公司要的就是快速发展。</li><li>京东一年比一年亏损，但是现金流好，足够支持它去抢占市场，这也侧面说明他还在打基础，此时股价可能就是间断的上涨。</li><li>如果有一天京东止损了，说明他想开始赚钱了，这样说明市场不会开阔的更大，可以看到公司发展的极限了，即将走下坡路，所以股价反而会下跌。</li><li>代持股协议，适合中国金融市场。</li></ul><h2 id="兄弟会的模式"><a href="#兄弟会的模式" class="headerlink" title="兄弟会的模式"></a>兄弟会的模式</h2><p>派出开发团队去外包项目，赚的钱是有限的，此时帮助这些创业公司救火，可以要求获得一些股份作为回报。</p><h2 id="中国房地产"><a href="#中国房地产" class="headerlink" title="中国房地产"></a>中国房地产</h2><p>硬着陆 =&gt; 泡沫破裂。<br>软着陆 =&gt; 人民币贬值，房地产泡沫变小，不会太大而破裂。</p><h2 id="对赌协议"><a href="#对赌协议" class="headerlink" title="对赌协议"></a>对赌协议</h2><p>花费两个月左右时间，写一个商业计划书，差不多就可以去找天使轮投资了。天使轮（不超过1000W），也有总资轮，和合伙人投资的说法。<br>此处有一个对赌协议的存在。</p><p>投资人和个人签约，是无限责任公司。<br>投资人和公司签约，是有限责任公司。</p><p>投资人会选择和个人或者母公司签约，更有保障一些。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="entrepreneurship" scheme="http://martist.cn/categories/entrepreneurship/"/>
-    
-    
-      <category term="entrepreneurship" scheme="http://martist.cn/tags/entrepreneurship/"/>
-    
-  </entry>
-  
-  <entry>
     <title>https证书搭建</title>
     <link href="http://martist.cn/2017/03/29/https%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>http://martist.cn/2017/03/29/https环境搭建/</id>
@@ -363,6 +341,28 @@
     
     
       <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>创业公司必经之路（二）</title>
+    <link href="http://martist.cn/2017/03/29/%E9%A9%AC%E9%97%AF%EF%BC%9A%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF%5B2%5D/"/>
+    <id>http://martist.cn/2017/03/29/马闯：创业公司必经之路[2]/</id>
+    <published>2017-03-28T16:00:00.000Z</published>
+    <updated>2017-10-02T04:57:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h2><ul><li>投资人不要股份的年底分红，那才多少啊，更愿意升值后套现。</li><li>地派利润率高，不愿上市分钱。</li><li>天派现金流好，利于做大，然后上市套现。</li><li>上市公司要的就是快速发展。</li><li>京东一年比一年亏损，但是现金流好，足够支持它去抢占市场，这也侧面说明他还在打基础，此时股价可能就是间断的上涨。</li><li>如果有一天京东止损了，说明他想开始赚钱了，这样说明市场不会开阔的更大，可以看到公司发展的极限了，即将走下坡路，所以股价反而会下跌。</li><li>代持股协议，适合中国金融市场。</li></ul><h2 id="兄弟会的模式"><a href="#兄弟会的模式" class="headerlink" title="兄弟会的模式"></a>兄弟会的模式</h2><p>派出开发团队去外包项目，赚的钱是有限的，此时帮助这些创业公司救火，可以要求获得一些股份作为回报。</p><h2 id="中国房地产"><a href="#中国房地产" class="headerlink" title="中国房地产"></a>中国房地产</h2><p>硬着陆 =&gt; 泡沫破裂。<br>软着陆 =&gt; 人民币贬值，房地产泡沫变小，不会太大而破裂。</p><h2 id="对赌协议"><a href="#对赌协议" class="headerlink" title="对赌协议"></a>对赌协议</h2><p>花费两个月左右时间，写一个商业计划书，差不多就可以去找天使轮投资了。天使轮（不超过1000W），也有总资轮，和合伙人投资的说法。<br>此处有一个对赌协议的存在。</p><p>投资人和个人签约，是无限责任公司。<br>投资人和公司签约，是有限责任公司。</p><p>投资人会选择和个人或者母公司签约，更有保障一些。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="entrepreneurship" scheme="http://martist.cn/categories/entrepreneurship/"/>
+    
+    
+      <category term="entrepreneurship" scheme="http://martist.cn/tags/entrepreneurship/"/>
     
   </entry>
   
