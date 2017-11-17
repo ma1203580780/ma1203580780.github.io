@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2017-10-19T03:56:30.000Z</updated>
+  <updated>2017-11-17T04:09:55.428Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -15,6 +15,81 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OpenStack学习笔记</title>
+    <link href="http://martist.cn/2017/11/13/OpenStack%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://martist.cn/2017/11/13/OpenStack学习笔记/</id>
+    <published>2017-11-12T16:00:00.000Z</published>
+    <updated>2017-11-17T04:09:55.428Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h3 id="什么是openstack？"><a href="#什么是openstack？" class="headerlink" title="什么是openstack？"></a>什么是openstack？</h3><p>它是Rackspace和NASA共同发起的开源项目，本身是一系列开源软件项目的组合，它的功能是基础设施资源的系统管理平台。它可以有效的管理cpu，硬盘等资源。</p><h3 id="OpenStack-可以干嘛？"><a href="#OpenStack-可以干嘛？" class="headerlink" title="OpenStack 可以干嘛？"></a>OpenStack 可以干嘛？</h3><p>它就是一个IaaS的云平台软件。实际应用场景非常多，凡是IaaS可以应用的地方Openstack都可以做到。比如虚拟主机，出售计算资源，公司内部IT云计算解决方案等等。</p><h3 id="OpenStack的镜像一般用哪个？"><a href="#OpenStack的镜像一般用哪个？" class="headerlink" title="OpenStack的镜像一般用哪个？"></a>OpenStack的镜像一般用哪个？</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CirrOS</div><div class="line">http://download.cirros-cloud.net/</div><div class="line">user:cirros     password:cubswin:)</div><div class="line">glance image-create --name cirros --disk-format qcow2 --container-format bare &lt; cirros-0.3.4-x86_64-disk.img</div></pre></td></tr></table></figure><p>测试 OpenStack 服务是否完好一般都用 CIRROS，体积小巧，只有 10M，上面是我做的笔记，最后一个是 GLANCE 的上传命令。</p><h3 id="OpenStack-是用什么语言开发的？"><a href="#OpenStack-是用什么语言开发的？" class="headerlink" title="OpenStack 是用什么语言开发的？"></a>OpenStack 是用什么语言开发的？</h3><p>一般就是 Python  、Java，你要知道 OpenStack是一个软件包，它整合了其他的开源软件，所以还有其他语言。</p><h1 id="主要功能组件"><a href="#主要功能组件" class="headerlink" title="主要功能组件"></a>主要功能组件</h1><p>Horizon：UI模块</p><p>keystone： 身份服务模块</p><p>service：即 服务，如Nova，Swift等， 需要在keystone注册</p><p>endpoint：可以理解为一个服务暴露出来的访问点</p><p>identify： 服务验证身份凭证</p><p>token：访问资源的令牌。</p><p>Catalog：提供可供与断电发现的服务注册表。</p><p>policy：暴露了一个基于规则的身份验证引擎</p><h1 id="易购环境集成"><a href="#易购环境集成" class="headerlink" title="易购环境集成"></a>易购环境集成</h1><p>不同的组件集成到keystone中</p><h1 id="open-stack组件介绍"><a href="#open-stack组件介绍" class="headerlink" title="open-stack组件介绍"></a>open-stack组件介绍</h1><h2 id="nova组件"><a href="#nova组件" class="headerlink" title="nova组件"></a>nova组件</h2><p>主要功能包括：<br>    实例生命周期管理<br>    计算资源管理<br>    向外提供rest风格api<br><img src="/source/images/openstack1.png" alt=""></p><h2 id="Glance组件"><a href="#Glance组件" class="headerlink" title="Glance组件"></a>Glance组件</h2><p><img src="/source/images/openstack2.png" alt=""></p><h2 id="swift组件"><a href="#swift组件" class="headerlink" title="swift组件"></a>swift组件</h2><p><img src="/source/images/openstack3.png" alt=""></p><h2 id="cinder组件"><a href="#cinder组件" class="headerlink" title="cinder组件"></a>cinder组件</h2><p><img src="/source/images/openstack4.png" alt=""></p><h2 id="neutron组件"><a href="#neutron组件" class="headerlink" title="neutron组件"></a>neutron组件</h2><p><img src="/source/images/openstack5.png" alt=""></p><h1 id="组件关系"><a href="#组件关系" class="headerlink" title="组件关系"></a>组件关系</h1><p><img src="/source/images/openstack6.png" alt=""></p><h1 id="访问控制流程"><a href="#访问控制流程" class="headerlink" title="访问控制流程"></a>访问控制流程</h1><p><img src="/source/images/openstack7.png" alt=""></p><p>参考文章：<a href="http://www.imooc.com/article/8989" target="_blank" rel="external">我的自学 OpenStack 云平台 之路（一）_慕课手记</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h1&gt;&lt;h3 id=&quot;什么是openstack？&quot;&gt;&lt;a href=&quot;#什么是openstack？&quot; class=&quot;headerlink&quot; title=
+      
+    
+    </summary>
+    
+      <category term="OpenStack学习笔记" scheme="http://martist.cn/categories/OpenStack%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="云服务，docker" scheme="http://martist.cn/tags/%E4%BA%91%E6%9C%8D%E5%8A%A1%EF%BC%8Cdocker/"/>
+    
+      <category term="OpenStack" scheme="http://martist.cn/tags/OpenStack/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>清洗html标签和css样式</title>
+    <link href="http://martist.cn/2017/11/12/html%E6%A0%87%E7%AD%BE%E5%8E%BB%E6%8E%89/"/>
+    <id>http://martist.cn/2017/11/12/html标签去掉/</id>
+    <published>2017-11-11T16:00:00.000Z</published>
+    <updated>2017-11-17T04:09:55.432Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><pre><code>$content = preg_replace(&quot;/&lt;a[^&gt;]*&gt;/i&quot;, &quot;&quot;, $content);  $content = preg_replace(&quot;/&lt;\/a&gt;/i&quot;, &quot;&quot;, $content);   $content = preg_replace(&quot;/&lt;div[^&gt;]*&gt;/i&quot;, &quot;&quot;, $content);  $content = preg_replace(&quot;/&lt;\/div&gt;/i&quot;, &quot;&quot;, $content);      $content = preg_replace(&quot;/&lt;!--[^&gt;]*--&gt;/i&quot;, &quot;&quot;, $content);//注释内容  $content = preg_replace(&quot;/style=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式  $content = preg_replace(&quot;/class=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式  $content = preg_replace(&quot;/id=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式     $content = preg_replace(&quot;/lang=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式      $content = preg_replace(&quot;/width=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式   $content = preg_replace(&quot;/height=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式   $content = preg_replace(&quot;/border=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式   $content = preg_replace(&quot;/face=.+?[&apos;|\&quot;]/i&quot;,&apos;&apos;,$content);//去除样式   $content = preg_replace(&quot;/face=.+?[&apos;|\&quot;]/&quot;,&apos;&apos;,$content);//去除样式 只允许小写 正则匹配没有</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>记一次部署node项目到centos服务器经历</title>
+    <link href="http://martist.cn/2017/11/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E9%83%A8%E7%BD%B2node%E9%A1%B9%E7%9B%AE%E5%88%B0centos%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BB%8F%E5%8E%86/"/>
+    <id>http://martist.cn/2017/11/07/记一次部署node项目到centos服务器经历/</id>
+    <published>2017-11-06T16:00:00.000Z</published>
+    <updated>2017-11-17T04:09:55.436Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h1 id="服务器安装运行环境"><a href="#服务器安装运行环境" class="headerlink" title="服务器安装运行环境"></a>服务器安装运行环境</h1><p>先从网上随便搜了个contos安装node的教程，大概就是这样。<br>准备命令：</p><pre><code>yum -y install gcc make gcc-c++ openssl-devel wget</code></pre><p>下载源码及解压：</p><pre><code>wget http://nodejs.org/dist/v0.10.26/node-v0.10.26.tar.gztar -zvxf node-v0.10.26.tar.gz</code></pre><p>编译及安装：</p><pre><code>cd node-v0.10.26make &amp;&amp; make install</code></pre><p>验证是否安装配置成功：</p><pre><code>node -v</code></pre><p>安装完了， 运行项目，报错，嗯？？原来开发版本是8.4.0，版本差距太大了，怎么办，删node重新安？我选择升级。</p><p>首先安装n模块：</p><pre><code>npm install -g n</code></pre><p>第二步：</p><p>升级node.js到最新稳定版</p><pre><code>n stable</code></pre><p>是不是很简单？！</p><p>此处无升级到了9.0.0，又超过开发版本，不过好在实际项目运行起来了，没问题，附可以指定版本的命令。</p><p>n后面也可以跟随版本号比如：</p><pre><code>n v0.10.26</code></pre><p>或</p><pre><code>n 0.10.26</code></pre><p>npm的常用命令</p><p> npm -v          #显示版本，检查npm 是否正确安装。<br> npm install express   #安装express模块<br> npm install -g express  #全局安装express模块<br> npm list         #列出已安装模块<br> npm show express     #显示模块详情<br> npm update        #升级当前目录下的项目的所有模块<br> npm update express    #升级当前目录下的项目的指定模块<br> npm update -g express  #升级全局安装的express模块<br> npm uninstall express  #删除指定的模块</p><h1 id="打包代码发到服务器"><a href="#打包代码发到服务器" class="headerlink" title="打包代码发到服务器"></a>打包代码发到服务器</h1><p>打包发送可以选择ftp工具，比如filezilla，比较好用，我是用的是命令行，scp传输命令。</p><pre><code>sudo scp -r -P port ./Desktop/musics/ root@1.1.1.1:/tmp</code></pre><p>把我桌面的music目录传输到了服务器的tmp目录下，打包之后更快一些。</p><h1 id="发布项目"><a href="#发布项目" class="headerlink" title="发布项目"></a>发布项目</h1><p>运行命令</p><pre><code>node index.js</code></pre><p>推荐使用forever工具。</p><p>sudo npm install forever -g   #安装<br>forever start app.js          #启动<br>forever stop app.js           #关闭<br>forever start -l forever.log -o out.log -e err.log app.js   #输出日志和错误</p><p>命令语法及使用 <a href="https://github.com/nodejitsu/forever" target="_blank" rel="external">https://github.com/nodejitsu/forever</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="web" scheme="http://martist.cn/categories/web/"/>
+    
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+      <category term="nodejs" scheme="http://martist.cn/tags/nodejs/"/>
+    
+  </entry>
   
   <entry>
     <title>常见的企业管理系统软件</title>
@@ -405,74 +480,6 @@
     
     
       <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>如何增肌</title>
-    <link href="http://martist.cn/2016/11/03/%E5%A6%82%E4%BD%95%E5%A2%9E%E8%82%8C/"/>
-    <id>http://martist.cn/2016/11/03/如何增肌/</id>
-    <published>2016-11-03T13:30:50.000Z</published>
-    <updated>2017-10-03T05:36:17.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h3 id="增大肌肉块的14大秘诀："><a href="#增大肌肉块的14大秘诀：" class="headerlink" title="增大肌肉块的14大秘诀："></a>增大肌肉块的14大秘诀：</h3><p>大重量、低次数、多组数、长位移、慢速度、高密度、念动一致、顶峰收缩、持续紧张、组间放松、多练大肌群、训练后进食蛋白质、休息48小时、宁轻勿假。   </p><h4 id="1．大重量、低次数"><a href="#1．大重量、低次数" class="headerlink" title="1．大重量、低次数"></a>1．大重量、低次数</h4><p>健美理论中用RM表示某个负荷量能连续做的最高重复次数。比如，练习者对一个重量只能连续举起5次，则该重量就是5RM。研究表明：1-5RM的负荷训练能使肌肉增粗，发展力量和速度；6-10RM的负荷训练能使肌肉粗大，力量速度提高，但耐力增长不明显；10-15RM的负荷训练肌纤维增粗不明显，但力量、速度、耐力均有长进；30RM的负荷训练肌肉内毛细血管增多，耐久力提高，但力量、速度提高不明显。可见，5-10RM的负荷重量适用于增大肌肉体积的健美训练。</p><h4 id="2．多组数"><a href="#2．多组数" class="headerlink" title="2．多组数"></a>2．多组数</h4><p> 什么时候想起来要锻炼了，就做上2～3组，这其实是浪费时间，根本不能长肌肉。必须专门抽出60～90分钟的时间集中锻炼某个部位，每个动作都做8～10组，才能充分刺激肌肉，同时肌肉需要的恢复时间越长。一直做到肌肉饱和为止，”饱和度”要自我感受，其适度的标准是：酸、胀、发麻、坚实、饱满、扩张，以及肌肉外形上的明显粗壮等。</p><h4 id="3-长位移"><a href="#3-长位移" class="headerlink" title="3.长位移"></a>3.长位移</h4><p>不管是划船、卧推、推举、弯举，都要首先把哑铃放得尽量低，以充分拉伸肌肉，再举得尽量高。这一条与”持续紧张”有时会矛盾，解决方法是快速地通过”锁定”状态。不过，我并不否认大重量的半程运动的作用。</p><h4 id="4-慢速度"><a href="#4-慢速度" class="headerlink" title="4.慢速度"></a>4.慢速度</h4><p>慢慢地举起，在慢慢地放下，对肌肉的刺激更深。特别是，在放下哑铃时，要控制好速度，做退让性练习，能够充分刺激肌肉。很多人忽视了退让性练习，把哑铃举起来就算完成了任务，很快地放下，浪费了增大肌肉的大好时机。</p><h4 id="5-高密度"><a href="#5-高密度" class="headerlink" title="5.高密度"></a>5.高密度</h4><p> “密度”指的是两组之间的休息时间，只休息1分钟或更少时间称为高密度。要使肌肉块迅速增大，就要少休息，频繁地刺激肌肉。”多组数”也是建立在”高密度”的基础上的。锻炼时，要象打仗一样，全神贯注地投入训练，不去想别的事。</p><h4 id="6．念动一致"><a href="#6．念动一致" class="headerlink" title="6．念动一致"></a>6．念动一致</h4><p>肌肉的工作是受神经支配的，注意力密度集中就能动员更多的肌纤维参加工作。练某一动作时，就应有意识地使意念和动作一致起来，即练什么就想什么肌肉工作。例如：练立式弯举，就要低头用双眼注视自已的双臂，看肱二头肌在慢慢地收缩。</p><h4 id="7．顶峰收缩"><a href="#7．顶峰收缩" class="headerlink" title="7．顶峰收缩"></a>7．顶峰收缩</h4><p>这是使肌肉线条练得十分明显的一项主要法则。它要求当某个动作做到肌肉收缩最紧张的位置时，保持一下这种收缩最紧张的状态，做静力性练习，然后慢慢回复到动作的开始位置。我的方法是感觉肌肉最紧张时，数1～6，再放下来。</p><h4 id="8．持续紧张"><a href="#8．持续紧张" class="headerlink" title="8．持续紧张"></a>8．持续紧张</h4><p>应在整个一组中保持肌肉持续紧张，不论在动作的开头还是结尾，都不要让它松弛（不处于”锁定”状态），总是达到彻底力竭。</p><h4 id="9．组间放松"><a href="#9．组间放松" class="headerlink" title="9．组间放松"></a>9．组间放松</h4><p>每做完一组动作都要伸展放松。这样能增加肌肉的血流量，还有助于排除沉积在肌肉里的废物，加快肌肉的恢复，迅速补充营养。</p><h4 id="10-多练大肌群"><a href="#10-多练大肌群" class="headerlink" title="10.多练大肌群"></a>10.多练大肌群</h4><p>多练胸、背、腰臀、腿部的大肌群，不仅能使身体强壮，还能够促进其他部位肌肉的生长。有的人为了把胳膊练粗，只练胳膊而不练其他部位，反而会使二头肌的生长十分缓慢。建议你安排一些使用大重量的大型复合动作练习，如大重量的深蹲练习，它们能促进所有其他部位肌肉的生长。这一点极其重要，可悲的是至少有90％的人都没有足够重视，以致不能达到期望的效果。因此，在训练计划里要多安排硬拉、深蹲、卧推、推举、引体向上这5个经典复合动作。</p><h4 id="11．训练后进食蛋白质"><a href="#11．训练后进食蛋白质" class="headerlink" title="11．训练后进食蛋白质"></a>11．训练后进食蛋白质</h4><p>  在训练后的30～90分钟里，蛋白质的需求达高峰期，此时补充蛋白质效果最佳。但不要训练完马上吃东西，至少要隔20分钟。</p><h4 id="12．休息48小时"><a href="#12．休息48小时" class="headerlink" title="12．休息48小时"></a>12．休息48小时</h4><p>局部肌肉训练一次后需要休息48～72小时才能进行第二次训练。如果进行高强度力量训练，则局部肌肉两次训练的间隔72小时也不够，尤其是大肌肉块。不过腹肌例外，腹肌不同于其他肌群，必须经常对其进行刺激，每星期至少要练4次，每次约15分钟；选三个对你最有效的练习，只做3组，每组20—25次，均做到力竭；每组间隔时间要短，不能超过1分钟。</p><h4 id="13．宁轻勿假"><a href="#13．宁轻勿假" class="headerlink" title="13．宁轻勿假"></a>13．宁轻勿假</h4><p>这是一个不是秘诀的秘诀。许多初学健美的人特别重视练习重量和动作次数，不太注意动作是否变形。健美训练的效果不仅仅取决于负重的重量和动作次数，而且还要看所练肌肉是否直接受力和受刺激的程度。如果动作变形或不到位，要练的肌肉没有或只是部分受力，训练效果就不大，甚至出偏差。事实上，在所有的法则中，动作的正确性永远是第一重要的。宁可用正确的动作举起比较轻的重量，也不要用不标准的动作举起更重的重量。  </p><p>不要与人攀比，也不要把健身房的嘲笑挂在心。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="生活" scheme="http://martist.cn/categories/%E7%94%9F%E6%B4%BB/"/>
-    
-    
-      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
-    
-      <category term="生活" scheme="http://martist.cn/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SEO初步优化</title>
-    <link href="http://martist.cn/2016/10/12/SEO%E7%AE%80%E5%8D%95%E4%BC%98%E5%8C%96/"/>
-    <id>http://martist.cn/2016/10/12/SEO简单优化/</id>
-    <published>2016-10-11T16:00:00.000Z</published>
-    <updated>2017-10-02T02:39:23.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>个人总结六条<strong>SEO</strong>简单优化执行方案  以前自己没有写过一份比较正规的优化方案，是因为没有必要写的那么认真，但是现在不同了，来到了正规公司上班，优化方案必须认真对待，要不客户丢失的责任我可担不起!下边是自己整理的一个优化提纲，大家可以参考一下! </p><h2 id="一、title和meta的优化"><a href="#一、title和meta的优化" class="headerlink" title="一、title和meta的优化"></a>一、title和meta的优化</h2><p>网站页面的Title和Meta与搜索引擎中搜索结果的表现是一一对应的，如果你网站页面没有填写meta中的description内容，那么搜索引擎会根据抓取的页面的文字信息来显示，当然一些flash类的网页是不可能抓取到这些信息的。<br>一般来说，对于Title和Meta内容的撰写要求如下：<br><strong>准确</strong>：每个页面有不同的标题(title)，和最能够体现页面信息的描述信息(Meta Description);<br><strong>简短</strong>：Title中的文字尽量不要超过33个中文字;Meta Description中的文字尽量不要超过100个中文字;<br><strong>包含关键词</strong>：Title和Meta中都必须合理的包含页面上所需要强调的关键词。<br>对于Title来说，最重要的关键词应该靠左。<br>频道页的tilte和meta信息优化格式，以下为引用的内容：</p><pre><code>&lt;title&gt;(频道名称)-网站名-(品牌宣传语)&lt;/title&gt;&lt;meta name=”keywords” content=”(频道名称),网站名,(频道相关关键词)” /&gt;&lt;meta name=”Description” content=”(频道相关描述文字)” /&gt; 网站更多内页Title和Meta完善&lt;title&gt;(文章名称)-(频道名称)-网站名&lt;/title&gt; &lt;meta name=”keywords” content=”(文章名称),(频道名称),网站名,(频道相关关键词)” /&gt; &lt;meta name=”Description” content=”(文章正文前100字)” /&gt;</code></pre><h2 id="二、图片链接文本化"><a href="#二、图片链接文本化" class="headerlink" title="二、图片链接文本化"></a>二、图片链接文本化</h2><p>查看网站是否有图片有没有做优化，指出并截图提示给客户，并对这些优化加以解释。    网站中图片显示不要太多，尤其是网站的导航部分，对于搜索引擎抓取页面不利，建议优化为纯文本文字的导航链接。    如果非要坚持用一些图片做修饰的话，建议加alt属性。  </p><h2 id="三、搜索引擎权重标签的使用"><a href="#三、搜索引擎权重标签的使用" class="headerlink" title="三、搜索引擎权重标签的使用"></a>三、搜索引擎权重标签的使用</h2><p>搜索引擎对网站页面的处理主要的依据是页面的源代码，在源代码中，根据W3C标准，部分HTML标签天然具有特殊的属性，而这些HTML标签，也是搜索引擎所关注的。 </p><h3 id="1、合理的使用-lt-h1-gt-标签-需要给客户截图指出"><a href="#1、合理的使用-lt-h1-gt-标签-需要给客户截图指出" class="headerlink" title="1、合理的使用&lt;h1&gt;标签(需要给客户截图指出)"></a>1、合理的使用<code>&lt;h1&gt;</code>标签(需要给客户截图指出)</h3><p><code>&lt;h1&gt;</code>标签是标题标签，它表明了这个页面的主标题是什么，通常情况下，<code>&lt;h1&gt;</code>标签中的标题、关键词都具有非常高的权重。同写文章一样，一个文章只有一个标题，一个页面也最多使用一个<code>&lt;h1&gt;</code>标签。</p><h3 id="2、适当使用-lt-strong-gt-标签-需要给客户截图指出"><a href="#2、适当使用-lt-strong-gt-标签-需要给客户截图指出" class="headerlink" title="2、适当使用&lt;strong&gt;标签(需要给客户截图指出)"></a>2、适当使用<code>&lt;strong&gt;</code>标签(需要给客户截图指出)</h3><p><code>&lt;strong&gt;</code>标签是关键词强调标签，用于对需要突出的关键词作为特殊显示。对于新奥集团网站来说，主要针对网站上的新闻、媒体报道、业务介绍等页面正文部分出现的前3-5个核心关键词使用<code>&lt;strong&gt;</code>标签。 </p><h2 id="四、网页中js链接的使用"><a href="#四、网页中js链接的使用" class="headerlink" title="四、网页中js链接的使用"></a>四、网页中js链接的使用</h2><p>指出客户网站中使用js链接的地方，告诉客户js链接无法被搜索引擎识别，搜索引擎不能抓取到所有的列表页面，最终看不到更多的信息，所以，建议将js链接换成文本链接。  </p><h2 id="五、网站url优化"><a href="#五、网站url优化" class="headerlink" title="五、网站url优化"></a>五、网站url优化</h2><p>现在有很多个客户，他们在做网站的时候都没有相当以后会做优化，这样网站建设公司当然在做网站的时候也不去注意优化，尤其是程序方面，都是怎么方便怎么来!其中最麻烦的应该就是url的优化，url为三级目录最佳，很多网站的url目录都比较深，都需要变成三级，甚至二级，像的助企网就是二级目录，把所有的页面都放在了根目录下边!这样对于一些小企业站来说是挺不错的!    在这里，你应该给客户指出他的url目录是几级目录，应该变成怎样的，举一个例子最好! </p><h2 id="六、添加robots-txt和sitemap-xml文件"><a href="#六、添加robots-txt和sitemap-xml文件" class="headerlink" title="六、添加robots.txt和sitemap.xml文件"></a>六、添加robots.txt和sitemap.xml文件</h2><h3 id="1、sitemap-xml文件的增加"><a href="#1、sitemap-xml文件的增加" class="headerlink" title="1、sitemap.xml文件的增加"></a>1、sitemap.xml文件的增加</h3><p>Sitemap.xml文件是一个重要的优化，它告诉搜索引擎网站上的URL结构、权重表现和更新时间。例如：某网站的sitemap.xml文件内容如下：    我们会制作相应的sitemap.xml文件，放在网站的域名根目录下，使得/sitemap.xml文件可访问。</p><h3 id="2、robots-txt文件的增加"><a href="#2、robots-txt文件的增加" class="headerlink" title="2、robots.txt文件的增加"></a>2、robots.txt文件的增加</h3><p>Robots.txt文件主要对网站一些隐私频道、JS和CSS目录进行屏蔽;以及对sitemap.xml文件地址进行广播，例如，某网站的robots.txt内容：    因此，我们也制作了网站的robots.txt文件，需要将文件放在网站的根域名下，使得/robots.txt文件可访问。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="web" scheme="http://martist.cn/categories/web/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>大并发高负载网站的前期准备</title>
-    <link href="http://martist.cn/2016/08/02/%E5%A4%A7%E8%B4%9F%E8%BD%BD%E9%AB%98%E5%B9%B6%E5%8F%91%E7%BD%91%E7%AB%99%E7%9A%84%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87/"/>
-    <id>http://martist.cn/2016/08/02/大负载高并发网站的前期准备/</id>
-    <published>2016-08-01T16:00:00.000Z</published>
-    <updated>2017-10-03T05:40:44.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>对互联网有了解的人都有自己的想法，有人就把想法付诸实现，做个网站然后开始运营。其实从纯网站技术上来说，因为开源模式的发展，现在建一个小网站 已经很简单也很便宜。当访问量到达一定数量级的时候成本就开始飙升了，问题也开始显现了。因为带宽的增加、硬件的扩展、人员的扩张所带来的成本提高是显而 易见的，而还有相当大的一部分成本是因为代码重构、架构重构，甚至底层开发语言更换引起的，最惨的就是数据丢失，辛辛苦苦好几年，一夜回到创业前。</p><p>减少成本就是增加利润。很多事情，我们在一开始就可以避免，先打好基础，往后可以省很多精力，少操很多心。</p><p>假设你是一个参与创业的技术人员，当前一穷二白，什么都要自己做，自己出钱，初期几十万的资金，做一个应用不是特别复杂的网站，那么就要注意以下几点：</p><h2 id="一、开发语言"><a href="#一、开发语言" class="headerlink" title="一、开发语言"></a>一、开发语言</h2><p>一般来说，技术人员（程序员）创业都是根据自己技术背景选择自己最熟悉的语言，不过考虑到不可能永远是您一个人写程序，这点还得仔细想想。无论用什么语言，最终代码质量是看管理，所以我们还是从纯语言层面来说实际一点。现在流行的java、php、.net、python、ruby都 有自己的优劣，python和ruby，现在人员还是相对难招一些，性能优化也会费些力气，.net平台买不起windows server。java、php用的还是最多。对于初期，应用几乎都是靠前端支撑的网站来说，php的优势稍大一些，入门简单、设计模式简单、写起来快、 性能足够等，不过不注重设计模式也是它的劣势，容易变得松散，隐藏bug稍多、难以维护。java的优势在于整套管理流程已经有很多成熟工具来辅助，强类 型也能避免一些弱智BUG，大多数JAVA程序员比较注重设计模式，别管实不实际，代码格式看起来还是不错的。这也是个劣势，初学者可能太注重模式而很难 解决实际需求。</p><p>前端不只是html、css这类。整个负责跟用户交互的部分都是前端，包括处理程序。这类程序还是建议用php，主要原因就是开发迅速、从业人员广泛。至于后端例如行为分析、银行接口、异步消息处理等，随便用什么程序，那个只能是根据不同业务需求来选择不同语言了。</p><h2 id="二、代码版本管理"><a href="#二、代码版本管理" class="headerlink" title="二、代码版本管理"></a>二、代码版本管理</h2><p>如果开发人员之间的网络速度差不多，就SVN；比较分散例如跨国，就hg。大多数人还是svn的.</p><p>假设选了svn，那么有几点考虑。一是采用什么树结构。初期可能只有一条主干，往后就需要建立分支，例如一条开发分支，一条上线分支，再往后，可能 要每个小组一个分支。建议一开始人少时选择两条分支，开发和线上，每个功能本地测试无误后提交到开发分支，最后统一测试，可以上线时合并到上线分支。如果 喜欢把svn当做移动硬盘用，写一点就commit一次也无所谓，就是合并的时候头大一些，这些人可以自己建个分支甚至建立个本地代码仓库，随便往自己的 分支提交，测试完毕后再提交到开发分支上。</p><p>部署，可以手工部署也可以自动部署。手工部署相对简单，一般是直接在服务器上svn update，或者找个新目录svn checkout，再把web root给ln -s过去。应用越复杂，部署越复杂，没有什么统一标准，只要别再用ftp上传那种形式就好，一是上传时文件引用不一致错误率增加，二是很容易出现开发人员 的版本跟线上版本不一致，导致本来想改个错字结果变成回滚的杯具。如果有多台服务器还是建议自动部署，更换代码的机器从当前服务池中临时撤出，更新完毕后 再重新加入。</p><p>不管项目多小，养成使用版本管理的好习惯，最起码还可以当做你的备份，我的 <a href="http://zhiyi.us" target="_blank" rel="external">http://zhiyi.us</a> 虽然就是一个wordpress，可还是svn了，只改动一两句css那也是劳动成果。</p><h2 id="三、服务器硬件"><a href="#三、服务器硬件" class="headerlink" title="三、服务器硬件"></a>三、服务器硬件</h2><p>别羡慕大客户和有钱人，看看机房散户区，一台服务器孤独的支撑的网站数不清。如果资金稍微充足，建议至少三台的标准配置，分别用作web处理、数据 库、备份。web服务器至少要8G内存，双sata raid1，如果经济稍微宽松，或静态文件或图片多，则15k sas raid1+0。数据库至少16G内存，15k sas raid 1+0。备份服务器最好跟数据库服务器同等配置。硬件可以自己买品牌的底板，也就是机箱配主板和硬盘盒，CPU内存硬盘都自己配，也可以上整套品牌，也可 以兼容机。三台机器，市场行情6、7万也就配齐了。</p><p>web服务器可以既跑程序又当内存缓存，数据库服务器则只跑主数据库（假如是MySQL的话），备份服务器干的活就相对多一些，web配置、缓存配置、数据库配置都要跟前两台一致，这样WEB和数据库任意一台出问题，把备份服务器换个ip就切换上去了。备份策略，可以drbd，可以rsync，或者其他的很多很多的开源备份方案可选择。rsync最简单，放cron里自己跑就行。备份和切换，建议多做测试，选最安全最适合业务的，并且尽可能异地备份。</p><h2 id="四、机房"><a href="#四、机房" class="headerlink" title="四、机房"></a>四、机房</h2><p>三种机房尽量不要选：联通访问特别慢的电信机房、电信访问特别慢的联通机房、电信联通访问特别慢的移动或铁通机房。那网通机房呢？亲，网通联通N久 以前合并改叫联通了。多多寻找，实地参观，多多测试，多方打探，北京、上海、广州等各个主节点城市，还是有很多优质机房的，找个网络质量好，管理严格的机 房，特别是管理要严格，千万别网站无法访问了，打个电话过去才知道别人维护时把你网线碰掉了，这比DOS都头疼。自己扯了几根光纤就称为机房的，看您抗风 险程度和心理素质了。机房可以说是非常重要，直接关系到网站访问速度，网站访问速度直接关系到用户体验，我可以翻墙看风景，但买个网游vpn才能打开你这 个还不怎么知名的网站就有难度了。或许您网站的ajax很出色，可是document怎么也不ready，一些代码永远绝缘于用户。</p><h2 id="五、架构"><a href="#五、架构" class="headerlink" title="五、架构"></a>五、架构</h2><p>初期架构一般比较简单，web负载均衡+数据库主从+缓存+分布式存储+队列。大方向上也确实就这几样东西，细节上也无数文章都重复过了，按照将来 会有N多WEB，N多主从关系，N多缓存，N多xxx设计就行，基本方案都是现成的，只是您比其他人厉害之处就在于设计上考虑到缓存失效时的雪崩效应、主 从同步的数据一致性和时间差、队列的稳定性和失败后的重试策略、文件存储的效率和备份方式等等意外情况。缓存总有一天会失效，数据库复制总有一天会断掉， 队列总有一天会写不进去，电源总有一天会烧坏。根据墨菲定律，如果不考虑这些，网站早晚会成为茶几。</p><h2 id="六、服务器软件"><a href="#六、服务器软件" class="headerlink" title="六、服务器软件"></a>六、服务器软件</h2><p>Linux、nginx、php、mysql，几乎是标配，我们除了看名字，还得选版本。Linux发行版众多，只要没特殊要求，就选个用的人最多的，社区最活跃的，配置最方便的，软件包最全最新的，例如debian、ubuntu。 至于RHEL之类的嘛，你用只能在RHEL上才能运行的软件么？剩下的nginx、php、mysql、activemq、其他的等等，除非你改过这些软 件或你的程序真的不兼容新版本，否则尽量版本越新越好，版本新，意味着新特性增多、BUG减少、性能增加。总有些道听途说的人跟你说老的版本稳定。所谓稳 定，是相对于特殊业务来说的，而就一个php写的网站，大多数人都没改过任何服务器软件源代码，绝大多数情况是能平稳的升级到新版本的。类似于jdk5到 jdk6，python2到python3这类变动比较大的升级还是比较少见的。看看ChangeLog，看看升级说明，结合自己情况评估一下，越早升级 越好，别人家都用php6写程序了这边还php4的逛游呢。优秀的开源程序升级还是很负责任的，看好文档，别怕。</p><p>以上这六点准备完毕，现在我们有了运行环境，有了基本架构骨架，有了备份和切换方案，应该开始着手设计开发方面的事情了。开发方面的事情无数，下一篇会先说一些重点。<br>原文地址</p><h2 id="七、数据库"><a href="#七、数据库" class="headerlink" title="七、数据库"></a>七、数据库</h2><p>几乎所有操作最后都要落到数据库身上，它又最难扩展（存储也挺难）。对于mysql，什么样的表用myisam，什么样的表用innodb，在开发 之前要确定。复制策略、分片策略，也要确定。表引擎方面，一般，更新不多、不需要事务的表可以用myisam，需要行锁定、事务支持的，用innodb。 myisam的锁表不一定是性能低下的根源，innodb也不一定全是行锁，具体细节要多看相关的文档，熟悉了引擎特性才能用的更好。现代WEB应用越来 越复杂了，我们设计表结构时常常设计很多冗余，虽然不符合传统范式，但为了速度考虑还是值得的，要求高的情况下甚至要杜绝联合查询。编程时得多注意数据一 致性。</p><p>复制策略方面，多主多从结构也最好一开始就设计好，代码直接按照多主多从来编写，用一些小技巧来避免复制延时问题，并且还要解决多数据库数据是否一致，可以自己写或者找现成的运维工具。</p><p>分片策略。总会有那么几个表数据量超大，这时分片必不可免。分片有很多策略，从简单的分区到根据热度自动调整，依照具体业务选择一个适合自己的。避免自增ID作为主键，不利于分片。</p><p>用存储过程是比较难扩展的，这种情形多发生于传统C/S，特别是OA系统转换过来的开发人员。低成本网站不是一两台小型机跑一个数据库处理所有业务的模式，是机海作战。方便水平扩展比那点预分析时间和网络传输流量要重要的多的多。</p><p>NoSQL。这只是一个概念。实际应用中，网站有着越来越多的密集写操作、上亿的简单关系数据读取、热备等，这都不是传统关系数据库所擅长的，于是 就产生了很多非关系型数据库，比如Redis/TC&amp;TT/MongoDB/Memcachedb等，在测试中，这些几乎都达到了每秒至少一万次 的写操作，内存型的甚至5万以上。例如MongoDB，几句配置就可以组建一个复制+自动分片+failover的环境，文档化的存储也简化了传统设计库 结构再开发的模式。很多业务是可以用这类数据库来替代mysql的。</p><h2 id="八、缓存"><a href="#八、缓存" class="headerlink" title="八、缓存"></a>八、缓存</h2><p>数据库很脆弱，一定要有缓存在前面挡着，其实我们优化速度，几乎就是优化缓存，能用缓存的地方，就不要再跑到后端数据库那折腾。缓存有持久化缓存、 内存缓存，生成静态页面是最容易理解的持久化缓存了，还有很多比如varnish的分块缓存、前面提到的memcachedb等，内存缓 存，memcached首当其冲。缓存更新可用被动更新和主动更新。被动更新的好处是设计简单，缓存空了就自动去数据库取数据再把缓存填上，但容易引发雪 崩效应，一旦缓存大面积失效，数据库的压力直线上升很可能挂掉。主动缓存可避免这点但是可能引发程序取不到数据的问题。这两者之间如何配合，程序设计要多 动脑筋。</p><h2 id="九、队列"><a href="#九、队列" class="headerlink" title="九、队列"></a>九、队列</h2><p>用户一个操作很可能引发一系列资源和功能的调动，这些调动如果同时发生，压力无法控制，用户体验也不好，可以把这样一些操作放入队列，由另几个模块 去异步执行，例如发送邮件，发送手机短信。开源队列服务器很多，性能要求不高用数据库当做队列也可以，只要保证程序读写队列的接口不变，底层队列服务可随 时更换就可以，类似Zend Framework里的Zend_Queue类，java.util.Queue接口等。</p><h2 id="十、文件存储"><a href="#十、文件存储" class="headerlink" title="十、文件存储"></a>十、文件存储</h2><p>除了结构化数据，我们经常要存放其他的数据，像图片之类的。这类数据数量繁多、访问量大。典型的就是图片，从用户头像到用户上传的照片，还要生成不 同的缩略图尺寸。存储的分布几乎跟数据库扩展一样艰难。不使用专业存储的情况下，基本都是靠自己的NAS。这就涉及到结构。拿图片存储举例，图片是非常容 易产生热点的，有些图片上传后就不再有人看，有些可能每天被访问数十万次，而且大量小文件的异步备份也很耗费时间。</p><p>为了将来图片走cdn做准备，一开始最好就将图片的域名分开，且不用主域名。很多网站都将cookie设置到了.domain.ltd，如果图片也在这个域名下，很可能因为cookie而造成缓存失效，并且占多余流量，还可能因为浏览器并发线程限制造成访问缓慢。</p><p>如果用普通的文件系统存储图片，有一个简单的方法。计算文件的hash值，比如md5，以结果第一位作为第一级目录，这样第一级有16个目录。从0 到F，可以把这个字母作为域名，0.yourimg.com到f.yourimg.com（客户端dns压力会增大），还可以扩展到最多16个NAS集群 上。第二级可用年月例如，201011，第三级用日，第四级可选，根据上传量，比如am/pm，甚至小时。最终的目录结构可能会是 e/201008/25/am/e43ae391c839d82801920cf.jpg。rsync备份时可以用脚本只同步某年某日某时的文件，避免计 算大量文件带来的开销。当然最好是能用专门的分布式文件系统或更专业点的存储解决方案。</p><p>下面，我们要谈谈代码了。</p><p>这一系列的最后一篇写给普通编程人员，如果不感兴趣可直接看本文最后几段。开始设计代码结构之前，先回顾一下之前准备过的事情：我们有负载均衡的 WEB服务器，有主从DB服务器并可能分片，有缓存，有可扩展的存储。在组织代码的各个方面，跟这些准备息息相关，我一二三的列出来分别说，并且每一条都 以“前面讲到”这个经典句式开头，为了方便对照。</p><p>别着急看经典句式，我思维跳跃了，插一段。实际开发中，我们总会在性能和代码优雅性上作折中。对于当今的计算机和语言解释器，多几层少几层对象调 用、声明变量为Map还是HashMap这种问题是最后才需要考虑的问题，永远要考虑系统最慢的部分，从最慢的部分解决。例如看看你用的ORM是不是做了 很多你用不到的事情，是不是有重复的数据调用。我们做的是web应用开发，不是底层框架API，代码易读易懂是保证质量很重要的一方面。</p><p>前面讲到，WEB 服务器是要做负载均衡的，图片服务器是要分开的。对于这点，代码在处理客户端状态时，不要把状态放到单机上，举例，不要用文件session，嗯，常识。 如果有可能，最好在一开始就做好用户单点认证的统一接口，包括跨域如何判断状态、静态页面如何判断状态，需要登录时的跳转和返回参数定义，底层给好接口， 应用层直接就用（可参考GAE的 user服务）。登录方面的设计要考虑移动设备的特性，比如电脑可以用浮动层窗口，但NOKIA自带的浏览器或UCWEB就无法处理这种表现形式，程序一 定既能处理AJAX请求又能直接通过URL来处理请求。图片服务器分开，资源文件最好也布局到图片服务器，也就是WEB服务器只服务动态程序。虽然开发测 试时稍微复杂（因为需要绝对URI才能访问），但将来页面前端优化上会轻松许多，并且你的WEB服务器IO优化也轻松许多。程序引用资源文件时，要有一个 统一的处理方法，在方法内部可以自动完成很多事情，例如将css/js根据组合，拼成一个文件，或者自动在生成的URI后面加上QUERYSTRING， 如果将来前端用了缓存服务，那生成QUERYSTRING是最简单的刷新服务端缓存和客户端缓存的办法。</p><p>前面讲到， 数据库会有复制，可能会多主多从，可能会分片。我们程序在处理数据的过程中，最好能抽象出来单独放做一层。拿现在流行的MVC模式来说，就是在M层下方再 放一个数据层，这个数据层不是通常所说的JDBC/PDO/ActiveRecord等，而是你自己的存取数据层，仅对外暴露方法，隐藏数据存取细节。这 个数据层内部不要怕写的难看，但一定要提供所有的数据存储功能，其他任何层次不要看到跟数据库打交道的字眼。之所以这样做，是因为在单关系数据库的情况 下，可能会SELECT…JOIN…或直接INSERT…INTO…，可你可能会将一些表放到key-value数据库里存储，或者分片，这么做之后原来 的语句和方式要全部改变，如果过于分散，则移植时会耗费很大精力，或得到一个很大的Model。在数据层面的设计上，尽量避免JOIN查询，我们可以多做 冗余，多做缓存，每种数据尽量只需要一次查询，然后在你的程序里面进行组合。对于比较复杂的数据组合，在实时性要求不高的情况下，可采用异步处理，用户访 问时只取处理后的结果。在对于主键的处理上，避免使用自增ID，可以用一定规则生成的唯一值当做主键，这种主键是最简单的分片分布策略。即使用自增ID， 也最好用一个自增ID发生器，否则从数据库不小心被写了一下，那主键很容易冲突。</p><p>前面讲到，咱数据库前面还有某些缓存挡着。别把 mysql的query cache当缓存，应用稍复杂的时候QUERY CACHE反而会成为累赘。缓存跟数据库和业务结合的很紧密，正因为跟业务关系紧密，所以这点没有放之四海而皆准的方法。但我们还是有一些规则可参照。规 则一：越接近前端，缓存的颗粒度越大。例如在WEB最前端缓存整个页面，再往后一层缓存部分页面区域，再往后缓存区域内的单条记录。因为越靠近后端，我们 的可操作性越灵活，并且变化最多的前端代码也比较方便编写。在实践中，因为产品需求变化速度非常快，迭代周期越来越短，有时很难将Controller和 Model分的那么清楚，Controller层面处理部分缓存必不可免，但要保证如果出现这种情况，Controller所操作的缓存一定不要影响其他 数据需求方，也就是要保证这个缓存数据只有这一个Controller在用。规则二：没有缓存时程序不能出错。在不考虑缓存失效引发的雪崩效应时，你的程 序要有缓存跟没缓存一个样，不能像新浪微博一样，缓存一失效，粉丝微博全空，整个应用都乱套了。在缓存必不可少的情况下，给用户出错信息都比给一个让人误 解的信息强。规则三，缓存更新要保证原子性或称作线程安全，特别是采用被动缓存的方式时，很可能两个用户访问时导致同一个缓存被更新，通常情况这不是大问 题，可缓存失效后重建时很可能是引发连锁反应的原因之一。规则四：缓存也是有成本的。不只是技术成本，还有人工时间成本。如果一个功能使用缓存和不使用， 在可预见的访问量情况下区别微小，但使用缓存会使复杂度增加，那就不用，我们可以加个TODO标注，在下次迭代的时候加上缓存处理。</p><p>前 面讲到，文件存储是独立的，那么所有的文件操作就都是远程调用。可以在文件服务器上提供一个很简单的RESTful接口，也可以提供xmlrpc 或json serveice，WEB服务器端所生成和处理的文件，全部通过接口通知文件服务器去处理，WEB服务器本身不要提供任何文件存储。你会发现很多大网站的 上传图片跟保存文章是分两步完成的，就是基于这个原因。</p><p>以上几条“前面讲到”，其实无数人都讲过，我也只是结合前几篇文章用自己的话重 复了一遍，真正分析起来精髓很简单——除了良好的功能逻辑分层，我们 还要为数据库存储、缓存、队列、文件服务等程序外层资源调用单独设计接口，你可以把你的程序想象成是运行在 Amazon EC2 上并用他的所有web service服务，你的数据库就是它的SimpleDB，你的队列就是他的SQS，你的存储就是他的S3，唯一不同是amazon的接口是远程调用，你的是内部调用。</p><p>将支撑服务接口化，意味着将MySQL更换到PostgreSQL不需要更改业务处理程序，移植团队甚至不需要跟业务开发团队过多沟通；意味着业务开发团队是对接口编程而不是对数据库编程；意味着不会因为某个业务开发人员的失误而拖垮性能。</p><p>对程序扫盲不感兴趣的直接看这里——</p><p>产品设计完了，程序框架搭完了，可能有矛盾在这个节骨眼儿产生了。不断有产品设计抱怨说他的创意没实现到预期效果，有程序员抱怨说产品设计不切实 际。这种抱怨多缘于产品人员不懂技术，技术人员不理解产品。从广义上来讲，产品包含市场策略、营销手段、功能设计，产品和技术在争论时往往把焦点放在功能 上，而实际重点是，实现这个功能所消耗的成本跟能这个功能带来的利益能否换算，能否取其轻重。若可以，争议解决。若不能，则抛硬币看运气。因为一个功能的 加强而引发指标井喷，或因项目拖延而导致贻误战机的例子比比皆是。激进的决策者注重利益，保守的决策者注重损失，聪明的决策者会考虑这个问题是否真的那么 严重。</p><p>关系到未来的事情谁都说不准，要不怎么说创业一半靠运气呢。不过总有能说的准的事情，那就得靠数据说话。</p><p>没有100%也有99.9%的网站安装了访问统计代码，连我的 <a href="http://zhiyi.us" target="_blank" rel="external">http://zhiyi.us</a> 也不例外，新闻联播也总说科学决策科学发展的。有了统计，能确定的事情就很多了。例如，可以根据来源-目标转化率来分析哪类渠道的人均获取成本低，根据来 源-内容访问猜测用户跳出率原因，根据用户点击行为判断链接位置是否合理等。将数据以不同方式组合起来，找到内在联系，分析内因外因，制定对应策略，减少 拍脑门决策。靠数据支撑运营是个非常专业的事情，虽然不懂深奥的数学模型不会复杂的公式计算，渐渐学会因为A所以B，因为A和B所以C还是相对简单的。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="web" scheme="http://martist.cn/categories/web/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   
