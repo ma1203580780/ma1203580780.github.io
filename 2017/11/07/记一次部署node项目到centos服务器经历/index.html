@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-11-17T04:09:55.436Z">
+<meta property="og:updated_time" content="2017-11-17T06:20:03.212Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次部署node项目到centos服务器经历">
 <meta name="twitter:description" content="：-}">
@@ -121,20 +121,31 @@ make &amp;&amp; make install
 </code></pre><p>或</p>
 <pre><code>n 0.10.26
 </code></pre><p>npm的常用命令</p>
-<p> npm -v          #显示版本，检查npm 是否正确安装。<br> npm install express   #安装express模块<br> npm install -g express  #全局安装express模块<br> npm list         #列出已安装模块<br> npm show express     #显示模块详情<br> npm update        #升级当前目录下的项目的所有模块<br> npm update express    #升级当前目录下的项目的指定模块<br> npm update -g express  #升级全局安装的express模块<br> npm uninstall express  #删除指定的模块</p>
-<h1 id="打包代码发到服务器"><a href="#打包代码发到服务器" class="headerlink" title="打包代码发到服务器"></a>打包代码发到服务器</h1><p>打包发送可以选择ftp工具，比如filezilla，比较好用，我是用的是命令行，scp传输命令。</p>
+<pre><code>npm -v          #显示版本，检查npm 是否正确安装。  
+npm install express   #安装express模块  
+npm install -g express  #全局安装express模块  
+npm list         #列出已安装模块  
+npm show express     #显示模块详情  
+npm update        #升级当前目录下的项目的所有模块  
+npm update express    #升级当前目录下的项目的指定模块  
+npm update -g express  #升级全局安装的express模块  
+npm uninstall express  #删除指定的模块
+</code></pre><h1 id="打包代码发到服务器"><a href="#打包代码发到服务器" class="headerlink" title="打包代码发到服务器"></a>打包代码发到服务器</h1><p>打包发送可以选择ftp工具，比如filezilla，比较好用，我是用的是命令行，scp传输命令。</p>
 <pre><code>sudo scp -r -P port ./Desktop/musics/ root@1.1.1.1:/tmp
 </code></pre><p>把我桌面的music目录传输到了服务器的tmp目录下，打包之后更快一些。</p>
 <h1 id="发布项目"><a href="#发布项目" class="headerlink" title="发布项目"></a>发布项目</h1><p>运行命令</p>
 <pre><code>node index.js
 </code></pre><p>推荐使用forever工具。</p>
-<p>sudo npm install forever -g   #安装<br>forever start app.js          #启动<br>forever stop app.js           #关闭<br>forever start -l forever.log -o out.log -e err.log app.js   #输出日志和错误</p>
-<p>命令语法及使用 <a href="https://github.com/nodejitsu/forever" target="_blank" rel="external">https://github.com/nodejitsu/forever</a></p>
+<pre><code>sudo npm install forever -g   #安装
+forever start app.js          #启动
+forever stop app.js           #关闭
+forever start -l forever.log -o out.log -e err.log app.js   #输出日志和错误
+</code></pre><p>命令语法及使用： <a href="https://github.com/nodejitsu/forever" target="_blank" rel="external">https://github.com/nodejitsu/forever</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2017/11/07/记一次部署node项目到centos服务器经历/" data-id="cja3fn0pk004kzgs6aor88i3d" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2017/11/07/记一次部署node项目到centos服务器经历/" data-id="cja3inj1l0047jms6cvn1df2n" class="article-share-link">分享</a>
       
       
       
