@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Mac 升级你的开发环境 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux,Mac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac 升级你的开发环境">
+<meta property="og:url" content="http://martist.cn/2017/11/27/Mac 升级你的开发环境/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-11-27T14:54:51.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac 升级你的开发环境">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Mac 升级你的开发环境" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/27/Mac 升级你的开发环境/" class="article-date">
+  <time datetime="2017-11-27T13:30:50.000Z" itemprop="datePublished">2017-11-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Mac/">Mac</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mac 升级你的开发环境
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>Mac系统自带php开发环境，但是版本低，Apache较为落伍，所以我们要紧跟潮流，走在技术的最前线。</p>
+<h2 id="本地原环境"><a href="#本地原环境" class="headerlink" title="本地原环境"></a>本地原环境</h2><p>Apache2.4；PHP5.6</p>
+<h2 id="1-安装Nginx"><a href="#1-安装Nginx" class="headerlink" title="1. 安装Nginx"></a>1. 安装Nginx</h2><pre><code>brew install nginx
+</code></pre><p>现象：一直显示updating homebrew，没有任何反应，我就给终止掉，再次执行brew install nginx，这次安装成功。</p>
+<h3 id="1-1-安装成功"><a href="#1-1-安装成功" class="headerlink" title="1.1 安装成功"></a>1.1 安装成功</h3><p>新目录：/usr/local/etc/nginx<br>主要文件：nginx.conf<br>主要目录：servers(配置虚拟主机时使用)</p>
+<h3 id="1-2-启动"><a href="#1-2-启动" class="headerlink" title="1.2 启动"></a>1.2 启动</h3><p>由于本地Apache一直在运行，所以先关闭Apache的运行：</p>
+<pre><code>ps aux | grep apache
+kill -9 apached的PID
+sudo nginx -s reload
+</code></pre><h3 id="1-3-配置server"><a href="#1-3-配置server" class="headerlink" title="1.3 配置server"></a>1.3 配置server</h3><p>cd servers,在此目录下创建xxx.conf文件</p>
+<pre><code>server {
+      listen 80;
+      server_name phpadmin.com; // 配置本地域名
+      root /Users/xxx/xxx/phpmyadmin; // 本地项目路径
+      index index.php;
+
+      location / {
+              try_files $uri $uri/ /index.php?$args;
+      }
+
+      location ~ \.php$ {
+              fastcgi_split_path_info ^(.+\.php)(/.+)$;//如果是php文件，就让php-fpm去工作
+              # With php-fpm:
+              fastcgi_pass unix:/var/run/php71-fpm.sock;  //也可以写成127.0.0.1:9000，如果想使用sock需要 vi php71/php-fpm.d/www.conf 修改listen的设置
+              fastcgi_index index.php;
+                      fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+              include fastcgi_params;
+      }
+
+      access_log /var/log/nginx/xxx.log zqaccess; // zqaccess命名需要与上级目录  nginx.conf 中的log_format命名保持一致
+      error_log /var/log/nginx/xxx.err.log;
+  }
+</code></pre><h2 id="2-升级PHP到7-1和安装7-1的php-fpm"><a href="#2-升级PHP到7-1和安装7-1的php-fpm" class="headerlink" title="2. 升级PHP到7.1和安装7.1的php-fpm"></a>2. 升级PHP到7.1和安装7.1的php-fpm</h2><pre><code>brew install --without-apache --with-fpm --with-mssql php71
+</code></pre><p>如果你只是想升级php到7.1，而且还想用Apache，这里需要执行brew install –with-http22 或者 –with-http24 –with-mssql php71,这个要根据你Apache的版本了，具体你可以执行brew options php71命令进行查看。如果没有写–with-http24,安装后是不会有libexec/apache2/libphp7.so的。</p>
+<h3 id="2-1-安装成功"><a href="#2-1-安装成功" class="headerlink" title="2.1 安装成功"></a>2.1 安装成功</h3><p>新目录：</p>
+<pre><code>/usr/local/etc/php/7.1 配置php-fpm
+/usr/local/opt/php71/sbin目录下启动php-fpm：sudo ./php71-fpm restart
+</code></pre><p>启动php71-fpm如果失败，需要将原来的php-fpm给杀掉，mac原本有低版本的php-fpm。</p>
+<h2 id="3-细节（用户权限问题）"><a href="#3-细节（用户权限问题）" class="headerlink" title="3. 细节（用户权限问题）"></a>3. 细节（用户权限问题）</h2><h3 id="3-1-验证Nginx是否生效"><a href="#3-1-验证Nginx是否生效" class="headerlink" title="3.1 验证Nginx是否生效"></a>3.1 验证Nginx是否生效</h3><p>配置好虚拟主机后，在指定目录下，创建一个html文件，如果浏览器能正常显示这个文件，则说明nginx生效。</p>
+<h3 id="3-2-验证php能否正常运行"><a href="#3-2-验证php能否正常运行" class="headerlink" title="3.2 验证php能否正常运行"></a>3.2 验证php能否正常运行</h3><p>nginx server配置的是php71-fpm.sock，遇到了502错误，查看日志提示，用户权限不足。<br>nginx server配置修改成127.0.0.1:9000，www.conf的listen也修改成127.0.0.1:9000是可以正常执行php的。<br>解决502</p>
+<pre><code>ll 查看生成的php71-fpm.sock文件，所属用户不是_www，
+vi /usr/local/etc/nginx/nginx.conf 文件，修改user为_www
+vi /usr/local/etc/php/7.1/php-fpm.d/www.conf，修改user = _www
+group = _www listen.owner = _www listen.group = _www
+</code></pre><h2 id="安装redis"><a href="#安装redis" class="headerlink" title="安装redis"></a>安装redis</h2><p>有很多方法，此处我推荐使用brew安装。</p>
+<pre><code>brew install php71-redis
+</code></pre><p>一切就搞好了，可以命令查看下。</p>
+<pre><code>php -m |grep redis
+</code></pre><h2 id="配置laravel项目"><a href="#配置laravel项目" class="headerlink" title="配置laravel项目"></a>配置laravel项目</h2><p>nginx server{} 需要加的代码:</p>
+<pre><code>location / {
+try_files $uri $uri/ /index.php?$query_string;
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/11/27/Mac 升级你的开发环境/" data-id="cjaibgaqf00059h2ns4iu3m8h" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mac/">Mac</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/11/13/OpenStack学习笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">OpenStack学习笔记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/11/27/Mac 升级你的开发环境/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">Content</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本地原环境"><span class="toc-number">1.</span> <span class="toc-text">本地原环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装Nginx"><span class="toc-number">2.</span> <span class="toc-text">1. 安装Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-安装成功"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 安装成功</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-启动"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-配置server"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 配置server</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-升级PHP到7-1和安装7-1的php-fpm"><span class="toc-number">3.</span> <span class="toc-text">2. 升级PHP到7.1和安装7.1的php-fpm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-安装成功"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 安装成功</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-细节（用户权限问题）"><span class="toc-number">4.</span> <span class="toc-text">3. 细节（用户权限问题）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-验证Nginx是否生效"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 验证Nginx是否生效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-验证php能否正常运行"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 验证php能否正常运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装redis"><span class="toc-number">5.</span> <span class="toc-text">安装redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置laravel项目"><span class="toc-number">6.</span> <span class="toc-text">配置laravel项目</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

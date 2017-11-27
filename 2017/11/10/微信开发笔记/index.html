@@ -17,7 +17,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/wx2.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/wx3.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/wx4.png">
-<meta property="og:updated_time" content="2017-11-17T07:30:56.180Z">
+<meta property="og:updated_time" content="2017-11-17T07:32:33.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信开发笔记">
 <meta name="twitter:description" content="：-}">
@@ -48,7 +48,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -118,7 +118,7 @@
 （可选）添加外观到 config/app.php 中的 aliases 部分:
 </code></pre><p>‘EasyWeChat’ =&gt; Overtrue\LaravelWechat\Facade::class,</p>
 <p>参考：<a href="https://github.com/overtrue/laravel-wechat/tree/3.1.10" target="_blank" rel="external">GitHub - overtrue/laravel-wechat at 3.1.10</a> 配置OAuth 中间件部分。</p>
-<h2 id="vagrant-homestead运行环境，下面是Homestead-yaml文件部分配置"><a href="#vagrant-homestead运行环境，下面是Homestead-yaml文件部分配置" class="headerlink" title="vagrant - homestead运行环境，下面是Homestead.yaml文件部分配置"></a>vagrant - homestead运行环境，下面是Homestead.yaml文件部分配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">ip: &quot;192.168.10.10&quot;</div><div class="line">memory: 2048</div><div class="line">cpus: 1</div><div class="line">provider: virtualbox</div><div class="line"></div><div class="line">authorize: ~/.ssh/id_rsa.pub</div><div class="line"></div><div class="line">keys:</div><div class="line">- ~/.ssh/id_rsa</div><div class="line"></div><div class="line">folders:</div><div class="line">- map: /Users/machuang/Code</div><div class="line">to: /home/vagrant/Code</div><div class="line"></div><div class="line">sites:</div><div class="line"># - map: homestead.app</div><div class="line">#   to: /home/vagrant/Code</div><div class="line"># - map: paper.app</div><div class="line">#   to: /home/vagrant/Code/paper/public</div><div class="line">- map: test.app</div><div class="line">to: /home/vagrant/Code/laravel/public</div></pre></td></tr></table></figure>
+<h2 id="vagrant-homestead运行环境"><a href="#vagrant-homestead运行环境" class="headerlink" title="vagrant - homestead运行环境"></a>vagrant - homestead运行环境</h2><h3 id="Homestead-yaml文件部分配置"><a href="#Homestead-yaml文件部分配置" class="headerlink" title="Homestead.yaml文件部分配置"></a>Homestead.yaml文件部分配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">ip: &quot;192.168.10.10&quot;</div><div class="line">memory: 2048</div><div class="line">cpus: 1</div><div class="line">provider: virtualbox</div><div class="line"></div><div class="line">authorize: ~/.ssh/id_rsa.pub</div><div class="line"></div><div class="line">keys:</div><div class="line">- ~/.ssh/id_rsa</div><div class="line"></div><div class="line">folders:</div><div class="line">- map: /Users/machuang/Code</div><div class="line">to: /home/vagrant/Code</div><div class="line"></div><div class="line">sites:</div><div class="line"># - map: homestead.app</div><div class="line">#   to: /home/vagrant/Code</div><div class="line"># - map: paper.app</div><div class="line">#   to: /home/vagrant/Code/paper/public</div><div class="line">- map: test.app</div><div class="line">to: /home/vagrant/Code/laravel/public</div></pre></td></tr></table></figure>
 <h2 id="内网穿透工具-ngrok"><a href="#内网穿透工具-ngrok" class="headerlink" title="内网穿透工具-ngrok"></a>内网穿透工具-ngrok</h2><p>作为一个Web开发者，我们有时候会需要临时地将一个本地的Web网站部署到外网，以供他人体验评价或协助调试等等，通常我们会这么做：</p>
 <pre><code>找到一台运行于外网的Web服务器
 服务器上有网站所需要的环境，否则自行搭建
@@ -127,7 +127,7 @@
 </code></pre><p>只不过是想向朋友展示一下网站而已，要不要这么麻烦,使用ngrok，免费的服务就足够实现将一个本地的Web网站临时部署到外网了。</p>
 <p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/wx2.png" alt=""></p>
 <h3 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h3><p><a href="https://ngrok.com/" target="_blank" rel="external">ngrok</a></p>
-<p>参考<br> <a href="https://tenten.co/blog/how-to-use-ngrok-to-connect-your-localhost/" target="_blank" rel="external">怎麼將內網的 localhost 讓外面的人都看得到呢？用用 ngrok 吧！ - Startup Incubator Asia</a></p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p> <a href="https://tenten.co/blog/how-to-use-ngrok-to-connect-your-localhost/" target="_blank" rel="external">怎麼將內網的 localhost 讓外面的人都看得到呢？用用 ngrok 吧！ - Startup Incubator Asia</a></p>
 <p>去官网下载下来，然后解压，当前目录的 ./ngrok文件就是启动文件了，</p>
 <p>我在/etc/profile 写了下别名，来简化操作</p>
 <pre><code>alias ngrok=&apos;/Users/machuang/Desktop/ngrok&apos;
@@ -154,7 +154,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2017/11/10/微信开发笔记/" data-id="cja3l5cwl003gf2s6peabipmr" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2017/11/10/微信开发笔记/" data-id="cjaibgas7003m9h2nysn9c80m" class="article-share-link">Share</a>
       
       
       
@@ -168,7 +168,7 @@
 <nav id="article-nav">
   
     <a href="/2017/11/12/html标签去掉/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           清洗html标签和css样式
@@ -178,7 +178,7 @@
   
   
     <a href="/2017/11/07/记一次部署node项目到centos服务器经历/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">记一次部署node项目到centos服务器经历</div>
     </a>
   
@@ -215,9 +215,9 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开发环境"><span class="toc-number">1.</span> <span class="toc-text">开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#laravel-5-5-20框架"><span class="toc-number">1.1.</span> <span class="toc-text">laravel 5.5.20框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#composer组件easywechat"><span class="toc-number">1.2.</span> <span class="toc-text">composer组件easywechat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant-homestead运行环境，下面是Homestead-yaml文件部分配置"><span class="toc-number">1.3.</span> <span class="toc-text">vagrant - homestead运行环境，下面是Homestead.yaml文件部分配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网穿透工具-ngrok"><span class="toc-number">1.4.</span> <span class="toc-text">内网穿透工具-ngrok</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官网"><span class="toc-number">1.4.1.</span> <span class="toc-text">官网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#微信公众平台测试账号申请"><span class="toc-number">1.5.</span> <span class="toc-text">微信公众平台测试账号申请</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#👌，开发"><span class="toc-number">2.</span> <span class="toc-text">👌，开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义路由"><span class="toc-number">2.1.</span> <span class="toc-text">定义路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理微信的请求消息"><span class="toc-number">2.2.</span> <span class="toc-text">处理微信的请求消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取用户的openid和微信信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取用户的openid和微信信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#返回结果"><span class="toc-number">2.3.1.</span> <span class="toc-text">返回结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开发环境"><span class="toc-number">1.</span> <span class="toc-text">开发环境</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#laravel-5-5-20框架"><span class="toc-number">1.1.</span> <span class="toc-text">laravel 5.5.20框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#composer组件easywechat"><span class="toc-number">1.2.</span> <span class="toc-text">composer组件easywechat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vagrant-homestead运行环境"><span class="toc-number">1.3.</span> <span class="toc-text">vagrant - homestead运行环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Homestead-yaml文件部分配置"><span class="toc-number">1.3.1.</span> <span class="toc-text">Homestead.yaml文件部分配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网穿透工具-ngrok"><span class="toc-number">1.4.</span> <span class="toc-text">内网穿透工具-ngrok</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官网"><span class="toc-number">1.4.1.</span> <span class="toc-text">官网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">1.4.2.</span> <span class="toc-text">参考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#微信公众平台测试账号申请"><span class="toc-number">1.5.</span> <span class="toc-text">微信公众平台测试账号申请</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#👌，开发"><span class="toc-number">2.</span> <span class="toc-text">👌，开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义路由"><span class="toc-number">2.1.</span> <span class="toc-text">定义路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#处理微信的请求消息"><span class="toc-number">2.2.</span> <span class="toc-text">处理微信的请求消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取用户的openid和微信信息"><span class="toc-number">2.3.</span> <span class="toc-text">获取用户的openid和微信信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#返回结果"><span class="toc-number">2.3.1.</span> <span class="toc-text">返回结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
@@ -247,10 +247,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
