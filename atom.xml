@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2017-11-27T14:54:51.905Z</updated>
+  <updated>2017-12-08T08:36:04.463Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>减脂计划</title>
+    <link href="http://martist.cn/2017/12/08/%20%E9%B1%BC%E9%AA%A8%E5%9B%BE%E5%AE%9E%E8%B7%B50/"/>
+    <id>http://martist.cn/2017/12/08/ 鱼骨图实践0/</id>
+    <published>2017-12-07T16:00:00.000Z</published>
+    <updated>2017-12-08T08:36:04.463Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>1111</p>]]></content>
+    
+    <summary type="html">
+    
+      健身
+    
+    </summary>
+    
+      <category term="常识" scheme="http://martist.cn/categories/%E5%B8%B8%E8%AF%86/"/>
+    
+    
+      <category term="生活" scheme="http://martist.cn/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>Mac 升级你的开发环境</title>
@@ -34,9 +56,9 @@
       <category term="Mac" scheme="http://martist.cn/categories/Mac/"/>
     
     
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
       <category term="Mac" scheme="http://martist.cn/tags/Mac/"/>
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
   </entry>
   
@@ -391,28 +413,6 @@
   </entry>
   
   <entry>
-    <title>创业公司必经之路（二）</title>
-    <link href="http://martist.cn/2017/03/29/%E9%A9%AC%E9%97%AF%EF%BC%9A%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF%5B2%5D/"/>
-    <id>http://martist.cn/2017/03/29/马闯：创业公司必经之路[2]/</id>
-    <published>2017-03-28T16:00:00.000Z</published>
-    <updated>2017-10-02T04:57:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h2><ul><li>投资人不要股份的年底分红，那才多少啊，更愿意升值后套现。</li><li>地派利润率高，不愿上市分钱。</li><li>天派现金流好，利于做大，然后上市套现。</li><li>上市公司要的就是快速发展。</li><li>京东一年比一年亏损，但是现金流好，足够支持它去抢占市场，这也侧面说明他还在打基础，此时股价可能就是间断的上涨。</li><li>如果有一天京东止损了，说明他想开始赚钱了，这样说明市场不会开阔的更大，可以看到公司发展的极限了，即将走下坡路，所以股价反而会下跌。</li><li>代持股协议，适合中国金融市场。</li></ul><h2 id="兄弟会的模式"><a href="#兄弟会的模式" class="headerlink" title="兄弟会的模式"></a>兄弟会的模式</h2><p>派出开发团队去外包项目，赚的钱是有限的，此时帮助这些创业公司救火，可以要求获得一些股份作为回报。</p><h2 id="中国房地产"><a href="#中国房地产" class="headerlink" title="中国房地产"></a>中国房地产</h2><p>硬着陆 =&gt; 泡沫破裂。<br>软着陆 =&gt; 人民币贬值，房地产泡沫变小，不会太大而破裂。</p><h2 id="对赌协议"><a href="#对赌协议" class="headerlink" title="对赌协议"></a>对赌协议</h2><p>花费两个月左右时间，写一个商业计划书，差不多就可以去找天使轮投资了。天使轮（不超过1000W），也有总资轮，和合伙人投资的说法。<br>此处有一个对赌协议的存在。</p><p>投资人和个人签约，是无限责任公司。<br>投资人和公司签约，是有限责任公司。</p><p>投资人会选择和个人或者母公司签约，更有保障一些。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="entrepreneurship" scheme="http://martist.cn/categories/entrepreneurship/"/>
-    
-    
-      <category term="entrepreneurship" scheme="http://martist.cn/tags/entrepreneurship/"/>
-    
-  </entry>
-  
-  <entry>
     <title>https证书搭建</title>
     <link href="http://martist.cn/2017/03/29/https%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>http://martist.cn/2017/03/29/https环境搭建/</id>
@@ -435,6 +435,28 @@
   </entry>
   
   <entry>
+    <title>创业公司必经之路（二）</title>
+    <link href="http://martist.cn/2017/03/29/%E9%A9%AC%E9%97%AF%EF%BC%9A%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF%5B2%5D/"/>
+    <id>http://martist.cn/2017/03/29/马闯：创业公司必经之路[2]/</id>
+    <published>2017-03-28T16:00:00.000Z</published>
+    <updated>2017-10-02T04:57:10.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="套路"><a href="#套路" class="headerlink" title="套路"></a>套路</h2><ul><li>投资人不要股份的年底分红，那才多少啊，更愿意升值后套现。</li><li>地派利润率高，不愿上市分钱。</li><li>天派现金流好，利于做大，然后上市套现。</li><li>上市公司要的就是快速发展。</li><li>京东一年比一年亏损，但是现金流好，足够支持它去抢占市场，这也侧面说明他还在打基础，此时股价可能就是间断的上涨。</li><li>如果有一天京东止损了，说明他想开始赚钱了，这样说明市场不会开阔的更大，可以看到公司发展的极限了，即将走下坡路，所以股价反而会下跌。</li><li>代持股协议，适合中国金融市场。</li></ul><h2 id="兄弟会的模式"><a href="#兄弟会的模式" class="headerlink" title="兄弟会的模式"></a>兄弟会的模式</h2><p>派出开发团队去外包项目，赚的钱是有限的，此时帮助这些创业公司救火，可以要求获得一些股份作为回报。</p><h2 id="中国房地产"><a href="#中国房地产" class="headerlink" title="中国房地产"></a>中国房地产</h2><p>硬着陆 =&gt; 泡沫破裂。<br>软着陆 =&gt; 人民币贬值，房地产泡沫变小，不会太大而破裂。</p><h2 id="对赌协议"><a href="#对赌协议" class="headerlink" title="对赌协议"></a>对赌协议</h2><p>花费两个月左右时间，写一个商业计划书，差不多就可以去找天使轮投资了。天使轮（不超过1000W），也有总资轮，和合伙人投资的说法。<br>此处有一个对赌协议的存在。</p><p>投资人和个人签约，是无限责任公司。<br>投资人和公司签约，是有限责任公司。</p><p>投资人会选择和个人或者母公司签约，更有保障一些。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="entrepreneurship" scheme="http://martist.cn/categories/entrepreneurship/"/>
+    
+    
+      <category term="entrepreneurship" scheme="http://martist.cn/tags/entrepreneurship/"/>
+    
+  </entry>
+  
+  <entry>
     <title>创业公司必经之路（一）</title>
     <link href="http://martist.cn/2017/03/22/%E9%A9%AC%E9%97%AF%EF%BC%9A%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%BF%85%E7%BB%8F%E4%B9%8B%E8%B7%AF%5B1%5D/"/>
     <id>http://martist.cn/2017/03/22/马闯：创业公司必经之路[1]/</id>
@@ -453,30 +475,6 @@
     
     
       <category term="entrepreneurship" scheme="http://martist.cn/tags/entrepreneurship/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SEO影响因素</title>
-    <link href="http://martist.cn/2017/03/20/SEO%E6%8E%92%E5%90%8D%E7%9A%84%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0/"/>
-    <id>http://martist.cn/2017/03/20/SEO排名的影响因素/</id>
-    <published>2017-03-20T04:13:54.000Z</published>
-    <updated>2017-10-02T02:39:23.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h3 id="一-关键词优化"><a href="#一-关键词优化" class="headerlink" title="(一)关键词优化"></a>(一)关键词优化</h3><p>1.URL中包含要优化的关键词<br>2.网页Title中绝对匹配和相对匹配要优化的关键词<br>3.meta标签中绝对匹配和相对匹配要优化的关键词<br>4.网页核心内容绝对匹配和相对匹配要优化的关键词<br>5.网页内容标题使用〈h1〉标签优化<br>6.网页主体内容第一段以关键词开头<br>7.网页主体内容使用段落格式,每个段落针对不同的组合关键词展开优化,可以的话每个段落都以关键词开头<br>8.相关内容的展示:在网页核心内容下设置相关内容展示区,选择包含关键词的文章标题并给予链接,同时,提供给用户到该优化关键词的专题区(自由设想)<br>9.评论中出现关键词<br>10.对网页中的关键词做适当的特殊处理(加粗、加红、斜体等）<br>11  网页中重点图片(内容区、相关内容区、重点图片等）给予合理的包含关键词的ALT文字<br>12.图片名中包含关键词<br>13.域名中中包含关键词<br>14.目录名中包含关键词<br>15.文件名中包含关键词<br>16.网站频道或栏目名中包含关键词</p><h3 id="二-网站结构优化"><a href="#二-网站结构优化" class="headerlink" title="(二)网站结构优化"></a>(二)网站结构优化</h3><p>1.根据网站定位及内容设计结构<br>2.二极域名与一级目录的选择<br>3.网站物理结构与逻辑结构的吻合<br>4.根据逻辑结构设计网站内容<br>5.合理的面包屑导航设计<br>6.搜索引擎友好的网页布局设计<br>7.网页制作中代码的规范问题(形成有效信息片的标签设计、JS代码的合理使用、CSS文件的嵌入等、代码的精简)<br>8.绝对URL与相对URL的使用规则<br>9.文字链接锚文本的设计<br>10.网页内容如何聚合成网站主题<br>11.让网页核心内容的HTML代码优先执行</p><h3 id="三-反向链接优化"><a href="#三-反向链接优化" class="headerlink" title="(三)反向链接优化"></a>(三)反向链接优化</h3><p>1.反向链接数量:一般而言，数量越多越有利于关键词排名及收录数量<br>2.导入链接网页的信任度高<br>3.导入链接网页的主题内容与链向的网页内容密切相关<br>4.导入链接指向的网页有具体内容<br>5.反向链接的锚文字中有关键词<br>6.反向链接的锚文字周围有以关键词为基础的组合词<br>7.导入链接建立在反向链接网页的核心内容区<br>8.导入链接的时间长度，一般导入链接的存在时间有3-6个月<br>9.单向链接的价值高于互惠链接<br>10.导入链接的网页自身的导出链接小于100个，最佳的反向链接来自于外站的内容页的内容区域<br>11.反向链接最好来自不同IP，切忌同一IP的站点交叉链接<br>12.反向链接的增长频率不要太快，逐步增加，特别是相关性的文字链接</p><h3 id="四-绝对禁止的操作"><a href="#四-绝对禁止的操作" class="headerlink" title="(四)绝对禁止的操作"></a>(四)绝对禁止的操作</h3><p>1.在网页内容区、keywords、alt中堆积关键词<br>2.反向链接和站内链接所有的锚文字都相同<br>3.使用CSS或背景色隐藏内容<br>4.使用JavaScript跳转,建议使用301跳转<br>5.相同ip之下的网页直接进行大量交换链接<br>6.桥页和Cloaking，诱导搜索引擎的爬虫<br>7.放置成人内容，违禁药品，赌博相关内容<br>8.频繁的更换IP地址<br>9.导出链接中包含SEO作弊站点<br>10.加入到Link Farm或则Link交换类网站<br>11.使用被惩罚过的域名<br>12.网站建立在被惩罚的IP上</p><h3 id="五-需要考究的SEO因素"><a href="#五-需要考究的SEO因素" class="headerlink" title="(五)需要考究的SEO因素"></a>(五)需要考究的SEO因素</h3><p>1.网站内每个网页都有不同的title、keywords、description<br>2.首页、栏目页、内容页使用相同的模版<br>3.确保网站中每个网页都只能通过网络上的唯一一个URL访问到<br>4.尽量不要将首页设计为单一图片和Flash<br>5.网站导航条使用文字链接，尽量不要使用FLASH技术或JAVASCRIPT技术<br>6.网站导航条如果用图片记得以关键词为ALT标签<br>7.尽量在区域引用CSS和JS文件，而不将JS代码或样式写在网页内<br>8.只要技术上可以实现并且不会过于麻烦，就不要使用JS来显示网页中的内容，特别是核心内容区及URL列表区<br>9.要能确定网页的主题，而不要夹杂太多与该主题完全不相关的内容<br>10.整理下站点目录，将无用的网页文件清理掉，保持目录干净整洁是一个好站点的前提条件，也是评价该站点是否有人管理的指标<br>11.无论如何，都要放一个robots.txt文件在站点根目录，无论你会不会写，哪怕文件内容是空都可以。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="web" scheme="http://martist.cn/categories/web/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="seo" scheme="http://martist.cn/tags/seo/"/>
     
   </entry>
   
