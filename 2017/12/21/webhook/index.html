@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>githook实践 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="linux">
+<meta name="keywords" content="linux,gitlab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="githook实践">
+<meta property="og:url" content="http://martist.cn/2017/12/21/webhook/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="linux">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-12-21T03:26:04.809Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="githook实践">
+<meta name="twitter:description" content="linux">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-webhook" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/12/21/webhook/" class="article-date">
+  <time datetime="2017-12-20T16:00:00.000Z" itemprop="datePublished">2017-12-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      githook实践
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><h3 id="gitlab"><a href="#gitlab" class="headerlink" title="gitlab"></a>gitlab</h3><p>GitLab 是基于 GIT 实现的现代化的开发者协作平台，它将 issues, code review, CI 和 CD 整合到独立的网站UI，弥补了 GIT 在可视化操作方面的不足。</p>
+<h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><p>分别部署你的项目和gitlab。</p>
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>分别解析你的gitlab和被hook触发的项目。</p>
+<h3 id="服务端执行脚本（php，shell）"><a href="#服务端执行脚本（php，shell）" class="headerlink" title="服务端执行脚本（php，shell）"></a>服务端执行脚本（php，shell）</h3><p>php脚本用来接受githook的请求，shell脚本用来执行git pull等命令。</p>
+<h2 id="本文目的"><a href="#本文目的" class="headerlink" title="本文目的"></a>本文目的</h2><p>本文的目的是配置实现在 GitLab 平台上的代码自动部署。想要达到的效果是这样子的，当客户端向 GitLab 服务器的特定分支（如：master）提交代码时，GitLab 服务器会发送通知给线上代码服务器，代码服务器收到通知之后再拉取 GitLab 服务器上该分支的最新代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">客户端 --&gt; git push                                                                              </div><div class="line">                   -                                                                                  </div><div class="line">                     -                                                                                  </div><div class="line">                        -                                                                                </div><div class="line">                          -&gt;                                                                         </div><div class="line">                               -----------------   -- http通知 --&gt;     -----------------                         </div><div class="line">客户端  --&gt; git push      ---&gt;  |  gitlab服务器  | -                 -  |   代码服务器    |</div><div class="line">                               -----------------   &lt;- git pull --     -----------------                         </div><div class="line">                          -&gt;                                                                         </div><div class="line">                        -                                                                                      </div><div class="line">                      -</div><div class="line">                   -</div><div class="line">客户端 --&gt; git push</div></pre></td></tr></table></figure>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在项目的setting里面设置webhook，点击webhook链接可以查看具体的使用方法。设置的域名是公网域名，gitlab管理的指定项目被push后会立即请求设定的网址，触发服务器的钩子，之后 git pull。</p>
+<h2 id="php脚本"><a href="#php脚本" class="headerlink" title="php脚本"></a>php脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line"></div><div class="line">$access_token = &apos;your-gitlab-webhook-token&apos;;</div><div class="line">$access_ip = [&apos;123.4.5.6&apos;];</div><div class="line"></div><div class="line">/* get user token and ip address */</div><div class="line">$client_token = $_SERVER[&apos;HTTP_X_GITLAB_TOKEN&apos;];</div><div class="line">$client_ip = $_SERVER[&apos;REMOTE_ADDR&apos;];</div><div class="line"></div><div class="line">/* create open log */</div><div class="line">$fs = fopen(&apos;./gitlab/webhook.log&apos;, &apos;a&apos;);</div><div class="line">fwrite($fs, &apos;Request on [&apos;.date(&quot;Y-m-d H:i:s&quot;).&apos;] from [&apos;.$client_ip.&apos;]&apos;.PHP_EOL);</div><div class="line"></div><div class="line">/* test token */</div><div class="line">if ($client_token !== $access_token)</div><div class="line">&#123;</div><div class="line">    echo &quot;error 403&quot;;</div><div class="line">    fwrite($fs, &quot;Invalid token [&#123;$client_token&#125;]&quot;.PHP_EOL);</div><div class="line">    exit(0);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* test ip */</div><div class="line">if ( ! in_array($client_ip, $access_ip))</div><div class="line">&#123;</div><div class="line">    echo &quot;error 503&quot;;</div><div class="line">    fwrite($fs, &quot;Invalid ip [&#123;$client_ip&#125;]&quot;.PHP_EOL);</div><div class="line">    exit(0);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* get json data */</div><div class="line">$json = file_get_contents(&apos;php://input&apos;);</div><div class="line">$data = json_decode($json, true);</div><div class="line"></div><div class="line">/* get branch */</div><div class="line">$branch = $data[&quot;ref&quot;];</div><div class="line">//fwrite($fs, &apos;=======================================================================&apos;.PHP_EOL);</div><div class="line"></div><div class="line">/* if you need get full json input */</div><div class="line">//fwrite($fs, &apos;DATA: &apos;.print_r($data, true).PHP_EOL);</div><div class="line"></div><div class="line">/* branch filter */</div><div class="line">if ($branch === &apos;refs/heads/master&apos;))</div><div class="line">&#123;</div><div class="line">    fwrite($fs, &apos;BRANCH: &apos;.print_r($branch, true).PHP_EOL);</div><div class="line">    exec(&quot;/var/www/api/public/gitlab/deploy.sh&quot;);</div><div class="line">    fwrite($fs, &apos;=================项目已更新==================&apos;.PHP_EOL);</div><div class="line">    $fs and fclose($fs);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">echo &apos;-------begin-----&apos;&gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div><div class="line">cd /var/www/your-project-path</div><div class="line">git checkout test</div><div class="line">git pull origin master &gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div><div class="line">echo &apos;-------end-------&apos;&gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div></pre></td></tr></table></figure>
+<h2 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h2><p>如果你的gitlab请求报绿色200，而且shell脚本可以执行到，但就是git执行不了，那就是权限出问题了。</p>
+<h3 id="配置服务器git的用户和邮箱需要和gitlab的一致"><a href="#配置服务器git的用户和邮箱需要和gitlab的一致" class="headerlink" title="配置服务器git的用户和邮箱需要和gitlab的一致"></a>配置服务器git的用户和邮箱需要和gitlab的一致</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo -Hu www git config --global credential.helper store # 永久保存</div><div class="line">sudo -Hu www git config --global user.name &quot;Bantes&quot;</div><div class="line">sudo -Hu www git config --global user.email &quot;admin@xsooo.com&quot; # 邮箱请与conding上一致</div></pre></td></tr></table></figure>
+<h3 id="查看nginx或者apache的执行用户"><a href="#查看nginx或者apache的执行用户" class="headerlink" title="查看nginx或者apache的执行用户"></a>查看nginx或者apache的执行用户</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ sudo ps aux | grep php</div><div class="line">www      22131  0.0  0.2  42872 23096 ?        S    02:13   0:03 nginx: worker process</div><div class="line">www      22132  0.0  0.2  42900 23352 ?        S    02:13   0:01 nginx: worker process</div><div class="line"></div><div class="line">$sudo ps aux | grep php-fpm</div><div class="line">www      22347  0.0  0.1 163832  9008 ?        S    02:13   0:00 php-fpm: pool www</div></pre></td></tr></table></figure>
+<p>确认是www用户在运行，也即是说gitlab中的Webhooks的所有请求都是以www用户在执行。再次查看我们的hook for php脚本。</p>
+<p>此请求默认以www 用户去访问gitlab.php，然后执行master_deploy.sh脚本。因此，需要给www用户设置 Public Key Authentication</p>
+<h3 id="建立用户目录"><a href="#建立用户目录" class="headerlink" title="建立用户目录"></a>建立用户目录</h3><p>sudo mkdir /home/www</p>
+<h3 id="部署公钥"><a href="#部署公钥" class="headerlink" title="部署公钥"></a>部署公钥</h3><p>sudo -Hu www ssh-keygen -t rsa # 请选择 “no passphrase”，一直回车下去</p>
+<h3 id="将此公钥加入gitlab中的SSH-KEYS中"><a href="#将此公钥加入gitlab中的SSH-KEYS中" class="headerlink" title="将此公钥加入gitlab中的SSH KEYS中"></a>将此公钥加入gitlab中的SSH KEYS中</h3><p>cat /home/www/.ssh/id_rsa.pub</p>
+<h3 id="设置项目的文件夹用户与用户组为www"><a href="#设置项目的文件夹用户与用户组为www" class="headerlink" title="设置项目的文件夹用户与用户组为www"></a>设置项目的文件夹用户与用户组为www</h3><p>$ sudo chown -R www:www /mnt/www/project</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>tail命令输出日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail -f 5 webhook.log</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/12/21/webhook/" data-id="cjc1ucs2e002iwa2n82kxt4uw" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gitlab/">gitlab</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/12/27/gitlab搭建/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          gitlab
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/27/Mac 升级你的开发环境/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Mac 升级你的开发环境</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/12/21/webhook/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前期准备"><span class="toc-number">1.</span> <span class="toc-text">前期准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gitlab"><span class="toc-number">1.1.</span> <span class="toc-text">gitlab</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器"><span class="toc-number">1.2.</span> <span class="toc-text">服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#域名"><span class="toc-number">1.3.</span> <span class="toc-text">域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端执行脚本（php，shell）"><span class="toc-number">1.4.</span> <span class="toc-text">服务端执行脚本（php，shell）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本文目的"><span class="toc-number">2.</span> <span class="toc-text">本文目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">3.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php脚本"><span class="toc-number">4.</span> <span class="toc-text">php脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shell脚本"><span class="toc-number">4.1.</span> <span class="toc-text">shell脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权限问题"><span class="toc-number">5.</span> <span class="toc-text">权限问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置服务器git的用户和邮箱需要和gitlab的一致"><span class="toc-number">5.1.</span> <span class="toc-text">配置服务器git的用户和邮箱需要和gitlab的一致</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看nginx或者apache的执行用户"><span class="toc-number">5.2.</span> <span class="toc-text">查看nginx或者apache的执行用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建立用户目录"><span class="toc-number">5.3.</span> <span class="toc-text">建立用户目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署公钥"><span class="toc-number">5.4.</span> <span class="toc-text">部署公钥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将此公钥加入gitlab中的SSH-KEYS中"><span class="toc-number">5.5.</span> <span class="toc-text">将此公钥加入gitlab中的SSH KEYS中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置项目的文件夹用户与用户组为www"><span class="toc-number">5.6.</span> <span class="toc-text">设置项目的文件夹用户与用户组为www</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">6.</span> <span class="toc-text">测试</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

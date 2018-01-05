@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>减脂计划 | MARTIST</title>
+  <title>MySQL数据库导入导出 | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="健身">
-<meta name="keywords" content="生活">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="减脂计划">
-<meta property="og:url" content="http://martist.cn/2017/12/08/ 鱼骨图实践0/index.html">
+<meta property="og:title" content="MySQL数据库导入导出">
+<meta property="og:url" content="http://martist.cn/2013/02/14/导入导出mysql数据库/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="健身">
+<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-12-08T08:36:04.463Z">
+<meta property="og:updated_time" content="2018-01-02T09:05:56.564Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="减脂计划">
-<meta name="twitter:description" content="健身">
+<meta name="twitter:title" content="MySQL数据库导入导出">
+<meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -69,14 +69,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post- 鱼骨图实践0" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-导入导出mysql数据库" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/12/08/ 鱼骨图实践0/" class="article-date">
-  <time datetime="2017-12-07T16:00:00.000Z" itemprop="datePublished">2017-12-08</time>
+    <a href="/2013/02/14/导入导出mysql数据库/" class="article-date">
+  <time datetime="2013-02-14T10:28:51.000Z" itemprop="datePublished">2013-02-14</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/常识/">常识</a>
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
   </div>
 
   </div>
@@ -87,7 +87,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      减脂计划
+      MySQL数据库导入导出
     </h1>
   
 
@@ -98,16 +98,33 @@
         <!-- Table of Contents -->
         
         <p>：-} <a id="more"></a></p>
-<p>1111</p>
+<h2 id="一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）："><a href="#一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）：" class="headerlink" title="一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）："></a>一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）：</h2><p>1、导出数据和表结构：</p>
+<p>  mysqldump -u用户名 -p密码 数据库名 &gt; 数据库名.sql</p>
+<p>  #/usr/local/mysql/bin/   mysqldump -uroot -p abc &gt; abc.sql</p>
+<p>敲回车后会提示输入密码</p>
+<p>2、只导出表结构</p>
+<p>  mysqldump -u用户名 -p密码 -d 数据库名 &gt; 数据库名.sql</p>
+<p>  #/usr/local/mysql/bin/   mysqldump -uroot -p -d abc &gt; abc.sql</p>
+<p>注：/usr/local/mysql/bin/  —&gt;  mysql的data目录</p>
+<h2 id="二、导入数据库"><a href="#二、导入数据库" class="headerlink" title="二、导入数据库"></a>二、导入数据库</h2><h3 id="1、首先建空数据库"><a href="#1、首先建空数据库" class="headerlink" title="1、首先建空数据库"></a>1、首先建空数据库</h3><p>  mysql&gt;create database abc;</p>
+<h3 id="2、导入数据库"><a href="#2、导入数据库" class="headerlink" title="2、导入数据库"></a>2、导入数据库</h3><p>方法一：<br>（1）选择数据库</p>
+<p>mysql&gt;use abc;</p>
+<p>（2）设置数据库编码</p>
+<p>  mysql&gt;set names utf8;</p>
+<p>（3）导入数据（注意sql文件的路径）</p>
+<p>  mysql&gt;source /home/abc/abc.sql;</p>
+<p>方法二：</p>
+<p>  mysql -u用户名 -p密码 数据库名 &lt; 数据库名.sql</p>
+<p>  #mysql -uabc_f -p abc &lt; abc.sql</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2017/12/08/ 鱼骨图实践0/" data-id="cjaxnqu4q0000hr2nl0m7em0o" class="article-share-link">Delen</a>
+      <a data-url="http://martist.cn/2013/02/14/导入导出mysql数据库/" data-id="cjc1ucs35003xwa2nl789j0s3" class="article-share-link">分享</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活/">生活</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
 
     </footer>
   </div>
@@ -116,10 +133,19 @@
     
 <nav id="article-nav">
   
+    <a href="/2013/03/20/nginx/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          nginx入门
+        
+      </div>
+    </a>
   
-    <a href="/2017/11/27/Mac 升级你的开发环境/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">Mac 升级你的开发环境</div>
+  
+    <a href="/2013/02/14/MySQL 数据库索引（一）（转载整理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">MySQL数据库索引</div>
     </a>
   
 </nav>
@@ -135,7 +161,7 @@
       <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
        
-            <div id="SOHUCS" sid="2017/12/08/ 鱼骨图实践0/"> </div>
+            <div id="SOHUCS" sid="2013/02/14/导入导出mysql数据库/"> </div>
     
       
       
@@ -151,42 +177,24 @@
 
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">Recente berichten</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/12/08/ 鱼骨图实践0/">减脂计划</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/27/Mac 升级你的开发环境/">Mac 升级你的开发环境</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/13/OpenStack学习笔记/">OpenStack学习笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/12/html标签去掉/">清洗html标签和css样式</a>
-          </li>
-        
-          <li>
-            <a href="/2017/11/10/微信开发笔记/">微信开发笔记</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）："><span class="toc-number">1.</span> <span class="toc-text">一、导出数据库用mysqldump命令（注意mysql的安装路径，即此命令的路径）：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、导入数据库"><span class="toc-number">2.</span> <span class="toc-text">二、导入数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、首先建空数据库"><span class="toc-number">2.1.</span> <span class="toc-text">1、首先建空数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、导入数据库"><span class="toc-number">2.2.</span> <span class="toc-text">2、导入数据库</span></a></li></ol></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 
@@ -204,11 +212,11 @@
   
   <div class="outer">
     <div id="footer-left">
-      &copy; 2014 - 2017 martist.cn&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
