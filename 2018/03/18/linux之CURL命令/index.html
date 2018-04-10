@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>linux之curl命令 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux之curl命令">
+<meta property="og:url" content="http://martist.cn/2018/03/18/linux之CURL命令/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-10T10:16:21.487Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux之curl命令">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux之CURL命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/18/linux之CURL命令/" class="article-date">
+  <time datetime="2018-03-17T16:00:00.000Z" itemprop="datePublished">2018-03-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      linux之curl命令
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>curl是一种命令行工具，作用是发出网络请求，然后得到和提取数据，显示在”标准输出”（stdout）上面。</p>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>curl(选项)(参数)
+</code></pre><h3 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h3><pre><code>-a/--append    上传文件时，附加到目标文件
+-A/--user-agent &lt;string&gt;    设置用户代理发送给服务器
+-anyauth    可以使用“任何”身份验证方法
+-b/--cookie &lt;name=string/file&gt;    cookie字符串或文件读取位置
+    --basic    使用HTTP基本验证
+-B/--use-ascii    使用ASCII /文本传输
+-c/--cookie-jar &lt;file&gt;    操作结束后把cookie写入到这个文件中
+-C/--continue-at &lt;offset&gt;    断点续转
+-d/--data &lt;data&gt;    HTTP POST方式传送数据
+    --data-ascii &lt;data&gt;    以ascii的方式post数据
+    --data-binary &lt;data&gt;    以二进制的方式post数据
+    --negotiate    使用HTTP身份验证
+    --digest    使用数字身份验证
+    --disable-eprt    禁止使用EPRT或LPRT
+    --disable-epsv    禁止使用EPSV
+-D/--dump-header &lt;file&gt;    把header信息写入到该文件中
+    --egd-file &lt;file&gt;    为随机数据(SSL)设置EGD socket路径
+    --tcp-nodelay    使用TCP_NODELAY选项
+-e/--referer    来源网址
+-E/--cert &lt;cert[:passwd]&gt;    客户端证书文件和密码 (SSL)
+    --cert-type &lt;type&gt;    证书文件类型 (DER/PEM/ENG) (SSL)
+    --key &lt;key&gt;    私钥文件名 (SSL)
+    --key-type &lt;type&gt;    私钥文件类型 (DER/PEM/ENG) (SSL)
+    --pass &lt;pass&gt;    私钥密码 (SSL)
+    --engine &lt;eng&gt;    加密引擎使用 (SSL). &quot;--engine list&quot; for list
+    --cacert &lt;file&gt;    CA证书 (SSL)
+    --capath &lt;directory&gt;    CA目录 (made using c_rehash) to verify peer against (SSL)
+    --ciphers &lt;list&gt;    SSL密码
+    --compressed    要求返回是压缩的形势 (using deflate or gzip)
+    --connect-timeout &lt;seconds&gt;    设置最大请求时间
+    --create-dirs    建立本地目录的目录层次结构
+    --crlf    上传是把LF转变成CRLF
+-f/--fail    连接失败时不显示http错误
+    --ftp-create-dirs    如果远程目录不存在，创建远程目录
+    --ftp-method [multicwd/nocwd/singlecwd]    控制CWD的使用
+    --ftp-pasv    使用 PASV/EPSV 代替端口
+    --ftp-skip-pasv-ip    使用PASV的时候,忽略该IP地址
+    --ftp-ssl    尝试用 SSL/TLS 来进行ftp数据传输
+    --ftp-ssl-reqd    要求用 SSL/TLS 来进行ftp数据传输
+-F/--form &lt;name=content&gt;    模拟http表单提交数据
+    --form-string &lt;name=string&gt;    模拟http表单提交数据
+-g/--globoff    禁用网址序列和范围使用{}和[]
+-G/--get    以get的方式来发送数据
+-H/--header &lt;line&gt;    自定义头信息传递给服务器
+    --ignore-content-length    忽略的HTTP头信息的长度
+-i/--include    输出时包括protocol头信息
+-I/--head    只显示请求头信息
+-j/--junk-session-cookies    读取文件进忽略session cookie
+    --interface &lt;interface&gt;    使用指定网络接口/地址
+    --krb4 &lt;level&gt;    使用指定安全级别的krb4
+-k/--insecure    允许不使用证书到SSL站点
+-K/--config    指定的配置文件读取
+-l/--list-only    列出ftp目录下的文件名称
+    --limit-rate &lt;rate&gt;    设置传输速度
+    --local-port&lt;NUM&gt;    强制使用本地端口号
+-m/--max-time &lt;seconds&gt;    设置最大传输时间
+    --max-redirs &lt;num&gt;    设置最大读取的目录数
+    --max-filesize &lt;bytes&gt;    设置最大下载的文件总量
+-M/--manual    显示全手动
+-n/--netrc    从netrc文件中读取用户名和密码
+    --netrc-optional    使用 .netrc 或者 URL来覆盖-n
+    --ntlm    使用 HTTP NTLM 身份验证
+-N/--no-buffer    禁用缓冲输出
+-o/--output    把输出写到该文件中
+-O/--remote-name    把输出写到该文件中，保留远程文件的文件名
+-p/--proxytunnel    使用HTTP代理
+    --proxy-anyauth    选择任一代理身份验证方法
+    --proxy-basic    在代理上使用基本身份验证
+    --proxy-digest    在代理上使用数字身份验证
+    --proxy-ntlm    在代理上使用ntlm身份验证
+-P/--ftp-port &lt;address&gt;    使用端口地址，而不是使用PASV
+-q    作为第一个参数，关闭 .curlrc
+-Q/--quote &lt;cmd&gt;    文件传输前，发送命令到服务器
+-r/--range &lt;range&gt;    检索来自HTTP/1.1或FTP服务器字节范围
+--range-file    读取（SSL）的随机文件
+-R/--remote-time    在本地生成文件时，保留远程文件时间
+    --retry &lt;num&gt;    传输出现问题时，重试的次数
+    --retry-delay &lt;seconds&gt;    传输出现问题时，设置重试间隔时间
+    --retry-max-time &lt;seconds&gt;    传输出现问题时，设置最大重试时间
+-s/--silent    静默模式。不输出任何东西
+-S/--show-error    显示错误
+    --socks4 &lt;host[:port]&gt;    用socks4代理给定主机和端口
+    --socks5 &lt;host[:port]&gt;    用socks5代理给定主机和端口
+    --stderr &lt;file&gt;     
+-t/--telnet-option &lt;OPT=val&gt;    Telnet选项设置
+    --trace &lt;file&gt;    对指定文件进行debug
+    --trace-ascii &lt;file&gt;    Like --跟踪但没有hex输出
+    --trace-time    跟踪/详细输出时，添加时间戳
+-T/--upload-file &lt;file&gt;    上传文件
+    --url &lt;URL&gt;    Spet URL to work with
+-u/--user &lt;user[:password]&gt;    设置服务器的用户和密码
+-U/--proxy-user &lt;user[:password]&gt;    设置代理用户名和密码
+-w/--write-out [format]    什么输出完成后
+-x/--proxy &lt;host[:port]&gt;    在给定的端口上使用HTTP代理
+-X/--request &lt;command&gt;    指定什么命令
+-y/--speed-time    放弃限速所要的时间，默认为30
+-Y/--speed-limit    停止传输速度的限制，速度时间
+</code></pre><p>具体可看：<a href="http://man.linuxde.net/curl" target="_blank" rel="external">http://man.linuxde.net/curl</a></p>
+<h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><h3 id="一、查看网页源码"><a href="#一、查看网页源码" class="headerlink" title="一、查看网页源码"></a>一、查看网页源码</h3><p>直接在curl命令后加上网址，就可以看到网页源码。我们以网址www.sina.com为例（选择该网址，主要因为它的网页代码较短）：</p>
+<pre><code>　　$ curl www.sina.com
+
+　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+　　&lt;html&gt;&lt;head&gt;
+　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;
+　　&lt;/head&gt;&lt;body&gt;
+　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;
+　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+　　&lt;/body&gt;&lt;/html&gt;
+</code></pre><p>如果要把这个网页保存下来，可以使用<code>-o</code>参数，这就相当于使用wget命令了。</p>
+<pre><code>　　$ curl -o [文件名] www.sina.com
+</code></pre><h3 id="二、自动跳转"><a href="#二、自动跳转" class="headerlink" title="二、自动跳转"></a>二、自动跳转</h3><p>有的网址是自动跳转的。使用<code>-L</code>参数，curl就会跳转到新的网址。</p>
+<pre><code>　　$ curl -L www.sina.com
+</code></pre><p>键入上面的命令，结果就自动跳转为www.sina.com.cn。</p>
+<h3 id="三、显示头信息"><a href="#三、显示头信息" class="headerlink" title="三、显示头信息"></a>三、显示头信息</h3><p><code>-i</code>参数可以显示http response的头信息，连同网页代码一起。</p>
+<pre><code>　　$ curl -i www.sina.com
+
+　　HTTP/1.0 301 Moved Permanently
+　　Date: Sat, 03 Sep 2011 23:44:10 GMT
+　　Server: Apache/2.0.54 (Unix)
+　　Location: http://www.sina.com.cn/
+　　Cache-Control: max-age=3600
+　　Expires: Sun, 04 Sep 2011 00:44:10 GMT
+　　Vary: Accept-Encoding
+　　Content-Length: 231
+　　Content-Type: text/html; charset=iso-8859-1
+　　Age: 3239
+　　X-Cache: HIT from sh201-9.sina.com.cn
+　　Connection: close
+
+　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+　　&lt;html&gt;&lt;head&gt;
+　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;
+　　&lt;/head&gt;&lt;body&gt;
+　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;
+　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+　　&lt;/body&gt;&lt;/html&gt;
+</code></pre><p><code>-I</code>参数则是只显示http response的头信息。</p>
+<h3 id="四、显示通信过程"><a href="#四、显示通信过程" class="headerlink" title="四、显示通信过程"></a>四、显示通信过程</h3><p><code>-v</code>参数可以显示一次http通信的整个过程，包括端口连接和http request头信息。</p>
+<pre><code>　　$ curl -v www.sina.com
+
+　　* About to connect() to www.sina.com port 80 (#0)
+　　* Trying 61.172.201.195... connected
+　　* Connected to www.sina.com (61.172.201.195) port 80 (#0)
+　　&gt; GET / HTTP/1.1
+　　&gt; User-Agent: curl/7.21.3 (i686-pc-linux-gnu) libcurl/7.21.3 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18
+　　&gt; Host: www.sina.com
+　　&gt; Accept: */*
+　　&gt;
+　　* HTTP 1.0, assume close after body
+　　&lt; HTTP/1.0 301 Moved Permanently
+　　&lt; Date: Sun, 04 Sep 2011 00:42:39 GMT
+　　&lt; Server: Apache/2.0.54 (Unix)
+　　&lt; Location: http://www.sina.com.cn/
+　　&lt; Cache-Control: max-age=3600
+　　&lt; Expires: Sun, 04 Sep 2011 01:42:39 GMT
+　　&lt; Vary: Accept-Encoding
+　　&lt; Content-Length: 231
+　　&lt; Content-Type: text/html; charset=iso-8859-1
+　　&lt; X-Cache: MISS from sh201-19.sina.com.cn
+　　&lt; Connection: close
+　　&lt;
+　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+　　&lt;html&gt;&lt;head&gt;
+　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;
+　　&lt;/head&gt;&lt;body&gt;
+　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;
+　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+　　&lt;/body&gt;&lt;/html&gt;
+　　* Closing connection #0
+</code></pre><p>如果你觉得上面的信息还不够，那么下面的命令可以查看更详细的通信过程。</p>
+<pre><code>　　$ curl --trace output.txt www.sina.com
+</code></pre><p>或者</p>
+<pre><code>　　$ curl --trace-ascii output.txt www.sina.com
+</code></pre><p>运行后，请打开output.txt文件查看。</p>
+<h3 id="五、发送表单信息"><a href="#五、发送表单信息" class="headerlink" title="五、发送表单信息"></a>五、发送表单信息</h3><p>发送表单信息有GET和POST两种方法。GET方法相对简单，只要把数据附在网址后面就行。</p>
+<pre><code>　　$ curl example.com/form.cgi?data=xxx
+</code></pre><p>POST方法必须把数据和网址分开，curl就要用到–data参数。</p>
+<pre><code>　　$ curl -X POST --data &quot;data=xxx&quot; example.com/form.cgi
+</code></pre><p>如果你的数据没有经过表单编码，还可以让curl为你编码，参数是<code>--data-urlencode</code>。</p>
+<pre><code>　　$ curl -X POST--data-urlencode &quot;date=April 1&quot; example.com/form.cgi
+</code></pre><h3 id="六、HTTP动词"><a href="#六、HTTP动词" class="headerlink" title="六、HTTP动词"></a>六、HTTP动词</h3><p>curl默认的HTTP动词是GET，使用<code>-X</code>参数可以支持其他动词。</p>
+<pre><code>　　$ curl -X POST www.example.com
+
+　　$ curl -X DELETE www.example.com
+</code></pre><h3 id="七、文件上传"><a href="#七、文件上传" class="headerlink" title="七、文件上传"></a>七、文件上传</h3><p>假定文件上传的表单是下面这样：</p>
+<pre><code>　　&lt;form method=&quot;POST&quot; enctype=&apos;multipart/form-data&apos; action=&quot;upload.cgi&quot;&gt;
+　　　　&lt;input type=file name=upload&gt;
+　　　　&lt;input type=submit name=press value=&quot;OK&quot;&gt;
+　　&lt;/form&gt;
+</code></pre><p>你可以用curl这样上传文件：</p>
+<pre><code>　　$ curl --form upload=@localfilename --form press=OK [URL]
+</code></pre><h3 id="八、Referer字段"><a href="#八、Referer字段" class="headerlink" title="八、Referer字段"></a>八、Referer字段</h3><p>有时你需要在http request头信息中，提供一个referer字段，表示你是从哪里跳转过来的。</p>
+<pre><code>　　$ curl --referer http://www.example.com http://www.example.com
+</code></pre><h3 id="九、User-Agent字段"><a href="#九、User-Agent字段" class="headerlink" title="九、User Agent字段"></a>九、User Agent字段</h3><p>这个字段是用来表示客户端的设备信息。服务器有时会根据这个字段，针对不同设备，返回不同格式的网页，比如手机版和桌面版。</p>
+<p>iPhone4的User Agent是</p>
+<pre><code>　　Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7
+</code></pre><p>curl可以这样模拟：</p>
+<pre><code>　　$ curl --user-agent &quot;[User Agent]&quot; [URL]
+</code></pre><h3 id="十、cookie"><a href="#十、cookie" class="headerlink" title="十、cookie"></a>十、cookie</h3><p>使用<code>--cookie</code>参数，可以让curl发送cookie。</p>
+<pre><code>　　$ curl --cookie &quot;name=xxx&quot; www.example.com
+</code></pre><p>至于具体的cookie的值，可以从http response头信息的<code>Set-Cookie</code>字段中得到。</p>
+<p><code>-c cookie-file</code>可以保存服务器返回的cookie到文件，<code>-b cookie-file</code>可以使用这个文件作为cookie信息，进行后续的请求。</p>
+<pre><code>　　$ curl -c cookies http://example.com
+　　$ curl -b cookies http://example.com
+</code></pre><h3 id="十一、增加头信息"><a href="#十一、增加头信息" class="headerlink" title="十一、增加头信息"></a>十一、增加头信息</h3><p>有时需要在http request之中，自行增加一个头信息。<code>--header</code>参数就可以起到这个作用。</p>
+<pre><code>　　$ curl --header &quot;Content-Type:application/json&quot; http://example.com
+</code></pre><h3 id="十二、HTTP认证"><a href="#十二、HTTP认证" class="headerlink" title="十二、HTTP认证"></a>十二、HTTP认证</h3><p>有些网域需要HTTP认证，这时curl需要用到<code>--user</code>参数。</p>
+<pre><code>　　$ curl --user name:password example.com
+</code></pre><h3 id="十三、监控"><a href="#十三、监控" class="headerlink" title="十三、监控"></a>十三、监控</h3><p>1、开启gzip请求</p>
+<pre><code>curl -I http://www.sina.com.cn/ -H Accept-Encoding:gzip,defalte
+</code></pre><p>2、监控网页的响应时间</p>
+<pre><code>curl -o /dev/null -s -w &quot;time_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n&quot; &quot;http://www.kklinux.com&quot;
+</code></pre><p>3、 监控站点可用性</p>
+<pre><code>curl -o /dev/null -s -w %{http_code} &quot;http://www.kklinux.com&quot;
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/03/18/linux之CURL命令/" data-id="cjftiiud70021522nwehj0r7l" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/20/php-fpm优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          php-fpm优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/12/单例模式的理解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">关于php的单例模式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/03/18/linux之CURL命令/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参数"><span class="toc-number">2.</span> <span class="toc-text">参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#语法"><span class="toc-number">2.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选项"><span class="toc-number">2.2.</span> <span class="toc-text">选项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用案例"><span class="toc-number">3.</span> <span class="toc-text">使用案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、查看网页源码"><span class="toc-number">3.1.</span> <span class="toc-text">一、查看网页源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、自动跳转"><span class="toc-number">3.2.</span> <span class="toc-text">二、自动跳转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、显示头信息"><span class="toc-number">3.3.</span> <span class="toc-text">三、显示头信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、显示通信过程"><span class="toc-number">3.4.</span> <span class="toc-text">四、显示通信过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、发送表单信息"><span class="toc-number">3.5.</span> <span class="toc-text">五、发送表单信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、HTTP动词"><span class="toc-number">3.6.</span> <span class="toc-text">六、HTTP动词</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七、文件上传"><span class="toc-number">3.7.</span> <span class="toc-text">七、文件上传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#八、Referer字段"><span class="toc-number">3.8.</span> <span class="toc-text">八、Referer字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#九、User-Agent字段"><span class="toc-number">3.9.</span> <span class="toc-text">九、User Agent字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#十、cookie"><span class="toc-number">3.10.</span> <span class="toc-text">十、cookie</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#十一、增加头信息"><span class="toc-number">3.11.</span> <span class="toc-text">十一、增加头信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#十二、HTTP认证"><span class="toc-number">3.12.</span> <span class="toc-text">十二、HTTP认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#十三、监控"><span class="toc-number">3.13.</span> <span class="toc-text">十三、监控</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

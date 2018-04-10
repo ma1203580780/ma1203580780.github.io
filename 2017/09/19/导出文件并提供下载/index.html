@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>导出文件并提供下载 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="PHP使用header方式实现文件下载功能">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="导出文件并提供下载">
+<meta property="og:url" content="http://martist.cn/2017/09/19/导出文件并提供下载/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="PHP使用header方式实现文件下载功能">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-03-30T07:32:29.504Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="导出文件并提供下载">
+<meta name="twitter:description" content="PHP使用header方式实现文件下载功能">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-导出文件并提供下载" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/19/导出文件并提供下载/" class="article-date">
+  <time datetime="2017-09-18T16:00:00.000Z" itemprop="datePublished">2017-09-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      导出文件并提供下载
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="header（）实现文件下载"><a href="#header（）实现文件下载" class="headerlink" title="header（）实现文件下载"></a>header（）实现文件下载</h2><p>代码如下：</p>
+<pre><code>phone_num_array = [110,119,120];
+header( &quot;Content-type:   application/octet-stream &quot;);
+header( &quot;Accept-Ranges:   bytes &quot;);
+header( &quot;Content-Disposition:   attachment;   filename=紧急联系方式.txt &quot;);
+header( &quot;Expires:   0 &quot;);
+header( &quot;Cache-Control:   must-revalidate,   post-check=0,   pre-check=0 &quot;);
+header( &quot;Pragma:   public &quot;);
+echo implode(PHP_EOL,$phone_num_array);
+</code></pre><p>可见使用header（）函数很简单就提供了文件导出和下载功能。<br>那么他还有其他什么功能么</p>
+<h2 id="header-函数"><a href="#header-函数" class="headerlink" title="header() 函数"></a>header() 函数</h2><h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>header() 函数向客户端发送原始的 HTTP 报头,需要注意必须在任何实际的输出被发送之前调用 header() 函数.</p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><pre><code>header(string,replace,http_response_code)
+</code></pre><h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><h4 id="string"><a href="#string" class="headerlink" title="string"></a>string</h4><p>有两种特别的头。第一种以”HTTP/“开头的 (case is not significant)，将会被用来计算出将要发送的HTTP状态码。 例如在 Apache 服务器上用 PHP 脚本来处理不存在文件的请求（使用 ErrorDocument 指令）， 就会希望脚本响应了正确的状态码。</p>
+<pre><code>&lt;?php
+header(&quot;HTTP/1.0 404 Not Found&quot;);
+?&gt;
+</code></pre><p>第二种特殊情况是”Location:”的头信息。它不仅把报文发送给浏览器，而且还将返回给浏览器一个 REDIRECT（302）的状态码，除非状态码已经事先被设置为了201或者3xx。</p>
+<pre><code>&lt;?php
+header(&quot;Location: http://www.example.com/&quot;); /* Redirect browser */
+/* Make sure that code below does not get executed when we redirect. */
+ exit;
+?&gt;
+</code></pre><h4 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h4><p>可选参数 replace 表明是否用后面的头替换前面相同类型的头。 默认情况下会替换。如果传入 FALSE，就可以强制使相同的头信息并存。例如：</p>
+<pre><code>&lt;?php
+header(&apos;WWW-Authenticate: Negotiate&apos;);
+header(&apos;WWW-Authenticate: NTLM&apos;, false);
+?&gt;
+</code></pre><h4 id="http-response-code"><a href="#http-response-code" class="headerlink" title="http_response_code"></a>http_response_code</h4><p>强制指定HTTP响应的值。注意，这个参数只有在报文字符串（string）不为空的情况下才有效。</p>
+<h3 id="一些常见的header功能"><a href="#一些常见的header功能" class="headerlink" title="一些常见的header功能"></a>一些常见的header功能</h3><h4 id="1、重定向"><a href="#1、重定向" class="headerlink" title="1、重定向"></a>1、重定向</h4><pre><code>header(&apos;Location: http://www.example.com/&apos;);
+</code></pre><h4 id="2、指定内容："><a href="#2、指定内容：" class="headerlink" title="2、指定内容："></a>2、指定内容：</h4><pre><code>header(&apos;Content-type: application/pdf&apos;);
+</code></pre><h4 id="3、附件："><a href="#3、附件：" class="headerlink" title="3、附件："></a>3、附件：</h4><pre><code>header(&apos;Content-type: application/pdf&apos;);
+//指定内容为附件，指定下载显示的名字
+header(&apos;Content-Disposition: attachment; filename=&quot;downloaded.pdf&quot;&apos;);
+//打开文件，并输出
+readfile(&apos;original.pdf&apos;);
+以上代码可以在浏览器产生文件对话框的效果
+</code></pre><h4 id="4、让用户获取最新的资料和数据而不是缓存"><a href="#4、让用户获取最新的资料和数据而不是缓存" class="headerlink" title="4、让用户获取最新的资料和数据而不是缓存"></a>4、让用户获取最新的资料和数据而不是缓存</h4><pre><code>header(&quot;Cache-Control: no-cache, must-revalidate&quot;); // HTTP/1.1
+header(&quot;Expires: Sat, 26 Jul 1997 05:00:00 GMT&quot;);   // 设置临界时间
+</code></pre><h3 id="其他例子"><a href="#其他例子" class="headerlink" title="其他例子"></a>其他例子</h3><pre><code>&lt;?php
+header(&apos;HTTP/1.1 200 OK&apos;); // ok 正常访问
+header(&apos;HTTP/1.1 404 Not Found&apos;); //通知浏览器 页面不存在
+header(&apos;HTTP/1.1 301 Moved Permanently&apos;); //设置地址被永久的重定向 301
+header(&apos;Location: http://www.ithhc.cn/&apos;); //跳转到一个新的地址
+header(&apos;Refresh: 10; url=http://www.ithhc.cn/&apos;); //延迟转向 也就是隔几秒跳转
+header(&apos;X-Powered-By: PHP/6.0.0&apos;); //修改 X-Powered-By信息
+header(&apos;Content-language: en&apos;); //文档语言
+header(&apos;Content-Length: 1234&apos;); //设置内容长度
+header(&apos;Last-Modified: &apos;.gmdate(&apos;D, d M Y H:i:s&apos;, $time).&apos; GMT&apos;); //告诉浏览器最后一次修改时间
+header(&apos;HTTP/1.1 304 Not Modified&apos;); //告诉浏览器文档内容没有发生改变
+
+###内容类型###
+header(&apos;Content-Type: text/html; charset=utf-8&apos;); //网页编码
+header(&apos;Content-Type: text/plain&apos;); //纯文本格式
+header(&apos;Content-Type: image/jpeg&apos;); //JPG、JPEG
+header(&apos;Content-Type: application/zip&apos;); // ZIP文件
+header(&apos;Content-Type: application/pdf&apos;); // PDF文件
+header(&apos;Content-Type: audio/mpeg&apos;); // 音频文件
+header(&apos;Content-type: text/css&apos;); //css文件
+header(&apos;Content-type: text/javascript&apos;); //js文件
+header(&apos;Content-type: application/json&apos;); //json
+header(&apos;Content-type: application/pdf&apos;); //pdf
+header(&apos;Content-type: text/xml&apos;); //xml
+header(&apos;Content-Type: application/x-shockw**e-flash&apos;); //Flash动画
+
+######
+
+###声明一个下载的文件###
+header(&apos;Content-Type: application/octet-stream&apos;);
+header(&apos;Content-Disposition: attachment; filename=&quot;ITblog.zip&quot;&apos;);
+header(&apos;Content-Transfer-Encoding: binary&apos;);
+readfile(&apos;test.zip&apos;);
+######
+
+###对当前文档禁用缓存###
+header(&apos;Cache-Control: no-cache, no-store, max-age=0, must-revalidate&apos;);
+header(&apos;Expires: Mon, 26 Jul 1997 05:00:00 GMT&apos;);
+######
+
+###显示一个需要验证的登陆对话框###
+header(&apos;HTTP/1.1 401 Unauthorized&apos;);
+header(&apos;WWW-Authenticate: Basic realm=&quot;Top Secret&quot;&apos;);
+######
+
+
+###声明一个需要下载的xls文件###
+header(&apos;Content-Disposition: attachment; filename=ithhc.xlsx&apos;);
+header(&apos;Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&apos;);
+header(&apos;Content-Length: &apos;.filesize(&apos;./test.xls&apos;));
+header(&apos;Content-Transfer-Encoding: binary&apos;);
+header(&apos;Cache-Control: must-revalidate&apos;);
+header(&apos;Pragma: public&apos;);
+readfile(&apos;./test.xls&apos;);
+######
+?&gt;
+</code></pre><p>1</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/09/19/导出文件并提供下载/" data-id="cjftiiufu007k522nf9mmtprs" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/09/27/laravel核心概念/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          laravel核心概念
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/09/11/homestead/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Vagrant之Homestead</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/09/19/导出文件并提供下载/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#header（）实现文件下载"><span class="toc-number">1.</span> <span class="toc-text">header（）实现文件下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#header-函数"><span class="toc-number">2.</span> <span class="toc-text">header() 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#用法"><span class="toc-number">2.1.</span> <span class="toc-text">用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-number">2.2.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数"><span class="toc-number">2.3.</span> <span class="toc-text">参数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#string"><span class="toc-number">2.3.1.</span> <span class="toc-text">string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#replace"><span class="toc-number">2.3.2.</span> <span class="toc-text">replace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#http-response-code"><span class="toc-number">2.3.3.</span> <span class="toc-text">http_response_code</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#一些常见的header功能"><span class="toc-number">2.4.</span> <span class="toc-text">一些常见的header功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、重定向"><span class="toc-number">2.4.1.</span> <span class="toc-text">1、重定向</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、指定内容："><span class="toc-number">2.4.2.</span> <span class="toc-text">2、指定内容：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3、附件："><span class="toc-number">2.4.3.</span> <span class="toc-text">3、附件：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4、让用户获取最新的资料和数据而不是缓存"><span class="toc-number">2.4.4.</span> <span class="toc-text">4、让用户获取最新的资料和数据而不是缓存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他例子"><span class="toc-number">2.5.</span> <span class="toc-text">其他例子</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
