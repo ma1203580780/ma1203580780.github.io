@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-04-09T06:37:07.333Z</updated>
+  <updated>2018-04-16T08:27:54.632Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -17,11 +17,35 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>关于下产权房的一些看法</title>
+    <title>monolog</title>
+    <link href="http://martist.cn/2018/04/13/monolog/"/>
+    <id>http://martist.cn/2018/04/13/monolog/</id>
+    <published>2018-04-12T16:00:00.000Z</published>
+    <updated>2018-04-16T08:27:54.632Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="php中的日志库"><a href="#php中的日志库" class="headerlink" title="php中的日志库"></a>php中的日志库</h2><p>php中并没有内建的日志接口，故长期以来也没一个功能完备并且应用广泛的日志库。monolog是一个为5.3以上版本php开发的日志库，但是需要注意的是现在主干版本只支持php 7以上版本，如果你的服务器环境还是php 5的话，可以使用monolog的1.x版本。</p><p>monolog的github地址：<a href="https://github.com/Seldaek/monolog" target="_blank" rel="external">https://github.com/Seldaek/monolog</a><br>中文文档地址：<a href="https://github.com/Clarence-pan/monolog-zh-doc" target="_blank" rel="external">https://github.com/Clarence-pan/monolog-zh-doc</a><br>psr规范官方地址：<a href="https://www.php-fig.org/psr" target="_blank" rel="external">https://www.php-fig.org/psr</a></p><p>值得一提的是monolog是一个符合psr-3规范的日志类库，并且符合psr-4加载规范。这有利于松耦合的融入框架中。下面是正在使用monolog作为日志组件的框架。</p><h3 id="框架集成"><a href="#框架集成" class="headerlink" title="框架集成"></a>框架集成</h3><p>使用 PSR-3 的框架和库可以非常简单地集成 Monolog, 因为它实现了这个接口。<br>Symfony2 开箱即用 Monolog.<br>Silex 开箱即用 Monolog.<br>Laravel 4 &amp; 5 开箱即用 Monolog.<br>Lumen 开箱即用 Monolog.<br>PPI 开箱即用 Monolog.<br>CakePHP 可以通过 cakephp-monolog 这个插件来使用 Monolog.<br>Slim 可以通过 Slim-Monolog 这个日志适配器来使用 Monolog.<br>XOOPS 2.6 开箱即用 Monolog.<br>Aura.Web_Project 开箱即用 Monolog.<br>Nette Framework 可以通过 Kdyby/Monolog 这个扩展来使用 Monolog.<br>Proton Micro Framework 开箱即用 Monolog.<br>FuelPHP 开箱即用 Monolog.<br>Equip Framework 开箱即用 Monolog.<br>Yii 2 可以通过 yii2-monolog 这个插件来使用 Monolog.<br>Hawkbit Micro Framework 开箱即用 Monolog.</p><h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>Monolog 需要 PHP 7.0 或以上版本才能正常工作。至于 PHP 5.3 请使用 Monolog ^1.0.</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code>composer require monolog/monolog</code></pre><h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><pre><code>&lt;?phpuse Monolog\Logger;use Monolog\Handler\StreamHandler;// 创建一个日志通道$log = new Logger(&apos;name&apos;);$log-&gt;pushHandler(new StreamHandler(&apos;path/to/your.log&apos;, Logger::WARNING));// 添加日志记录$log-&gt;warning(&apos;Foo&apos;);$log-&gt;error(&apos;Bar&apos;);</code></pre><p>1</p>]]></content>
+    
+    <summary type="html">
+    
+      这可能是php世界中最好的日志库——monolog
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于小产权房的一些看法</title>
     <link href="http://martist.cn/2018/04/09/%E5%85%B3%E4%BA%8E%E5%B0%8F%E4%BA%A7%E6%9D%83%E6%88%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
     <id>http://martist.cn/2018/04/09/关于小产权房的一些看法/</id>
     <published>2018-04-08T16:00:00.000Z</published>
-    <updated>2018-04-09T06:37:07.333Z</updated>
+    <updated>2018-04-16T07:37:24.915Z</updated>
     
     <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="先回答几个问题"><a href="#先回答几个问题" class="headerlink" title="先回答几个问题"></a>先回答几个问题</h2><h3 id="什么是小产权房？"><a href="#什么是小产权房？" class="headerlink" title="什么是小产权房？"></a>什么是小产权房？</h3><p>小产权房是指在农村集体土地上建设的房屋，未缴纳土地出让金等费用，其产权证不是由国家房管部门颁发，而是由乡政府或村政府颁发，亦称“乡产权房”。“小产权房”不是法律概念，是人们在社会实践中形成的一种约定俗成的称谓。该类房没有国家发放的土地使用证和预售许可证，购房合同在国土房管局不会给予备案。所谓产权证亦不是真正合法有效的产权证。按照国家的相关要求，“小产权房”不得确权发证，不受法律保护。</p><h3 id="小产权房有保障吗？"><a href="#小产权房有保障吗？" class="headerlink" title="小产权房有保障吗？"></a>小产权房有保障吗？</h3><p>如果有一天这些村民把开发商买地的钱花完了，没钱了，开始动歪脑筋找钱花的时候，这群敢买小产权房的羔羊是再好宰不过了。隔三差五要求你每个月交物业费，村管理费，或者看当下房价高想在卖一次，直接撕毁合同。都是买房者不能承受之重</p><blockquote><p>家里在京郊有一套小产权，可谓依山傍水，空气清新，景色怡人，完全脱离城市的喧嚣。简单整了整之后，父母每周末都要过去住两天，感情状态回到新婚的水准。<br>然后，开放商想把这卖给某企业，就断水断电，列了个正常人不会签的条件，准备收房了。– 郭云昊</p></blockquote><h3 id="小产权房为什么不受保护？"><a href="#小产权房为什么不受保护？" class="headerlink" title="小产权房为什么不受保护？"></a>小产权房为什么不受保护？</h3><p>1.本集体组织成员之间买卖小产权房一般认定合同有效<br>2.本集体与他集体组织成员之间买卖小产权房一般认定合同无效<br>3.集体组织成员与城镇居民之间买卖小产权房一般认定合同无效<br>例外情形:城镇居民在签订小产权房买卖合同后取得了该集体组织户口并经相关部门批准，该房屋买卖合同一般认定有效。<br>4.小产权房买卖合同被认定无效之后的处理规则<br>5.上海地区对小产权房纠纷特别规定</p><p><strong> 法律禁止非同一集体组织成员间小产权房买卖，因此，买卖小产权房请慎重！</strong></p><p>具体参见： <a href="https://www.zhihu.com/question/20158141" target="_blank" rel="external">https://www.zhihu.com/question/20158141</a></p><h3 id="如果购买了小产权房，需要承担什么风险呢？"><a href="#如果购买了小产权房，需要承担什么风险呢？" class="headerlink" title="如果购买了小产权房，需要承担什么风险呢？"></a>如果购买了小产权房，需要承担什么风险呢？</h3><ol><li>法律效力<br>“小产权房”买卖合同的效力一般认定无效。</li><li>房产转让<br>“小产权房”拿不到正式的房产证，因此并不构成真正法律意义上的产权。即小产权房只有使用权，没有所有权。<br>根据《中华人民共和国土地管理法》的规定，小产权房不能向非本集体成员的第三人转让或出售，即购买后不能合法转让过户。其同时对房屋的保值和升值也有一定影响。</li><li>政策风险<br>购买在建小产权房时，购房人与开发商签订合同并交付房款后，如果相关部门整顿乡产权房的建设项目，可导致部分项目停建甚至被强迫拆除。购房人会面临既无法取得房屋，又不能及时索回房款的尴尬境地。<br>其次，购房后如果遇到国家征地拆迁，由于乡产权房没有国家认可的合法产权，购房人并非合法的产权人，所以无法得到对产权进行的拆迁补偿。</li><li>监管缺位<br>乡产权房屋的开发建设没有明确的规定加以约束，开发建设的监管存在缺位，对购房者的利益有一定的影响。同时，开发单位的资质没有，房屋质量和房屋售后保修难以保证。</li></ol><p><strong>综上所述，小产权房是不受法律保障的，所以不建议购买。</strong></p><h2 id="“小产权房”能不能买？"><a href="#“小产权房”能不能买？" class="headerlink" title="“小产权房”能不能买？"></a>“小产权房”能不能买？</h2><p>通俗的说，没有所谓小产权房，咱们国家从来没有过这个概念。你口中的“小产权”其实是“没产权”，不出纠纷还好，出了事没有任何保障，断水断电，然后三天两头村民去你家闹，你不能维权。反过头来国家或者村里要整你，也只需要一纸公文。</p><p>不是内行不要碰。</p><p>小产权房经常要求全款支付，也不能贷款。其次手续各方面容易出问题。如果不是自己涉入很深，对风险把控非常彻底，或者是对卖方有十足的把控能力的话，绝对不要碰。</p><p>这类房子不能考虑未来转手，不能考虑增值空间。</p><p>千万别碰小产权“期房”，那就等于是拿着血汗钱做了一次风投。</p>]]></content>
     
@@ -39,6 +63,28 @@
   </entry>
   
   <entry>
+    <title>健身相关文章的推荐</title>
+    <link href="http://martist.cn/2018/04/08/%E5%81%A5%E8%BA%AB%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0%E7%9A%84%E6%8E%A8%E8%8D%90/"/>
+    <id>http://martist.cn/2018/04/08/健身相关文章的推荐/</id>
+    <published>2018-04-07T16:00:00.000Z</published>
+    <updated>2018-04-16T02:15:40.514Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="健身还是伤身？"><a href="#健身还是伤身？" class="headerlink" title="健身还是伤身？"></a>健身还是伤身？</h2><p><a href="https://zhuanlan.zhihu.com/p/34315947" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/34315947</a></p><h2 id="健身后的禁忌—10个不要，关乎身家性命"><a href="#健身后的禁忌—10个不要，关乎身家性命" class="headerlink" title="健身后的禁忌—10个不要，关乎身家性命"></a>健身后的禁忌—10个不要，关乎身家性命</h2><p><a href="https://zhuanlan.zhihu.com/p/25606492" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/25606492</a></p><h2 id="运动不是膝盖杀手，它才是"><a href="#运动不是膝盖杀手，它才是" class="headerlink" title="运动不是膝盖杀手，它才是!"></a>运动不是膝盖杀手，它才是!</h2><p><a href="https://zhuanlan.zhihu.com/p/31894631" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/31894631</a></p><h2 id="史上最全面的拉伸指南"><a href="#史上最全面的拉伸指南" class="headerlink" title="史上最全面的拉伸指南"></a>史上最全面的拉伸指南</h2><p><a href="https://zhuanlan.zhihu.com/p/32118734" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/32118734</a></p><h2 id="严谨的健身书籍推荐2-姿态评估、运动损伤和身体疼痛"><a href="#严谨的健身书籍推荐2-姿态评估、运动损伤和身体疼痛" class="headerlink" title="严谨的健身书籍推荐2 - 姿态评估、运动损伤和身体疼痛"></a>严谨的健身书籍推荐2 - 姿态评估、运动损伤和身体疼痛</h2><p><a href="https://zhuanlan.zhihu.com/p/22864752" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22864752</a></p><h2 id="物美价廉的健身装备推荐，亲测好用！"><a href="#物美价廉的健身装备推荐，亲测好用！" class="headerlink" title="物美价廉的健身装备推荐，亲测好用！"></a>物美价廉的健身装备推荐，亲测好用！</h2><p><a href="https://zhuanlan.zhihu.com/p/22762552" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22762552</a></p><p>持续更新！</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
+    
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>SaaS的php技术实现</title>
     <link href="http://martist.cn/2018/04/01/SaaS%E7%9A%84php%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
     <id>http://martist.cn/2018/04/01/SaaS的php技术实现/</id>
@@ -50,30 +96,6 @@
     <summary type="html">
     
       对我们phper来讲，这些概念不难理解
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>monolog</title>
-    <link href="http://martist.cn/2018/03/30/monolog/"/>
-    <id>http://martist.cn/2018/03/30/monolog/</id>
-    <published>2018-03-29T16:00:00.000Z</published>
-    <updated>2018-03-30T11:57:41.989Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p>]]></content>
-    
-    <summary type="html">
-    
-      最好用的php日志组件之一
     
     </summary>
     
@@ -111,13 +133,13 @@
   </entry>
   
   <entry>
-    <title>php-fpm优化</title>
+    <title>php-fpm小结</title>
     <link href="http://martist.cn/2018/03/20/php-fpm%E4%BC%98%E5%8C%96/"/>
     <id>http://martist.cn/2018/03/20/php-fpm优化/</id>
     <published>2018-03-19T16:00:00.000Z</published>
-    <updated>2018-04-02T10:34:49.069Z</updated>
+    <updated>2018-04-12T11:57:25.252Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a><br>fpm 是FastCGI Process Manager (FPM)的简拼。是FastCGI</p><h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><pre><code>支持平滑停止/启动的高级进程管理功能；可以工作于不同的 uid/gid/chroot 环境下，并监听不同的端口和使用不同的 php.ini 配置文件（可取代 safe_mode 的设置）；stdout 和 stderr 日志记录;在发生意外情况的时候能够重新启动并缓存被破坏的 opcode;文件上传优化支持;&quot;慢日志&quot; - 记录脚本（不仅记录文件名，还记录 PHP backtrace 信息，可以使用 ptrace或者类似工具读取和分析远程进程的运行数据）运行所导致的异常缓慢;fastcgi_finish_request() - 特殊功能：用于在请求完成和刷新数据后，继续在后台执行耗时的工作（录入视频转换、统计处理等）；动态／静态子进程产生；基本 SAPI 运行状态信息（类似Apache的 mod_status）；基于 php.ini 的配置文件。</code></pre><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>首先要找到php-fpm.conf配置文件,查看pid的配置路径</p><pre><code>machuangdeMacBook-Pro:etc machuang$  ps aux | grep php-fpm   machuang          1619   0.0  0.0  4267768    888 s000  S+   10:17上午   0:00.00 grep php-fpm_www              1610   0.0  0.0  4327128    856   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pid_www              1609   0.0  0.0  4328152    892   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pidroot              1608   0.0  0.0  4326104   1108   ??  Ss   10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pid</code></pre><p>查看php-fpm进程数:</p><pre><code>ps aux | grep -c php-fpm</code></pre><p>参考 <a href="http://php.net/manual/zh/install.fpm.configuration.php" target="_blank" rel="external">http://php.net/manual/zh/install.fpm.configuration.php</a></p><h2 id="CGI、FastCGI、php-fpm的关系"><a href="#CGI、FastCGI、php-fpm的关系" class="headerlink" title="CGI、FastCGI、php-fpm的关系"></a>CGI、FastCGI、php-fpm的关系</h2><p> ps aux | grep php-fpm   </p><h2 id="进程数和并发数的关系"><a href="#进程数和并发数的关系" class="headerlink" title="进程数和并发数的关系"></a>进程数和并发数的关系</h2><h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><p>1</p>]]></content>
     
     <summary type="html">
     
@@ -131,6 +153,28 @@
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
       <category term="nginx" scheme="http://martist.cn/tags/nginx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深蹲膝盖要不要过脚尖</title>
+    <link href="http://martist.cn/2018/03/18/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
+    <id>http://martist.cn/2018/03/18/深蹲膝盖要不要过脚尖/</id>
+    <published>2018-03-17T16:00:00.000Z</published>
+    <updated>2018-04-12T12:05:03.724Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>网上流传着“深蹲时膝盖不能过脚尖，过了脚尖容易伤膝盖”这种说法。今天，我们来探讨一下。</p><p>本来我以为这个事已经达成共识了，还是有人问，那么，我觉得有必要说两句。</p><p>看到一个说法，首先可以提问，对于这个说法，该问的就是：为什么不过脚尖能保护膝盖？网上的解释一般是：膝盖过脚尖，膝关节承受的压力会增加，于是受伤风险增加。</p><p>脊椎和任何关节，都与膝关节一样，增加压力就会提高受伤风险。现在，有这么一个膝盖和脚尖关系的说法，好，我炮制一个“背角（躯干与地面的夹角）小于45度就有椎间盘突出的风险”，你觉得怎么样？你说我没有理论支撑，那你找找看，深蹲脚尖这个事，有理论支撑吗？上网一查就发现，原来这说法没有任何文献，和我刚编出来的东西差不多，是拍脑门的产物。</p><p>你说，压力增加，就是容易受伤啊。他们这个说法虽然没有文献支撑，但是也没错啊。</p><p>我就奇了怪了，照他们这么说，深蹲就不能负重，因为一旦负重，膝关节承受的压力肯定就增加了，于是，大家都徒手深蹲吧。既然要减轻膝关节的压力，那徒手深蹲也不合适，最好找个人辅助一下。都这么干了，为啥还要膝盖不过脚尖地深蹲啊，干脆就别蹲了。为了减轻膝关节的压力，而采用膝盖不过脚尖的办法，还蹲什么啊？</p><p>哦，还是要蹲，还是要负重，毕竟还得训练，只是找一个最安全的办法，这种说法也站不住脚。与其用不过脚尖的怪异姿势保护膝关节，为什么不减轻一点重量用正常动作呢？嫌强度不够，那做硬拉得了。</p><p>哦，硬拉和深蹲不一样，就得蹲，就得上重量。你看，不蹲最安全，你要蹲；轻重量相对安全，你要上重量。你已经决定要让膝关节承受很大的压力，也就是说，你可以接受风险啊。膝关节压力增加，受伤的风险增加，说得很对，问题是，它是废话。你只要训练，只要想提高，要么增加强度、要么增加训练量（文末扩展阅读），受伤的风险就会增加，没有人会几十年如一日地用同样的负重、同样的组次、同样的节奏来训练吧。</p><p>你说你要翘臀，伸膝的事无所谓。那么，你最好做纯直腿的站躬身或硬拉，这样伸膝就没多少参与了。可是，你要知道，一旦站姿负重，这些重量就直接作用于膝关节上了，而且即便你完全直着腿，伸髋的时候腘绳肌发力，一样会再次增加膝关节压力的。</p><p>所以，无论怎么练，只要负重，甚至就算徒手，都会增大膝关节压力，照他们这个理论，也就增加了膝伤风险。显然，我们还是要锻炼的，不能因为它受压就放弃，所以，要探讨的就是膝伤风险问题了。</p><p>干什么事都有风险对不对？不能接受风险的话，应该老老实实躺在床上，不然上楼、跑步，甚至走路都有伤膝盖的风险，出门还有被车撞的风险呢。像我这种脸大的，躺床上看手机都有被砸到的风险。如果一听说风险就要避免，人是没法活了。</p><p>人活着，只要风险在可接受的范围内，生活就是第一位的。锻炼也是如此，只要风险可接受，训练目的就应该是第一位的。</p><p>你知道几个人单纯因为膝盖超脚尖深蹲导致膝伤的？你说健身房那个胖子某甲这么蹲膝盖就受伤了。这就没意思了，你只看见他“深蹲时膝盖超脚尖”和“受伤”这两件事了，也许它们相关，但不能说就是因果啊。我奶奶啥都没干，膝盖还坏了呢，实际上是退行性的事，我一定把她的“膝盖坏了”和“啥都没干”建立起因果关系，得出“什么都没干易导致膝伤”的结论，不合适吧。</p><p>你应该看看健身房里那些负重比较大的训练者，他们深蹲时膝盖都过脚尖了，他们是否受伤。如果得出的结论是：那些膝盖超脚尖的训练者，负重非常大，没有一个因此而膝伤的。那么就说明，这样的训练方式受伤概率极低，尽管这个风险可能存在，但是，它是可接受的。于是，你也应该考虑不管这个拍脑门出来的说法，而把训练目的放在首要位置。</p><p>也许你又想了，虽然这说法没什么道理，但宁可信其有不可信其无，反正也没什么坏处。我得告诉你，你真这么干的话，有坏处。</p><p>现在，好像大家都非常爱护自己的膝关节，说起啥来都是伤膝盖。难道，大家身上除了膝关节就没有别的关节了吗？</p><p>我们还要保护腰部，因为过于后倾的深蹲，对腰部肌肉甚至骨骼的损害是很大的。希望大家在健身过程中，保护好自己的身体。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
+    
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
     
   </entry>
   
@@ -179,6 +223,28 @@
   </entry>
   
   <entry>
+    <title>让我们脱离国定器械</title>
+    <link href="http://martist.cn/2018/03/03/%E8%84%B1%E7%A6%BB%E5%9B%BD%E5%AE%9A%E5%99%A8%E6%A2%B0/"/>
+    <id>http://martist.cn/2018/03/03/脱离国定器械/</id>
+    <published>2018-03-02T16:00:00.000Z</published>
+    <updated>2018-04-12T12:00:05.603Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><blockquote><p>从安全角度讲，为什么不推荐史密斯架等固定轨迹器械训练？</p></blockquote><p>我说来说去都是杠铃、哑铃（其实哑铃我都没说过），从不推荐练史密斯架或是各种各样的固定轨迹器械。这是为什么？今天，我从安全角度来说说。针对普通训练者，高阶健美、康复阶段等不在探讨范围内。</p><p>看我文章的，大多是去过健身房的。健身房的一大特色就是，那里总有一堆一堆的器械，看上去很高级，甚至让初学者神往。有不少人问我，健身房的那些器械不会用，怎么办？我的回答很简单：那太好了，你直接路过就行，别碰它们。</p><p>我这么说，不是想拉人来我的地方训练，更不是不负责任，仅仅是从安全角度为他们考虑。</p><p>很多人认为，那些固定器械很安全，掉不下来，砸不到人，不会出事故。这是对的，非常正确的，所以，健身房就有了这些东西，注意——是为了不出事故。健身房不希望你深蹲的时候，哦，对了，好多健身房连自由深蹲架都没有，卧推吧。健身房不希望你卧推的时候被杠铃压在下面，你左右扭动，最终把杠铃扔到地上了，结果地板上多了一个坑；他们也不希望你左右扭动，却没扭出来，结果受伤了。所以，健身房要有那些能确保不会出现人身事故、财产损失的家伙，于是，“安全”的固定轨迹器械就诞生了。</p><p>可是，好像从没有人考虑，这些器械，对于自己的训练，会不会出问题。其实不是不考虑，是很多人考虑不到。我今天要说的安全，是关于训练者自己的，而不是关于健身房的经营者的。</p><p>我们还是拿一个几乎所有人都会做且都做过的项目来说吧——卧推。</p><p>这个动作功能性、结构性都很差，但力量表现很好，而且，当泵感上来的时候，借用我一个学员的话：“很屌的感觉”。那么卧推的时候，简单地说，主要发力肌群是胸大肌、肱三头肌、三角肌前束，这是我们都知道的。卧推在向心收缩过（把杠铃推起，向心离心搞不清楚的，请看文末扩展阅读）程中，主要是胸大肌、三角肌前束负责改变肩关节角度，肱三头肌伸展肘关节。但是，请注意，胸前那个家伙是相当重的啊，负责稳定的肌群要保证杠铃轨迹，千万不能让它远离我们控制的范围，换句话说，就是还有一些肌肉要保证杠铃别跑到眼睛或肚子上方。</p><p>可是在史密斯架卧推的时候呢，重量大了或次数多了，主发力肌群力量不足，而轨迹又被固定了，那么无论你的力是朝着哪个方向，只要有一点向上的意思杠铃就能向上走。结果显而易见，当即将力竭或是训练者无法准确控制动作的时候，所有负责稳定的肌群就都会参与发力，于是，关节只能承受50公斤的时候，你60公斤也一样推得起来。在史密斯架上，50公斤的力量、50公斤承受能力，推60公斤的杠铃，推一次可以，推十次，我就想问问你肩关节还是否舒服了。</p><p>再说了，如果你对自己的肩关节负责的话，卧推，能直上直下吗？</p><p>所有让负责稳定的肌群无需发力控制轨迹的固定轨迹器械，对普通训练者都非常糟糕。当然，作为职业健美运动员，这些器械是有价值的，它们可以让训练者更好地训练目标肌群。请注意，职业运动员，成绩是第一位的，其它都不重要。带伤上场、比赛受伤都是很常见的，现在禁药查得这么严，很多运动员不照样用嘛。但这作为他们的职业，就像你明知熬夜不好、作息颠倒不好，为了工作，有时候不也得这么干嘛。</p><p>问题是，你是职业健美运动员吗，你致力于成为职业健美运动员吗，你具备职业健美运动员的训练水平吗？不是的话，咱还是照着普通人健身的思路走，悠着点吧。</p><p>史密斯架深蹲，和史密斯架卧推还是有区别的。但是，深蹲这事，肩上那个杠铃很重，重到你不愿出现一点点重心不稳的情况，有保护还好，不然一不小心就是事故。而史密斯架深蹲就不一样了，什么节律、什么重心、什么前后左右，统统不用管，你就可劲干吧。50公斤的力量、50公斤承受能力，深蹲60公斤的杠铃。</p><p>健身房里，见过史密斯架前有人做“老熊蹭树”的动作吧？就是双脚站在杠铃投影前面老远做深蹲。蹲下去的时候躯干竖直，从侧面看就像是扛着杠铃坐上了一个不可见的椅子。你在侧面看一会，就能理解这诡异的动作为什么叫“老熊蹭树”了。如果他们的理由是这动作不伤膝盖，因为膝盖不会过脚尖，请看扩展阅读，深蹲能否过脚尖这事我写过了。</p><p>说道这，结论该有了。固定轨迹的器械会让训练者负责稳定的肌群参与发力。随着时间的推移，关节承受不了的重量长时间被使用，最终，训练者受伤。这时候，你到哪说理去呢？</p><p>如果你还对那些看上去很高级的器械神往的话，希望你看了这篇小文能有所收获，为了你自己，为了将陪你一辈子的关节考虑，放弃那些为健身房经营者设计的玩意吧。</p><p>多说一句。钢线器械不一样啊，不是固定轨迹的。钢线很好，不像杠铃哑铃壶铃之类只能对抗向下的重力，它可以让阻力朝向任何你需要的方向。比如，练肩外旋的同志们，用哑铃可苦了，得趴着或撅着，有了钢线器械，你想站着、坐着、甚至躺着都行。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
+    
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>中间件</title>
     <link href="http://martist.cn/2018/03/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
     <id>http://martist.cn/2018/03/02/中间件/</id>
@@ -199,6 +265,28 @@
       <category term="常识" scheme="http://martist.cn/tags/%E5%B8%B8%E8%AF%86/"/>
     
       <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>面向对象的模式方法__tostring()和__invoke()</title>
+    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
+    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
+    <published>2018-02-28T16:00:00.000Z</published>
+    <updated>2018-04-16T07:43:06.650Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      php
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
@@ -385,102 +473,6 @@
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
       <category term="git" scheme="http://martist.cn/tags/git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>php获取文件目录路径</title>
-    <link href="http://martist.cn/2017/12/22/php%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84/"/>
-    <id>http://martist.cn/2017/12/22/php获取文件目录路径/</id>
-    <published>2017-12-21T16:00:00.000Z</published>
-    <updated>2018-03-27T07:38:08.117Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a><br>具体代码如下：</p><pre><code>&lt;?php/*** PHP获取路径或目录实现*///魔术变量，获取当前文件的绝对路径echo &quot;__FILE__: ========&gt; &quot;.__FILE__;echo &apos;&lt;br/&gt;&apos;;//魔术变量，获取当前脚本的目录echo &quot;__DIR__: ========&gt; &quot;.__DIR__;echo &apos;&lt;br/&gt;&apos;;//dirname返回路径的目录部分,dirname(__FILE__)相当于__DIR__echo &quot;dirname(__FILE__): ========&gt; &quot;.dirname(__FILE__);echo &apos;&lt;br/&gt;&apos;;//$_SERVER[&apos;PHP_SELF&apos;]和$_SERVER[&apos;SCRIPT_NAME&apos;]的结果一般相同，他们都是获取当前脚本的文件名//只有当php以cgi方式运行时有区别，但是现在几乎找不到以cgi方式运行php了echo &apos;$_SERVER[&quot;PHP_SELF&quot;]: ========&gt; &apos;.$_SERVER[&apos;PHP_SELF&apos;];echo &apos;&lt;br/&gt;&apos;;echo &apos;$_SERVER[&quot;SCRIPT_NAME&quot;]: ========&gt; &apos;.$_SERVER[&apos;SCRIPT_NAME&apos;];echo &apos;&lt;br/&gt;&apos;;//当前执行脚本的绝对路径。记住，在CLI方式运行php是获取不到的echo &apos;$_SERVER[&quot;SCRIPT_FILENAME&quot;]: ========&gt; &apos;.$_SERVER[&apos;SCRIPT_FILENAME&apos;];echo &apos;&lt;br/&gt;&apos;;//当前运行脚本所在的文档根目录。在服务器配置文件中定义。echo &apos;$_SERVER[&quot;DOCUMENT_ROOT&quot;]: ========&gt; &apos;.$_SERVER[&apos;DOCUMENT_ROOT&apos;];echo &apos;&lt;br&gt;&apos;;//getcwd()返回当前工作目录echo &quot;getcwd(): ========&gt; &quot;.getcwd();</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="常识" scheme="http://martist.cn/tags/%E5%B8%B8%E8%AF%86/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>githook实践</title>
-    <link href="http://martist.cn/2017/12/21/webhook/"/>
-    <id>http://martist.cn/2017/12/21/webhook/</id>
-    <published>2017-12-20T16:00:00.000Z</published>
-    <updated>2017-12-21T03:26:04.809Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><h3 id="gitlab"><a href="#gitlab" class="headerlink" title="gitlab"></a>gitlab</h3><p>GitLab 是基于 GIT 实现的现代化的开发者协作平台，它将 issues, code review, CI 和 CD 整合到独立的网站UI，弥补了 GIT 在可视化操作方面的不足。</p><h3 id="服务器"><a href="#服务器" class="headerlink" title="服务器"></a>服务器</h3><p>分别部署你的项目和gitlab。</p><h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>分别解析你的gitlab和被hook触发的项目。</p><h3 id="服务端执行脚本（php，shell）"><a href="#服务端执行脚本（php，shell）" class="headerlink" title="服务端执行脚本（php，shell）"></a>服务端执行脚本（php，shell）</h3><p>php脚本用来接受githook的请求，shell脚本用来执行git pull等命令。</p><h2 id="本文目的"><a href="#本文目的" class="headerlink" title="本文目的"></a>本文目的</h2><p>本文的目的是配置实现在 GitLab 平台上的代码自动部署。想要达到的效果是这样子的，当客户端向 GitLab 服务器的特定分支（如：master）提交代码时，GitLab 服务器会发送通知给线上代码服务器，代码服务器收到通知之后再拉取 GitLab 服务器上该分支的最新代码。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">客户端 --&gt; git push                                                                              </div><div class="line">                   -                                                                                  </div><div class="line">                     -                                                                                  </div><div class="line">                        -                                                                                </div><div class="line">                          -&gt;                                                                         </div><div class="line">                               -----------------   -- http通知 --&gt;     -----------------                         </div><div class="line">客户端  --&gt; git push      ---&gt;  |  gitlab服务器  | -                 -  |   代码服务器    |</div><div class="line">                               -----------------   &lt;- git pull --     -----------------                         </div><div class="line">                          -&gt;                                                                         </div><div class="line">                        -                                                                                      </div><div class="line">                      -</div><div class="line">                   -</div><div class="line">客户端 --&gt; git push</div></pre></td></tr></table></figure><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在项目的setting里面设置webhook，点击webhook链接可以查看具体的使用方法。设置的域名是公网域名，gitlab管理的指定项目被push后会立即请求设定的网址，触发服务器的钩子，之后 git pull。</p><h2 id="php脚本"><a href="#php脚本" class="headerlink" title="php脚本"></a>php脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line"></div><div class="line">$access_token = &apos;your-gitlab-webhook-token&apos;;</div><div class="line">$access_ip = [&apos;123.4.5.6&apos;];</div><div class="line"></div><div class="line">/* get user token and ip address */</div><div class="line">$client_token = $_SERVER[&apos;HTTP_X_GITLAB_TOKEN&apos;];</div><div class="line">$client_ip = $_SERVER[&apos;REMOTE_ADDR&apos;];</div><div class="line"></div><div class="line">/* create open log */</div><div class="line">$fs = fopen(&apos;./gitlab/webhook.log&apos;, &apos;a&apos;);</div><div class="line">fwrite($fs, &apos;Request on [&apos;.date(&quot;Y-m-d H:i:s&quot;).&apos;] from [&apos;.$client_ip.&apos;]&apos;.PHP_EOL);</div><div class="line"></div><div class="line">/* test token */</div><div class="line">if ($client_token !== $access_token)</div><div class="line">&#123;</div><div class="line">    echo &quot;error 403&quot;;</div><div class="line">    fwrite($fs, &quot;Invalid token [&#123;$client_token&#125;]&quot;.PHP_EOL);</div><div class="line">    exit(0);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* test ip */</div><div class="line">if ( ! in_array($client_ip, $access_ip))</div><div class="line">&#123;</div><div class="line">    echo &quot;error 503&quot;;</div><div class="line">    fwrite($fs, &quot;Invalid ip [&#123;$client_ip&#125;]&quot;.PHP_EOL);</div><div class="line">    exit(0);</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* get json data */</div><div class="line">$json = file_get_contents(&apos;php://input&apos;);</div><div class="line">$data = json_decode($json, true);</div><div class="line"></div><div class="line">/* get branch */</div><div class="line">$branch = $data[&quot;ref&quot;];</div><div class="line">//fwrite($fs, &apos;=======================================================================&apos;.PHP_EOL);</div><div class="line"></div><div class="line">/* if you need get full json input */</div><div class="line">//fwrite($fs, &apos;DATA: &apos;.print_r($data, true).PHP_EOL);</div><div class="line"></div><div class="line">/* branch filter */</div><div class="line">if ($branch === &apos;refs/heads/master&apos;))</div><div class="line">&#123;</div><div class="line">    fwrite($fs, &apos;BRANCH: &apos;.print_r($branch, true).PHP_EOL);</div><div class="line">    exec(&quot;/var/www/api/public/gitlab/deploy.sh&quot;);</div><div class="line">    fwrite($fs, &apos;=================项目已更新==================&apos;.PHP_EOL);</div><div class="line">    $fs and fclose($fs);</div><div class="line">&#125;</div></pre></td></tr></table></figure><h3 id="shell脚本"><a href="#shell脚本" class="headerlink" title="shell脚本"></a>shell脚本</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">echo &apos;-------begin-----&apos;&gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div><div class="line">cd /var/www/your-project-path</div><div class="line">git checkout test</div><div class="line">git pull origin master &gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div><div class="line">echo &apos;-------end-------&apos;&gt;&gt; /var/www/your-project-path/gitlab/webhook.log</div></pre></td></tr></table></figure><h2 id="权限问题"><a href="#权限问题" class="headerlink" title="权限问题"></a>权限问题</h2><p>如果你的gitlab请求报绿色200，而且shell脚本可以执行到，但就是git执行不了，那就是权限出问题了。</p><h3 id="配置服务器git的用户和邮箱需要和gitlab的一致"><a href="#配置服务器git的用户和邮箱需要和gitlab的一致" class="headerlink" title="配置服务器git的用户和邮箱需要和gitlab的一致"></a>配置服务器git的用户和邮箱需要和gitlab的一致</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo -Hu www git config --global credential.helper store # 永久保存</div><div class="line">sudo -Hu www git config --global user.name &quot;Bantes&quot;</div><div class="line">sudo -Hu www git config --global user.email &quot;admin@xsooo.com&quot; # 邮箱请与conding上一致</div></pre></td></tr></table></figure><h3 id="查看nginx或者apache的执行用户"><a href="#查看nginx或者apache的执行用户" class="headerlink" title="查看nginx或者apache的执行用户"></a>查看nginx或者apache的执行用户</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ sudo ps aux | grep php</div><div class="line">www      22131  0.0  0.2  42872 23096 ?        S    02:13   0:03 nginx: worker process</div><div class="line">www      22132  0.0  0.2  42900 23352 ?        S    02:13   0:01 nginx: worker process</div><div class="line"></div><div class="line">$sudo ps aux | grep php-fpm</div><div class="line">www      22347  0.0  0.1 163832  9008 ?        S    02:13   0:00 php-fpm: pool www</div></pre></td></tr></table></figure><p>确认是www用户在运行，也即是说gitlab中的Webhooks的所有请求都是以www用户在执行。再次查看我们的hook for php脚本。</p><p>此请求默认以www 用户去访问gitlab.php，然后执行master_deploy.sh脚本。因此，需要给www用户设置 Public Key Authentication</p><h3 id="建立用户目录"><a href="#建立用户目录" class="headerlink" title="建立用户目录"></a>建立用户目录</h3><p>sudo mkdir /home/www</p><h3 id="部署公钥"><a href="#部署公钥" class="headerlink" title="部署公钥"></a>部署公钥</h3><p>sudo -Hu www ssh-keygen -t rsa # 请选择 “no passphrase”，一直回车下去</p><h3 id="将此公钥加入gitlab中的SSH-KEYS中"><a href="#将此公钥加入gitlab中的SSH-KEYS中" class="headerlink" title="将此公钥加入gitlab中的SSH KEYS中"></a>将此公钥加入gitlab中的SSH KEYS中</h3><p>cat /home/www/.ssh/id_rsa.pub</p><h3 id="设置项目的文件夹用户与用户组为www"><a href="#设置项目的文件夹用户与用户组为www" class="headerlink" title="设置项目的文件夹用户与用户组为www"></a>设置项目的文件夹用户与用户组为www</h3><p>$ sudo chown -R www:www /mnt/www/project</p><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>tail命令输出日志</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tail -f 5 webhook.log</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      linux
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="gitlab" scheme="http://martist.cn/tags/gitlab/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mac 升级你的开发环境</title>
-    <link href="http://martist.cn/2017/11/27/Mac%20%E5%8D%87%E7%BA%A7%E4%BD%A0%E7%9A%84%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"/>
-    <id>http://martist.cn/2017/11/27/Mac 升级你的开发环境/</id>
-    <published>2017-11-27T13:30:50.000Z</published>
-    <updated>2017-11-27T14:54:51.905Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>Mac系统自带php开发环境，但是版本低，Apache较为落伍，所以我们要紧跟潮流，走在技术的最前线。</p><h2 id="本地原环境"><a href="#本地原环境" class="headerlink" title="本地原环境"></a>本地原环境</h2><p>Apache2.4；PHP5.6</p><h2 id="1-安装Nginx"><a href="#1-安装Nginx" class="headerlink" title="1. 安装Nginx"></a>1. 安装Nginx</h2><pre><code>brew install nginx</code></pre><p>现象：一直显示updating homebrew，没有任何反应，我就给终止掉，再次执行brew install nginx，这次安装成功。</p><h3 id="1-1-安装成功"><a href="#1-1-安装成功" class="headerlink" title="1.1 安装成功"></a>1.1 安装成功</h3><p>新目录：/usr/local/etc/nginx<br>主要文件：nginx.conf<br>主要目录：servers(配置虚拟主机时使用)</p><h3 id="1-2-启动"><a href="#1-2-启动" class="headerlink" title="1.2 启动"></a>1.2 启动</h3><p>由于本地Apache一直在运行，所以先关闭Apache的运行：</p><pre><code>ps aux | grep apachekill -9 apached的PIDsudo nginx -s reload</code></pre><h3 id="1-3-配置server"><a href="#1-3-配置server" class="headerlink" title="1.3 配置server"></a>1.3 配置server</h3><p>cd servers,在此目录下创建xxx.conf文件</p><pre><code>server {      listen 80;      server_name phpadmin.com; // 配置本地域名      root /Users/xxx/xxx/phpmyadmin; // 本地项目路径      index index.php;      location / {              try_files $uri $uri/ /index.php?$args;      }      location ~ \.php$ {              fastcgi_split_path_info ^(.+\.php)(/.+)$;//如果是php文件，就让php-fpm去工作              # With php-fpm:              fastcgi_pass unix:/var/run/php71-fpm.sock;  //也可以写成127.0.0.1:9000，如果想使用sock需要 vi php71/php-fpm.d/www.conf 修改listen的设置              fastcgi_index index.php;                      fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;              include fastcgi_params;      }      access_log /var/log/nginx/xxx.log zqaccess; // zqaccess命名需要与上级目录  nginx.conf 中的log_format命名保持一致      error_log /var/log/nginx/xxx.err.log;  }</code></pre><h2 id="2-升级PHP到7-1和安装7-1的php-fpm"><a href="#2-升级PHP到7-1和安装7-1的php-fpm" class="headerlink" title="2. 升级PHP到7.1和安装7.1的php-fpm"></a>2. 升级PHP到7.1和安装7.1的php-fpm</h2><pre><code>brew install --without-apache --with-fpm --with-mssql php71</code></pre><p>如果你只是想升级php到7.1，而且还想用Apache，这里需要执行brew install –with-http22 或者 –with-http24 –with-mssql php71,这个要根据你Apache的版本了，具体你可以执行brew options php71命令进行查看。如果没有写–with-http24,安装后是不会有libexec/apache2/libphp7.so的。</p><h3 id="2-1-安装成功"><a href="#2-1-安装成功" class="headerlink" title="2.1 安装成功"></a>2.1 安装成功</h3><p>新目录：</p><pre><code>/usr/local/etc/php/7.1 配置php-fpm/usr/local/opt/php71/sbin目录下启动php-fpm：sudo ./php71-fpm restart</code></pre><p>启动php71-fpm如果失败，需要将原来的php-fpm给杀掉，mac原本有低版本的php-fpm。</p><h2 id="3-细节（用户权限问题）"><a href="#3-细节（用户权限问题）" class="headerlink" title="3. 细节（用户权限问题）"></a>3. 细节（用户权限问题）</h2><h3 id="3-1-验证Nginx是否生效"><a href="#3-1-验证Nginx是否生效" class="headerlink" title="3.1 验证Nginx是否生效"></a>3.1 验证Nginx是否生效</h3><p>配置好虚拟主机后，在指定目录下，创建一个html文件，如果浏览器能正常显示这个文件，则说明nginx生效。</p><h3 id="3-2-验证php能否正常运行"><a href="#3-2-验证php能否正常运行" class="headerlink" title="3.2 验证php能否正常运行"></a>3.2 验证php能否正常运行</h3><p>nginx server配置的是php71-fpm.sock，遇到了502错误，查看日志提示，用户权限不足。<br>nginx server配置修改成127.0.0.1:9000，www.conf的listen也修改成127.0.0.1:9000是可以正常执行php的。<br>解决502</p><pre><code>ll 查看生成的php71-fpm.sock文件，所属用户不是_www，vi /usr/local/etc/nginx/nginx.conf 文件，修改user为_wwwvi /usr/local/etc/php/7.1/php-fpm.d/www.conf，修改user = _wwwgroup = _www listen.owner = _www listen.group = _www</code></pre><h2 id="安装redis"><a href="#安装redis" class="headerlink" title="安装redis"></a>安装redis</h2><p>有很多方法，此处我推荐使用brew安装。</p><pre><code>brew install php71-redis</code></pre><p>一切就搞好了，可以命令查看下。</p><pre><code>php -m |grep redis</code></pre><h2 id="配置laravel项目"><a href="#配置laravel项目" class="headerlink" title="配置laravel项目"></a>配置laravel项目</h2><p>nginx server{} 需要加的代码:</p><pre><code>location / {try_files $uri $uri/ /index.php?$query_string;}</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="Mac" scheme="http://martist.cn/categories/Mac/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="Mac" scheme="http://martist.cn/tags/Mac/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>php7新特性</title>
-    <link href="http://martist.cn/2017/11/17/php7%E6%96%B0%E7%89%B9%E6%80%A7/"/>
-    <id>http://martist.cn/2017/11/17/php7新特性/</id>
-    <published>2017-11-16T16:00:00.000Z</published>
-    <updated>2018-04-09T12:01:10.616Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><p><a href="http://php.net/manual/zh/migration70.new-features.php" target="_blank" rel="external">http://php.net/manual/zh/migration70.new-features.php</a></p><p><a href="https://zhuanlan.zhihu.com/guagua" target="_blank" rel="external">https://zhuanlan.zhihu.com/guagua</a></p><p><a href="https://coyee.com/article/11569-what-s-new-and-exciting-in-php-7-1" target="_blank" rel="external">https://coyee.com/article/11569-what-s-new-and-exciting-in-php-7-1</a></p>]]></content>
-    
-    <summary type="html">
-    
-      概括的说下php7新特性
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>monolog | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这可能是php世界中最好的日志库——monolog">
+<meta name="keywords" content="web,php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="monolog">
+<meta property="og:url" content="http://martist.cn/2018/04/13/monolog/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="这可能是php世界中最好的日志库——monolog">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-16T08:27:54.632Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="monolog">
+<meta name="twitter:description" content="这可能是php世界中最好的日志库——monolog">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-monolog" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/13/monolog/" class="article-date">
+  <time datetime="2018-04-12T16:00:00.000Z" itemprop="datePublished">2018-04-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      monolog
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="php中的日志库"><a href="#php中的日志库" class="headerlink" title="php中的日志库"></a>php中的日志库</h2><p>php中并没有内建的日志接口，故长期以来也没一个功能完备并且应用广泛的日志库。monolog是一个为5.3以上版本php开发的日志库，但是需要注意的是现在主干版本只支持php 7以上版本，如果你的服务器环境还是php 5的话，可以使用monolog的1.x版本。</p>
+<p>monolog的github地址：<a href="https://github.com/Seldaek/monolog" target="_blank" rel="external">https://github.com/Seldaek/monolog</a><br>中文文档地址：<a href="https://github.com/Clarence-pan/monolog-zh-doc" target="_blank" rel="external">https://github.com/Clarence-pan/monolog-zh-doc</a><br>psr规范官方地址：<a href="https://www.php-fig.org/psr" target="_blank" rel="external">https://www.php-fig.org/psr</a></p>
+<p>值得一提的是monolog是一个符合psr-3规范的日志类库，并且符合psr-4加载规范。这有利于松耦合的融入框架中。下面是正在使用monolog作为日志组件的框架。</p>
+<h3 id="框架集成"><a href="#框架集成" class="headerlink" title="框架集成"></a>框架集成</h3><p>使用 PSR-3 的框架和库可以非常简单地集成 Monolog, 因为它实现了这个接口。<br>Symfony2 开箱即用 Monolog.<br>Silex 开箱即用 Monolog.<br>Laravel 4 &amp; 5 开箱即用 Monolog.<br>Lumen 开箱即用 Monolog.<br>PPI 开箱即用 Monolog.<br>CakePHP 可以通过 cakephp-monolog 这个插件来使用 Monolog.<br>Slim 可以通过 Slim-Monolog 这个日志适配器来使用 Monolog.<br>XOOPS 2.6 开箱即用 Monolog.<br>Aura.Web_Project 开箱即用 Monolog.<br>Nette Framework 可以通过 Kdyby/Monolog 这个扩展来使用 Monolog.<br>Proton Micro Framework 开箱即用 Monolog.<br>FuelPHP 开箱即用 Monolog.<br>Equip Framework 开箱即用 Monolog.<br>Yii 2 可以通过 yii2-monolog 这个插件来使用 Monolog.<br>Hawkbit Micro Framework 开箱即用 Monolog.</p>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>Monolog 需要 PHP 7.0 或以上版本才能正常工作。至于 PHP 5.3 请使用 Monolog ^1.0.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code>composer require monolog/monolog
+</code></pre><h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><pre><code>&lt;?php
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// 创建一个日志通道
+$log = new Logger(&apos;name&apos;);
+$log-&gt;pushHandler(new StreamHandler(&apos;path/to/your.log&apos;, Logger::WARNING));
+
+// 添加日志记录
+$log-&gt;warning(&apos;Foo&apos;);
+$log-&gt;error(&apos;Bar&apos;);
+</code></pre><p>1</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/04/13/monolog/" data-id="cjg20643i0032bd2n2qhsts10" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/09/关于小产权房的一些看法/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">关于小产权房的一些看法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/04/13/monolog/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#php中的日志库"><span class="toc-number">1.</span> <span class="toc-text">php中的日志库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#框架集成"><span class="toc-number">1.1.</span> <span class="toc-text">框架集成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求"><span class="toc-number">2.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础使用"><span class="toc-number">4.</span> <span class="toc-text">基础使用</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

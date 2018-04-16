@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>php-fpm优化 | MARTIST</title>
+  <title>php-fpm小结 | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="：-}">
 <meta name="keywords" content="linux,nginx">
 <meta property="og:type" content="article">
-<meta property="og:title" content="php-fpm优化">
+<meta property="og:title" content="php-fpm小结">
 <meta property="og:url" content="http://martist.cn/2018/03/20/php-fpm优化/index.html">
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-04-02T10:34:49.069Z">
+<meta property="og:updated_time" content="2018-04-12T11:57:25.252Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="php-fpm优化">
+<meta name="twitter:title" content="php-fpm小结">
 <meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
@@ -87,7 +87,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      php-fpm优化
+      php-fpm小结
     </h1>
   
 
@@ -97,12 +97,42 @@
       
         <!-- Table of Contents -->
         
-        <p>：-} <a id="more"></a></p>
+        <p>：-} <a id="more"></a><br>fpm 是FastCGI Process Manager (FPM)的简拼。是FastCGI</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><pre><code>支持平滑停止/启动的高级进程管理功能；
+
+可以工作于不同的 uid/gid/chroot 环境下，并监听不同的端口和使用不同的 php.ini 配置文件（可取代 safe_mode 的设置）；
+
+stdout 和 stderr 日志记录;
+
+在发生意外情况的时候能够重新启动并缓存被破坏的 opcode;
+
+文件上传优化支持;
+
+&quot;慢日志&quot; - 记录脚本（不仅记录文件名，还记录 PHP backtrace 信息，可以使用 ptrace或者类似工具读取和分析远程进程的运行数据）运行所导致的异常缓慢;
+
+fastcgi_finish_request() - 特殊功能：用于在请求完成和刷新数据后，继续在后台执行耗时的工作（录入视频转换、统计处理等）；
+
+动态／静态子进程产生；
+
+基本 SAPI 运行状态信息（类似Apache的 mod_status）；
+
+基于 php.ini 的配置文件。
+</code></pre><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>首先要找到php-fpm.conf配置文件,查看pid的配置路径</p>
+<pre><code>machuangdeMacBook-Pro:etc machuang$  ps aux | grep php-fpm   
+machuang          1619   0.0  0.0  4267768    888 s000  S+   10:17上午   0:00.00 grep php-fpm
+_www              1610   0.0  0.0  4327128    856   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pid
+_www              1609   0.0  0.0  4328152    892   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pid
+root              1608   0.0  0.0  4326104   1108   ??  Ss   10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm --daemonize --fpm-config /usr/local/etc/php/7.1/php-fpm.conf --pid /usr/local/var/run/php-fpm.pid
+</code></pre><p>查看php-fpm进程数:</p>
+<pre><code>ps aux | grep -c php-fpm
+</code></pre><p>参考 <a href="http://php.net/manual/zh/install.fpm.configuration.php" target="_blank" rel="external">http://php.net/manual/zh/install.fpm.configuration.php</a></p>
+<h2 id="CGI、FastCGI、php-fpm的关系"><a href="#CGI、FastCGI、php-fpm的关系" class="headerlink" title="CGI、FastCGI、php-fpm的关系"></a>CGI、FastCGI、php-fpm的关系</h2><p> ps aux | grep php-fpm   </p>
+<h2 id="进程数和并发数的关系"><a href="#进程数和并发数的关系" class="headerlink" title="进程数和并发数的关系"></a>进程数和并发数的关系</h2><h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><p>1</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/03/20/php-fpm优化/" data-id="cjftiiuf10056522nkzk1qwkk" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/03/20/php-fpm优化/" data-id="cjg20643k0037bd2n35wt6yei" class="article-share-link">分享</a>
       
       
       
@@ -125,9 +155,9 @@
     </a>
   
   
-    <a href="/2018/03/18/linux之CURL命令/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/03/18/深蹲膝盖要不要过脚尖/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">linux之curl命令</div>
+      <div class="article-nav-title">深蹲膝盖要不要过脚尖</div>
     </a>
   
 </nav>
@@ -159,42 +189,24 @@
 
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2018/04/09/关于小产权房的一些看法/">关于下产权房的一些看法</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/01/SaaS的php技术实现/">SaaS的php技术实现</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/30/monolog/">monolog</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/30/PHP中的ob_start()/">PHP中的ob_start()</a>
-          </li>
-        
-          <li>
-            <a href="/2018/03/20/php-fpm优化/">php-fpm优化</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#功能"><span class="toc-number">1.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CGI、FastCGI、php-fpm的关系"><span class="toc-number">3.</span> <span class="toc-text">CGI、FastCGI、php-fpm的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程数和并发数的关系"><span class="toc-number">4.</span> <span class="toc-text">进程数和并发数的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化总结"><span class="toc-number">5.</span> <span class="toc-text">优化总结</span></a></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 
