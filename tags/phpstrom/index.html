@@ -3,20 +3,15 @@
 <head>
   <meta charset="utf-8">
   
-  <title>nginx-fpm调试 | MARTIST</title>
+  <title>Tag: phpstrom | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="：-}">
-<meta name="keywords" content="linux,nginx">
-<meta property="og:type" content="article">
-<meta property="og:title" content="nginx-fpm调试">
-<meta property="og:url" content="http://martist.cn/2013/02/14/nginx+php+php-fpm调试/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="MARTIST">
+<meta property="og:url" content="http://martist.cn/tags/phpstrom/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="nginx-fpm调试">
-<meta name="twitter:description" content="：-}">
+<meta name="twitter:title" content="MARTIST">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -43,7 +38,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -69,114 +64,40 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-nginx+php+php-fpm调试" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2013/02/14/nginx+php+php-fpm调试/" class="article-date">
-  <time datetime="2013-02-14T10:28:51.000Z" itemprop="datePublished">2013-02-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/nginx/">nginx</a>
-  </div>
+        <section id="main">
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 class="article-title" itemprop="name">
-      nginx-fpm调试
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2018" class="archive-year">2018</a>
+        </div>
+         <span class="archive-year-post">23 post  this year</span>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2018/02/11/PHPstorm快捷键 for Mac/" class="archive-article-date">
+  <time datetime="2018-02-11T07:30:16.000Z" itemprop="datePublished">02-11</time>
+</a>
+      
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2018/02/11/PHPstorm快捷键 for Mac/">PHPstorm快捷键 for Mac</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <!-- Table of Contents -->
-        
-        <p>：-} <a id="more"></a></p>
-<p>netstat命令详解</p>
-<p><a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html" target="_blank" rel="external">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html</a></p>
-<p>Ps命令详解</p>
-<p><a href="http://www.cnblogs.com/wangkangluo1/archive/2011/09/23/2185938.html" target="_blank" rel="external">http://www.cnblogs.com/wangkangluo1/archive/2011/09/23/2185938.html</a></p>
-<p>调试用到命令：</p>
-<p>ps -ef |grep php</p>
-<p>./php71-fpm reload</p>
-<p>cd /usr/local/etc/php/7.1/php-fpm.d/</p>
-<p> vi www.conf</p>
-<p>Nginx.conf</p>
-<p>可以拆分成sites-available和sites-enabled目录，然后available通过软连接到enabled，<br>在nginx.conf文件中，include进来enabled这个目录下的文件。</p>
-<p>看来必须要学习下shell脚本语言了。</p>
-<hr>
-
-<p>可以安装多个php版本，如Mac自带的php56，用brew安装的php70，php71，安装nginx的话，还需要安装php-fpm，这里nginx需要在server中include绑定不同的php-fpm。</p>
-<p>php-fpm</p>
-<p>php-fpm是mac下自带的软件, 而且兼容不同的PHP版本, 不用额外安装, 但是fpm是需要配置的, 在/private/etc下有个模板, 执行</p>
-<p>cd /usr/local/etc/php/7.1/php-fpm.d<br>cp www.conf</p>
-<pre><code>修改php-fpm.conf中的listen行, 
-</code></pre><p>将listen = 127.0.0.1改为listen = /tmp/php-fpm.sock,<br>这样运行php-fpm后就会生成/tmp/php-fpm.sock文件,<br> nginx可以与这个socket文件交互了(当然也可以用默认的监听端口的方式,<br> 但是指定socket的方式可以避免端口占用的问题, 我认为要放心一些)<br>    修改error_log项, 改为error_log = /usr/local/var/log/php-fpm.log<br>    修改pid项, 改为pid = /usr/local/var/run/php-fpm.pid, pid文件记录fpm的pid, 后续可以用cat /usr/local/var/run/php-fpm.pid的方式获得pid<br>    sudo php-fpm, 大功告成!</p>
-<p>注意：不要再root权限下安装东西。</p>
-<p>几个关键的目录：</p>
-<p>/usr/local/sbin  : php-fpm.conf</p>
-<p>/usr/local/etc/php/7.1/php-fpm.d  : www.conf</p>
-<p>有时间，学习下php-fpm和nginx的原理</p>
-<p>套接字的配置：</p>
-<p><a href="http://blog.csdn.net/pcyph/article/details/46513521" target="_blank" rel="external">http://blog.csdn.net/pcyph/article/details/46513521</a></p>
-<p><a href="http://www.vcaptain.com/?id=15" target="_blank" rel="external">http://www.vcaptain.com/?id=15</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://martist.cn/2013/02/14/nginx+php+php-fpm调试/" data-id="cjg3h298h0030ns2n8krknae0" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
-    
-    
-<nav id="article-nav">
-  
-    <a href="/2013/02/14/MySQL 数据库索引（一）（转载整理/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          MySQL数据库索引
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2012/01/01/About Me/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">About Me</div>
-    </a>
-  
-</nav>
-
-  
 </article>
- 
-     
-  <div class="comments" id="comments">
-    
-     
-       
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
-    
-       
-            <div id="SOHUCS" sid="2013/02/14/nginx+php+php-fpm调试/"> </div>
-    
-      
-      
-  </div>
- 
+  
+  
+    </div></section>
   
 
 </section>
@@ -192,31 +113,38 @@
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title tagcloud">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Mac/" style="font-size: 15.22px;">Mac</a> <a href="/tags/MySQL/" style="font-size: 17.67px;">MySQL</a> <a href="/tags/OpenStack/" style="font-size: 14px;">OpenStack</a> <a href="/tags/entrepreneurship/" style="font-size: 17.67px;">entrepreneurship</a> <a href="/tags/git/" style="font-size: 21.33px;">git</a> <a href="/tags/gitlab/" style="font-size: 14px;">gitlab</a> <a href="/tags/laravel/" style="font-size: 20.11px;">laravel</a> <a href="/tags/linux/" style="font-size: 23.78px;">linux</a> <a href="/tags/mac/" style="font-size: 16.44px;">mac</a> <a href="/tags/nginx/" style="font-size: 18.89px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 14px;">nodejs</a> <a href="/tags/php/" style="font-size: 25px;">php</a> <a href="/tags/php-fpm/" style="font-size: 15.22px;">php-fpm</a> <a href="/tags/phpstrom/" style="font-size: 14px;">phpstrom</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/seo/" style="font-size: 14px;">seo</a> <a href="/tags/vagrant/" style="font-size: 16.44px;">vagrant</a> <a href="/tags/web/" style="font-size: 22.56px;">web</a> <a href="/tags/云服务，docker/" style="font-size: 14px;">云服务，docker</a> <a href="/tags/人生/" style="font-size: 16.44px;">人生</a> <a href="/tags/健身/" style="font-size: 18.89px;">健身</a> <a href="/tags/常识/" style="font-size: 20.11px;">常识</a> <a href="/tags/性能测试/" style="font-size: 14px;">性能测试</a> <a href="/tags/感悟/" style="font-size: 15.22px;">感悟</a> <a href="/tags/生活/" style="font-size: 17.67px;">生活</a> <a href="/tags/算法/" style="font-size: 14px;">算法</a> <a href="/tags/语法/" style="font-size: 14px;">语法</a> <a href="/tags/进程/" style="font-size: 14px;">进程</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">最新文章</h3>
+    <h3 class="widget-title recent-posts">Recent Posts</h3>
     <div class="widget">
       <ul>
         
           <li>
-            <a href="/2018/04/17/php-fpm优化/">php-fpm小结</a>
+            <a href="/2018/04/20/php性能分析入门/">php性能分析入门</a>
           </li>
         
           <li>
-            <a href="/2018/04/13/monolog/">monolog</a>
+            <a href="/2018/04/20/nginx中的PHP_VALUE/">nginx中的PHP_VALUE</a>
           </li>
         
           <li>
-            <a href="/2018/04/09/关于小产权房的一些看法/">关于小产权房的一些看法</a>
+            <a href="/2018/04/18/phper需要注意的web安全/">phper需要注意的web安全</a>
           </li>
         
           <li>
-            <a href="/2018/04/08/健身相关文章的推荐/">健身相关文章的推荐</a>
+            <a href="/2018/04/18/加密如何保障安全/">加密如何保障安全</a>
           </li>
         
           <li>
-            <a href="/2018/04/01/SaaS的php技术实现/">SaaS的php技术实现</a>
+            <a href="/2018/04/18/深蹲怎么不伤膝盖/">深蹲怎么不伤膝盖</a>
           </li>
         
       </ul>
@@ -241,10 +169,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>

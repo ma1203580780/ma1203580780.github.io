@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
+<meta property="og:updated_time" content="2018-04-19T09:51:58.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx入门">
 <meta name="twitter:description" content="：-}">
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -98,30 +98,29 @@
         <!-- Table of Contents -->
         
         <p>：-} <a id="more"></a></p>
-<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><pre><code>brew search nginx
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre><code>brew search nginx
 brew install nginx
-</code></pre><h2 id="启动nginx"><a href="#启动nginx" class="headerlink" title="启动nginx"></a>启动nginx</h2><pre><code>sudo nginx 
+</code></pre><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><pre><code>sudo nginx
 </code></pre><p>访问localhost:8080 发现已出现nginx的欢迎页面了。</p>
 <p>做个软连接</p>
-<pre><code>ln -s  /usr/local/sbin/nginx /usr/bin/nginx 
+<pre><code>ln -s  /usr/local/sbin/nginx /usr/bin/nginx
 </code></pre><p>常用的指令有：</p>
 <pre><code>nginx -V 查看版本，以及配置文件地址
 nginx -v 查看版本
 nginx -c filename 指定配置文件
 nginx -h 帮助
-</code></pre><p>#重新加载配置|重启|停止|退出 nginx</p>
-<pre><code>nginx -s reload|reopen|stop|quit
-</code></pre><p>#测试配置是否有语法错误</p>
+</code></pre><h2 id="重新加载配置-重启-停止-退出-nginx"><a href="#重新加载配置-重启-停止-退出-nginx" class="headerlink" title="重新加载配置|重启|停止|退出 nginx"></a>重新加载配置|重启|停止|退出 nginx</h2><pre><code>nginx -s reload|reopen|stop|quit
+</code></pre><h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>查看配置是否有语法错误</p>
 <pre><code>nginx -t
 </code></pre><p>查看nginx的进程pid，并杀死进程，但不要杀死父进程。</p>
 <pre><code>ps -ef | grep nginx
 </code></pre><p>如果杀死父进程。要执行这条命令，加载nginx.conf文件</p>
-<pre><code>nginx -c /usr/local/etc/nginx/nginx.conf 
+<pre><code>nginx -c /usr/local/etc/nginx/nginx.conf
 </code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2013/03/20/nginx/" data-id="cjg3h298k0032ns2nhgnui99w" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2013/03/20/nginx/" data-id="cjg6g3p6l003gqm2nc9yd4h6q" class="article-share-link">Share</a>
       
       
       
@@ -135,7 +134,7 @@ nginx -h 帮助
 <nav id="article-nav">
   
     <a href="/2014/05/20/2016即将过去，未来10年当如何/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           10年
@@ -144,9 +143,9 @@ nginx -h 帮助
     </a>
   
   
-    <a href="/2013/02/14/导入导出mysql数据库/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">MySQL数据库导入导出</div>
+    <a href="/2013/02/14/MySQL 数据库索引（一）（转载整理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MySQL数据库索引</div>
     </a>
   
 </nav>
@@ -182,9 +181,9 @@ nginx -h 帮助
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装nginx"><span class="toc-number">1.</span> <span class="toc-text">安装nginx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动nginx"><span class="toc-number">2.</span> <span class="toc-text">启动nginx</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动"><span class="toc-number">2.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重新加载配置-重启-停止-退出-nginx"><span class="toc-number">3.</span> <span class="toc-text">重新加载配置|重启|停止|退出 nginx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a></li></ol>
           </div>
       </div>
     </div>
@@ -214,10 +213,10 @@ nginx -h 帮助
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 martist.cn&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
