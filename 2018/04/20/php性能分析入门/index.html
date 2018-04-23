@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-04-18T11:30:18.599Z">
+<meta property="og:updated_time" content="2018-04-23T02:12:37.619Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="php性能分析入门">
 <meta name="twitter:description" content="：-}">
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -98,11 +98,90 @@
         <!-- Table of Contents -->
         
         <p>：-} <a id="more"></a></p>
+<h2 id="xhprof"><a href="#xhprof" class="headerlink" title="xhprof"></a>xhprof</h2><p>Xhprof是facebook开源出来的一个php轻量级的性能分析工具，跟Xdebug类似，但性能开销更低，还可以用在生产环境中，也可以由程序开关来控制是否进行profile。</p>
+<h2 id="xhprof-for-PHP7"><a href="#xhprof-for-PHP7" class="headerlink" title="xhprof for PHP7"></a>xhprof for PHP7</h2><p>xhprof已经不维护很久了，同事他也不再支持php7.这对我学习性能测试造成了困扰，好在有这个xhprof for PHP7的开源项目，供大家一起使用。</p>
+<h3 id="适配PHP版本"><a href="#适配PHP版本" class="headerlink" title="适配PHP版本"></a>适配PHP版本</h3><pre><code>7.0
+7.1
+7.2
+</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>git clone https://github.com/longxinH/xhprof.git ./xhprof
+cd xhprof/extension/
+phpize
+./configure --with-php-config=/path/to/php7/bin/php-config
+make &amp;&amp; sudo make install
+</code></pre><p>出现</p>
+<pre><code>Installing shared extensions:     /opt/php-7.0.14/lib/php/extensions/no-debug-non-zts-20151012/
+</code></pre><p>代表编译成功</p>
+<h4 id="编译过程问题"><a href="#编译过程问题" class="headerlink" title="编译过程问题"></a>编译过程问题</h4><pre><code>configure: error: Cannot find php-config. Please use --with-php-config=PATH
+</code></pre><p>configure: error: Cannot find php-config. Please use –with-php-config=PATH</p>
+<p>一般出现这个错误说明你执行 ./configure 时  –with-php-config 这个参数配置路径错误导致的。</p>
+<p>查找:</p>
+<pre><code>find / -name  php-config
+</code></pre><p>修改为：</p>
+<pre><code>./configure --with-php-config=/usr/local/php/bin/php-config
+</code></pre><p>就可以解决问题，上面的 /usr/local/php/ 是你的 php 安装路径。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="添加配置项到php-ini"><a href="#添加配置项到php-ini" class="headerlink" title="添加配置项到php.ini"></a>添加配置项到php.ini</h4><pre><code>[xhprof]
+extension=xhprof.so
+xhprof.output_dir=/Users/machuang/Desktop/project/xhprof/save_output_dir//此处你就留一个存放xhprof记录文件的目录ok了
+</code></pre><h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><pre><code>mkdir -p  /Users/machuang/Desktop/project/xhprof/save_output_dir
+</code></pre><h4 id="重启php-fpm-php-ini就生效了"><a href="#重启php-fpm-php-ini就生效了" class="headerlink" title="重启php-fpm, php.ini就生效了"></a>重启php-fpm, php.ini就生效了</h4><pre><code>machuangdeMacBook-Pro:7.1 machuang$ fpm
+-n Gracefully shutting down php-fpm
+-n .
+ done
+-n Starting php-fpm
+ done
+</code></pre><h3 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h3><p><a href="https://github.com/longxinH/xhprof" target="_blank" rel="external">https://github.com/longxinH/xhprof</a></p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="植入xhprof"><a href="#植入xhprof" class="headerlink" title="植入xhprof"></a>植入xhprof</h3><p>此处写个脚本就OK，文件命名为b.php。</p>
+<pre><code>&lt;?php
+
+//1.开启xhprof
+xhprof_enable();
+
+//2.你需要分析的代码
+for($i=1;$i&lt;1000;$i++){
+  if($i%100 == 0){
+    echo  $i;
+    echo &quot;&lt;br&gt;&quot;;
+  }
+}
+
+//3.关闭xhprof,收集数据
+$xhprof_data = xhprof_disable();
+include_once &apos;./xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;
+include_once &apos;./xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;
+$xhprof_runs = new XHProfRuns_Default();
+$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_test&quot;);
+
+echo &quot;&lt;br&gt;&quot;;
+echo  $run_id;die;
+//将run_id保存起来或者随代码一起输出
+</code></pre><h3 id="使用php内置部署工具"><a href="#使用php内置部署工具" class="headerlink" title="使用php内置部署工具"></a>使用php内置部署工具</h3><pre><code>php -S 127.0.0.1:9001
+</code></pre><h3 id="在浏览器运行脚本"><a href="#在浏览器运行脚本" class="headerlink" title="在浏览器运行脚本"></a>在浏览器运行脚本</h3><p>打开：<a href="http://127.0.0.1:9001/b.php" target="_blank" rel="external">http://127.0.0.1:9001/b.php</a></p>
+<p>输出：</p>
+<pre><code>100
+200
+300
+400
+500
+600
+700
+800
+900
+5ad88171addf9
+</code></pre><h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><p>在浏览器输入url，HOST为你的项目当前域名，get参数run的值为$run_id</p>
+<pre><code>HOST/xhpfrof_html/index.php?run=58d3b28b521f6&amp;source=xhprof_test
+</code></pre><p>打开：<a href="http://127.0.0.1:9001/xhprof/xhprof_html/" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/</a></p>
+<p>可见生成的文件，点击一个打开，url地址变为  <a href="http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test</a></p>
+<pre><code>Function Name    Calls    Calls%    Incl. Wall Time
+(microsec)    IWall%    Excl. Wall Time
+(microsec)    EWall%
+main()     1     50.0%     3     100.0%     3     100.0%
+xhprof_disable     1     50.0%     0     0.0%     0     0.0%
+</code></pre><p>1</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/20/php性能分析入门/" data-id="cjg6g3p6k003bqm2nw10rravq" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/04/20/php性能分析入门/" data-id="cjgbyi6qe0041d12nvy6wayxa" class="article-share-link">Delen</a>
       
       
       
@@ -117,7 +196,7 @@
   
   
     <a href="/2018/04/20/nginx中的PHP_VALUE/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ouder</strong>
       <div class="article-nav-title">nginx中的PHP_VALUE</div>
     </a>
   
@@ -150,42 +229,24 @@
 
   
     
-  
+    <div class="widget-wrap">
     
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2018/04/20/php性能分析入门/">php性能分析入门</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/20/nginx中的PHP_VALUE/">nginx中的PHP_VALUE</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/18/phper需要注意的web安全/">phper需要注意的web安全</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/18/加密如何保障安全/">加密如何保障安全</a>
-          </li>
-        
-          <li>
-            <a href="/2018/04/18/深蹲怎么不伤膝盖/">深蹲怎么不伤膝盖</a>
-          </li>
-        
-      </ul>
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof"><span class="toc-number">1.</span> <span class="toc-text">xhprof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof-for-PHP7"><span class="toc-number">2.</span> <span class="toc-text">xhprof for PHP7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配PHP版本"><span class="toc-number">2.1.</span> <span class="toc-text">适配PHP版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编译过程问题"><span class="toc-number">2.2.1.</span> <span class="toc-text">编译过程问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#添加配置项到php-ini"><span class="toc-number">2.3.1.</span> <span class="toc-text">添加配置项到php.ini</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建目录"><span class="toc-number">2.3.2.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启php-fpm-php-ini就生效了"><span class="toc-number">2.3.3.</span> <span class="toc-text">重启php-fpm, php.ini就生效了</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目地址"><span class="toc-number">2.4.</span> <span class="toc-text">项目地址</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#植入xhprof"><span class="toc-number">3.1.</span> <span class="toc-text">植入xhprof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用php内置部署工具"><span class="toc-number">3.2.</span> <span class="toc-text">使用php内置部署工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在浏览器运行脚本"><span class="toc-number">3.3.</span> <span class="toc-text">在浏览器运行脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看结果"><span class="toc-number">3.4.</span> <span class="toc-text">查看结果</span></a></li></ol></li></ol>
+          </div>
+      </div>
     </div>
-  </div>
 
+  
+    
+
+  
+    
+  
+    
   
     
 
