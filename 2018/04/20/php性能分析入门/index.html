@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-04-23T02:12:37.619Z">
+<meta property="og:updated_time" content="2018-04-24T07:42:38.237Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="php性能分析入门">
 <meta name="twitter:description" content="：-}">
@@ -176,12 +176,142 @@ echo  $run_id;die;
 (microsec)    EWall%
 main()     1     50.0%     3     100.0%     3     100.0%
 xhprof_disable     1     50.0%     0     0.0%     0     0.0%
-</code></pre><p>1</p>
+</code></pre><h3 id="xhprof-enable的参数控制"><a href="#xhprof-enable的参数控制" class="headerlink" title="xhprof_enable的参数控制"></a>xhprof_enable的参数控制</h3><pre><code>HPROF_FLAGS_NO_BUILTINS 跳过所有内置（内部）函数。
+
+XHPROF_FLAGS_CPU 输出的性能数据中添加 CPU 数据。
+
+XHPROF_FLAGS_MEMORY 输出的性能数据中添加内存数据。
+</code></pre><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><p>xhprof_html/index.php将记录的结果整理并可视化，默认的UI里列出了：</p>
+<pre><code>funciton name ： 函数名
+calls: 调用次数
+Incl. Wall Time (microsec)： 函数运行时间（包括子函数）
+IWall%：函数运行时间（包括子函数）占比
+Excl. Wall Time(microsec)：函数运行时间（不包括子函数）
+EWall%：函数运行时间（不包括子函数）
+</code></pre><p>在xhprof_html/index.php中还可以看到[View Full Callgraph]链接，点击后可以绘制出一张可视化的性能分析图，如果点击后报错的话，可能是缺少依赖graphviz，<br>graphviz是一个绘制图形的工具，可以更为直观的让你查看性能的瓶颈。</p>
+<h2 id="优化读取测试数据"><a href="#优化读取测试数据" class="headerlink" title="优化读取测试数据"></a>优化读取测试数据</h2><ul>
+<li>graphviz<br><a href="https://graphviz.gitlab.io/download/" target="_blank" rel="external">https://graphviz.gitlab.io/download/</a></li>
+</ul>
+<p>macbook上的安装很简单，brew就可以。</p>
+<pre><code>brew install  graphviz
+</code></pre><p>安装成功，brew会帮你配置graphviz，所以后面可以直接使用。点击 [View Full Callgraph] ，可以更直观查看所有的性能测试信息。</p>
+<h2 id="XHProf报告含义"><a href="#XHProf报告含义" class="headerlink" title="XHProf报告含义"></a>XHProf报告含义</h2><p>XHProf报告中有许多列，它们代表的含义见下表：</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function Name</td>
+<td style="text-align:center">方法名称。</td>
+</tr>
+<tr>
+<td>Calls</td>
+<td style="text-align:center">方法被调用的次数。</td>
+</tr>
+<tr>
+<td>Calls%</td>
+<td style="text-align:center">方法调用次数在同级方法总数调用次数中所占的百分比。</td>
+</tr>
+<tr>
+<td>Incl.Wall Time(microsec)</td>
+<td style="text-align:center">方法执行花费的时间，包括子方法的执行时间。（单位：微秒）</td>
+</tr>
+<tr>
+<td>IWall%</td>
+<td style="text-align:center">方法执行花费的时间百分比。</td>
+</tr>
+<tr>
+<td>Excl. Wall Time(microsec)</td>
+<td style="text-align:center">方法本身执行花费的时间，不包括子方法的执行时间。（单位：微秒）</td>
+</tr>
+<tr>
+<td>EWall%</td>
+<td style="text-align:center">方法本身执行花费的时间百分比。</td>
+</tr>
+<tr>
+<td>Incl. CPU(microsecs)</td>
+<td style="text-align:center">方法执行花费的CPU时间，包括子方法的执行时间。（单位：微秒）</td>
+</tr>
+<tr>
+<td>ICpu%</td>
+<td style="text-align:center">方法执行花费的CPU时间百分比。</td>
+</tr>
+<tr>
+<td>Excl. CPU(microsec)</td>
+<td style="text-align:center">方法本身执行花费的CPU时间，不包括子方法的执行时间。（单位：微秒）</td>
+</tr>
+<tr>
+<td>ECPU%</td>
+<td style="text-align:center">方法本身执行花费的CPU时间百分比。</td>
+</tr>
+<tr>
+<td>Incl.MemUse(bytes)</td>
+<td style="text-align:center">方法执行占用的内存，包括子方法执行占用的内存。（单位：字节）</td>
+</tr>
+<tr>
+<td>IMemUse%</td>
+<td style="text-align:center">方法执行占用的内存百分比。</td>
+</tr>
+<tr>
+<td>Excl.MemUse(bytes)</td>
+<td style="text-align:center">方法本身执行占用的内存，不包括子方法执行占用的内存。（单位：字节）</td>
+</tr>
+<tr>
+<td>EMemUse%</td>
+<td style="text-align:center">方法本身执行占用的内存百分比。</td>
+</tr>
+<tr>
+<td>Incl.PeakMemUse(bytes)</td>
+<td style="text-align:center">Incl.MemUse峰值。（单位：字节）</td>
+</tr>
+<tr>
+<td>IPeakMemUse%</td>
+<td style="text-align:center">ncl.MemUse峰值百分比。</td>
+</tr>
+<tr>
+<td>Excl.PeakMemUse(bytes)</td>
+<td style="text-align:center">Excl.MemUse峰值。单位：（字节）</td>
+</tr>
+<tr>
+<td>EPeakMemUse%</td>
+<td style="text-align:center">Excl.MemUse峰值百分比。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="php框架中使用"><a href="#php框架中使用" class="headerlink" title="php框架中使用"></a>php框架中使用</h2><p>此处我们有比较优雅的注入方式，首先，把xhprof项目放到laravel项目的public目录下，<br>然后在index.php的最上面加入如下代码：</p>
+<pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(__DIR__).&apos;/xhprof_save_dir&apos;);
+//echo ini_get(&apos;xhprof.output_dir&apos;); die;
+$xhprof_lib_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;
+$xhprof_runs_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;
+
+include_once $xhprof_lib_dir;
+include_once $xhprof_runs_dir;
+//开启xhprof
+xhprof_enable(XHPROF_FLAGS_MEMORY );
+//在程序结束后收集数据
+register_shutdown_function(function() {
+    $xhprof_data        = xhprof_disable();
+    //让数据收集程序在后台运行
+    if (function_exists(&apos;fastcgi_finish_request&apos;)) {
+        fastcgi_finish_request();
+    }
+    //保存
+    $xhprof_runs = new XHProfRuns_Default();
+    $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_crm&quot;);
+});
+</code></pre><p>然后，在xhprof/xhprof_html/index.php增加一行代码，如下：</p>
+<pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(dirname(dirname(__DIR__))).&apos;/xhprof_save_dir&apos;);
+</code></pre><p>这是为了保证数据的存储和读取目录一致。</p>
+<p>打开类似链接，即可看到测试数据分析了<br><a href="http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm" target="_blank" rel="external">http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/20/php性能分析入门/" data-id="cjgc0nzt2003t322n87drqaud" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/04/20/php性能分析入门/" data-id="cjgdd8h11003m0s2ncizwwrcw" class="article-share-link">分享</a>
       
       
       
@@ -235,7 +365,7 @@ xhprof_disable     1     50.0%     0     0.0%     0     0.0%
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof"><span class="toc-number">1.</span> <span class="toc-text">xhprof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof-for-PHP7"><span class="toc-number">2.</span> <span class="toc-text">xhprof for PHP7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配PHP版本"><span class="toc-number">2.1.</span> <span class="toc-text">适配PHP版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编译过程问题"><span class="toc-number">2.2.1.</span> <span class="toc-text">编译过程问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#添加配置项到php-ini"><span class="toc-number">2.3.1.</span> <span class="toc-text">添加配置项到php.ini</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建目录"><span class="toc-number">2.3.2.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启php-fpm-php-ini就生效了"><span class="toc-number">2.3.3.</span> <span class="toc-text">重启php-fpm, php.ini就生效了</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目地址"><span class="toc-number">2.4.</span> <span class="toc-text">项目地址</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#植入xhprof"><span class="toc-number">3.1.</span> <span class="toc-text">植入xhprof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用php内置部署工具"><span class="toc-number">3.2.</span> <span class="toc-text">使用php内置部署工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在浏览器运行脚本"><span class="toc-number">3.3.</span> <span class="toc-text">在浏览器运行脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看结果"><span class="toc-number">3.4.</span> <span class="toc-text">查看结果</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof"><span class="toc-number">1.</span> <span class="toc-text">xhprof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof-for-PHP7"><span class="toc-number">2.</span> <span class="toc-text">xhprof for PHP7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配PHP版本"><span class="toc-number">2.1.</span> <span class="toc-text">适配PHP版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编译过程问题"><span class="toc-number">2.2.1.</span> <span class="toc-text">编译过程问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#添加配置项到php-ini"><span class="toc-number">2.3.1.</span> <span class="toc-text">添加配置项到php.ini</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建目录"><span class="toc-number">2.3.2.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启php-fpm-php-ini就生效了"><span class="toc-number">2.3.3.</span> <span class="toc-text">重启php-fpm, php.ini就生效了</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目地址"><span class="toc-number">2.4.</span> <span class="toc-text">项目地址</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#植入xhprof"><span class="toc-number">3.1.</span> <span class="toc-text">植入xhprof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用php内置部署工具"><span class="toc-number">3.2.</span> <span class="toc-text">使用php内置部署工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在浏览器运行脚本"><span class="toc-number">3.3.</span> <span class="toc-text">在浏览器运行脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看结果"><span class="toc-number">3.4.</span> <span class="toc-text">查看结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xhprof-enable的参数控制"><span class="toc-number">3.5.</span> <span class="toc-text">xhprof_enable的参数控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结果分析"><span class="toc-number">3.6.</span> <span class="toc-text">结果分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化读取测试数据"><span class="toc-number">4.</span> <span class="toc-text">优化读取测试数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XHProf报告含义"><span class="toc-number">5.</span> <span class="toc-text">XHProf报告含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php框架中使用"><span class="toc-number">6.</span> <span class="toc-text">php框架中使用</span></a></li></ol>
           </div>
       </div>
     </div>

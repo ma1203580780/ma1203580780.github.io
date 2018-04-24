@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-04-23T02:12:37.619Z</updated>
+  <updated>2018-04-24T07:42:38.237Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://martist.cn/2018/04/20/php%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"/>
     <id>http://martist.cn/2018/04/20/php性能分析入门/</id>
     <published>2018-04-19T16:00:00.000Z</published>
-    <updated>2018-04-23T02:12:37.619Z</updated>
+    <updated>2018-04-24T07:42:38.237Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="xhprof"><a href="#xhprof" class="headerlink" title="xhprof"></a>xhprof</h2><p>Xhprof是facebook开源出来的一个php轻量级的性能分析工具，跟Xdebug类似，但性能开销更低，还可以用在生产环境中，也可以由程序开关来控制是否进行profile。</p><h2 id="xhprof-for-PHP7"><a href="#xhprof-for-PHP7" class="headerlink" title="xhprof for PHP7"></a>xhprof for PHP7</h2><p>xhprof已经不维护很久了，同事他也不再支持php7.这对我学习性能测试造成了困扰，好在有这个xhprof for PHP7的开源项目，供大家一起使用。</p><h3 id="适配PHP版本"><a href="#适配PHP版本" class="headerlink" title="适配PHP版本"></a>适配PHP版本</h3><pre><code>7.07.17.2</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>git clone https://github.com/longxinH/xhprof.git ./xhprofcd xhprof/extension/phpize./configure --with-php-config=/path/to/php7/bin/php-configmake &amp;&amp; sudo make install</code></pre><p>出现</p><pre><code>Installing shared extensions:     /opt/php-7.0.14/lib/php/extensions/no-debug-non-zts-20151012/</code></pre><p>代表编译成功</p><h4 id="编译过程问题"><a href="#编译过程问题" class="headerlink" title="编译过程问题"></a>编译过程问题</h4><pre><code>configure: error: Cannot find php-config. Please use --with-php-config=PATH</code></pre><p>configure: error: Cannot find php-config. Please use –with-php-config=PATH</p><p>一般出现这个错误说明你执行 ./configure 时  –with-php-config 这个参数配置路径错误导致的。</p><p>查找:</p><pre><code>find / -name  php-config</code></pre><p>修改为：</p><pre><code>./configure --with-php-config=/usr/local/php/bin/php-config</code></pre><p>就可以解决问题，上面的 /usr/local/php/ 是你的 php 安装路径。</p><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="添加配置项到php-ini"><a href="#添加配置项到php-ini" class="headerlink" title="添加配置项到php.ini"></a>添加配置项到php.ini</h4><pre><code>[xhprof]extension=xhprof.soxhprof.output_dir=/Users/machuang/Desktop/project/xhprof/save_output_dir//此处你就留一个存放xhprof记录文件的目录ok了</code></pre><h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><pre><code>mkdir -p  /Users/machuang/Desktop/project/xhprof/save_output_dir</code></pre><h4 id="重启php-fpm-php-ini就生效了"><a href="#重启php-fpm-php-ini就生效了" class="headerlink" title="重启php-fpm, php.ini就生效了"></a>重启php-fpm, php.ini就生效了</h4><pre><code>machuangdeMacBook-Pro:7.1 machuang$ fpm-n Gracefully shutting down php-fpm-n . done-n Starting php-fpm done</code></pre><h3 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h3><p><a href="https://github.com/longxinH/xhprof" target="_blank" rel="external">https://github.com/longxinH/xhprof</a></p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="植入xhprof"><a href="#植入xhprof" class="headerlink" title="植入xhprof"></a>植入xhprof</h3><p>此处写个脚本就OK，文件命名为b.php。</p><pre><code>&lt;?php//1.开启xhprofxhprof_enable();//2.你需要分析的代码for($i=1;$i&lt;1000;$i++){  if($i%100 == 0){    echo  $i;    echo &quot;&lt;br&gt;&quot;;  }}//3.关闭xhprof,收集数据$xhprof_data = xhprof_disable();include_once &apos;./xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;include_once &apos;./xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;$xhprof_runs = new XHProfRuns_Default();$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_test&quot;);echo &quot;&lt;br&gt;&quot;;echo  $run_id;die;//将run_id保存起来或者随代码一起输出</code></pre><h3 id="使用php内置部署工具"><a href="#使用php内置部署工具" class="headerlink" title="使用php内置部署工具"></a>使用php内置部署工具</h3><pre><code>php -S 127.0.0.1:9001</code></pre><h3 id="在浏览器运行脚本"><a href="#在浏览器运行脚本" class="headerlink" title="在浏览器运行脚本"></a>在浏览器运行脚本</h3><p>打开：<a href="http://127.0.0.1:9001/b.php" target="_blank" rel="external">http://127.0.0.1:9001/b.php</a></p><p>输出：</p><pre><code>1002003004005006007008009005ad88171addf9</code></pre><h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><p>在浏览器输入url，HOST为你的项目当前域名，get参数run的值为$run_id</p><pre><code>HOST/xhpfrof_html/index.php?run=58d3b28b521f6&amp;source=xhprof_test</code></pre><p>打开：<a href="http://127.0.0.1:9001/xhprof/xhprof_html/" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/</a></p><p>可见生成的文件，点击一个打开，url地址变为  <a href="http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test</a></p><pre><code>Function Name    Calls    Calls%    Incl. Wall Time(microsec)    IWall%    Excl. Wall Time(microsec)    EWall%main()     1     50.0%     3     100.0%     3     100.0%xhprof_disable     1     50.0%     0     0.0%     0     0.0%</code></pre><p>1</p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="xhprof"><a href="#xhprof" class="headerlink" title="xhprof"></a>xhprof</h2><p>Xhprof是facebook开源出来的一个php轻量级的性能分析工具，跟Xdebug类似，但性能开销更低，还可以用在生产环境中，也可以由程序开关来控制是否进行profile。</p><h2 id="xhprof-for-PHP7"><a href="#xhprof-for-PHP7" class="headerlink" title="xhprof for PHP7"></a>xhprof for PHP7</h2><p>xhprof已经不维护很久了，同事他也不再支持php7.这对我学习性能测试造成了困扰，好在有这个xhprof for PHP7的开源项目，供大家一起使用。</p><h3 id="适配PHP版本"><a href="#适配PHP版本" class="headerlink" title="适配PHP版本"></a>适配PHP版本</h3><pre><code>7.07.17.2</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>git clone https://github.com/longxinH/xhprof.git ./xhprofcd xhprof/extension/phpize./configure --with-php-config=/path/to/php7/bin/php-configmake &amp;&amp; sudo make install</code></pre><p>出现</p><pre><code>Installing shared extensions:     /opt/php-7.0.14/lib/php/extensions/no-debug-non-zts-20151012/</code></pre><p>代表编译成功</p><h4 id="编译过程问题"><a href="#编译过程问题" class="headerlink" title="编译过程问题"></a>编译过程问题</h4><pre><code>configure: error: Cannot find php-config. Please use --with-php-config=PATH</code></pre><p>configure: error: Cannot find php-config. Please use –with-php-config=PATH</p><p>一般出现这个错误说明你执行 ./configure 时  –with-php-config 这个参数配置路径错误导致的。</p><p>查找:</p><pre><code>find / -name  php-config</code></pre><p>修改为：</p><pre><code>./configure --with-php-config=/usr/local/php/bin/php-config</code></pre><p>就可以解决问题，上面的 /usr/local/php/ 是你的 php 安装路径。</p><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="添加配置项到php-ini"><a href="#添加配置项到php-ini" class="headerlink" title="添加配置项到php.ini"></a>添加配置项到php.ini</h4><pre><code>[xhprof]extension=xhprof.soxhprof.output_dir=/Users/machuang/Desktop/project/xhprof/save_output_dir//此处你就留一个存放xhprof记录文件的目录ok了</code></pre><h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><pre><code>mkdir -p  /Users/machuang/Desktop/project/xhprof/save_output_dir</code></pre><h4 id="重启php-fpm-php-ini就生效了"><a href="#重启php-fpm-php-ini就生效了" class="headerlink" title="重启php-fpm, php.ini就生效了"></a>重启php-fpm, php.ini就生效了</h4><pre><code>machuangdeMacBook-Pro:7.1 machuang$ fpm-n Gracefully shutting down php-fpm-n . done-n Starting php-fpm done</code></pre><h3 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h3><p><a href="https://github.com/longxinH/xhprof" target="_blank" rel="external">https://github.com/longxinH/xhprof</a></p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="植入xhprof"><a href="#植入xhprof" class="headerlink" title="植入xhprof"></a>植入xhprof</h3><p>此处写个脚本就OK，文件命名为b.php。</p><pre><code>&lt;?php//1.开启xhprofxhprof_enable();//2.你需要分析的代码for($i=1;$i&lt;1000;$i++){  if($i%100 == 0){    echo  $i;    echo &quot;&lt;br&gt;&quot;;  }}//3.关闭xhprof,收集数据$xhprof_data = xhprof_disable();include_once &apos;./xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;include_once &apos;./xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;$xhprof_runs = new XHProfRuns_Default();$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_test&quot;);echo &quot;&lt;br&gt;&quot;;echo  $run_id;die;//将run_id保存起来或者随代码一起输出</code></pre><h3 id="使用php内置部署工具"><a href="#使用php内置部署工具" class="headerlink" title="使用php内置部署工具"></a>使用php内置部署工具</h3><pre><code>php -S 127.0.0.1:9001</code></pre><h3 id="在浏览器运行脚本"><a href="#在浏览器运行脚本" class="headerlink" title="在浏览器运行脚本"></a>在浏览器运行脚本</h3><p>打开：<a href="http://127.0.0.1:9001/b.php" target="_blank" rel="external">http://127.0.0.1:9001/b.php</a></p><p>输出：</p><pre><code>1002003004005006007008009005ad88171addf9</code></pre><h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><p>在浏览器输入url，HOST为你的项目当前域名，get参数run的值为$run_id</p><pre><code>HOST/xhpfrof_html/index.php?run=58d3b28b521f6&amp;source=xhprof_test</code></pre><p>打开：<a href="http://127.0.0.1:9001/xhprof/xhprof_html/" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/</a></p><p>可见生成的文件，点击一个打开，url地址变为  <a href="http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test</a></p><pre><code>Function Name    Calls    Calls%    Incl. Wall Time(microsec)    IWall%    Excl. Wall Time(microsec)    EWall%main()     1     50.0%     3     100.0%     3     100.0%xhprof_disable     1     50.0%     0     0.0%     0     0.0%</code></pre><h3 id="xhprof-enable的参数控制"><a href="#xhprof-enable的参数控制" class="headerlink" title="xhprof_enable的参数控制"></a>xhprof_enable的参数控制</h3><pre><code>HPROF_FLAGS_NO_BUILTINS 跳过所有内置（内部）函数。XHPROF_FLAGS_CPU 输出的性能数据中添加 CPU 数据。XHPROF_FLAGS_MEMORY 输出的性能数据中添加内存数据。</code></pre><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><p>xhprof_html/index.php将记录的结果整理并可视化，默认的UI里列出了：</p><pre><code>funciton name ： 函数名calls: 调用次数Incl. Wall Time (microsec)： 函数运行时间（包括子函数）IWall%：函数运行时间（包括子函数）占比Excl. Wall Time(microsec)：函数运行时间（不包括子函数）EWall%：函数运行时间（不包括子函数）</code></pre><p>在xhprof_html/index.php中还可以看到[View Full Callgraph]链接，点击后可以绘制出一张可视化的性能分析图，如果点击后报错的话，可能是缺少依赖graphviz，<br>graphviz是一个绘制图形的工具，可以更为直观的让你查看性能的瓶颈。</p><h2 id="优化读取测试数据"><a href="#优化读取测试数据" class="headerlink" title="优化读取测试数据"></a>优化读取测试数据</h2><ul><li>graphviz<br><a href="https://graphviz.gitlab.io/download/" target="_blank" rel="external">https://graphviz.gitlab.io/download/</a></li></ul><p>macbook上的安装很简单，brew就可以。</p><pre><code>brew install  graphviz</code></pre><p>安装成功，brew会帮你配置graphviz，所以后面可以直接使用。点击 [View Full Callgraph] ，可以更直观查看所有的性能测试信息。</p><h2 id="XHProf报告含义"><a href="#XHProf报告含义" class="headerlink" title="XHProf报告含义"></a>XHProf报告含义</h2><p>XHProf报告中有许多列，它们代表的含义见下表：</p><table><thead><tr><th>列名</th><th style="text-align:center">描述</th></tr></thead><tbody><tr><td>Function Name</td><td style="text-align:center">方法名称。</td></tr><tr><td>Calls</td><td style="text-align:center">方法被调用的次数。</td></tr><tr><td>Calls%</td><td style="text-align:center">方法调用次数在同级方法总数调用次数中所占的百分比。</td></tr><tr><td>Incl.Wall Time(microsec)</td><td style="text-align:center">方法执行花费的时间，包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>IWall%</td><td style="text-align:center">方法执行花费的时间百分比。</td></tr><tr><td>Excl. Wall Time(microsec)</td><td style="text-align:center">方法本身执行花费的时间，不包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>EWall%</td><td style="text-align:center">方法本身执行花费的时间百分比。</td></tr><tr><td>Incl. CPU(microsecs)</td><td style="text-align:center">方法执行花费的CPU时间，包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>ICpu%</td><td style="text-align:center">方法执行花费的CPU时间百分比。</td></tr><tr><td>Excl. CPU(microsec)</td><td style="text-align:center">方法本身执行花费的CPU时间，不包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>ECPU%</td><td style="text-align:center">方法本身执行花费的CPU时间百分比。</td></tr><tr><td>Incl.MemUse(bytes)</td><td style="text-align:center">方法执行占用的内存，包括子方法执行占用的内存。（单位：字节）</td></tr><tr><td>IMemUse%</td><td style="text-align:center">方法执行占用的内存百分比。</td></tr><tr><td>Excl.MemUse(bytes)</td><td style="text-align:center">方法本身执行占用的内存，不包括子方法执行占用的内存。（单位：字节）</td></tr><tr><td>EMemUse%</td><td style="text-align:center">方法本身执行占用的内存百分比。</td></tr><tr><td>Incl.PeakMemUse(bytes)</td><td style="text-align:center">Incl.MemUse峰值。（单位：字节）</td></tr><tr><td>IPeakMemUse%</td><td style="text-align:center">ncl.MemUse峰值百分比。</td></tr><tr><td>Excl.PeakMemUse(bytes)</td><td style="text-align:center">Excl.MemUse峰值。单位：（字节）</td></tr><tr><td>EPeakMemUse%</td><td style="text-align:center">Excl.MemUse峰值百分比。</td></tr></tbody></table><h2 id="php框架中使用"><a href="#php框架中使用" class="headerlink" title="php框架中使用"></a>php框架中使用</h2><p>此处我们有比较优雅的注入方式，首先，把xhprof项目放到laravel项目的public目录下，<br>然后在index.php的最上面加入如下代码：</p><pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(__DIR__).&apos;/xhprof_save_dir&apos;);//echo ini_get(&apos;xhprof.output_dir&apos;); die;$xhprof_lib_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;$xhprof_runs_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;include_once $xhprof_lib_dir;include_once $xhprof_runs_dir;//开启xhprofxhprof_enable(XHPROF_FLAGS_MEMORY );//在程序结束后收集数据register_shutdown_function(function() {    $xhprof_data        = xhprof_disable();    //让数据收集程序在后台运行    if (function_exists(&apos;fastcgi_finish_request&apos;)) {        fastcgi_finish_request();    }    //保存    $xhprof_runs = new XHProfRuns_Default();    $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_crm&quot;);});</code></pre><p>然后，在xhprof/xhprof_html/index.php增加一行代码，如下：</p><pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(dirname(dirname(__DIR__))).&apos;/xhprof_save_dir&apos;);</code></pre><p>这是为了保证数据的存储和读取目录一致。</p><p>打开类似链接，即可看到测试数据分析了<br><a href="http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm" target="_blank" rel="external">http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm</a></p>]]></content>
     
     <summary type="html">
     
@@ -84,9 +84,9 @@
       <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
     
     
-      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
-    
       <category term="生活" scheme="http://martist.cn/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
     
   </entry>
   
@@ -259,28 +259,6 @@
   </entry>
   
   <entry>
-    <title>深蹲膝盖要不要过脚尖</title>
-    <link href="http://martist.cn/2018/03/18/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
-    <id>http://martist.cn/2018/03/18/深蹲膝盖要不要过脚尖/</id>
-    <published>2018-03-17T16:00:00.000Z</published>
-    <updated>2018-04-12T12:05:03.724Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>网上流传着“深蹲时膝盖不能过脚尖，过了脚尖容易伤膝盖”这种说法。今天，我们来探讨一下。</p><p>本来我以为这个事已经达成共识了，还是有人问，那么，我觉得有必要说两句。</p><p>看到一个说法，首先可以提问，对于这个说法，该问的就是：为什么不过脚尖能保护膝盖？网上的解释一般是：膝盖过脚尖，膝关节承受的压力会增加，于是受伤风险增加。</p><p>脊椎和任何关节，都与膝关节一样，增加压力就会提高受伤风险。现在，有这么一个膝盖和脚尖关系的说法，好，我炮制一个“背角（躯干与地面的夹角）小于45度就有椎间盘突出的风险”，你觉得怎么样？你说我没有理论支撑，那你找找看，深蹲脚尖这个事，有理论支撑吗？上网一查就发现，原来这说法没有任何文献，和我刚编出来的东西差不多，是拍脑门的产物。</p><p>你说，压力增加，就是容易受伤啊。他们这个说法虽然没有文献支撑，但是也没错啊。</p><p>我就奇了怪了，照他们这么说，深蹲就不能负重，因为一旦负重，膝关节承受的压力肯定就增加了，于是，大家都徒手深蹲吧。既然要减轻膝关节的压力，那徒手深蹲也不合适，最好找个人辅助一下。都这么干了，为啥还要膝盖不过脚尖地深蹲啊，干脆就别蹲了。为了减轻膝关节的压力，而采用膝盖不过脚尖的办法，还蹲什么啊？</p><p>哦，还是要蹲，还是要负重，毕竟还得训练，只是找一个最安全的办法，这种说法也站不住脚。与其用不过脚尖的怪异姿势保护膝关节，为什么不减轻一点重量用正常动作呢？嫌强度不够，那做硬拉得了。</p><p>哦，硬拉和深蹲不一样，就得蹲，就得上重量。你看，不蹲最安全，你要蹲；轻重量相对安全，你要上重量。你已经决定要让膝关节承受很大的压力，也就是说，你可以接受风险啊。膝关节压力增加，受伤的风险增加，说得很对，问题是，它是废话。你只要训练，只要想提高，要么增加强度、要么增加训练量（文末扩展阅读），受伤的风险就会增加，没有人会几十年如一日地用同样的负重、同样的组次、同样的节奏来训练吧。</p><p>你说你要翘臀，伸膝的事无所谓。那么，你最好做纯直腿的站躬身或硬拉，这样伸膝就没多少参与了。可是，你要知道，一旦站姿负重，这些重量就直接作用于膝关节上了，而且即便你完全直着腿，伸髋的时候腘绳肌发力，一样会再次增加膝关节压力的。</p><p>所以，无论怎么练，只要负重，甚至就算徒手，都会增大膝关节压力，照他们这个理论，也就增加了膝伤风险。显然，我们还是要锻炼的，不能因为它受压就放弃，所以，要探讨的就是膝伤风险问题了。</p><p>干什么事都有风险对不对？不能接受风险的话，应该老老实实躺在床上，不然上楼、跑步，甚至走路都有伤膝盖的风险，出门还有被车撞的风险呢。像我这种脸大的，躺床上看手机都有被砸到的风险。如果一听说风险就要避免，人是没法活了。</p><p>人活着，只要风险在可接受的范围内，生活就是第一位的。锻炼也是如此，只要风险可接受，训练目的就应该是第一位的。</p><p>你知道几个人单纯因为膝盖超脚尖深蹲导致膝伤的？你说健身房那个胖子某甲这么蹲膝盖就受伤了。这就没意思了，你只看见他“深蹲时膝盖超脚尖”和“受伤”这两件事了，也许它们相关，但不能说就是因果啊。我奶奶啥都没干，膝盖还坏了呢，实际上是退行性的事，我一定把她的“膝盖坏了”和“啥都没干”建立起因果关系，得出“什么都没干易导致膝伤”的结论，不合适吧。</p><p>你应该看看健身房里那些负重比较大的训练者，他们深蹲时膝盖都过脚尖了，他们是否受伤。如果得出的结论是：那些膝盖超脚尖的训练者，负重非常大，没有一个因此而膝伤的。那么就说明，这样的训练方式受伤概率极低，尽管这个风险可能存在，但是，它是可接受的。于是，你也应该考虑不管这个拍脑门出来的说法，而把训练目的放在首要位置。</p><p>也许你又想了，虽然这说法没什么道理，但宁可信其有不可信其无，反正也没什么坏处。我得告诉你，你真这么干的话，有坏处。</p><p>现在，好像大家都非常爱护自己的膝关节，说起啥来都是伤膝盖。难道，大家身上除了膝关节就没有别的关节了吗？</p><p>我们还要保护腰部，因为过于后倾的深蹲，对腰部肌肉甚至骨骼的损害是很大的。希望大家在健身过程中，保护好自己的身体。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
-    
-    
-      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
-    
-  </entry>
-  
-  <entry>
     <title>linux之curl命令</title>
     <link href="http://martist.cn/2018/03/18/linux%E4%B9%8BCURL%E5%91%BD%E4%BB%A4/"/>
     <id>http://martist.cn/2018/03/18/linux之CURL命令/</id>
@@ -299,6 +277,28 @@
     
     
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深蹲膝盖要不要过脚尖</title>
+    <link href="http://martist.cn/2018/03/18/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
+    <id>http://martist.cn/2018/03/18/深蹲膝盖要不要过脚尖/</id>
+    <published>2018-03-17T16:00:00.000Z</published>
+    <updated>2018-04-12T12:05:03.724Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>网上流传着“深蹲时膝盖不能过脚尖，过了脚尖容易伤膝盖”这种说法。今天，我们来探讨一下。</p><p>本来我以为这个事已经达成共识了，还是有人问，那么，我觉得有必要说两句。</p><p>看到一个说法，首先可以提问，对于这个说法，该问的就是：为什么不过脚尖能保护膝盖？网上的解释一般是：膝盖过脚尖，膝关节承受的压力会增加，于是受伤风险增加。</p><p>脊椎和任何关节，都与膝关节一样，增加压力就会提高受伤风险。现在，有这么一个膝盖和脚尖关系的说法，好，我炮制一个“背角（躯干与地面的夹角）小于45度就有椎间盘突出的风险”，你觉得怎么样？你说我没有理论支撑，那你找找看，深蹲脚尖这个事，有理论支撑吗？上网一查就发现，原来这说法没有任何文献，和我刚编出来的东西差不多，是拍脑门的产物。</p><p>你说，压力增加，就是容易受伤啊。他们这个说法虽然没有文献支撑，但是也没错啊。</p><p>我就奇了怪了，照他们这么说，深蹲就不能负重，因为一旦负重，膝关节承受的压力肯定就增加了，于是，大家都徒手深蹲吧。既然要减轻膝关节的压力，那徒手深蹲也不合适，最好找个人辅助一下。都这么干了，为啥还要膝盖不过脚尖地深蹲啊，干脆就别蹲了。为了减轻膝关节的压力，而采用膝盖不过脚尖的办法，还蹲什么啊？</p><p>哦，还是要蹲，还是要负重，毕竟还得训练，只是找一个最安全的办法，这种说法也站不住脚。与其用不过脚尖的怪异姿势保护膝关节，为什么不减轻一点重量用正常动作呢？嫌强度不够，那做硬拉得了。</p><p>哦，硬拉和深蹲不一样，就得蹲，就得上重量。你看，不蹲最安全，你要蹲；轻重量相对安全，你要上重量。你已经决定要让膝关节承受很大的压力，也就是说，你可以接受风险啊。膝关节压力增加，受伤的风险增加，说得很对，问题是，它是废话。你只要训练，只要想提高，要么增加强度、要么增加训练量（文末扩展阅读），受伤的风险就会增加，没有人会几十年如一日地用同样的负重、同样的组次、同样的节奏来训练吧。</p><p>你说你要翘臀，伸膝的事无所谓。那么，你最好做纯直腿的站躬身或硬拉，这样伸膝就没多少参与了。可是，你要知道，一旦站姿负重，这些重量就直接作用于膝关节上了，而且即便你完全直着腿，伸髋的时候腘绳肌发力，一样会再次增加膝关节压力的。</p><p>所以，无论怎么练，只要负重，甚至就算徒手，都会增大膝关节压力，照他们这个理论，也就增加了膝伤风险。显然，我们还是要锻炼的，不能因为它受压就放弃，所以，要探讨的就是膝伤风险问题了。</p><p>干什么事都有风险对不对？不能接受风险的话，应该老老实实躺在床上，不然上楼、跑步，甚至走路都有伤膝盖的风险，出门还有被车撞的风险呢。像我这种脸大的，躺床上看手机都有被砸到的风险。如果一听说风险就要避免，人是没法活了。</p><p>人活着，只要风险在可接受的范围内，生活就是第一位的。锻炼也是如此，只要风险可接受，训练目的就应该是第一位的。</p><p>你知道几个人单纯因为膝盖超脚尖深蹲导致膝伤的？你说健身房那个胖子某甲这么蹲膝盖就受伤了。这就没意思了，你只看见他“深蹲时膝盖超脚尖”和“受伤”这两件事了，也许它们相关，但不能说就是因果啊。我奶奶啥都没干，膝盖还坏了呢，实际上是退行性的事，我一定把她的“膝盖坏了”和“啥都没干”建立起因果关系，得出“什么都没干易导致膝伤”的结论，不合适吧。</p><p>你应该看看健身房里那些负重比较大的训练者，他们深蹲时膝盖都过脚尖了，他们是否受伤。如果得出的结论是：那些膝盖超脚尖的训练者，负重非常大，没有一个因此而膝伤的。那么就说明，这样的训练方式受伤概率极低，尽管这个风险可能存在，但是，它是可接受的。于是，你也应该考虑不管这个拍脑门出来的说法，而把训练目的放在首要位置。</p><p>也许你又想了，虽然这说法没什么道理，但宁可信其有不可信其无，反正也没什么坏处。我得告诉你，你真这么干的话，有坏处。</p><p>现在，好像大家都非常爱护自己的膝关节，说起啥来都是伤膝盖。难道，大家身上除了膝关节就没有别的关节了吗？</p><p>我们还要保护腰部，因为过于后倾的深蹲，对腰部肌肉甚至骨骼的损害是很大的。希望大家在健身过程中，保护好自己的身体。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
+    
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
     
   </entry>
   
@@ -421,6 +421,28 @@
   </entry>
   
   <entry>
+    <title>面向对象的模式方法__tostring()和__invoke()</title>
+    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
+    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
+    <published>2018-02-28T16:00:00.000Z</published>
+    <updated>2018-04-16T07:43:06.650Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      php
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
     <title>php实现汉诺塔</title>
     <link href="http://martist.cn/2018/03/01/php%E5%AE%9E%E7%8E%B0%E6%B1%89%E8%AF%BA%E5%A1%94/"/>
     <id>http://martist.cn/2018/03/01/php实现汉诺塔/</id>
@@ -441,28 +463,6 @@
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
       <category term="算法" scheme="http://martist.cn/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>面向对象的模式方法__tostring()和__invoke()</title>
-    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
-    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
-    <published>2018-02-28T16:00:00.000Z</published>
-    <updated>2018-04-16T07:43:06.650Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      php
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
