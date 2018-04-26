@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-04-24T09:15:35.762Z</updated>
+  <updated>2018-04-26T11:06:09.048Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>php性能分析入门</title>
+    <title>php7性能分析-xhprof【laravel】</title>
     <link href="http://martist.cn/2018/04/20/php%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"/>
     <id>http://martist.cn/2018/04/20/php性能分析入门/</id>
     <published>2018-04-19T16:00:00.000Z</published>
-    <updated>2018-04-24T09:15:35.762Z</updated>
+    <updated>2018-04-26T11:06:09.048Z</updated>
     
     <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="xhprof"><a href="#xhprof" class="headerlink" title="xhprof"></a>xhprof</h2><p>Xhprof是facebook开源出来的一个php轻量级的性能分析工具，跟Xdebug类似，但性能开销更低，还可以用在生产环境中，也可以由程序开关来控制是否进行profile。</p><h2 id="xhprof-for-PHP7"><a href="#xhprof-for-PHP7" class="headerlink" title="xhprof for PHP7"></a>xhprof for PHP7</h2><p>xhprof已经不维护很久了，同事他也不再支持php7.这对我学习性能测试造成了困扰，好在有这个xhprof for PHP7的开源项目，供大家一起使用。</p><h3 id="适配PHP版本"><a href="#适配PHP版本" class="headerlink" title="适配PHP版本"></a>适配PHP版本</h3><pre><code>7.07.17.2</code></pre><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>git clone https://github.com/longxinH/xhprof.git ./xhprofcd xhprof/extension/phpize./configure --with-php-config=/path/to/php7/bin/php-configmake &amp;&amp; sudo make install</code></pre><p>出现</p><pre><code>Installing shared extensions:     /opt/php-7.0.14/lib/php/extensions/no-debug-non-zts-20151012/</code></pre><p>代表编译成功</p><h4 id="编译过程问题"><a href="#编译过程问题" class="headerlink" title="编译过程问题"></a>编译过程问题</h4><pre><code>configure: error: Cannot find php-config. Please use --with-php-config=PATH</code></pre><p>configure: error: Cannot find php-config. Please use –with-php-config=PATH</p><p>一般出现这个错误说明你执行 ./configure 时  –with-php-config 这个参数配置路径错误导致的。</p><p>查找:</p><pre><code>find / -name  php-config</code></pre><p>修改为：</p><pre><code>./configure --with-php-config=/usr/local/php/bin/php-config</code></pre><p>就可以解决问题，上面的 /usr/local/php/ 是你的 php 安装路径。</p><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="添加配置项到php-ini"><a href="#添加配置项到php-ini" class="headerlink" title="添加配置项到php.ini"></a>添加配置项到php.ini</h4><pre><code>[xhprof]extension=xhprof.soxhprof.output_dir=/Users/machuang/Desktop/project/xhprof/save_output_dir//此处你就留一个存放xhprof记录文件的目录ok了</code></pre><h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><pre><code>mkdir -p  /Users/machuang/Desktop/project/xhprof/save_output_dir</code></pre><h4 id="重启php-fpm-php-ini就生效了"><a href="#重启php-fpm-php-ini就生效了" class="headerlink" title="重启php-fpm, php.ini就生效了"></a>重启php-fpm, php.ini就生效了</h4><pre><code>machuangdeMacBook-Pro:7.1 machuang$ fpm-n Gracefully shutting down php-fpm-n . done-n Starting php-fpm done</code></pre><h3 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h3><p><a href="https://github.com/longxinH/xhprof" target="_blank" rel="external">https://github.com/longxinH/xhprof</a></p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="植入xhprof"><a href="#植入xhprof" class="headerlink" title="植入xhprof"></a>植入xhprof</h3><p>此处写个脚本就OK，文件命名为b.php。</p><pre><code>&lt;?php//1.开启xhprofxhprof_enable();//2.你需要分析的代码for($i=1;$i&lt;1000;$i++){  if($i%100 == 0){    echo  $i;    echo &quot;&lt;br&gt;&quot;;  }}//3.关闭xhprof,收集数据$xhprof_data = xhprof_disable();include_once &apos;./xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;include_once &apos;./xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;$xhprof_runs = new XHProfRuns_Default();$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_test&quot;);echo &quot;&lt;br&gt;&quot;;echo  $run_id;die;//将run_id保存起来或者随代码一起输出</code></pre><h3 id="使用php内置部署工具"><a href="#使用php内置部署工具" class="headerlink" title="使用php内置部署工具"></a>使用php内置部署工具</h3><pre><code>php -S 127.0.0.1:9001</code></pre><h3 id="在浏览器运行脚本"><a href="#在浏览器运行脚本" class="headerlink" title="在浏览器运行脚本"></a>在浏览器运行脚本</h3><p>打开：<a href="http://127.0.0.1:9001/b.php" target="_blank" rel="external">http://127.0.0.1:9001/b.php</a></p><p>输出：</p><pre><code>1002003004005006007008009005ad88171addf9</code></pre><h3 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h3><p>在浏览器输入url，HOST为你的项目当前域名，get参数run的值为$run_id</p><pre><code>HOST/xhpfrof_html/index.php?run=58d3b28b521f6&amp;source=xhprof_test</code></pre><p>打开：<a href="http://127.0.0.1:9001/xhprof/xhprof_html/" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/</a></p><p>可见生成的文件，点击一个打开，url地址变为  <a href="http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test" target="_blank" rel="external">http://127.0.0.1:9001/xhprof/xhprof_html/index.php?run=5ad88171addf9&amp;source=xhprof_test</a></p><pre><code>Function Name    Calls    Calls%    Incl. Wall Time(microsec)    IWall%    Excl. Wall Time(microsec)    EWall%main()     1     50.0%     3     100.0%     3     100.0%xhprof_disable     1     50.0%     0     0.0%     0     0.0%</code></pre><h3 id="xhprof-enable的参数控制"><a href="#xhprof-enable的参数控制" class="headerlink" title="xhprof_enable的参数控制"></a>xhprof_enable的参数控制</h3><pre><code>HPROF_FLAGS_NO_BUILTINS 跳过所有内置（内部）函数。XHPROF_FLAGS_CPU 输出的性能数据中添加 CPU 数据。XHPROF_FLAGS_MEMORY 输出的性能数据中添加内存数据。</code></pre><h3 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h3><p>xhprof_html/index.php将记录的结果整理并可视化，默认的UI里列出了：</p><pre><code>funciton name ： 函数名calls: 调用次数Incl. Wall Time (microsec)： 函数运行时间（包括子函数）IWall%：函数运行时间（包括子函数）占比Excl. Wall Time(microsec)：函数运行时间（不包括子函数）EWall%：函数运行时间（不包括子函数）</code></pre><p>在xhprof_html/index.php中还可以看到[View Full Callgraph]链接，点击后可以绘制出一张可视化的性能分析图，如果点击后报错的话，可能是缺少依赖graphviz，<br>graphviz是一个绘制图形的工具，可以更为直观的让你查看性能的瓶颈。</p><h2 id="优化读取测试数据"><a href="#优化读取测试数据" class="headerlink" title="优化读取测试数据"></a>优化读取测试数据</h2><ul><li>graphviz<br><a href="https://graphviz.gitlab.io/download/" target="_blank" rel="external">https://graphviz.gitlab.io/download/</a></li></ul><p>macbook上的安装很简单，brew就可以。</p><pre><code>brew install  graphviz</code></pre><p>安装成功，brew会帮你配置graphviz，所以后面可以直接使用。点击 [View Full Callgraph] ，可以更直观查看所有的性能测试信息。</p><h2 id="XHProf报告含义"><a href="#XHProf报告含义" class="headerlink" title="XHProf报告含义"></a>XHProf报告含义</h2><p>XHProf报告中有许多列，它们代表的含义见下表：</p><table><thead><tr><th>列名</th><th style="text-align:center">描述</th></tr></thead><tbody><tr><td>Function Name</td><td style="text-align:center">方法名称。</td></tr><tr><td>Calls</td><td style="text-align:center">方法被调用的次数。</td></tr><tr><td>Calls%</td><td style="text-align:center">方法调用次数在同级方法总数调用次数中所占的百分比。</td></tr><tr><td>Incl.Wall Time(microsec)</td><td style="text-align:center">方法执行花费的时间，包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>IWall%</td><td style="text-align:center">方法执行花费的时间百分比。</td></tr><tr><td>Excl. Wall Time(microsec)</td><td style="text-align:center">方法本身执行花费的时间，不包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>EWall%</td><td style="text-align:center">方法本身执行花费的时间百分比。</td></tr><tr><td>Incl. CPU(microsecs)</td><td style="text-align:center">方法执行花费的CPU时间，包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>ICpu%</td><td style="text-align:center">方法执行花费的CPU时间百分比。</td></tr><tr><td>Excl. CPU(microsec)</td><td style="text-align:center">方法本身执行花费的CPU时间，不包括子方法的执行时间。（单位：微秒）</td></tr><tr><td>ECPU%</td><td style="text-align:center">方法本身执行花费的CPU时间百分比。</td></tr><tr><td>Incl.MemUse(bytes)</td><td style="text-align:center">方法执行占用的内存，包括子方法执行占用的内存。（单位：字节）</td></tr><tr><td>IMemUse%</td><td style="text-align:center">方法执行占用的内存百分比。</td></tr><tr><td>Excl.MemUse(bytes)</td><td style="text-align:center">方法本身执行占用的内存，不包括子方法执行占用的内存。（单位：字节）</td></tr><tr><td>EMemUse%</td><td style="text-align:center">方法本身执行占用的内存百分比。</td></tr><tr><td>Incl.PeakMemUse(bytes)</td><td style="text-align:center">Incl.MemUse峰值。（单位：字节）</td></tr><tr><td>IPeakMemUse%</td><td style="text-align:center">ncl.MemUse峰值百分比。</td></tr><tr><td>Excl.PeakMemUse(bytes)</td><td style="text-align:center">Excl.MemUse峰值。单位：（字节）</td></tr><tr><td>EPeakMemUse%</td><td style="text-align:center">Excl.MemUse峰值百分比。</td></tr></tbody></table><h2 id="php框架中使用"><a href="#php框架中使用" class="headerlink" title="php框架中使用"></a>php框架中使用</h2><p>此处我们有比较优雅的注入方式，首先，把xhprof项目放到laravel项目的public目录下，<br>然后在index.php的最上面加入如下代码：</p><pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(__DIR__).&apos;/xhprof_save_dir&apos;);//echo ini_get(&apos;xhprof.output_dir&apos;); die;$xhprof_lib_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;$xhprof_runs_dir = dirname(__DIR__).&apos;/public/xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;include_once $xhprof_lib_dir;include_once $xhprof_runs_dir;//开启xhprofxhprof_enable(XHPROF_FLAGS_MEMORY );//在程序结束后收集数据register_shutdown_function(function() {    $xhprof_data        = xhprof_disable();    //让数据收集程序在后台运行    if (function_exists(&apos;fastcgi_finish_request&apos;)) {        fastcgi_finish_request();    }    //保存    $xhprof_runs = new XHProfRuns_Default();    $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_crm&quot;);});</code></pre><p>然后，在xhprof/xhprof_html/index.php增加一行代码，如下：</p><pre><code>ini_set(&apos;xhprof.output_dir&apos;,dirname(dirname(dirname(__DIR__))).&apos;/xhprof_save_dir&apos;);</code></pre><p>这是为了保证数据的存储和读取目录一致。</p><p>打开类似链接，即可看到测试数据分析了<br><a href="http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm" target="_blank" rel="external">http://xhprof.your-laravel.app/xhprof/xhprof_html/index.php?run=5adeaebf97d31&amp;source=xhprof_crm</a></p><h3 id="数据如下"><a href="#数据如下" class="headerlink" title="数据如下"></a>数据如下</h3><p>  Overall Summary<br>  Total Incl. Wall Time (microsec):    818,313 microsecs<br>  Total Incl. MemUse (bytes):    10,521,952 bytes<br>  Total Incl. PeakMemUse (bytes):    10,435,224 bytes<br>  Number of Function Calls:    56,935</p><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/xhprof.png" alt=""></p>]]></content>
     
@@ -67,6 +67,30 @@
   </entry>
   
   <entry>
+    <title>加密如何保障安全</title>
+    <link href="http://martist.cn/2018/04/18/%E5%8A%A0%E5%AF%86%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E5%AE%89%E5%85%A8/"/>
+    <id>http://martist.cn/2018/04/18/加密如何保障安全/</id>
+    <published>2018-04-17T16:00:00.000Z</published>
+    <updated>2018-04-19T03:12:12.810Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>你还在用md5+salt方式加密密码吗？PHP5.5引入了Password Hashing函数，内核自带无需安装扩展。</p><h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>  password_get_info — 返回指定散列（hash）的相关信息<br>  password_hash — 创建密码的散列（hash）<br>  password_needs_rehash — 检测散列值是否匹配指定的选项<br>  password_verify — 验证密码是否和散列值匹配</p><p>提供了这4个函数，具体案例可以看 <a href="http://php.net/manual/zh/function.password-hash.php" target="_blank" rel="external">http://php.net/manual/zh/function.password-hash.php</a></p><h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>代码：</p><pre><code>&lt;?php$pwd = password_hash(&apos;123456abc&apos;,PASSWORD_DEFAULT);$v = password_get_info($pwd);if(password_verify(&apos;123456abc&apos;, $pwd)){  echo &apos;yes&apos;;  echo  PHP_EOL;}var_dump($v);  echo  PHP_EOL;var_dump($pwd);  echo  PHP_EOL;</code></pre><p>在cli模式下运行结果：</p><pre><code>$ php b.phpyesarray(3) {  [&quot;algo&quot;]=&gt;  int(1)  [&quot;algoName&quot;]=&gt;  string(6) &quot;bcrypt&quot;  [&quot;options&quot;]=&gt;  array(1) {    [&quot;cost&quot;]=&gt;    int(10)  }}string(60) &quot;$2y$10$PQcdiu8BHfKS.43/RJ5xUeYDdHQ8/vcDSlM6lubIdCiTwso6T9.7.&quot;</code></pre><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>通过password_hash加密后的密码，使用字典方式很难破解，因为每次生成的密码都是不一样的,破解这种加密只能采用暴力破解。加密方法再好，原始密码设置的过于简单都容易被破解，设置复杂的密码才是王道。</p><h2 id="laravel框架中的使用"><a href="#laravel框架中的使用" class="headerlink" title="laravel框架中的使用"></a>laravel框架中的使用</h2><p>这两篇文章从框架源码讲解了Password Hashing函数的应用。<br><a href="http://laravelacademy.org/post/8327.html" target="_blank" rel="external">http://laravelacademy.org/post/8327.html</a><br><a href="http://laravelacademy.org/post/4764.html" target="_blank" rel="external">http://laravelacademy.org/post/4764.html</a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然通过password_hash()创建的哈希密码更加安全，但是却降低了互操作性。<br>如我们使用md5方式，在php中用标准的MD5加密，很容易通过其他语言来校验，因为md5的加密方式其他语言也可以使用。而使用password_hash()加密的哈希值基本只能通过PHP的password_verify来校验。<br>这2种方法各有优劣，是使用md5(或sha1等)+salt(干扰字符串)的方式还是使用password_hash()大家根据具体情况取舍把。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
     <title>phper需要注意的web安全</title>
     <link href="http://martist.cn/2018/04/18/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
     <id>http://martist.cn/2018/04/18/phper需要注意的web安全/</id>
@@ -87,30 +111,6 @@
       <category term="web" scheme="http://martist.cn/tags/web/"/>
     
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>加密如何保障安全</title>
-    <link href="http://martist.cn/2018/04/18/%E5%8A%A0%E5%AF%86%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E5%AE%89%E5%85%A8/"/>
-    <id>http://martist.cn/2018/04/18/加密如何保障安全/</id>
-    <published>2018-04-17T16:00:00.000Z</published>
-    <updated>2018-04-19T03:12:12.810Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>你还在用md5+salt方式加密密码吗？PHP5.5引入了Password Hashing函数，内核自带无需安装扩展。</p><h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>  password_get_info — 返回指定散列（hash）的相关信息<br>  password_hash — 创建密码的散列（hash）<br>  password_needs_rehash — 检测散列值是否匹配指定的选项<br>  password_verify — 验证密码是否和散列值匹配</p><p>提供了这4个函数，具体案例可以看 <a href="http://php.net/manual/zh/function.password-hash.php" target="_blank" rel="external">http://php.net/manual/zh/function.password-hash.php</a></p><h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>代码：</p><pre><code>&lt;?php$pwd = password_hash(&apos;123456abc&apos;,PASSWORD_DEFAULT);$v = password_get_info($pwd);if(password_verify(&apos;123456abc&apos;, $pwd)){  echo &apos;yes&apos;;  echo  PHP_EOL;}var_dump($v);  echo  PHP_EOL;var_dump($pwd);  echo  PHP_EOL;</code></pre><p>在cli模式下运行结果：</p><pre><code>$ php b.phpyesarray(3) {  [&quot;algo&quot;]=&gt;  int(1)  [&quot;algoName&quot;]=&gt;  string(6) &quot;bcrypt&quot;  [&quot;options&quot;]=&gt;  array(1) {    [&quot;cost&quot;]=&gt;    int(10)  }}string(60) &quot;$2y$10$PQcdiu8BHfKS.43/RJ5xUeYDdHQ8/vcDSlM6lubIdCiTwso6T9.7.&quot;</code></pre><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>通过password_hash加密后的密码，使用字典方式很难破解，因为每次生成的密码都是不一样的,破解这种加密只能采用暴力破解。加密方法再好，原始密码设置的过于简单都容易被破解，设置复杂的密码才是王道。</p><h2 id="laravel框架中的使用"><a href="#laravel框架中的使用" class="headerlink" title="laravel框架中的使用"></a>laravel框架中的使用</h2><p>这两篇文章从框架源码讲解了Password Hashing函数的应用。<br><a href="http://laravelacademy.org/post/8327.html" target="_blank" rel="external">http://laravelacademy.org/post/8327.html</a><br><a href="http://laravelacademy.org/post/4764.html" target="_blank" rel="external">http://laravelacademy.org/post/4764.html</a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然通过password_hash()创建的哈希密码更加安全，但是却降低了互操作性。<br>如我们使用md5方式，在php中用标准的MD5加密，很容易通过其他语言来校验，因为md5的加密方式其他语言也可以使用。而使用password_hash()加密的哈希值基本只能通过PHP的password_verify来校验。<br>这2种方法各有优劣，是使用md5(或sha1等)+salt(干扰字符串)的方式还是使用password_hash()大家根据具体情况取舍把。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
@@ -246,6 +246,30 @@
     <summary type="html">
     
       对我们phper来讲，这些概念不难理解
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>简单谈接口设计</title>
+    <link href="http://martist.cn/2018/03/20/%E7%AE%80%E5%8D%95%E8%B0%88%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1/"/>
+    <id>http://martist.cn/2018/03/20/简单谈接口设计/</id>
+    <published>2018-03-19T16:00:00.000Z</published>
+    <updated>2018-04-26T11:21:35.998Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>关于接口设计，需要注意区分pc,wap,app不同端的接口请求和通用性，以及实现签名鉴权，访问控制等功能。</p><h2 id="接口参数定义"><a href="#接口参数定义" class="headerlink" title="接口参数定义"></a>接口参数定义</h2><p>接口设计中往可以抽象出一些新的公共参数，从事了近三年的接口开发工作中，我目前能想到了一些较为常见的公共接口参数如下：</p><table><thead><tr><th>公共参数</th><th style="text-align:center">含意</th><th>定义该参数的意义</th></tr></thead><tbody><tr><td>timestamp</td><td style="text-align:center">毫秒级时间戳</td><td>1.客户端的请求时间标示 2.后端可以做请求过期验证 3.该参数参与签名算法增加签名的唯一性</td></tr><tr><td>app_key/source</td><td style="text-align:center">签名公钥(来源)</td><td>签名算法的公钥，后端通过公钥可以得到对应的私钥（也就是来源的意义）</td></tr><tr><td>sign</td><td style="text-align:center">接口签名</td><td>通过请求的参数和定义好的签名算法生成接口签名，作用防止中间人篡改请求参数</td></tr><tr><td>did</td><td style="text-align:center">设备ID</td><td>设备的唯一标示，生成规则例如android的mac地址的md5和ios曾今udid(目前无法获取)的md5, 1:数据收集 2.便于问题追踪 3.消息推送标示</td></tr></tbody></table><h2 id="接口版本化"><a href="#接口版本化" class="headerlink" title="接口版本化"></a>接口版本化</h2><p>我不太习惯把版本号直接放到路由里面去，还有其他方式可以区别版本，比如get、post传参。</p><h2 id="接口安全性"><a href="#接口安全性" class="headerlink" title="接口安全性"></a>接口安全性</h2><h3 id="过期验证"><a href="#过期验证" class="headerlink" title="过期验证"></a>过期验证</h3><p>通过时间戳进行验证</p><pre><code>if (microtime(true)*1000 - $_REQUEST[&apos;timestamp&apos;] &gt; 5000) {    throw new \Exception(401, &apos;Expired request&apos;);}</code></pre><h3 id="签名验证-公钥校验省略，如果是saas，密钥可能不同"><a href="#签名验证-公钥校验省略，如果是saas，密钥可能不同" class="headerlink" title="签名验证(公钥校验省略，如果是saas，密钥可能不同)"></a>签名验证(公钥校验省略，如果是saas，密钥可能不同)</h3><p>通过配对私钥的加密算法产生签名，请求中携带签名进行鉴权。</p><pre><code>$params = ksort($_REQUEST);unset($params[&apos;sign&apos;]);$sign = md5(sha1(implode(&apos;-&apos;, $params) . $_REQUEST[&apos;app_key&apos;]));if ($sign !== $_REQUEST[&apos;sign&apos;]) {    throw new \Exception(401, &apos;Invalid sign&apos;);}</code></pre><h3 id="重放攻击"><a href="#重放攻击" class="headerlink" title="重放攻击"></a>重放攻击</h3><p>防止一次相同请求多次攻击API服务器。</p><pre><code> /** @params noise string 随机字符串或随机正整数，与 Timestamp 联合起来, 用于防止重放攻击 例如腾讯云是6位随机正整数 */$key = md5(&quot;{$_REQUEST[&apos;REQUEST_URI&apos;]}-{$_REQUEST[&apos;timestamp&apos;]}-{$_REQUEST[&apos;noise&apos;]}-{$_REQUEST[&apos;did&apos;]}&quot;);if ($redisInstance-&gt;exists($key)) {    throw new \Exception(401, &apos;Repeated request&apos;);}</code></pre><h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><p>防止同一ip频繁访问API服务器。</p><pre><code>$key = md5(&quot;{$_REQUEST[&apos;REQUEST_URI&apos;]}-{$_REQUEST[&apos;REMOTE_ADDR&apos;]}-{$_REQUEST[&apos;did&apos;]}&quot;);if ($redisInstance-&gt;get($key) &gt; 60) {    throw new \Exception(401, &apos;Request limit&apos;);}$redisInstance-&gt;incre($key);</code></pre><h3 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h3><p>防止注入，xss等攻击。</p><pre><code>$username = htmlspecialchars($_REQUEST[&apos;username&apos;]);</code></pre><h2 id="接口的解耦设计"><a href="#接口的解耦设计" class="headerlink" title="接口的解耦设计"></a>接口的解耦设计</h2><ol><li>活用中间件、钩子</li><li>借口多用post请求，少用get</li><li>废弃的代码及时删掉，或者注释掉并且标注</li><li>接口文件合理切割（laravel，lumen等有接口文件的框架）</li><li>服务间调用不要私钥公钥相同，免得一破百破</li></ol><h2 id="接口的状态码"><a href="#接口的状态码" class="headerlink" title="接口的状态码"></a>接口的状态码</h2><p>推荐一些公用的，如果还有私信，广播，商城等状态码可以另加。</p><pre><code>200 -&gt; 正常400 -&gt; 缺少公共必传参数或者业务必传参数401 -&gt; 接口校验失败 例如签名403 -&gt; 没有该接口的访问权限499 -&gt; 上游服务响应时间超过接口设置的超时时间500 -&gt; 代码错误501 -&gt; 不支持的接口method502 -&gt; 上游服务返回的数据格式不正确503 -&gt; 上游服务超时504 -&gt; 上游服务不可用</code></pre><p>转自：<a href="http://tigerb.cn/2018/03/13/api/" target="_blank" rel="external">http://tigerb.cn/2018/03/13/api/</a></p><p>1</p>]]></content>
+    
+    <summary type="html">
+    
+      接口设计
     
     </summary>
     
@@ -421,28 +445,6 @@
   </entry>
   
   <entry>
-    <title>面向对象的模式方法__tostring()和__invoke()</title>
-    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
-    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
-    <published>2018-02-28T16:00:00.000Z</published>
-    <updated>2018-04-16T07:43:06.650Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      php
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
     <title>php实现汉诺塔</title>
     <link href="http://martist.cn/2018/03/01/php%E5%AE%9E%E7%8E%B0%E6%B1%89%E8%AF%BA%E5%A1%94/"/>
     <id>http://martist.cn/2018/03/01/php实现汉诺塔/</id>
@@ -467,24 +469,24 @@
   </entry>
   
   <entry>
-    <title>鸟哥的一次采访实录【转载】</title>
-    <link href="http://martist.cn/2018/02/24/%E6%83%A0%E6%96%B0%E5%AE%B8%E9%87%87%E8%AE%BF/"/>
-    <id>http://martist.cn/2018/02/24/惠新宸采访/</id>
-    <published>2018-02-23T16:00:00.000Z</published>
-    <updated>2018-03-27T07:38:16.069Z</updated>
+    <title>面向对象的模式方法__tostring()和__invoke()</title>
+    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
+    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
+    <published>2018-02-28T16:00:00.000Z</published>
+    <updated>2018-04-16T07:43:06.650Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a><br>PHP 7.1 已于12月1日正式发布，带来了全新的特性和功能。对于 PHP 开发者来说，每个正式版本的更新都是值得记住的日子，每次发布的新特性也都值得去尝试和研究。本期，【开源访谈】邀请到了 PHP 大神鸟哥惠新宸<a href="https://my.oschina.net/laruence" target="_blank" rel="external">@Laruence</a> ，听听他对 PHP 7.1 的看法，聊聊他当初学习 PHP 的那些事。</p><p>【本期嘉宾】</p><p>惠新宸，鸟哥，国内最有影响力的 PHP 技术专家， PHP 开发组核心成员，PHP 7 核心开发者。曾供职于雅虎、百度、新浪，现任链家网技术副总裁兼总架构师。是 Yaf、Yar 以及 Yac 、Taint 等多个开源项目的作者。</p><p>【采访实录】</p><h3 id="1、最初是因为什么喜欢上-PHP-的？"><a href="#1、最初是因为什么喜欢上-PHP-的？" class="headerlink" title="1、最初是因为什么喜欢上 PHP 的？"></a>1、最初是因为什么喜欢上 PHP 的？</h3><p>答：其实倒没有一开始就喜欢，06年还是研究生的时候，要给学校做一些网站，就逼着自己去学，阴差阳错的学了 PHP ，然后就一直做到现在。现在来说肯定是喜欢的，有感情在里面，别人说它不好，也会不舒服。当觉得自己有力量和途径去让它变好时，当发现它有哪里不好的时候，感觉会像是一个责任，会觉得可能自己不去管或许就没人管，可能更多的时候是这种感觉吧。</p><h3 id="2、学习过程中是怎么一步步提高自己的技术能力的，有没有一些心得分享？"><a href="#2、学习过程中是怎么一步步提高自己的技术能力的，有没有一些心得分享？" class="headerlink" title="2、学习过程中是怎么一步步提高自己的技术能力的，有没有一些心得分享？"></a>2、学习过程中是怎么一步步提高自己的技术能力的，有没有一些心得分享？</h3><p>答：我觉得更多的是要去研究，把每个遇到的问题都搞清楚。我经常会跟一些刚毕业的同学讲，你现在学的东西跟你的课本到底能不能联系起来？如果现在学的、用的东西通过一系列的摸索，能跟课本里面学到的那些东西贯通起来，说明你已经找到了好的学习方法。</p><p>记得在刚开始学做网站时，听说一项新技术，我就想在自己的网站里面去实现。结果各种不通，各种搞不定。我两天一夜没有睡觉去研究它，最后发现是编码的问题。还有07年刚开始参加工作在雅虎实习的时候，有段时间公司项目组做封闭开发，当时我住得离公司比较远，就在公司附近的一个酒店住了好几个月，每天都是工作到晚上12点以后，甚至到凌晨1、2点，然后早上起来吃个饭又去上班。我觉得更多的时候是要去专研，把遇到的每个问题、每个分支都搞清楚是什么原因。比如去研究一个东西，当研究到它操作系统的层面时，操作系统会告诉你一个结论。这个结论是怎么来的？你有没有兴趣去搞清楚，我觉得这就是关键。</p><h3 id="3、据了解，您有同时参与多个项目的开发，是怎么来安排自己的时间呢？"><a href="#3、据了解，您有同时参与多个项目的开发，是怎么来安排自己的时间呢？" class="headerlink" title="3、据了解，您有同时参与多个项目的开发，是怎么来安排自己的时间呢？"></a>3、据了解，您有同时参与多个项目的开发，是怎么来安排自己的时间呢？</h3><p>答：对于那个时候的我来说，根本没有时间管理一说，基本上都是一件事搞定之后再去做另外一件事。我觉得唯一需要时间安排的就是跟人约好的事情，当涉及到别人的时候，因为要尊重别人，要守时。更多的时候，一项工作搞不定我不会去做下一项工作。当然，所谓的搞定也有一个度，比如说做到了一个里程碑，我会歇一歇，换个思路去做另一件事情。</p><p>时间管理，我觉得可能更多的时候是你的事情是相对来说比较灵活的情况下才会去做。如果是真正去研究一个问题的时候，不可能时间管理，你吃饭也想，睡觉也想，什么时候都在想，这个问题解决不了，睡不好吃不好，还谈什么时间管理。</p><h3 id="4、对于普通技术人员来说，遇到问题可以请教高手。那对于您这样的技术大神遇到阻力时，会如何去解决？"><a href="#4、对于普通技术人员来说，遇到问题可以请教高手。那对于您这样的技术大神遇到阻力时，会如何去解决？" class="headerlink" title="4、对于普通技术人员来说，遇到问题可以请教高手。那对于您这样的技术大神遇到阻力时，会如何去解决？"></a>4、对于普通技术人员来说，遇到问题可以请教高手。那对于您这样的技术大神遇到阻力时，会如何去解决？</h3><p>答：每个人都有一套自己的学习方法，这分很多种。比如说，问别人，这也是一套学习的方法，但问别人必须要有人可问。我刚开始做 PHP 的时候，几乎整个中国都没有几个人在做内核这块相关的东西。当时为了研究出一个变量的含义，去 Google 查不到，了解到上海有一个人写过一些内核的文章，就给他留言、发邮件，他可能比较忙也没回我。当费了好大的劲去研究一个东西，如果还搞不明白，那就重头再来！从它相关的地方开始读，直到有一天，恍然大悟，原来是这个样子。</p><p>很多时候，大家需要的只是一个学习的方法。对于我来说，就是去 Google ，去搜索，去读一些别人写的东西。当然，这两年，整个开发环境好了很多，资料越来越多。你要去研究任何的东西，基本上都会有人已经有一些研究和产出，而且他们也比较愿意去分享。</p><p>以前大家可能也没那么乐意去分享，包括我自己。我一开始也不想去分享，因为你分享一些东西，你说不清楚。比如分享一些东西涉及到操作系统层面，那操作系统层面有一些高手会说你这什么东西啊，这完全不对。不过慢慢的，我愿意去分享，愿意把知道的那些分享出来。如果你告诉我哪哪错了，我会非常感激，因为你帮助我学到了一些东西。学东西不是只有主动学习，被动学习也未尝不可。我有时候会出错，很多人会出错，我现在看以前写的文章，有很多关键点是错的，还是有很多东西没有搞明白。</p><h3 id="5、PHP-7-1-刚刚发布，最喜欢或最看好的新特性是什么？"><a href="#5、PHP-7-1-刚刚发布，最喜欢或最看好的新特性是什么？" class="headerlink" title="5、PHP 7.1 刚刚发布，最喜欢或最看好的新特性是什么？"></a>5、PHP 7.1 刚刚发布，最喜欢或最看好的新特性是什么？</h3><p>答：还真没有。我在北京源创会年终盛典上分享新特性时也说过，大部分我都投了反对票。因为我其实觉得语法糖这样的东西，会把这个语言搞得越来越复杂。我表达了我的观点，因为 PHP 比较民主。我记得前两天有一个特性30多个人赞成，就我一个反对。但我不觉得有什么，因为我表达了我的意见，我反对，不同意，我认为这个东西不好，没意义。但别人会觉得有意义，有的人会喜欢。</p><p>我觉得每一个去做开源，或者是做一些跟别人打交道特别多的工作的人，一定要有这样的心理素质，或养成这么个习惯，就是勇于表达自己的观点，不要害怕别人的反对。别人反对你，没关系，如果耐心的去听每个人的理由，其实都会有一定道理。这些新特性也是如此，他们也有自己的理由。我强烈反对的情况下或许是因为这东西对性能有影响，如果它对性能没有影响，我只会表达说它好或者不好。比如说 List 那个我觉得还 OK，因为它是一致性的问题。还有一个 Catch 多个 Exception，也是如此。非要说喜欢的话，那个 List 可以用方括号代替的特性还行，写起来可能会方便一点。</p><h3 id="6、PHP-7-1-是否达到了最佳性能？"><a href="#6、PHP-7-1-是否达到了最佳性能？" class="headerlink" title="6、PHP 7.1 是否达到了最佳性能？"></a>6、PHP 7.1 是否达到了最佳性能？</h3><p>答：不能说最，别看 PHP 7.1 现在这么快，但相比其它语言，在某些场景下，还是有差距的。这跟它天然的像动态、符号表、间接引用等特性有很大关系。PHP 7.1 相比 7.0 来说，做的最大的工作，就是一个类型推断系统加一个类型相关的中间代码执行引擎。这个不是新的工作，在2013年我们做 PHP 5.5 的 JIT 的时候类型推断系统已经做出来了，但当时把这个项目停掉了，现在把那项工作其中的类型推断部分拿过来，放到 7.1 。基于这个类型推断未来还可以做更多的东西。PHP 7.1 更多的是对 7.0 未完成的工作的一个补充。</p><h3 id="7、PHP-国内开发环境越来越成熟，您觉得-PHP-的未来会是怎样？"><a href="#7、PHP-国内开发环境越来越成熟，您觉得-PHP-的未来会是怎样？" class="headerlink" title="7、PHP 国内开发环境越来越成熟，您觉得 PHP 的未来会是怎样？"></a>7、PHP 国内开发环境越来越成熟，您觉得 PHP 的未来会是怎样？</h3><p>答：这个真不好说，谁知道呢是吧！之前有人问我为什么 PHP 这么火，我觉得是跟它的历史原因是有关系的。因为在 Web 诞生时期，其实可学的不多。但是现在可学的特别多，写 Web 的可以有 PHP、Go、Java、Node.js、Python 等等。时代在进步，大家的选择越来越多，根据喜好每个人的选择也不一样。未来到底怎样？这个真不好说……</p><h3 id="8、伴随着-PHP-火的声音的同时，还有-PHP-人员已经饱和的争议，对此怎么看？"><a href="#8、伴随着-PHP-火的声音的同时，还有-PHP-人员已经饱和的争议，对此怎么看？" class="headerlink" title="8、伴随着 PHP 火的声音的同时，还有 PHP 人员已经饱和的争议，对此怎么看？"></a>8、伴随着 PHP 火的声音的同时，还有 PHP 人员已经饱和的争议，对此怎么看？</h3><p>答：他们说饱和就饱和呗。其实有很多时候就是这样，以前的时候我会去争论一些事情，后来觉得其实没有什么意义。哪怕这个语言只有那么几个人在用，但这些人用的舒服，解决了他们的问题，我觉得也是好的。我曾经开玩笑说，PHP 100万人用和 1000万人用对我们来说有什么区别？没有区别，可能就是演讲的时候来的人多一些吧。</p><h3 id="9、还有种说法就是-PHP-学习起来特别简单，不利于展示个人能力，对此怎么看？"><a href="#9、还有种说法就是-PHP-学习起来特别简单，不利于展示个人能力，对此怎么看？" class="headerlink" title="9、还有种说法就是 PHP 学习起来特别简单，不利于展示个人能力，对此怎么看？"></a>9、还有种说法就是 PHP 学习起来特别简单，不利于展示个人能力，对此怎么看？</h3><p>答：PHP 确实简单，这也是我们追求的目标，我们希望它简单，简单难道不好吗？可能有些人会寄希望通过一些复杂的东西来体现自己的优越感，这其实也没什么问题。只是我个人不认可这种态度，我觉得什么简单就用什么呗。我们公司里面之前有个分享，有同事说他费了好大劲去完成了某项工作，我提出了反对，我觉得这项工作可以在 Ngnix 上通过简单的配置去实现，为什么偏偏要花那么多的精力去做。当然，最后他告诉我说他不知道 Ngnix 上可以这么做。很多时候，有些人习惯于自己去解决一些问题，这是好事，但一定要努力扩充自己的视野，因为你花了那么大的精力最后可能会发现做的还不如人家一两下做得好。对于你来说可能损失不会很大，但对于一个集体、组织来说，损失就大了。你在团队里很重要，你的精力很重要，你花那么多时间做出的工作，可能别人用其他方法很快就能做出来。</p><p>回过头来说，你说 PHP 简单吧它也不简单，PHP 相关的东西现在也有很多，比如一些很优雅的框架。有些框架我自己看半天也会觉得还挺复杂的，学起来费劲。</p><p>我自己是用 C，我就是喜欢用简单的东西，我不太喜欢那种特别复杂的东西，因为要去理解它。之前我跟别人好像有过一次争吵，他的意思是说你只要肯学一定能学会，学不会说明你有问题。对我来说，我会去学也会去看别人的东西，但是用起来一定是用我最顺手的东西去解决问题。</p><p>不说机器语言，汇编层面就那么多东西，类型再复杂，落到汇编上也就是Size 和偏移上的问题。只要能搞清楚这个东西，你去学习其它的，都会觉得它最终的目的就是这个，那学习其它东西还有什么意义呢。当然，这只是在这个层面，如果是人生哲理啊、工作道理什么的，还是要多学习一些。</p><h3 id="10、能简单透露一点PHP后续的动作吗？"><a href="#10、能简单透露一点PHP后续的动作吗？" class="headerlink" title="10、能简单透露一点PHP后续的动作吗？"></a>10、能简单透露一点PHP后续的动作吗？</h3><p>答：我们几个人现在对新特性关注的比较少，更多的还是关注性能。现在我们在做 PHP 的 JIT 引擎，不出意外的在最近几个月就可能会合并到主干。</p><h3 id="11：最后，对于处于迷茫期的PHP新手有怎样的一些建议？"><a href="#11：最后，对于处于迷茫期的PHP新手有怎样的一些建议？" class="headerlink" title="11：最后，对于处于迷茫期的PHP新手有怎样的一些建议？"></a>11：最后，对于处于迷茫期的PHP新手有怎样的一些建议？</h3><p>答：我觉得不仅仅是学习 PHP ，学习任何东西都一样，一定要自己去专研。很多时候，有人问我的问题特别简单的话，我不会去回答他。一方面是我确实比较忙，另一方面是我觉得回答他反而对他不好。我更建议他们多去想，多去了解。每一个学习新东西的人，一定要养成自己的一个良好的学习方法，这也会是最高效的方法。尽量少问人，多问搜索引擎，多看 paper，多把自己学的东西和遇到的问题结合起来，学会融会贯通。举例说，你去学习 PHP ，你要搞清楚 PHP 是怎么跑起来的，当一个请求过来，它是怎么通过一系列东西去运行的。说到底我觉得就是需要养成良好的学习方法，而这个方法一定不是去问别人，即便你身边有个特别牛的人，人家也很难做到天天有耐心解答你的问题。</p><p>转载自【开源中国】<br><a href="https://www.oschina.net/question/2896879_2212316" target="_blank" rel="external">https://www.oschina.net/question/2896879_2212316</a></p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
     
     <summary type="html">
     
-      看看大神是怎么字里行间装b的
+      php
     
     </summary>
     
-      <category term="人生" scheme="http://martist.cn/categories/%E4%BA%BA%E7%94%9F/"/>
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
     
     
-      <category term="人生" scheme="http://martist.cn/tags/%E4%BA%BA%E7%94%9F/"/>
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
