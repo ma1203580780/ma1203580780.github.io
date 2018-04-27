@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-04-26T11:06:09.048Z</updated>
+  <updated>2018-04-19T11:30:38.665Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>nginx中的PHP_VALUE</title>
+    <link href="http://martist.cn/2018/04/20/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
+    <id>http://martist.cn/2018/04/20/nginx中的PHP_VALUE/</id>
+    <published>2018-04-19T16:00:00.000Z</published>
+    <updated>2018-04-19T11:30:38.665Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>PHP_VALUE实现了动态修改php的配置项 ，而不需要去改项目代码。</p><p>我们一般修改php的配置项都是在php.ini中修改。在php,ini中的修改会影响到所有使用php的程序。假如我想让修改只在某个域名下生效，该如何做呢?首先想到的可能是使用ini_set()方法在脚本中修改。但是这个只能修改作用域为PHP_INI_USER和PHP_INI_ALL的配置项。所以我们用PHP_VALUE这个更好的做法。</p><h3 id="PHP配置指令作用域说明"><a href="#PHP配置指令作用域说明" class="headerlink" title="PHP配置指令作用域说明"></a>PHP配置指令作用域说明</h3><p>PHP总共有4个配置指令作用域，分别是PHP_INI_USER，PHP_INI_PERDIR，PHP_INI_SYSTEM，PHP_INI_ALL。这些作用域限制了指令是否可以被修改，在那里可以被修改。php的每个配置项都会有一个作用域。下面是对四种作用域的说明。</p><pre><code>作用域类型         说明PHP_INI_USER     可在用户脚本(如 ini_set())或Windows注册表(PHP 5.3 起)以及.user.ini中设定PHP_INI_PERDIR   可在 php.ini，.htaccess 或 httpd.conf 中设定PHP_INI_SYSTEM   可在 php.ini 或 httpd.conf 中设定PHP_INI_ALL      可在任何地方设定</code></pre><p>例如 output_buffering 指令是属于 PHP_INI_PERDIR，因而就不能用 ini_set() 来设定。但是 display_errors 指令是属于 PHP_INI_ALL 因而就可以在任何地方被设定，包括 ini_set()。httpd.conf相比ini_set()中可以设定更多级别的配置项。</p><h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>如果是apache+php的组合，我们可以在apache的配置文件中加入如下指令即可。</p><pre><code>PHP_VALUE auto_prepend_file /home/www/bo56.com/header.php</code></pre><p>如果是nginx+php组合，可以加入如下指令</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php&quot;;</code></pre><p>注意，nginx中多次使用 PHP_VALUE时，最后的一个会覆盖之前的。如果想设置多个配置项，需要写在一起，然后用换行分割。如：</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php \n auto_append_file=/home/www/bo56.com/external/footer.php&quot;;</code></pre><h2 id="fastcgi-pass配置"><a href="#fastcgi-pass配置" class="headerlink" title="fastcgi_pass配置"></a>fastcgi_pass配置</h2><p>我们看到nginx的虚拟主机server中的fastcgi_param，这是什么呢，引起了我的好奇心，下面讲解下。</p><p>Nginx 的 fastcgi 模块提供了 fastcgi_param 指令来主要处理这些映射关系，其主要完成的工作是将 Nginx 中的变量翻译成 PHP 中能够理解的变量。</p><pre><code>fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;#脚本文件请求的路径,也就是说当访问127.0.0.1/index.php的时候，需要读取网站根目录下面的index.php文件，如果没有配置这一配置项时，nginx不回去网站根目录下访问.php文件，所以返回空白fastcgi_param QUERY_STRING $query_string;                        #请求的参数;如?app=123fastcgi_param REQUEST_METHOD $request_method;                    #请求的动作(GET,POST)fastcgi_param CONTENT_TYPE $content_type;                        #请求头中的Content-Type字段fastcgi_param CONTENT_LENGTH $content_length;                    #请求头中的Content-length字段。fastcgi_param SCRIPT_NAME $fastcgi_script_name;                  #脚本名称fastcgi_param REQUEST_URI $request_uri;                          #请求的地址不带参数fastcgi_param DOCUMENT_URI $document_uri;                        #与$uri相同。fastcgi_param DOCUMENT_ROOT $document_root;                      #网站的根目录。在server配置中root指令中指定的值fastcgi_param SERVER_PROTOCOL $server_protocol;                  #请求使用的协议，通常是HTTP/1.0或HTTP/1.1。fastcgi_param GATEWAY_INTERFACE CGI/1.1;                         #cgi 版本fastcgi_param SERVER_SOFTWARE nginx/$nginx_version;              #nginx 版本号，可修改、隐藏fastcgi_param REMOTE_ADDR $remote_addr;                          #客户端IPfastcgi_param REMOTE_PORT $remote_port;                          #客户端端口fastcgi_param SERVER_ADDR $server_addr;                          #服务器IP地址fastcgi_param SERVER_PORT $server_port;                          #服务器端口fastcgi_param SERVER_NAME $server_name;                          #服务器名，域名在server配置中指定的server_namefastcgi_param PATH_INFO $path_info;                             #可自定义变量-- PHP only, required if PHP was built with --enable-force-cgi-redirectfastcgi_param REDIRECT_STATUS 200;</code></pre><p>在php可打印出上面的服务环境变量<br>如：</p><pre><code>echo $_SERVER[&apos;REMOTE_ADDR&apos;]</code></pre><h2 id="open-basedir限制目录"><a href="#open-basedir限制目录" class="headerlink" title="open_basedir限制目录"></a>open_basedir限制目录</h2><p>open_basedir 将PHP所能打开的文件限制在指定的目录树中，包括文件本身。当程序要使用例如fopen()或file_get_contents()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开。</p><p>本指令不受安全模式打开或关闭的影响。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>httpd.conf中的VritualHost</p><pre><code>php_admin_value open_basedir &quot;指定目录&quot;</code></pre><p>nginx fastcgi.conf</p><pre><code>fastcgi_param PHP_VALUE &quot;open_basedir=指定目录&quot;</code></pre><p>1</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="nginx" scheme="http://martist.cn/categories/nginx/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="nginx" scheme="http://martist.cn/tags/nginx/"/>
+    
+  </entry>
   
   <entry>
     <title>php7性能分析-xhprof【laravel】</title>
@@ -43,26 +67,28 @@
   </entry>
   
   <entry>
-    <title>nginx中的PHP_VALUE</title>
-    <link href="http://martist.cn/2018/04/20/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
-    <id>http://martist.cn/2018/04/20/nginx中的PHP_VALUE/</id>
-    <published>2018-04-19T16:00:00.000Z</published>
-    <updated>2018-04-19T11:30:38.665Z</updated>
+    <title>phper需要注意的web安全</title>
+    <link href="http://martist.cn/2018/04/18/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
+    <id>http://martist.cn/2018/04/18/phper需要注意的web安全/</id>
+    <published>2018-04-17T16:00:00.000Z</published>
+    <updated>2018-04-18T11:27:59.064Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>PHP_VALUE实现了动态修改php的配置项 ，而不需要去改项目代码。</p><p>我们一般修改php的配置项都是在php.ini中修改。在php,ini中的修改会影响到所有使用php的程序。假如我想让修改只在某个域名下生效，该如何做呢?首先想到的可能是使用ini_set()方法在脚本中修改。但是这个只能修改作用域为PHP_INI_USER和PHP_INI_ALL的配置项。所以我们用PHP_VALUE这个更好的做法。</p><h3 id="PHP配置指令作用域说明"><a href="#PHP配置指令作用域说明" class="headerlink" title="PHP配置指令作用域说明"></a>PHP配置指令作用域说明</h3><p>PHP总共有4个配置指令作用域，分别是PHP_INI_USER，PHP_INI_PERDIR，PHP_INI_SYSTEM，PHP_INI_ALL。这些作用域限制了指令是否可以被修改，在那里可以被修改。php的每个配置项都会有一个作用域。下面是对四种作用域的说明。</p><pre><code>作用域类型         说明PHP_INI_USER     可在用户脚本(如 ini_set())或Windows注册表(PHP 5.3 起)以及.user.ini中设定PHP_INI_PERDIR   可在 php.ini，.htaccess 或 httpd.conf 中设定PHP_INI_SYSTEM   可在 php.ini 或 httpd.conf 中设定PHP_INI_ALL      可在任何地方设定</code></pre><p>例如 output_buffering 指令是属于 PHP_INI_PERDIR，因而就不能用 ini_set() 来设定。但是 display_errors 指令是属于 PHP_INI_ALL 因而就可以在任何地方被设定，包括 ini_set()。httpd.conf相比ini_set()中可以设定更多级别的配置项。</p><h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>如果是apache+php的组合，我们可以在apache的配置文件中加入如下指令即可。</p><pre><code>PHP_VALUE auto_prepend_file /home/www/bo56.com/header.php</code></pre><p>如果是nginx+php组合，可以加入如下指令</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php&quot;;</code></pre><p>注意，nginx中多次使用 PHP_VALUE时，最后的一个会覆盖之前的。如果想设置多个配置项，需要写在一起，然后用换行分割。如：</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php \n auto_append_file=/home/www/bo56.com/external/footer.php&quot;;</code></pre><h2 id="fastcgi-pass配置"><a href="#fastcgi-pass配置" class="headerlink" title="fastcgi_pass配置"></a>fastcgi_pass配置</h2><p>我们看到nginx的虚拟主机server中的fastcgi_param，这是什么呢，引起了我的好奇心，下面讲解下。</p><p>Nginx 的 fastcgi 模块提供了 fastcgi_param 指令来主要处理这些映射关系，其主要完成的工作是将 Nginx 中的变量翻译成 PHP 中能够理解的变量。</p><pre><code>fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;#脚本文件请求的路径,也就是说当访问127.0.0.1/index.php的时候，需要读取网站根目录下面的index.php文件，如果没有配置这一配置项时，nginx不回去网站根目录下访问.php文件，所以返回空白fastcgi_param QUERY_STRING $query_string;                        #请求的参数;如?app=123fastcgi_param REQUEST_METHOD $request_method;                    #请求的动作(GET,POST)fastcgi_param CONTENT_TYPE $content_type;                        #请求头中的Content-Type字段fastcgi_param CONTENT_LENGTH $content_length;                    #请求头中的Content-length字段。fastcgi_param SCRIPT_NAME $fastcgi_script_name;                  #脚本名称fastcgi_param REQUEST_URI $request_uri;                          #请求的地址不带参数fastcgi_param DOCUMENT_URI $document_uri;                        #与$uri相同。fastcgi_param DOCUMENT_ROOT $document_root;                      #网站的根目录。在server配置中root指令中指定的值fastcgi_param SERVER_PROTOCOL $server_protocol;                  #请求使用的协议，通常是HTTP/1.0或HTTP/1.1。fastcgi_param GATEWAY_INTERFACE CGI/1.1;                         #cgi 版本fastcgi_param SERVER_SOFTWARE nginx/$nginx_version;              #nginx 版本号，可修改、隐藏fastcgi_param REMOTE_ADDR $remote_addr;                          #客户端IPfastcgi_param REMOTE_PORT $remote_port;                          #客户端端口fastcgi_param SERVER_ADDR $server_addr;                          #服务器IP地址fastcgi_param SERVER_PORT $server_port;                          #服务器端口fastcgi_param SERVER_NAME $server_name;                          #服务器名，域名在server配置中指定的server_namefastcgi_param PATH_INFO $path_info;                             #可自定义变量-- PHP only, required if PHP was built with --enable-force-cgi-redirectfastcgi_param REDIRECT_STATUS 200;</code></pre><p>在php可打印出上面的服务环境变量<br>如：</p><pre><code>echo $_SERVER[&apos;REMOTE_ADDR&apos;]</code></pre><h2 id="open-basedir限制目录"><a href="#open-basedir限制目录" class="headerlink" title="open_basedir限制目录"></a>open_basedir限制目录</h2><p>open_basedir 将PHP所能打开的文件限制在指定的目录树中，包括文件本身。当程序要使用例如fopen()或file_get_contents()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开。</p><p>本指令不受安全模式打开或关闭的影响。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>httpd.conf中的VritualHost</p><pre><code>php_admin_value open_basedir &quot;指定目录&quot;</code></pre><p>nginx fastcgi.conf</p><pre><code>fastcgi_param PHP_VALUE &quot;open_basedir=指定目录&quot;</code></pre><p>1</p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>我一开始想写，思想被局限在后端了，可能是因为我是一名后端开发吧，其实前端也可以做很多事情来防止网络攻击，下面以前后端来分类简单讲讲web安全。</p><h2 id="前端眼里的web安全"><a href="#前端眼里的web安全" class="headerlink" title="前端眼里的web安全"></a>前端眼里的web安全</h2><ul><li>xss</li><li>csrf</li></ul><p>XSS（cross-site scripting跨域脚本攻击）攻击也是最常见的WEB攻击之一，其重点是“跨域”和“客户端执行”。<br>CSRF（cross-site request forgery），翻译为跨站请求伪造，与XSS非常相似，但XSS是利用用户对当前网站的信任来发起攻击，而CSRF是利用网站对用户的信任来发起攻击。<br>推荐阅读：<br><a href="https://www.cnblogs.com/vajoy/p/4176908.html" target="_blank" rel="external">https://www.cnblogs.com/vajoy/p/4176908.html</a><br><a href="https://segmentfault.com/a/1190000006672214" target="_blank" rel="external">https://segmentfault.com/a/1190000006672214</a></p><h2 id="后端眼里的web安全"><a href="#后端眼里的web安全" class="headerlink" title="后端眼里的web安全"></a>后端眼里的web安全</h2><p>SQL注入攻击<br>中间人攻击（会话劫持）<br>文件上传漏洞攻击<br>DoS和DDoS攻击<br>不安全加密<br>后门</p><p>推荐阅读：<br><a href="https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral</a><br><a href="https://segmentfault.com/a/1190000007028595" target="_blank" rel="external">https://segmentfault.com/a/1190000007028595</a><br><a href="https://www.cnblogs.com/luyucheng/p/6234524.html" target="_blank" rel="external">https://www.cnblogs.com/luyucheng/p/6234524.html</a></p><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>目前我也在学习阶段，发现一本书很不多，《白帽子讲web安全》，希望大家可以和我一起学习。</p><p>1</p>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;：-}
+      关于网络安全，phper开发时候需要注意到的地方
     
     </summary>
     
-      <category term="nginx" scheme="http://martist.cn/categories/nginx/"/>
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
     
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
-      <category term="nginx" scheme="http://martist.cn/tags/nginx/"/>
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
@@ -85,32 +111,6 @@
     
     
       <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>phper需要注意的web安全</title>
-    <link href="http://martist.cn/2018/04/18/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
-    <id>http://martist.cn/2018/04/18/phper需要注意的web安全/</id>
-    <published>2018-04-17T16:00:00.000Z</published>
-    <updated>2018-04-18T11:27:59.064Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>我一开始想写，思想被局限在后端了，可能是因为我是一名后端开发吧，其实前端也可以做很多事情来防止网络攻击，下面以前后端来分类简单讲讲web安全。</p><h2 id="前端眼里的web安全"><a href="#前端眼里的web安全" class="headerlink" title="前端眼里的web安全"></a>前端眼里的web安全</h2><ul><li>xss</li><li>csrf</li></ul><p>XSS（cross-site scripting跨域脚本攻击）攻击也是最常见的WEB攻击之一，其重点是“跨域”和“客户端执行”。<br>CSRF（cross-site request forgery），翻译为跨站请求伪造，与XSS非常相似，但XSS是利用用户对当前网站的信任来发起攻击，而CSRF是利用网站对用户的信任来发起攻击。<br>推荐阅读：<br><a href="https://www.cnblogs.com/vajoy/p/4176908.html" target="_blank" rel="external">https://www.cnblogs.com/vajoy/p/4176908.html</a><br><a href="https://segmentfault.com/a/1190000006672214" target="_blank" rel="external">https://segmentfault.com/a/1190000006672214</a></p><h2 id="后端眼里的web安全"><a href="#后端眼里的web安全" class="headerlink" title="后端眼里的web安全"></a>后端眼里的web安全</h2><p>SQL注入攻击<br>中间人攻击（会话劫持）<br>文件上传漏洞攻击<br>DoS和DDoS攻击<br>不安全加密<br>后门</p><p>推荐阅读：<br><a href="https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral</a><br><a href="https://segmentfault.com/a/1190000007028595" target="_blank" rel="external">https://segmentfault.com/a/1190000007028595</a><br><a href="https://www.cnblogs.com/luyucheng/p/6234524.html" target="_blank" rel="external">https://www.cnblogs.com/luyucheng/p/6234524.html</a></p><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>目前我也在学习阶段，发现一本书很不多，《白帽子讲web安全》，希望大家可以和我一起学习。</p><p>1</p>]]></content>
-    
-    <summary type="html">
-    
-      关于网络安全，phper开发时候需要注意到的地方
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
@@ -283,28 +283,6 @@
   </entry>
   
   <entry>
-    <title>linux之curl命令</title>
-    <link href="http://martist.cn/2018/03/18/linux%E4%B9%8BCURL%E5%91%BD%E4%BB%A4/"/>
-    <id>http://martist.cn/2018/03/18/linux之CURL命令/</id>
-    <published>2018-03-17T16:00:00.000Z</published>
-    <updated>2018-04-10T10:16:21.487Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>curl是一种命令行工具，作用是发出网络请求，然后得到和提取数据，显示在”标准输出”（stdout）上面。</p><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>curl(选项)(参数)</code></pre><h3 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h3><pre><code>-a/--append    上传文件时，附加到目标文件-A/--user-agent &lt;string&gt;    设置用户代理发送给服务器-anyauth    可以使用“任何”身份验证方法-b/--cookie &lt;name=string/file&gt;    cookie字符串或文件读取位置    --basic    使用HTTP基本验证-B/--use-ascii    使用ASCII /文本传输-c/--cookie-jar &lt;file&gt;    操作结束后把cookie写入到这个文件中-C/--continue-at &lt;offset&gt;    断点续转-d/--data &lt;data&gt;    HTTP POST方式传送数据    --data-ascii &lt;data&gt;    以ascii的方式post数据    --data-binary &lt;data&gt;    以二进制的方式post数据    --negotiate    使用HTTP身份验证    --digest    使用数字身份验证    --disable-eprt    禁止使用EPRT或LPRT    --disable-epsv    禁止使用EPSV-D/--dump-header &lt;file&gt;    把header信息写入到该文件中    --egd-file &lt;file&gt;    为随机数据(SSL)设置EGD socket路径    --tcp-nodelay    使用TCP_NODELAY选项-e/--referer    来源网址-E/--cert &lt;cert[:passwd]&gt;    客户端证书文件和密码 (SSL)    --cert-type &lt;type&gt;    证书文件类型 (DER/PEM/ENG) (SSL)    --key &lt;key&gt;    私钥文件名 (SSL)    --key-type &lt;type&gt;    私钥文件类型 (DER/PEM/ENG) (SSL)    --pass &lt;pass&gt;    私钥密码 (SSL)    --engine &lt;eng&gt;    加密引擎使用 (SSL). &quot;--engine list&quot; for list    --cacert &lt;file&gt;    CA证书 (SSL)    --capath &lt;directory&gt;    CA目录 (made using c_rehash) to verify peer against (SSL)    --ciphers &lt;list&gt;    SSL密码    --compressed    要求返回是压缩的形势 (using deflate or gzip)    --connect-timeout &lt;seconds&gt;    设置最大请求时间    --create-dirs    建立本地目录的目录层次结构    --crlf    上传是把LF转变成CRLF-f/--fail    连接失败时不显示http错误    --ftp-create-dirs    如果远程目录不存在，创建远程目录    --ftp-method [multicwd/nocwd/singlecwd]    控制CWD的使用    --ftp-pasv    使用 PASV/EPSV 代替端口    --ftp-skip-pasv-ip    使用PASV的时候,忽略该IP地址    --ftp-ssl    尝试用 SSL/TLS 来进行ftp数据传输    --ftp-ssl-reqd    要求用 SSL/TLS 来进行ftp数据传输-F/--form &lt;name=content&gt;    模拟http表单提交数据    --form-string &lt;name=string&gt;    模拟http表单提交数据-g/--globoff    禁用网址序列和范围使用{}和[]-G/--get    以get的方式来发送数据-H/--header &lt;line&gt;    自定义头信息传递给服务器    --ignore-content-length    忽略的HTTP头信息的长度-i/--include    输出时包括protocol头信息-I/--head    只显示请求头信息-j/--junk-session-cookies    读取文件进忽略session cookie    --interface &lt;interface&gt;    使用指定网络接口/地址    --krb4 &lt;level&gt;    使用指定安全级别的krb4-k/--insecure    允许不使用证书到SSL站点-K/--config    指定的配置文件读取-l/--list-only    列出ftp目录下的文件名称    --limit-rate &lt;rate&gt;    设置传输速度    --local-port&lt;NUM&gt;    强制使用本地端口号-m/--max-time &lt;seconds&gt;    设置最大传输时间    --max-redirs &lt;num&gt;    设置最大读取的目录数    --max-filesize &lt;bytes&gt;    设置最大下载的文件总量-M/--manual    显示全手动-n/--netrc    从netrc文件中读取用户名和密码    --netrc-optional    使用 .netrc 或者 URL来覆盖-n    --ntlm    使用 HTTP NTLM 身份验证-N/--no-buffer    禁用缓冲输出-o/--output    把输出写到该文件中-O/--remote-name    把输出写到该文件中，保留远程文件的文件名-p/--proxytunnel    使用HTTP代理    --proxy-anyauth    选择任一代理身份验证方法    --proxy-basic    在代理上使用基本身份验证    --proxy-digest    在代理上使用数字身份验证    --proxy-ntlm    在代理上使用ntlm身份验证-P/--ftp-port &lt;address&gt;    使用端口地址，而不是使用PASV-q    作为第一个参数，关闭 .curlrc-Q/--quote &lt;cmd&gt;    文件传输前，发送命令到服务器-r/--range &lt;range&gt;    检索来自HTTP/1.1或FTP服务器字节范围--range-file    读取（SSL）的随机文件-R/--remote-time    在本地生成文件时，保留远程文件时间    --retry &lt;num&gt;    传输出现问题时，重试的次数    --retry-delay &lt;seconds&gt;    传输出现问题时，设置重试间隔时间    --retry-max-time &lt;seconds&gt;    传输出现问题时，设置最大重试时间-s/--silent    静默模式。不输出任何东西-S/--show-error    显示错误    --socks4 &lt;host[:port]&gt;    用socks4代理给定主机和端口    --socks5 &lt;host[:port]&gt;    用socks5代理给定主机和端口    --stderr &lt;file&gt;     -t/--telnet-option &lt;OPT=val&gt;    Telnet选项设置    --trace &lt;file&gt;    对指定文件进行debug    --trace-ascii &lt;file&gt;    Like --跟踪但没有hex输出    --trace-time    跟踪/详细输出时，添加时间戳-T/--upload-file &lt;file&gt;    上传文件    --url &lt;URL&gt;    Spet URL to work with-u/--user &lt;user[:password]&gt;    设置服务器的用户和密码-U/--proxy-user &lt;user[:password]&gt;    设置代理用户名和密码-w/--write-out [format]    什么输出完成后-x/--proxy &lt;host[:port]&gt;    在给定的端口上使用HTTP代理-X/--request &lt;command&gt;    指定什么命令-y/--speed-time    放弃限速所要的时间，默认为30-Y/--speed-limit    停止传输速度的限制，速度时间</code></pre><p>具体可看：<a href="http://man.linuxde.net/curl" target="_blank" rel="external">http://man.linuxde.net/curl</a></p><h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><h3 id="一、查看网页源码"><a href="#一、查看网页源码" class="headerlink" title="一、查看网页源码"></a>一、查看网页源码</h3><p>直接在curl命令后加上网址，就可以看到网页源码。我们以网址www.sina.com为例（选择该网址，主要因为它的网页代码较短）：</p><pre><code>　　$ curl www.sina.com　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;</code></pre><p>如果要把这个网页保存下来，可以使用<code>-o</code>参数，这就相当于使用wget命令了。</p><pre><code>　　$ curl -o [文件名] www.sina.com</code></pre><h3 id="二、自动跳转"><a href="#二、自动跳转" class="headerlink" title="二、自动跳转"></a>二、自动跳转</h3><p>有的网址是自动跳转的。使用<code>-L</code>参数，curl就会跳转到新的网址。</p><pre><code>　　$ curl -L www.sina.com</code></pre><p>键入上面的命令，结果就自动跳转为www.sina.com.cn。</p><h3 id="三、显示头信息"><a href="#三、显示头信息" class="headerlink" title="三、显示头信息"></a>三、显示头信息</h3><p><code>-i</code>参数可以显示http response的头信息，连同网页代码一起。</p><pre><code>　　$ curl -i www.sina.com　　HTTP/1.0 301 Moved Permanently　　Date: Sat, 03 Sep 2011 23:44:10 GMT　　Server: Apache/2.0.54 (Unix)　　Location: http://www.sina.com.cn/　　Cache-Control: max-age=3600　　Expires: Sun, 04 Sep 2011 00:44:10 GMT　　Vary: Accept-Encoding　　Content-Length: 231　　Content-Type: text/html; charset=iso-8859-1　　Age: 3239　　X-Cache: HIT from sh201-9.sina.com.cn　　Connection: close　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;</code></pre><p><code>-I</code>参数则是只显示http response的头信息。</p><h3 id="四、显示通信过程"><a href="#四、显示通信过程" class="headerlink" title="四、显示通信过程"></a>四、显示通信过程</h3><p><code>-v</code>参数可以显示一次http通信的整个过程，包括端口连接和http request头信息。</p><pre><code>　　$ curl -v www.sina.com　　* About to connect() to www.sina.com port 80 (#0)　　* Trying 61.172.201.195... connected　　* Connected to www.sina.com (61.172.201.195) port 80 (#0)　　&gt; GET / HTTP/1.1　　&gt; User-Agent: curl/7.21.3 (i686-pc-linux-gnu) libcurl/7.21.3 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18　　&gt; Host: www.sina.com　　&gt; Accept: */*　　&gt;　　* HTTP 1.0, assume close after body　　&lt; HTTP/1.0 301 Moved Permanently　　&lt; Date: Sun, 04 Sep 2011 00:42:39 GMT　　&lt; Server: Apache/2.0.54 (Unix)　　&lt; Location: http://www.sina.com.cn/　　&lt; Cache-Control: max-age=3600　　&lt; Expires: Sun, 04 Sep 2011 01:42:39 GMT　　&lt; Vary: Accept-Encoding　　&lt; Content-Length: 231　　&lt; Content-Type: text/html; charset=iso-8859-1　　&lt; X-Cache: MISS from sh201-19.sina.com.cn　　&lt; Connection: close　　&lt;　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;　　* Closing connection #0</code></pre><p>如果你觉得上面的信息还不够，那么下面的命令可以查看更详细的通信过程。</p><pre><code>　　$ curl --trace output.txt www.sina.com</code></pre><p>或者</p><pre><code>　　$ curl --trace-ascii output.txt www.sina.com</code></pre><p>运行后，请打开output.txt文件查看。</p><h3 id="五、发送表单信息"><a href="#五、发送表单信息" class="headerlink" title="五、发送表单信息"></a>五、发送表单信息</h3><p>发送表单信息有GET和POST两种方法。GET方法相对简单，只要把数据附在网址后面就行。</p><pre><code>　　$ curl example.com/form.cgi?data=xxx</code></pre><p>POST方法必须把数据和网址分开，curl就要用到–data参数。</p><pre><code>　　$ curl -X POST --data &quot;data=xxx&quot; example.com/form.cgi</code></pre><p>如果你的数据没有经过表单编码，还可以让curl为你编码，参数是<code>--data-urlencode</code>。</p><pre><code>　　$ curl -X POST--data-urlencode &quot;date=April 1&quot; example.com/form.cgi</code></pre><h3 id="六、HTTP动词"><a href="#六、HTTP动词" class="headerlink" title="六、HTTP动词"></a>六、HTTP动词</h3><p>curl默认的HTTP动词是GET，使用<code>-X</code>参数可以支持其他动词。</p><pre><code>　　$ curl -X POST www.example.com　　$ curl -X DELETE www.example.com</code></pre><h3 id="七、文件上传"><a href="#七、文件上传" class="headerlink" title="七、文件上传"></a>七、文件上传</h3><p>假定文件上传的表单是下面这样：</p><pre><code>　　&lt;form method=&quot;POST&quot; enctype=&apos;multipart/form-data&apos; action=&quot;upload.cgi&quot;&gt;　　　　&lt;input type=file name=upload&gt;　　　　&lt;input type=submit name=press value=&quot;OK&quot;&gt;　　&lt;/form&gt;</code></pre><p>你可以用curl这样上传文件：</p><pre><code>　　$ curl --form upload=@localfilename --form press=OK [URL]</code></pre><h3 id="八、Referer字段"><a href="#八、Referer字段" class="headerlink" title="八、Referer字段"></a>八、Referer字段</h3><p>有时你需要在http request头信息中，提供一个referer字段，表示你是从哪里跳转过来的。</p><pre><code>　　$ curl --referer http://www.example.com http://www.example.com</code></pre><h3 id="九、User-Agent字段"><a href="#九、User-Agent字段" class="headerlink" title="九、User Agent字段"></a>九、User Agent字段</h3><p>这个字段是用来表示客户端的设备信息。服务器有时会根据这个字段，针对不同设备，返回不同格式的网页，比如手机版和桌面版。</p><p>iPhone4的User Agent是</p><pre><code>　　Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7</code></pre><p>curl可以这样模拟：</p><pre><code>　　$ curl --user-agent &quot;[User Agent]&quot; [URL]</code></pre><h3 id="十、cookie"><a href="#十、cookie" class="headerlink" title="十、cookie"></a>十、cookie</h3><p>使用<code>--cookie</code>参数，可以让curl发送cookie。</p><pre><code>　　$ curl --cookie &quot;name=xxx&quot; www.example.com</code></pre><p>至于具体的cookie的值，可以从http response头信息的<code>Set-Cookie</code>字段中得到。</p><p><code>-c cookie-file</code>可以保存服务器返回的cookie到文件，<code>-b cookie-file</code>可以使用这个文件作为cookie信息，进行后续的请求。</p><pre><code>　　$ curl -c cookies http://example.com　　$ curl -b cookies http://example.com</code></pre><h3 id="十一、增加头信息"><a href="#十一、增加头信息" class="headerlink" title="十一、增加头信息"></a>十一、增加头信息</h3><p>有时需要在http request之中，自行增加一个头信息。<code>--header</code>参数就可以起到这个作用。</p><pre><code>　　$ curl --header &quot;Content-Type:application/json&quot; http://example.com</code></pre><h3 id="十二、HTTP认证"><a href="#十二、HTTP认证" class="headerlink" title="十二、HTTP认证"></a>十二、HTTP认证</h3><p>有些网域需要HTTP认证，这时curl需要用到<code>--user</code>参数。</p><pre><code>　　$ curl --user name:password example.com</code></pre><h3 id="十三、监控"><a href="#十三、监控" class="headerlink" title="十三、监控"></a>十三、监控</h3><p>1、开启gzip请求</p><pre><code>curl -I http://www.sina.com.cn/ -H Accept-Encoding:gzip,defalte</code></pre><p>2、监控网页的响应时间</p><pre><code>curl -o /dev/null -s -w &quot;time_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n&quot; &quot;http://www.kklinux.com&quot;</code></pre><p>3、 监控站点可用性</p><pre><code>curl -o /dev/null -s -w %{http_code} &quot;http://www.kklinux.com&quot;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
     <title>深蹲膝盖要不要过脚尖</title>
     <link href="http://martist.cn/2018/03/18/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
     <id>http://martist.cn/2018/03/18/深蹲膝盖要不要过脚尖/</id>
@@ -323,6 +301,28 @@
     
     
       <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux之curl命令</title>
+    <link href="http://martist.cn/2018/03/18/linux%E4%B9%8BCURL%E5%91%BD%E4%BB%A4/"/>
+    <id>http://martist.cn/2018/03/18/linux之CURL命令/</id>
+    <published>2018-03-17T16:00:00.000Z</published>
+    <updated>2018-04-10T10:16:21.487Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>curl是一种命令行工具，作用是发出网络请求，然后得到和提取数据，显示在”标准输出”（stdout）上面。</p><h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><pre><code>curl(选项)(参数)</code></pre><h3 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h3><pre><code>-a/--append    上传文件时，附加到目标文件-A/--user-agent &lt;string&gt;    设置用户代理发送给服务器-anyauth    可以使用“任何”身份验证方法-b/--cookie &lt;name=string/file&gt;    cookie字符串或文件读取位置    --basic    使用HTTP基本验证-B/--use-ascii    使用ASCII /文本传输-c/--cookie-jar &lt;file&gt;    操作结束后把cookie写入到这个文件中-C/--continue-at &lt;offset&gt;    断点续转-d/--data &lt;data&gt;    HTTP POST方式传送数据    --data-ascii &lt;data&gt;    以ascii的方式post数据    --data-binary &lt;data&gt;    以二进制的方式post数据    --negotiate    使用HTTP身份验证    --digest    使用数字身份验证    --disable-eprt    禁止使用EPRT或LPRT    --disable-epsv    禁止使用EPSV-D/--dump-header &lt;file&gt;    把header信息写入到该文件中    --egd-file &lt;file&gt;    为随机数据(SSL)设置EGD socket路径    --tcp-nodelay    使用TCP_NODELAY选项-e/--referer    来源网址-E/--cert &lt;cert[:passwd]&gt;    客户端证书文件和密码 (SSL)    --cert-type &lt;type&gt;    证书文件类型 (DER/PEM/ENG) (SSL)    --key &lt;key&gt;    私钥文件名 (SSL)    --key-type &lt;type&gt;    私钥文件类型 (DER/PEM/ENG) (SSL)    --pass &lt;pass&gt;    私钥密码 (SSL)    --engine &lt;eng&gt;    加密引擎使用 (SSL). &quot;--engine list&quot; for list    --cacert &lt;file&gt;    CA证书 (SSL)    --capath &lt;directory&gt;    CA目录 (made using c_rehash) to verify peer against (SSL)    --ciphers &lt;list&gt;    SSL密码    --compressed    要求返回是压缩的形势 (using deflate or gzip)    --connect-timeout &lt;seconds&gt;    设置最大请求时间    --create-dirs    建立本地目录的目录层次结构    --crlf    上传是把LF转变成CRLF-f/--fail    连接失败时不显示http错误    --ftp-create-dirs    如果远程目录不存在，创建远程目录    --ftp-method [multicwd/nocwd/singlecwd]    控制CWD的使用    --ftp-pasv    使用 PASV/EPSV 代替端口    --ftp-skip-pasv-ip    使用PASV的时候,忽略该IP地址    --ftp-ssl    尝试用 SSL/TLS 来进行ftp数据传输    --ftp-ssl-reqd    要求用 SSL/TLS 来进行ftp数据传输-F/--form &lt;name=content&gt;    模拟http表单提交数据    --form-string &lt;name=string&gt;    模拟http表单提交数据-g/--globoff    禁用网址序列和范围使用{}和[]-G/--get    以get的方式来发送数据-H/--header &lt;line&gt;    自定义头信息传递给服务器    --ignore-content-length    忽略的HTTP头信息的长度-i/--include    输出时包括protocol头信息-I/--head    只显示请求头信息-j/--junk-session-cookies    读取文件进忽略session cookie    --interface &lt;interface&gt;    使用指定网络接口/地址    --krb4 &lt;level&gt;    使用指定安全级别的krb4-k/--insecure    允许不使用证书到SSL站点-K/--config    指定的配置文件读取-l/--list-only    列出ftp目录下的文件名称    --limit-rate &lt;rate&gt;    设置传输速度    --local-port&lt;NUM&gt;    强制使用本地端口号-m/--max-time &lt;seconds&gt;    设置最大传输时间    --max-redirs &lt;num&gt;    设置最大读取的目录数    --max-filesize &lt;bytes&gt;    设置最大下载的文件总量-M/--manual    显示全手动-n/--netrc    从netrc文件中读取用户名和密码    --netrc-optional    使用 .netrc 或者 URL来覆盖-n    --ntlm    使用 HTTP NTLM 身份验证-N/--no-buffer    禁用缓冲输出-o/--output    把输出写到该文件中-O/--remote-name    把输出写到该文件中，保留远程文件的文件名-p/--proxytunnel    使用HTTP代理    --proxy-anyauth    选择任一代理身份验证方法    --proxy-basic    在代理上使用基本身份验证    --proxy-digest    在代理上使用数字身份验证    --proxy-ntlm    在代理上使用ntlm身份验证-P/--ftp-port &lt;address&gt;    使用端口地址，而不是使用PASV-q    作为第一个参数，关闭 .curlrc-Q/--quote &lt;cmd&gt;    文件传输前，发送命令到服务器-r/--range &lt;range&gt;    检索来自HTTP/1.1或FTP服务器字节范围--range-file    读取（SSL）的随机文件-R/--remote-time    在本地生成文件时，保留远程文件时间    --retry &lt;num&gt;    传输出现问题时，重试的次数    --retry-delay &lt;seconds&gt;    传输出现问题时，设置重试间隔时间    --retry-max-time &lt;seconds&gt;    传输出现问题时，设置最大重试时间-s/--silent    静默模式。不输出任何东西-S/--show-error    显示错误    --socks4 &lt;host[:port]&gt;    用socks4代理给定主机和端口    --socks5 &lt;host[:port]&gt;    用socks5代理给定主机和端口    --stderr &lt;file&gt;     -t/--telnet-option &lt;OPT=val&gt;    Telnet选项设置    --trace &lt;file&gt;    对指定文件进行debug    --trace-ascii &lt;file&gt;    Like --跟踪但没有hex输出    --trace-time    跟踪/详细输出时，添加时间戳-T/--upload-file &lt;file&gt;    上传文件    --url &lt;URL&gt;    Spet URL to work with-u/--user &lt;user[:password]&gt;    设置服务器的用户和密码-U/--proxy-user &lt;user[:password]&gt;    设置代理用户名和密码-w/--write-out [format]    什么输出完成后-x/--proxy &lt;host[:port]&gt;    在给定的端口上使用HTTP代理-X/--request &lt;command&gt;    指定什么命令-y/--speed-time    放弃限速所要的时间，默认为30-Y/--speed-limit    停止传输速度的限制，速度时间</code></pre><p>具体可看：<a href="http://man.linuxde.net/curl" target="_blank" rel="external">http://man.linuxde.net/curl</a></p><h2 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h2><h3 id="一、查看网页源码"><a href="#一、查看网页源码" class="headerlink" title="一、查看网页源码"></a>一、查看网页源码</h3><p>直接在curl命令后加上网址，就可以看到网页源码。我们以网址www.sina.com为例（选择该网址，主要因为它的网页代码较短）：</p><pre><code>　　$ curl www.sina.com　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;</code></pre><p>如果要把这个网页保存下来，可以使用<code>-o</code>参数，这就相当于使用wget命令了。</p><pre><code>　　$ curl -o [文件名] www.sina.com</code></pre><h3 id="二、自动跳转"><a href="#二、自动跳转" class="headerlink" title="二、自动跳转"></a>二、自动跳转</h3><p>有的网址是自动跳转的。使用<code>-L</code>参数，curl就会跳转到新的网址。</p><pre><code>　　$ curl -L www.sina.com</code></pre><p>键入上面的命令，结果就自动跳转为www.sina.com.cn。</p><h3 id="三、显示头信息"><a href="#三、显示头信息" class="headerlink" title="三、显示头信息"></a>三、显示头信息</h3><p><code>-i</code>参数可以显示http response的头信息，连同网页代码一起。</p><pre><code>　　$ curl -i www.sina.com　　HTTP/1.0 301 Moved Permanently　　Date: Sat, 03 Sep 2011 23:44:10 GMT　　Server: Apache/2.0.54 (Unix)　　Location: http://www.sina.com.cn/　　Cache-Control: max-age=3600　　Expires: Sun, 04 Sep 2011 00:44:10 GMT　　Vary: Accept-Encoding　　Content-Length: 231　　Content-Type: text/html; charset=iso-8859-1　　Age: 3239　　X-Cache: HIT from sh201-9.sina.com.cn　　Connection: close　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;</code></pre><p><code>-I</code>参数则是只显示http response的头信息。</p><h3 id="四、显示通信过程"><a href="#四、显示通信过程" class="headerlink" title="四、显示通信过程"></a>四、显示通信过程</h3><p><code>-v</code>参数可以显示一次http通信的整个过程，包括端口连接和http request头信息。</p><pre><code>　　$ curl -v www.sina.com　　* About to connect() to www.sina.com port 80 (#0)　　* Trying 61.172.201.195... connected　　* Connected to www.sina.com (61.172.201.195) port 80 (#0)　　&gt; GET / HTTP/1.1　　&gt; User-Agent: curl/7.21.3 (i686-pc-linux-gnu) libcurl/7.21.3 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.18　　&gt; Host: www.sina.com　　&gt; Accept: */*　　&gt;　　* HTTP 1.0, assume close after body　　&lt; HTTP/1.0 301 Moved Permanently　　&lt; Date: Sun, 04 Sep 2011 00:42:39 GMT　　&lt; Server: Apache/2.0.54 (Unix)　　&lt; Location: http://www.sina.com.cn/　　&lt; Cache-Control: max-age=3600　　&lt; Expires: Sun, 04 Sep 2011 01:42:39 GMT　　&lt; Vary: Accept-Encoding　　&lt; Content-Length: 231　　&lt; Content-Type: text/html; charset=iso-8859-1　　&lt; X-Cache: MISS from sh201-19.sina.com.cn　　&lt; Connection: close　　&lt;　　&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;　　&lt;html&gt;&lt;head&gt;　　&lt;title&gt;301 Moved Permanently&lt;/title&gt;　　&lt;/head&gt;&lt;body&gt;　　&lt;h1&gt;Moved Permanently&lt;/h1&gt;　　&lt;p&gt;The document has moved &lt;a href=&quot;http://www.sina.com.cn/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;　　&lt;/body&gt;&lt;/html&gt;　　* Closing connection #0</code></pre><p>如果你觉得上面的信息还不够，那么下面的命令可以查看更详细的通信过程。</p><pre><code>　　$ curl --trace output.txt www.sina.com</code></pre><p>或者</p><pre><code>　　$ curl --trace-ascii output.txt www.sina.com</code></pre><p>运行后，请打开output.txt文件查看。</p><h3 id="五、发送表单信息"><a href="#五、发送表单信息" class="headerlink" title="五、发送表单信息"></a>五、发送表单信息</h3><p>发送表单信息有GET和POST两种方法。GET方法相对简单，只要把数据附在网址后面就行。</p><pre><code>　　$ curl example.com/form.cgi?data=xxx</code></pre><p>POST方法必须把数据和网址分开，curl就要用到–data参数。</p><pre><code>　　$ curl -X POST --data &quot;data=xxx&quot; example.com/form.cgi</code></pre><p>如果你的数据没有经过表单编码，还可以让curl为你编码，参数是<code>--data-urlencode</code>。</p><pre><code>　　$ curl -X POST--data-urlencode &quot;date=April 1&quot; example.com/form.cgi</code></pre><h3 id="六、HTTP动词"><a href="#六、HTTP动词" class="headerlink" title="六、HTTP动词"></a>六、HTTP动词</h3><p>curl默认的HTTP动词是GET，使用<code>-X</code>参数可以支持其他动词。</p><pre><code>　　$ curl -X POST www.example.com　　$ curl -X DELETE www.example.com</code></pre><h3 id="七、文件上传"><a href="#七、文件上传" class="headerlink" title="七、文件上传"></a>七、文件上传</h3><p>假定文件上传的表单是下面这样：</p><pre><code>　　&lt;form method=&quot;POST&quot; enctype=&apos;multipart/form-data&apos; action=&quot;upload.cgi&quot;&gt;　　　　&lt;input type=file name=upload&gt;　　　　&lt;input type=submit name=press value=&quot;OK&quot;&gt;　　&lt;/form&gt;</code></pre><p>你可以用curl这样上传文件：</p><pre><code>　　$ curl --form upload=@localfilename --form press=OK [URL]</code></pre><h3 id="八、Referer字段"><a href="#八、Referer字段" class="headerlink" title="八、Referer字段"></a>八、Referer字段</h3><p>有时你需要在http request头信息中，提供一个referer字段，表示你是从哪里跳转过来的。</p><pre><code>　　$ curl --referer http://www.example.com http://www.example.com</code></pre><h3 id="九、User-Agent字段"><a href="#九、User-Agent字段" class="headerlink" title="九、User Agent字段"></a>九、User Agent字段</h3><p>这个字段是用来表示客户端的设备信息。服务器有时会根据这个字段，针对不同设备，返回不同格式的网页，比如手机版和桌面版。</p><p>iPhone4的User Agent是</p><pre><code>　　Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7</code></pre><p>curl可以这样模拟：</p><pre><code>　　$ curl --user-agent &quot;[User Agent]&quot; [URL]</code></pre><h3 id="十、cookie"><a href="#十、cookie" class="headerlink" title="十、cookie"></a>十、cookie</h3><p>使用<code>--cookie</code>参数，可以让curl发送cookie。</p><pre><code>　　$ curl --cookie &quot;name=xxx&quot; www.example.com</code></pre><p>至于具体的cookie的值，可以从http response头信息的<code>Set-Cookie</code>字段中得到。</p><p><code>-c cookie-file</code>可以保存服务器返回的cookie到文件，<code>-b cookie-file</code>可以使用这个文件作为cookie信息，进行后续的请求。</p><pre><code>　　$ curl -c cookies http://example.com　　$ curl -b cookies http://example.com</code></pre><h3 id="十一、增加头信息"><a href="#十一、增加头信息" class="headerlink" title="十一、增加头信息"></a>十一、增加头信息</h3><p>有时需要在http request之中，自行增加一个头信息。<code>--header</code>参数就可以起到这个作用。</p><pre><code>　　$ curl --header &quot;Content-Type:application/json&quot; http://example.com</code></pre><h3 id="十二、HTTP认证"><a href="#十二、HTTP认证" class="headerlink" title="十二、HTTP认证"></a>十二、HTTP认证</h3><p>有些网域需要HTTP认证，这时curl需要用到<code>--user</code>参数。</p><pre><code>　　$ curl --user name:password example.com</code></pre><h3 id="十三、监控"><a href="#十三、监控" class="headerlink" title="十三、监控"></a>十三、监控</h3><p>1、开启gzip请求</p><pre><code>curl -I http://www.sina.com.cn/ -H Accept-Encoding:gzip,defalte</code></pre><p>2、监控网页的响应时间</p><pre><code>curl -o /dev/null -s -w &quot;time_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n&quot; &quot;http://www.kklinux.com&quot;</code></pre><p>3、 监控站点可用性</p><pre><code>curl -o /dev/null -s -w %{http_code} &quot;http://www.kklinux.com&quot;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
   </entry>
   
@@ -445,6 +445,28 @@
   </entry>
   
   <entry>
+    <title>面向对象的模式方法__tostring()和__invoke()</title>
+    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
+    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
+    <published>2018-02-28T16:00:00.000Z</published>
+    <updated>2018-04-16T07:43:06.650Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      php
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
     <title>php实现汉诺塔</title>
     <link href="http://martist.cn/2018/03/01/php%E5%AE%9E%E7%8E%B0%E6%B1%89%E8%AF%BA%E5%A1%94/"/>
     <id>http://martist.cn/2018/03/01/php实现汉诺塔/</id>
@@ -465,28 +487,6 @@
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
       <category term="算法" scheme="http://martist.cn/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>面向对象的模式方法__tostring()和__invoke()</title>
-    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
-    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
-    <published>2018-02-28T16:00:00.000Z</published>
-    <updated>2018-04-16T07:43:06.650Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      php
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   

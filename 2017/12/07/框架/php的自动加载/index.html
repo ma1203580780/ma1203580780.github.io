@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>php框架自动加载的实现 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现自动加载的函数和组合使用">
+<meta name="keywords" content="php,框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php框架自动加载的实现">
+<meta property="og:url" content="http://martist.cn/2017/12/07/框架/php的自动加载/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="实现自动加载的函数和组合使用">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-27T08:16:32.208Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php框架自动加载的实现">
+<meta name="twitter:description" content="实现自动加载的函数和组合使用">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-框架/php的自动加载" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/12/07/框架/php的自动加载/" class="article-date">
+  <time datetime="2017-12-06T16:00:00.000Z" itemprop="datePublished">2017-12-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/框架/">框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php框架自动加载的实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="file-exists"><a href="#file-exists" class="headerlink" title="file_exists()"></a>file_exists()</h2><p>定义和用法</p>
+<p>file_exists() 函数检查文件或目录是否存在。</p>
+<p>如果指定的文件或目录存在则返回 true，否则返回 false。<br>语法</p>
+<pre><code>file_exists(path)
+</code></pre><h2 id="get-included-files"><a href="#get-included-files" class="headerlink" title="get_included_files()"></a>get_included_files()</h2><p>返回所有被 include、 include_once、 require 和 require_once 的文件名。</p>
+<pre><code>get_included_files ( void )
+</code></pre><h2 id="autoload"><a href="#autoload" class="headerlink" title="__autoload()"></a>__autoload()</h2><pre><code>__autoload ( string $class )
+</code></pre><p>你可以通过定义这个函数来启用类的自动加载。</p>
+<h2 id="spl-autoload-functions"><a href="#spl-autoload-functions" class="headerlink" title="spl_autoload_functions()"></a>spl_autoload_functions()</h2><p>返回所有已注册的__autoload()函数。</p>
+<pre><code>spl_autoload_functions ( void )
+</code></pre><h2 id="spl-autoload-register"><a href="#spl-autoload-register" class="headerlink" title="spl_autoload_register()"></a>spl_autoload_register()</h2><p>注册给定的函数作为 __autoload  的实现</p>
+<pre><code>spl_autoload_register ([ callable $autoload_function [, bool $throw = true [, bool $prepend = false ]]] )
+</code></pre><p> 如果在你的程序中已经实现了<strong>autoload()函数，它必须显式注册到</strong>autoload()队列中。因为 spl_autoload_register()函数会将Zend Engine中的__autoload()函数取代为spl_autoload()或spl_autoload_call()。</p>
+<p>如果需要多条 autoload 函数，spl_autoload_register() 满足了此类需求。 它实际上创建了 autoload 函数的队列，按定义时的顺序逐个执行。相比之下， __autoload() 只可以定义一次。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="第一个实例"><a href="#第一个实例" class="headerlink" title="第一个实例"></a>第一个实例</h3><p>a.php文件:</p>
+<pre><code>&lt;?php
+
+echo &quot;&lt;pre&gt;&quot;;
+var_dump(get_included_files());
+$rf = new ReflectionClass(&apos;test&apos;);
+var_dump(get_included_files());
+$testObj = $rf-&gt;newInstance();
+var_dump($rf-&gt;getProperties());
+$testObj-&gt;showName();
+
+function __autoload($classname){
+  $classpath = &apos;./&apos; .$classname . &apos;.php&apos;;
+  if (file_exists($classpath)) {
+    require_once($classpath);
+  }else {
+    echo &apos;class file&apos;.$classpath.&apos;not found!&apos;;
+  }
+}
+</code></pre><p>同级目录test.php文件:</p>
+<pre><code>&lt;?php
+//namespace martist;
+
+ class test{
+    public $t = 3;
+    public $p = 55;
+
+    public function showName(){
+        var_dump(__CLASS__);
+    }
+ }
+</code></pre><h3 id="执行a-php返回结果"><a href="#执行a-php返回结果" class="headerlink" title="执行a.php返回结果"></a>执行a.php返回结果</h3><pre><code>array(1) {
+  [0]=&gt;
+  string(31) &quot;/Users/machuang/Desktop/t/a.php&quot;
+}
+array(2) {
+  [0]=&gt;
+  string(31) &quot;/Users/machuang/Desktop/t/a.php&quot;
+  [1]=&gt;
+  string(34) &quot;/Users/machuang/Desktop/t/test.php&quot;
+}
+array(2) {
+  [0]=&gt;
+  object(ReflectionProperty)#3 (2) {
+    [&quot;name&quot;]=&gt;
+    string(1) &quot;t&quot;
+    [&quot;class&quot;]=&gt;
+    string(4) &quot;test&quot;
+  }
+  [1]=&gt;
+  object(ReflectionProperty)#4 (2) {
+    [&quot;name&quot;]=&gt;
+    string(1) &quot;p&quot;
+    [&quot;class&quot;]=&gt;
+    string(4) &quot;test&quot;
+  }
+}
+string(4) &quot;test&quot;
+</code></pre><h2 id="另一个实例"><a href="#另一个实例" class="headerlink" title="另一个实例"></a>另一个实例</h2><pre><code>&lt;?php
+
+echo &quot;&lt;pre&gt;&quot;;
+
+var_dump(spl_autoload_functions());//默认是__autoload（）
+
+spl_autoload_register(&apos;newAutoload&apos;);//此时newAutoload（）替换掉了__autoload（）
+var_dump(spl_autoload_functions());
+
+spl_autoload_register(&apos;__autoload&apos;);//又加入了__autoload（）
+var_dump(spl_autoload_functions());
+
+
+$testObj1 = getInstance(&apos;test&apos;);
+$testObj2 = getInstance(&apos;test&apos;);
+$testObj3 = getInstance(&apos;test&apos;);
+
+
+function getInstance($class, $returnInstance = false){
+  $rf = new ReflectionClass($class);
+  if ($returnInstance)
+     return $rf-&gt;newInstance();
+}
+
+function __autoload($classname){
+  $classpath = &apos;./&apos; .$classname . &apos;.php&apos;;
+  if (file_exists($classpath)) {
+    require_once($classpath);
+  }else {
+    echo &apos;class file&apos;.$classpath.&apos;not found!&apos;;
+  }
+}
+
+function newAutoload($classname){
+  $classpath = &apos;./&apos; . $classname . &apos;.php&apos;;
+  if (file_exists($classpath)) {
+    var_dump(&apos;require success&apos;);
+    require_once($classpath);
+  } else {
+    echo &apos;class file &apos; . $classpath . &apos; not found!&apos;;
+  }
+}
+</code></pre><p>newAutoload方法中，每执行成功一次，打印一句’require success’，这里只打印了一次，说明了虽然实例了3次ReflectionClass(‘test’)，但因为test类已经加载过一次，就不会再执行自动加载的方法。通过getInstance()这种加载类的方法，比以前的include()之类的方便多了，只需要加载这个写了getInstance()方法的文件就可以了。</p>
+<p>重写的自动加载方法可以根据需要，通过判断类的名字，定义不同的文件路径。getInstance可以用静态变量保存实例，这也是使用到了设计模式中的单例模式。</p>
+<p>关于类的自动加载<br><a href="http://php.net/manual/zh/language.oop5.autoload.php" target="_blank" rel="external">http://php.net/manual/zh/language.oop5.autoload.php</a></p>
+<p>最后我们看下php的反射。</p>
+<h2 id="ReflectionClass-和ReflectionMethod-【反射】"><a href="#ReflectionClass-和ReflectionMethod-【反射】" class="headerlink" title="ReflectionClass()和ReflectionMethod()【反射】"></a>ReflectionClass()和ReflectionMethod()【反射】</h2><p> PHP5 具有完整的反射API，添加对类、接口、函数、方法和扩展进行反向工程的能力。</p>
+<h3 id="反射是什么？"><a href="#反射是什么？" class="headerlink" title="反射是什么？"></a>反射是什么？</h3><p>它是指在PHP运行状态中，扩展分析PHP程序，导出或提取出关于类、方法、属性、参数等的详细信息，包括注释。这种动态获取的信息以及动态调用对象的方法的功能称为反射API。反射是操纵面向对象范型中元模型的API，其功能十分强大，可帮助我们构建复杂，可扩展的应用。</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h3><p>自动加载插件，自动生成文档，甚至可用来扩充PHP语言。</p>
+<p>PHP反射api由若干类组成，可帮助我们用来访问程序的元数据或者同相关的注释交互。借助反射我们可以获取诸如类实现了那些方法，创建一个类的实例（不同于用new创建），调用一个方法（也不同于常规调用），传递参数，动态调用类的静态方法。<br>反射api是PHP内建的OOP技术扩展，包括一些类，异常和接口，综合使用他们可用来帮助我们分析其它类，接口，方法，属性，方法和扩展。这些OOP扩展被称为反射。</p>
+<p>平常我们用的比较多的是 ReflectionClass类 和 ReflectionMethod类。</p>
+<h3 id="用来举例反射的Person类"><a href="#用来举例反射的Person类" class="headerlink" title="用来举例反射的Person类"></a>用来举例反射的Person类</h3><pre><code>&lt;?php
+class Person {
+
+ /**
+  * For the sake of demonstration, we&quot;re setting this private
+  */
+ private $_allowDynamicAttributes = false;
+
+ /**
+  * type=primary_autoincrement
+  */
+ protected $id = 0;
+
+ /**
+  * type=varchar length=255 null
+  */
+ protected $name;
+
+ /**
+  * type=text null
+  */
+ protected $biography;
+
+ public function getId() {
+  return $this-&gt;id;
+ }
+
+ public function setId($v) {
+  $this-&gt;id = $v;
+ }
+
+ public function getName() {
+  return $this-&gt;name;
+ }
+
+ public function setName($v) {
+  $this-&gt;name = $v;
+ }
+
+ public function getBiography() {
+  return $this-&gt;biography;
+ }
+
+ public function setBiography($v) {
+  $this-&gt;biography = $v;
+ }
+}
+</code></pre><h3 id="通过ReflectionClass得到Person类的以下信息"><a href="#通过ReflectionClass得到Person类的以下信息" class="headerlink" title="通过ReflectionClass得到Person类的以下信息"></a>通过ReflectionClass得到Person类的以下信息</h3><pre><code>1.常量 Contants
+2.属性 Property Names
+3.方法 Method Names静态
+4.属性 Static Properties
+5.命名空间 Namespace
+6.Person类是否为final或者abstract
+7.Person类是否有某个方法
+</code></pre><p>接下来反射它，只要把类名”Person”传递给ReflectionClass就可以了：</p>
+<pre><code>$class = new ReflectionClass(&apos;Person&apos;); // 建立 Person这个类的反射类  
+$instance  = $class-&gt;newInstanceArgs($args); // 相当于实例化Person 类  
+</code></pre><h4 id="获取属性-Properties-："><a href="#获取属性-Properties-：" class="headerlink" title="获取属性(Properties)："></a>获取属性(Properties)：</h4><pre><code>$properties = $class-&gt;getProperties();
+foreach ($properties as $property) {
+ echo $property-&gt;getName() . &quot;\n&quot;;
+}
+// 输出:
+// _allowDynamicAttributes
+// id
+// name
+// biography
+</code></pre><p>默认情况下，ReflectionClass会获取到所有的属性，private 和 protected的也可以。如果只想获取到private属性，就要额外传个参数：</p>
+<pre><code>$private_properties = $class-&gt;getProperties(ReflectionProperty::IS_PRIVATE);
+</code></pre><p>可用参数列表：</p>
+<pre><code>ReflectionProperty::IS_STATIC
+ReflectionProperty::IS_PUBLIC
+ReflectionProperty::IS_PROTECTED
+ReflectionProperty::IS_PRIVATE
+</code></pre><p>通过$property-&gt;getName()可以得到属性名。</p>
+<h4 id="获取注释"><a href="#获取注释" class="headerlink" title="获取注释"></a>获取注释</h4><p>通过getDocComment可以得到写给property的注释。</p>
+<pre><code>foreach ($properties as $property) {
+ if ($property-&gt;isProtected()) {
+  $docblock = $property-&gt;getDocComment();
+  preg_match(&apos;/ type\=([a-z_]*) /&apos;, $property-&gt;getDocComment(), $matches);
+  echo $matches[1] . &quot;\n&quot;;
+ }
+}
+// Output:
+// primary_autoincrement
+// varchar
+// text
+</code></pre><h4 id="获取类的方法"><a href="#获取类的方法" class="headerlink" title="获取类的方法"></a>获取类的方法</h4><pre><code>getMethods()       来获取到类的所有methods。
+hasMethod(string)  是否存在某个方法
+getMethod(string)  获取方法
+</code></pre><h4 id="执行类的方法"><a href="#执行类的方法" class="headerlink" title="执行类的方法"></a>执行类的方法</h4><pre><code>$instance-&gt;getName(); // 执行Person 里的方法getName
+// 或者：
+$method = $class-&gt;getmethod(&apos;getName&apos;); // 获取Person 类中的getName方法
+$method-&gt;invoke($instance);    // 执行getName 方法
+// 或者：
+$method = $class-&gt;getmethod(&apos;setName&apos;); // 获取Person 类中的setName方法
+$method-&gt;invokeArgs($instance, array(&apos;snsgou.com&apos;));
+</code></pre><h3 id="通过ReflectionMethod得到Person类的某个方法的信息"><a href="#通过ReflectionMethod得到Person类的某个方法的信息" class="headerlink" title="通过ReflectionMethod得到Person类的某个方法的信息"></a>通过ReflectionMethod得到Person类的某个方法的信息</h3><p>1.是否“public”、“protected”、“private” 、“static”类型<br>2.方法的参数列表<br>3.方法的参数个数<br>4.反调用类的方法</p>
+<pre><code>// 执行detail方法
+$method = new ReflectionMethod(&apos;Person&apos;, &apos;test&apos;);
+
+if ($method-&gt;isPublic() &amp;&amp; !$method-&gt;isStatic()) {
+ echo &apos;Action is right&apos;;
+}
+echo $method-&gt;getNumberOfParameters(); // 参数个数
+echo $method-&gt;getParameters(); // 参数对象数组
+</code></pre><h3 id="Reflection-API详解"><a href="#Reflection-API详解" class="headerlink" title="Reflection API详解"></a>Reflection API详解</h3><p>Reflection API包括了Reflection类、ReflectionException类、ReflectionFunction类、ReflectionParameter类、ReflectionClass类、ReflectionMethod类等内容。</p>
+<p>可以参考<br><a href="http://www.jb51.net/article/65897.htm" target="_blank" rel="external">http://www.jb51.net/article/65897.htm</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/12/07/框架/php的自动加载/" data-id="cjghuyzzy00bvdm2nujj8hhfi" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/12/21/webhook/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          githook实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/11/27/Mac 升级你的开发环境/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Mac 升级你的开发环境</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/12/07/框架/php的自动加载/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#file-exists"><span class="toc-number">1.</span> <span class="toc-text">file_exists()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-included-files"><span class="toc-number">2.</span> <span class="toc-text">get_included_files()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#autoload"><span class="toc-number">3.</span> <span class="toc-text">__autoload()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#spl-autoload-functions"><span class="toc-number">4.</span> <span class="toc-text">spl_autoload_functions()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#spl-autoload-register"><span class="toc-number">5.</span> <span class="toc-text">spl_autoload_register()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例"><span class="toc-number">6.</span> <span class="toc-text">实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一个实例"><span class="toc-number">6.1.</span> <span class="toc-text">第一个实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行a-php返回结果"><span class="toc-number">6.2.</span> <span class="toc-text">执行a.php返回结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#另一个实例"><span class="toc-number">7.</span> <span class="toc-text">另一个实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReflectionClass-和ReflectionMethod-【反射】"><span class="toc-number">8.</span> <span class="toc-text">ReflectionClass()和ReflectionMethod()【反射】</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#反射是什么？"><span class="toc-number">8.1.</span> <span class="toc-text">反射是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用途"><span class="toc-number">8.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#用来举例反射的Person类"><span class="toc-number">8.3.</span> <span class="toc-text">用来举例反射的Person类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过ReflectionClass得到Person类的以下信息"><span class="toc-number">8.4.</span> <span class="toc-text">通过ReflectionClass得到Person类的以下信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取属性-Properties-："><span class="toc-number">8.4.1.</span> <span class="toc-text">获取属性(Properties)：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取注释"><span class="toc-number">8.4.2.</span> <span class="toc-text">获取注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取类的方法"><span class="toc-number">8.4.3.</span> <span class="toc-text">获取类的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#执行类的方法"><span class="toc-number">8.4.4.</span> <span class="toc-text">执行类的方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过ReflectionMethod得到Person类的某个方法的信息"><span class="toc-number">8.5.</span> <span class="toc-text">通过ReflectionMethod得到Person类的某个方法的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reflection-API详解"><span class="toc-number">8.6.</span> <span class="toc-text">Reflection API详解</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
