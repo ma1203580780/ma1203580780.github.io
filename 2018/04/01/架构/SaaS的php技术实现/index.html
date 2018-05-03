@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -145,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/01/架构/SaaS的php技术实现/" data-id="cjgq601tu0067m52nhvezbu8k" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/04/01/架构/SaaS的php技术实现/" data-id="cjgqhospn009kxm2n273vehbj" class="article-share-link">Share</a>
       
       
       
@@ -159,7 +159,7 @@
 <nav id="article-nav">
   
     <a href="/2018/04/08/健身/健身相关文章的推荐/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           健身相关文章的推荐
@@ -169,7 +169,7 @@
   
   
     <a href="/2018/03/20/架构/简单谈接口设计/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">简单谈接口设计</div>
     </a>
   
@@ -206,7 +206,7 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SOFTWARE-AS-A-SERVICE"><span class="toc-number">1.1.</span> <span class="toc-text">SOFTWARE AS A SERVICE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PLATFORM-AS-A-SERVICE"><span class="toc-number">1.2.</span> <span class="toc-text">PLATFORM AS A SERVICE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#INFRASTRUCTURE-AS-A-SERVICE"><span class="toc-number">1.3.</span> <span class="toc-text">INFRASTRUCTURE AS A SERVICE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通俗的讲pass和saas的区别"><span class="toc-number">1.4.</span> <span class="toc-text">通俗的讲pass和saas的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#程序设计"><span class="toc-number">2.</span> <span class="toc-text">程序设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#分层设计"><span class="toc-number">2.1.</span> <span class="toc-text">分层设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据隔离"><span class="toc-number">2.2.</span> <span class="toc-text">数据隔离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#租户识别方案"><span class="toc-number">2.3.</span> <span class="toc-text">租户识别方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#租户管理系统（计费，订购，定制，充值，催缴）"><span class="toc-number">2.4.</span> <span class="toc-text">租户管理系统（计费，订购，定制，充值，催缴）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定制化开发"><span class="toc-number">2.5.</span> <span class="toc-text">定制化开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#灰度升级"><span class="toc-number">2.6.</span> <span class="toc-text">灰度升级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术实现"><span class="toc-number">3.</span> <span class="toc-text">技术实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于多租户的数据隔离方案"><span class="toc-number">3.1.</span> <span class="toc-text">关于多租户的数据隔离方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#独立数据库"><span class="toc-number">3.1.1.</span> <span class="toc-text">独立数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#共享数据库，隔离数据架构"><span class="toc-number">3.1.2.</span> <span class="toc-text">共享数据库，隔离数据架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#共享数据库，共享数据架构"><span class="toc-number">3.1.3.</span> <span class="toc-text">共享数据库，共享数据架构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选择合理的实现模式"><span class="toc-number">3.2.</span> <span class="toc-text">选择合理的实现模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#成本角度因素"><span class="toc-number">3.2.1.</span> <span class="toc-text">成本角度因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安全因素"><span class="toc-number">3.2.2.</span> <span class="toc-text">安全因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#租户数量因素"><span class="toc-number">3.2.3.</span> <span class="toc-text">租户数量因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#信息监管因素"><span class="toc-number">3.2.4.</span> <span class="toc-text">信息监管因素</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基于laravel框架开发SaaS系统"><span class="toc-number">3.3.</span> <span class="toc-text">基于laravel框架开发SaaS系统</span></a></li></ol></li></ol>
           </div>
@@ -238,10 +238,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>

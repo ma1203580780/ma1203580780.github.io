@@ -14,7 +14,7 @@
 <meta property="og:description" content="实现一个类似laravel的现代化PHP框架">
 <meta property="og:locale" content="简体中文">
 <meta property="og:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/martp目录.png">
-<meta property="og:updated_time" content="2018-05-03T06:39:03.227Z">
+<meta property="og:updated_time" content="2018-05-03T07:01:33.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="实现一个类似laravel的现代化PHP框架">
 <meta name="twitter:description" content="实现一个类似laravel的现代化PHP框架">
@@ -45,7 +45,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -135,10 +135,10 @@ Macaw::get(&apos;(:all)&apos;, function($fu) {
 
 Macaw::dispatch();
 </code></pre><p>然后你就可以在浏览器进行测试了。</p>
-<h3 id="Macaw代码分析"><a href="#Macaw代码分析" class="headerlink" title="Macaw代码分析"></a>Macaw代码分析</h3><p>Macaw 的文档位于 <a href="https://github.com/NoahBuscher/Macaw，请按照你的" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw，请按照你的</a> HTTP 服务软件类型自行设置伪静态，其实跟绝大多数框架一样：“将所有非静态文件全部指向 index.php”。</p>
+<p>Macaw 的文档位于 <a href="https://github.com/NoahBuscher/Macaw" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw</a>  , 请按照你的 HTTP 服务软件类型自行设置伪静态，其实跟绝大多数框架一样：“将所有非静态文件全部指向 index.php”。</p>
 <p>Macaw 只有一个文件，去除空行总共也就一百行多一点，通过代码我们能直接看明白它是怎么工作。</p>
 <p>路由文件最后一行的 Macaw::dispatch(); 方法才是真正处理当前 URL 的地方。</p>
-<h2 id="设计mvc"><a href="#设计mvc" class="headerlink" title="设计mvc"></a>设计mvc</h2><h3 id="规划文件夹"><a href="#规划文件夹" class="headerlink" title="规划文件夹"></a>规划文件夹</h3><p>新建 MFFC/app 文件夹，在 app 中创建 controllers、models、views 三个文件夹，开始正式开始踏上 MVC 的征程。</p>
+<h2 id="设计MVC架构"><a href="#设计MVC架构" class="headerlink" title="设计MVC架构"></a>设计MVC架构</h2><h3 id="规划文件夹"><a href="#规划文件夹" class="headerlink" title="规划文件夹"></a>规划文件夹</h3><p>新建 MFFC/app 文件夹，在 app 中创建 controllers、models、views 三个文件夹，开始正式开始踏上 MVC 的征程。</p>
 <h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>增加一条路由： Macaw::get(‘’, ‘HomeController@home’);，打开浏览器直接访问 <a href="http://127.0.0.1:81/，出现以下提示：" target="_blank" rel="external">http://127.0.0.1:81/，出现以下提示：</a></p>
 <pre><code>Fatal error: Class &apos;HomeController&apos; not found in /Library/WebServer/Documents/wwwroot/MFFC/vendor/codingbean/macaw/Macaw.php on line 93
 </code></pre><p>为什么没找到 HomeController 类？因为我们没有让他自动加载，修改 composer.json 为：</p>
@@ -196,7 +196,7 @@ class HomeController extends BaseController
     }
 
 }
-</code></pre><p>更新自动加载配置：</p>
+</code></pre><p>更新自动加载配置</p>
 <pre><code>composer dump-autoload
 </code></pre><p>SQL 语句：</p>
 <pre><code>DROP TABLE IF EXISTS `articles`;
@@ -302,7 +302,7 @@ echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjgq601ur007xm52n5asl278m" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjgqhoson007qxm2nx2urdon8" class="article-share-link">Share</a>
       
       
       
@@ -317,7 +317,7 @@ echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;
   
   
     <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">实现一个类似tp的轻量级框架</div>
     </a>
   
@@ -354,9 +354,9 @@ echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#路由组件Macaw"><span class="toc-number">1.</span> <span class="toc-text">路由组件Macaw</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Macaw代码分析"><span class="toc-number">1.1.</span> <span class="toc-text">Macaw代码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计mvc"><span class="toc-number">2.</span> <span class="toc-text">设计mvc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规划文件夹"><span class="toc-number">2.1.</span> <span class="toc-text">规划文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用命名空间"><span class="toc-number">2.2.</span> <span class="toc-text">使用命名空间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ORM组件illuminate-database"><span class="toc-number">3.</span> <span class="toc-text">ORM组件illuminate/database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#错误页面提示组件whoops"><span class="toc-number">4.</span> <span class="toc-text">错误页面提示组件whoops</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP写startswith和endswith"><span class="toc-number">5.1.</span> <span class="toc-text">PHP写startswith和endswith</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctype-lower"><span class="toc-number">5.2.</span> <span class="toc-text">ctype_lower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strtolower"><span class="toc-number">5.3.</span> <span class="toc-text">strtolower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extract"><span class="toc-number">5.4.</span> <span class="toc-text">extract()</span></a></li></ol></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#路由组件Macaw"><span class="toc-number">1.</span> <span class="toc-text">路由组件Macaw</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计MVC架构"><span class="toc-number">2.</span> <span class="toc-text">设计MVC架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规划文件夹"><span class="toc-number">2.1.</span> <span class="toc-text">规划文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用命名空间"><span class="toc-number">2.2.</span> <span class="toc-text">使用命名空间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ORM组件illuminate-database"><span class="toc-number">3.</span> <span class="toc-text">ORM组件illuminate/database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#错误页面提示组件whoops"><span class="toc-number">4.</span> <span class="toc-text">错误页面提示组件whoops</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP写startswith和endswith"><span class="toc-number">5.1.</span> <span class="toc-text">PHP写startswith和endswith</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctype-lower"><span class="toc-number">5.2.</span> <span class="toc-text">ctype_lower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strtolower"><span class="toc-number">5.3.</span> <span class="toc-text">strtolower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extract"><span class="toc-number">5.4.</span> <span class="toc-text">extract()</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
@@ -386,10 +386,10 @@ echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
