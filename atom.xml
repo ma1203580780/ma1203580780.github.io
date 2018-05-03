@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-04-19T11:30:38.665Z</updated>
+  <updated>2018-05-03T06:39:03.227Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -17,9 +17,57 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>实现一个类似laravel的现代化PHP框架</title>
+    <link href="http://martist.cn/2018/05/03/%E6%A1%86%E6%9E%B6/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%B1%BB%E4%BC%BClaravel%E7%9A%84%E7%8E%B0%E4%BB%A3%E5%8C%96PHP%E6%A1%86%E6%9E%B6/"/>
+    <id>http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/</id>
+    <published>2018-05-02T16:00:00.000Z</published>
+    <updated>2018-05-03T06:39:03.227Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>读了JohnLui的7篇博文之后，我想要把学到的东西总结一下，于是写了这篇文章。<br>他的博客地址：<a href="https://lvwenhan.com/sort/php" target="_blank" rel="external">https://lvwenhan.com/sort/php</a></p><h2 id="路由组件Macaw"><a href="#路由组件Macaw" class="headerlink" title="路由组件Macaw"></a>路由组件Macaw</h2><p>推荐 <a href="https://github.com/NoahBuscher/Macaw" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw</a> , 这个包体积小，很优雅。</p><p>下面开始安装它，更改 composer.json：</p><pre><code>{  &quot;require&quot;: {    &quot;noahbuscher/macaw&quot;: &quot;dev-master&quot;  }}</code></pre><p>运行</p><pre><code>composer update</code></pre><p>新建 MFFC/public 文件夹，这个文件夹将是用户唯一可见的部分。在文件夹下新建 index.php 文件：</p><pre><code>&lt;?php// Autoload 自动载入require &apos;../vendor/autoload.php&apos;;// 路由配置require &apos;../config/routes.php&apos;;上面一行表示引入 Composer 的自动载入功能，下面一行表示载入路由配置文件。新建 MFFC/config 文件夹，在里面新建 routs.php 文件，内容如下：&lt;?phpuse NoahBuscher\Macaw\Macaw;Macaw::get(&apos;fuck&apos;, function() {  echo &quot;成功！&quot;;});Macaw::get(&apos;(:all)&apos;, function($fu) {  echo &apos;未匹配到路由&lt;br&gt;&apos;.$fu;});Macaw::dispatch();</code></pre><p>然后你就可以在浏览器进行测试了。</p><h3 id="Macaw代码分析"><a href="#Macaw代码分析" class="headerlink" title="Macaw代码分析"></a>Macaw代码分析</h3><p>Macaw 的文档位于 <a href="https://github.com/NoahBuscher/Macaw，请按照你的" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw，请按照你的</a> HTTP 服务软件类型自行设置伪静态，其实跟绝大多数框架一样：“将所有非静态文件全部指向 index.php”。</p><p>Macaw 只有一个文件，去除空行总共也就一百行多一点，通过代码我们能直接看明白它是怎么工作。</p><p>路由文件最后一行的 Macaw::dispatch(); 方法才是真正处理当前 URL 的地方。</p><h2 id="设计mvc"><a href="#设计mvc" class="headerlink" title="设计mvc"></a>设计mvc</h2><h3 id="规划文件夹"><a href="#规划文件夹" class="headerlink" title="规划文件夹"></a>规划文件夹</h3><p>新建 MFFC/app 文件夹，在 app 中创建 controllers、models、views 三个文件夹，开始正式开始踏上 MVC 的征程。</p><h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>增加一条路由： Macaw::get(‘’, ‘HomeController@home’);，打开浏览器直接访问 <a href="http://127.0.0.1:81/，出现以下提示：" target="_blank" rel="external">http://127.0.0.1:81/，出现以下提示：</a></p><pre><code>Fatal error: Class &apos;HomeController&apos; not found in /Library/WebServer/Documents/wwwroot/MFFC/vendor/codingbean/macaw/Macaw.php on line 93</code></pre><p>为什么没找到 HomeController 类？因为我们没有让他自动加载，修改 composer.json 为：</p><pre><code>&quot;autoload&quot;: {  &quot;classmap&quot;: [    &quot;app/controllers&quot;,    &quot;app/models&quot;  ]}</code></pre><p>运行 composer 命令</p><pre><code>composer dump-autoload</code></pre><h2 id="ORM组件illuminate-database"><a href="#ORM组件illuminate-database" class="headerlink" title="ORM组件illuminate/database"></a>ORM组件illuminate/database</h2><p>给 composer.json 增加一个 require 项：</p><pre><code>&quot;illuminate/database&quot;: &quot;*&quot;</code></pre><p>运行 composer update ，等待安装完成。</p><pre><code>&lt;?phpuse Illuminate\Database\Capsule\Manager as Capsule;// Autoload 自动载入require &apos;../vendor/autoload.php&apos;;// Eloquent ORM$capsule = new Capsule;$capsule-&gt;addConnection(require &apos;../config/database.php&apos;);$capsule-&gt;bootEloquent();// 路由配置require &apos;../config/routes.php&apos;;</code></pre><p>新增 config/database.php （注意替换数据库密码）：</p><pre><code>&lt;?phpreturn [  &apos;driver&apos;    =&gt; &apos;mysql&apos;,  &apos;host&apos;      =&gt; &apos;localhost&apos;,  &apos;database&apos;  =&gt; &apos;mffc&apos;,  &apos;username&apos;  =&gt; &apos;root&apos;,  &apos;password&apos;  =&gt; &apos;password&apos;,  &apos;charset&apos;   =&gt; &apos;utf8&apos;,  &apos;collation&apos; =&gt; &apos;utf8_general_ci&apos;,  &apos;prefix&apos;    =&gt; &apos;&apos;  ];</code></pre><p>修改 models/Article.php ：</p><pre><code>&lt;?phpclass Article extends Illuminate\Database\Eloquent\Model{  public $timestamps = false;}</code></pre><p>controllers/HomeController.php ：</p><pre><code>&lt;?phpclass HomeController extends BaseController{    public function index()    {        $article = Article::first();        require dirname(__FILE__).&apos;/../views/home.php&apos;;//模板文件    }}</code></pre><p>更新自动加载配置：</p><pre><code>composer dump-autoload</code></pre><p>SQL 语句：</p><pre><code>DROP TABLE IF EXISTS `articles`;CREATE TABLE `articles` (  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,  `title` varchar(255) DEFAULT NULL,  `content` longtext,  PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;LOCK TABLES `articles` WRITE;/*!40000 ALTER TABLE `articles` DISABLE KEYS */;INSERT INTO `articles` (`id`, `title`, `content`)VALUES    (1,&apos;我是标题&apos;,&apos;&lt;h3&gt;我是内容呀~~&lt;/h3&gt;&lt;p&gt;我真的是内容，不信算了，哼~ O(∩_∩)O&lt;/p&gt;&apos;),    (2,&apos;我是标题&apos;,&apos;&lt;h3&gt;我是内容呀~~&lt;/h3&gt;&lt;p&gt;我真的是内容，不信算了，哼~ O(∩_∩)O&lt;/p&gt;&apos;);/*!40000 ALTER TABLE `articles` ENABLE KEYS */;UNLOCK TABLES;</code></pre><p>刷新页面，可以看到成功出现数据库的数据了。</p><h2 id="错误页面提示组件whoops"><a href="#错误页面提示组件whoops" class="headerlink" title="错误页面提示组件whoops"></a>错误页面提示组件whoops</h2><p>引入错误页面提示组件，修改  composer.json ：</p><pre><code>&quot;require&quot;: {  &quot;codingbean/macaw&quot;: &quot;dev-master&quot;,  &quot;illuminate/database&quot;: &quot;*&quot;,  &quot;filp/whoops&quot;: &quot;*&quot;},</code></pre><p>运行  composer update ，然后在  bootstrap.php  的最后添加：</p><pre><code>// whoops 错误提示$whoops = new \Whoops\Run;$whoops-&gt;pushHandler(new \Whoops\Handler\PrettyPageHandler);$whoops-&gt;register();</code></pre><p>下面我们将增加路由配置中  无匹配项  的错误页面，修改  config/routes.php ：</p><pre><code>&lt;?phpuse NoahBuscher\Macaw\Macaw;Macaw::get(&apos;&apos;, &apos;HomeController@home&apos;);Macaw::get(&apos;fuck&apos;, function() {  echo &quot;成功！&quot;;});Macaw::$error_callback = function() {  throw new Exception(&quot;路由无匹配项 404 Not Found&quot;);};Macaw::dispatch();</code></pre><p>这时随便在配的域名后面加上个路由，系统就会报错了。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个项目学下来，整个目录结构差不多就这样。</p><p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/martp目录.png" alt=""></p><p>里面有几个用到的函数和概念，需要在这里做下笔记。</p><h3 id="PHP写startswith和endswith"><a href="#PHP写startswith和endswith" class="headerlink" title="PHP写startswith和endswith"></a>PHP写startswith和endswith</h3><pre><code>&lt;?phpfunction starts_with($a,$b){    return strpos($a, $b) &gt; 0?true: false;}var_dump(starts_with(&apos;I love she&apos;,&apos;L&apos;));function end_with($a,$b,$lowerorup=1){    // 如果$lowerorup = 0则不用区分大小写        $begin= $lowerorup?strpos($a,$b):stripos($a,$b);    if($begin){    echo &apos;开始于第&apos;,$begin,&apos;个字符&lt;br /&gt;&apos;;    echo &apos;结束于&apos;,$begin+strlen($b);    }}echo &apos;&lt;br /&gt;&apos;;end_with(&apos;I love she&apos;,&apos;Lov&apos;,0);</code></pre><h3 id="ctype-lower"><a href="#ctype-lower" class="headerlink" title="ctype_lower()"></a>ctype_lower()</h3><p>做小写字符检测,数字不能通过检测。</p><pre><code>bool ctype_lower ( string $text )</code></pre><h3 id="strtolower"><a href="#strtolower" class="headerlink" title="strtolower()"></a>strtolower()</h3><p>函数把字符串转换为小写。</p><p>相关函数：</p><pre><code>lcfirst() - 把字符串中的首字符转换为小写strtoupper() - 把字符串转换为大写ucfirst() - 把字符串中的首字符转换为大写ucwords() - 把字符串中每个单词的首字符转换为大写</code></pre><h3 id="extract"><a href="#extract" class="headerlink" title="extract()"></a>extract()</h3><p>该函数使用数组键名作为变量名，使用数组键值作为变量值。针对数组中的每个元素，将在当前符号表中创建对应的一个变量。</p><p>举例：</p><pre><code>&lt;?php$a = &quot;Original&quot;;$my_array = array(&quot;a&quot; =&gt; &quot;Cat&quot;,&quot;b&quot; =&gt; &quot;Dog&quot;, &quot;c&quot; =&gt; &quot;Horse&quot;);extract($my_array);echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;?&gt;</code></pre><p>结果：</p><pre><code>$a = Cat; $b = Dog; $c = Horse</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      实现一个类似laravel的现代化PHP框架
+    
+    </summary>
+    
+      <category term="框架" scheme="http://martist.cn/categories/%E6%A1%86%E6%9E%B6/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="框架" scheme="http://martist.cn/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>实现一个类似tp的轻量级框架</title>
+    <link href="http://martist.cn/2018/05/02/%E6%A1%86%E6%9E%B6/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%B1%BB%E4%BC%BCtp%E7%9A%84%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%A1%86%E6%9E%B6/"/>
+    <id>http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/</id>
+    <published>2018-05-01T16:00:00.000Z</published>
+    <updated>2018-05-02T10:10:22.326Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="MVC框架"><a href="#MVC框架" class="headerlink" title="MVC框架"></a>MVC框架</h2><h3 id="什么是MVC"><a href="#什么是MVC" class="headerlink" title="什么是MVC"></a>什么是MVC</h3><blockquote><p>MVC模式（Model-View-Controller）是软件工程中的一种软件架构模式。</p></blockquote><p>MVC把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。</p><p>PHP中MVC模式也称Web MVC，从上世纪70年代进化而来。</p><p>MVC的目的是实现一种动态的程序设计，便于后续对程序的修改和扩展简化，并且使程序某一部分的重复利用成为可能。</p><p>除此之外，此模式通过对复杂度的简化，使程序结构更加直观。</p><h3 id="MVC各部分的职能"><a href="#MVC各部分的职能" class="headerlink" title="MVC各部分的职能"></a>MVC各部分的职能</h3><pre><code>模型Model – 管理大部分的业务逻辑和所有的数据库逻辑。模型提供了连接和操作数据库的抽象层。控制器Controller - 负责响应用户请求、准备数据，以及决定如何展示数据。视图View – 负责渲染数据，通过HTML方式呈现给用户。</code></pre><h3 id="MVC流程图"><a href="#MVC流程图" class="headerlink" title="MVC流程图"></a>MVC流程图</h3><p>一个典型的Web MVC流程：</p><pre><code>Controller截获用户发出的请求；Controller调用Model完成状态的读写操作；Controller把数据传递给View；View渲染最终结果并呈献给用户。</code></pre><h3 id="为什么要自己开发MVC框架"><a href="#为什么要自己开发MVC框架" class="headerlink" title="为什么要自己开发MVC框架"></a>为什么要自己开发MVC框架</h3><p>网络上有大量优秀的MVC框架可供使用，本教程并不是为了开发一个全面的、终极的MVC框架解决方案。</p><p>我们将它看作是一个很好的从内部学习PHP的机会。</p><p>在此过程中，你将学习面向对象编程和MVC设计模式，并学习到开发中的一些注意事项。</p><p>更重要的是，通过自制MVC框架，每个人都可以完全控制自己的框架，将你的想法融入到你开发的框架中。</p><p>虽然不一定是最好的，但是你可以按照自己的方式开发各种功能。</p><h2 id="开始开发自己的MVC框架"><a href="#开始开发自己的MVC框架" class="headerlink" title="开始开发自己的MVC框架"></a>开始开发自己的MVC框架</h2><h3 id="目录准备"><a href="#目录准备" class="headerlink" title="目录准备"></a>目录准备</h3><p>在开始开发前，让我们先来把项目建立好。</p><p>假设我们建立的项目为 project，MVC的框架命名为 fastphp，那么接下来，第一步要把目录结构设置好。</p><p>project  WEB部署目录<br>├─application           应用目录<br>│  ├─controllers        控制器目录<br>│  ├─models             模块目录<br>│  ├─views              视图目录<br>├─config                配置文件目录<br>├─fastphp               框架核心目录<br>├─static                静态文件目录<br>├─index.php             入口文件</p><p>然后把Nginx或者Apache的站点根目录配置到project目录。</p><h3 id="代码规范"><a href="#代码规范" class="headerlink" title="代码规范"></a>代码规范</h3><p>在目录设置好以后，我们接下来规定代码的规范：</p><pre><code>MySQL的表名需小写或小写加下划线，如：item，car_orders。模块名（Models）需用大驼峰命名法，即首字母大写，并在名称后添加Model，如：ItemModel，CarModel。控制器（Controllers）需用大驼峰命名法，即首字母大写，并在名称后添加Controller，如：ItemController，CarController。方法名（Action）需用小驼峰命名法，即首字母小写，如：index，indexPost。视图（Views）部署结构为控制器名/行为名，如：item/view.php，car/buy.php。</code></pre><p>上述规则是为了程序能更好地相互调用。</p><p>接下来就开始真正的PHP MVC编程了。</p><h3 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h3><p>重定向的目的有两个：设置根目录为project所在位置，以及将所有请求都发送给 index.php 文件。</p><p>如果是Apache服务器，在 project 目录下新建一个 .htaccess 文件，内容为：</p><pre><code>&lt;IfModule mod_rewrite.c&gt;    RewriteEngine On    RewriteCond %{REQUEST_FILENAME} !-f    RewriteCond %{REQUEST_FILENAME} !-d    RewriteRule . index.php&lt;/IfModule&gt;</code></pre><p>如果是Nginx服务器，修改配置文件，在server块中加入如下的重定向：</p><pre><code>location / {    try_files $uri $uri/ /index.php$args;}</code></pre><h4 id="主要原因"><a href="#主要原因" class="headerlink" title="主要原因"></a>主要原因</h4><h5 id="静态文件能直接访问"><a href="#静态文件能直接访问" class="headerlink" title="静态文件能直接访问"></a>静态文件能直接访问</h5><p>如果文件或者目录真实存在，则直接访问存在的文件/目录。</p><p>比如，静态文件static/css/main.css真实存在，就可以直接访问它。</p><h5 id="程序有单一的入口"><a href="#程序有单一的入口" class="headerlink" title="程序有单一的入口"></a>程序有单一的入口</h5><p>这种情况是请求地址不是真实存在的文件或目录，这样请求就会传到 index.php 上。</p><p>例如，访问地址：localhost/item/view/1，在文件系统中并不存在这样的文件或目录。</p><p>那么，Apache或Nginx服务器会把请求发给index.php，并且把域名之后的字符串赋值给REQUEST_URI变量。</p><p>这样在PHP中用$_SERVER[‘REQUEST_URI’]就能拿到/item/view/1；</p><h5 id="可以用来生成美化的URL，利于SEO。"><a href="#可以用来生成美化的URL，利于SEO。" class="headerlink" title="可以用来生成美化的URL，利于SEO。"></a>可以用来生成美化的URL，利于SEO。</h5><h3 id="入口文件"><a href="#入口文件" class="headerlink" title="入口文件"></a>入口文件</h3><p>接下来，在 project 目录下新建 index.php 入口文件，文件内容为：</p><pre><code>&lt;?phpdefine(&apos;APP_PATH&apos;, __DIR__ . &apos;/&apos;);define(&apos;APP_DEBUG&apos;, true);require(APP_PATH . &apos;fastphp/Fastphp.php&apos;);$config = require(APP_PATH . &apos;config/config.php&apos;);(new Fastphp($config))-&gt;run();</code></pre><p>注意，上面的PHP代码中，并没有添加PHP结束符号?&gt;。</p><h4 id="主要原因-1"><a href="#主要原因-1" class="headerlink" title="主要原因"></a>主要原因</h4><p>对于只有 PHP 代码的文件，最好没有结束标志 ?&gt;</p><p>PHP自身并不需要结束符号，不加结束符让程序更加安全，很大程度防止了末尾被注入额外的内容。</p><h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>在入口文件中，我们加载了config.php文件的内容，那它有何作用呢？</p><p>从名称不难看出，它的作用是保存一些常用配置。</p><p>config.php 文件内容如下，作用是定义数据库连接参数参数，以及配置默认控制器名和操作名：</p><pre><code>&lt;?phpdefine(&apos;DB_NAME&apos;, &apos;project&apos;);define(&apos;DB_USER&apos;, &apos;root&apos;);define(&apos;DB_PASSWORD&apos;, &apos;123456&apos;);define(&apos;DB_HOST&apos;, &apos;localhost&apos;);$config[&apos;defaultController&apos;] = &apos;Item&apos;;$config[&apos;defaultAction&apos;] = &apos;index&apos;;return $config;</code></pre><p>入口中的$config变量接收到配置参数后，再传给框架的核心类，也就是Fastphp类。</p><h3 id="框架核心类"><a href="#框架核心类" class="headerlink" title="框架核心类"></a>框架核心类</h3><p>入口文件对框架类做了两步操作：实例化，调用run()方法。</p><p>实例化操作接受$config参数配置，并保存到类属性中。</p><p>run()方法则调用用类自身方法，完成：自动加载类文件、监测开发环境、过滤敏感字符、移除全局变量的老用法、和处理路由。</p><pre><code>&lt;?phpclass Fastphp{    protected $_config = [];    public function __construct($config)    {        $this-&gt;_config = $config;    }    public function run()    {        spl_autoload_register(array($this, &apos;loadClass&apos;));        $this-&gt;setReporting();        $this-&gt;removeMagicQuotes();        $this-&gt;unregisterGlobals();        $this-&gt;setDbConfig();        $this-&gt;route();    }    public function route()    {        $controllerName = $this-&gt;_config[&apos;defaultController&apos;];        $actionName = $this-&gt;_config[&apos;defaultAction&apos;];        $param = array();        $url = $_SERVER[&apos;REQUEST_URI&apos;];        $position = strpos($url, &apos;?&apos;);        $url = $position === false ? $url : substr($url, 0, $position);        $url = trim($url, &apos;/&apos;);        if ($url) {            $urlArray = explode(&apos;/&apos;, $url);            $urlArray = array_filter($urlArray);            $controllerName = ucfirst($urlArray[0]);            array_shift($urlArray);            $actionName = $urlArray ? $urlArray[0] : $actionName;            array_shift($urlArray);            $param = $urlArray ? $urlArray : array();        }        $controller = $controllerName . &apos;Controller&apos;;        if (!class_exists($controller)) {            exit($controller . &apos;控制器不存在&apos;);        }        if (!method_exists($controller, $actionName)) {            exit($actionName . &apos;方法不存在&apos;);        }        $dispatch = new $controller($controllerName, $actionName);        call_user_func_array(array($dispatch, $actionName), $param);    }    public function setReporting()    {        if (APP_DEBUG === true) {            error_reporting(E_ALL);            ini_set(&apos;display_errors&apos;,&apos;On&apos;);        } else {            error_reporting(E_ALL);            ini_set(&apos;display_errors&apos;,&apos;Off&apos;);            ini_set(&apos;log_errors&apos;, &apos;On&apos;);        }    }    public function stripSlashesDeep($value)    {        $value = is_array($value) ? array_map(array($this, &apos;stripSlashesDeep&apos;), $value) : stripslashes($value);        return $value;    }    public function removeMagicQuotes()    {        if (get_magic_quotes_gpc()) {            $_GET = isset($_GET) ? $this-&gt;stripSlashesDeep($_GET ) : &apos;&apos;;            $_POST = isset($_POST) ? $this-&gt;stripSlashesDeep($_POST ) : &apos;&apos;;            $_COOKIE = isset($_COOKIE) ? $this-&gt;stripSlashesDeep($_COOKIE) : &apos;&apos;;            $_SESSION = isset($_SESSION) ? $this-&gt;stripSlashesDeep($_SESSION) : &apos;&apos;;        }    }    public function unregisterGlobals()    {        if (ini_get(&apos;register_globals&apos;)) {            $array = array(&apos;_SESSION&apos;, &apos;_POST&apos;, &apos;_GET&apos;, &apos;_COOKIE&apos;, &apos;_REQUEST&apos;, &apos;_SERVER&apos;, &apos;_ENV&apos;, &apos;_FILES&apos;);            foreach ($array as $value) {                foreach ($GLOBALS[$value] as $key =&gt; $var) {                    if ($var === $GLOBALS[$key]) {                        unset($GLOBALS[$key]);                    }                }            }        }    }    public function setDbConfig()    {        if ($this-&gt;_config[&apos;db&apos;]) {            Model::$dbConfig = $this-&gt;_config[&apos;db&apos;];        }    }    public static function loadClass($class)    {        $frameworks = __DIR__ . &apos;/&apos; . $class . &apos;.php&apos;;        $controllers = APP_PATH . &apos;application/controllers/&apos; . $class . &apos;.php&apos;;        $models = APP_PATH . &apos;application/models/&apos; . $class . &apos;.php&apos;;        if (file_exists($frameworks)) {            include $frameworks;        } elseif (file_exists($controllers)) {            include $controllers;        } elseif (file_exists($models)) {            include $models;        } else {        }    }}</code></pre><p>下面重点讲解主请求方法<br> route()，它也称路由方法，作用是：截取URL，并解析出控制器名、方法名和URL参数。</p><p>假设我们的 URL 是这样：</p><pre><code>yoursite.com/controllerName/actionName/queryString</code></pre><p>当浏览器访问上面的URL，route()从全局变量 $_SERVER[‘REQUEST_URI’]中获取到字符串/controllerName/actionName/queryString。</p><p>然后，会将这个字符串分割成三部分：controller、action 和 queryString。</p><p>例如，URL链接为：yoursite.com/item/view/1/hello，那么route()分割之后，</p><pre><code>Controller名就是：itemaction名就是：viewURL参数就是：array(1, hello)</code></pre><p>分割完成后，再实例化控制器：itemController，并调用其中的view方法 。</p><h3 id="Controller基类"><a href="#Controller基类" class="headerlink" title="Controller基类"></a>Controller基类</h3><p>接下来，就是在 fastphp 中创建MVC基类，包括控制器、模型和视图三个基类。</p><p>新建控制器基类，文件名 Controller.class.php，功能就是总调度，内容如下：</p><pre><code>&lt;?phpclass Controller{    protected $_controller;    protected $_action;    protected $_view;    public function __construct($controller, $action)    {        $this-&gt;_controller = $controller;        $this-&gt;_action = $action;        $this-&gt;_view = new View($controller, $action);    }    public function assign($name, $value)    {        $this-&gt;_view-&gt;assign($name, $value);    }    public function render()    {        $this-&gt;_view-&gt;render();    }}Controller 类用assign()方法实现把变量保存到View对象中。这样，在调用$this-&gt; render() 后视图文件就能显示这些变量。</code></pre><h3 id="Model基类"><a href="#Model基类" class="headerlink" title="Model基类"></a>Model基类</h3><pre><code>新建模型基类，继承自数据库操作类Sql类（因为数据库操作比较复杂）。</code></pre><h4 id="模型基类-Model-class-php"><a href="#模型基类-Model-class-php" class="headerlink" title="模型基类 Model.class.php"></a>模型基类 Model.class.php</h4><pre><code>&lt;?phpclass Model extends Sql{    protected $_model;    protected $_table;    public static $dbConfig = [];    public function __construct()    {        $this-&gt;connect(self::$dbConfig[&apos;host&apos;], self::$dbConfig[&apos;username&apos;], self::$dbConfig[&apos;password&apos;],            self::$dbConfig[&apos;dbname&apos;]);        if (!$this-&gt;_table) {            $this-&gt;_model = get_class($this);            $this-&gt;_model = substr($this-&gt;_model, 0, -5);            $this-&gt;_table = strtolower($this-&gt;_model);        }    }}</code></pre><h4 id="数据库基类-Sql-class-php"><a href="#数据库基类-Sql-class-php" class="headerlink" title="数据库基类 Sql.class.php"></a>数据库基类 Sql.class.php</h4><pre><code>&lt;?phpclass Sql{    protected $_dbHandle;    protected $_result;    private $filter = &apos;&apos;;    public function connect($host, $username, $password, $dbname)    {        try {            $dsn = sprintf(&quot;mysql:host=%s;dbname=%s;charset=utf8&quot;, $host, $dbname);            $option = array(PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC);            $this-&gt;_dbHandle = new PDO($dsn, $username, $password, $option);        } catch (PDOException $e) {            exit(&apos;错误: &apos; . $e-&gt;getMessage());        }    }    public function where($where = array())    {        if (isset($where)) {            $this-&gt;filter .= &apos; WHERE &apos;;            $this-&gt;filter .= implode(&apos; &apos;, $where);        }        return $this;    }    public function order($order = array())    {        if(isset($order)) {            $this-&gt;filter .= &apos; ORDER BY &apos;;            $this-&gt;filter .= implode(&apos;,&apos;, $order);        }        return $this;    }    public function selectAll()    {        $sql = sprintf(&quot;select * from `%s` %s&quot;, $this-&gt;_table, $this-&gt;filter);        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);        $sth-&gt;execute();        return $sth-&gt;fetchAll();    }    public function select($id)    {        $sql = sprintf(&quot;select * from `%s` where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $id);        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);        $sth-&gt;execute();        return $sth-&gt;fetch();    }    public function delete($id)    {        $sql = sprintf(&quot;delete from `%s` where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $id);        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);        $sth-&gt;execute();        return $sth-&gt;rowCount();    }    public function query($sql)    {        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);        $sth-&gt;execute();        return $sth-&gt;rowCount();    }    public function add($data)    {        $sql = sprintf(&quot;insert into `%s` %s&quot;, $this-&gt;_table, $this-&gt;formatInsert($data));        return $this-&gt;query($sql);    }    public function update($id, $data)    {        $sql = sprintf(&quot;update `%s` set %s where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $this-&gt;formatUpdate($data), $id);        return $this-&gt;query($sql);    }    private function formatInsert($data)    {        $fields = array();        $values = array();        foreach ($data as $key =&gt; $value) {            $fields[] = sprintf(&quot;`%s`&quot;, $key);            $values[] = sprintf(&quot;&apos;%s&apos;&quot;, $value);        }        $field = implode(&apos;,&apos;, $fields);        $value = implode(&apos;,&apos;, $values);        return sprintf(&quot;(%s) values (%s)&quot;, $field, $value);    }    private function formatUpdate($data)    {        $fields = array();        foreach ($data as $key =&gt; $value) {            $fields[] = sprintf(&quot;`%s` = &apos;%s&apos;&quot;, $key, $value);        }        return implode(&apos;,&apos;, $fields);    }}</code></pre><p>应该说，Sql.class.php 是框架的核心部分。为什么？</p><p>因为通过它，我们创建了一个 SQL 抽象层，可以大大减少了数据库的编程工作。</p><p>虽然 PDO 接口本来已经很简洁，但是抽象之后框架的可灵活性更高。</p><p>这里的数据库句柄$this-&gt;_dbHandle还能用单例模式返回，让数据读写更高效，这部分可自行实现。</p><h3 id="View基类"><a href="#View基类" class="headerlink" title="View基类"></a>View基类</h3><h4 id="视图基类-View-class-php"><a href="#视图基类-View-class-php" class="headerlink" title="视图基类 View.class.php"></a>视图基类 View.class.php</h4><pre><code>&lt;?phpclass View{    protected $variables = array();    protected $_controller;    protected $_action;    function __construct($controller, $action)    {        $this-&gt;_controller = $controller;        $this-&gt;_action = $action;    }    public function assign($name, $value)    {        $this-&gt;variables[$name] = $value;    }    public function render()    {        extract($this-&gt;variables);        $defaultHeader = APP_PATH . &apos;application/views/header.php&apos;;        $defaultFooter = APP_PATH . &apos;application/views/footer.php&apos;;        $controllerHeader = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/header.php&apos;;        $controllerFooter = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/footer.php&apos;;        $controllerLayout = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/&apos; . $this-&gt;_action . &apos;.php&apos;;        if (file_exists($controllerHeader)) {            include ($controllerHeader);        } else {            include ($defaultHeader);        }        include ($controllerLayout);        if (file_exists($controllerFooter)) {            include ($controllerFooter);        } else {            include ($defaultFooter);        }    }}</code></pre><p>这样，核心的PHP MVC框架核心就完成了。</p><p>下面我们编写应用来测试框架功能。</p><h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="部署数据库"><a href="#部署数据库" class="headerlink" title="部署数据库"></a>部署数据库</h3><p>在 SQL 中新建一个 project 数据库，增加一个item 表、并插入两条记录，命令如下：</p><pre><code>CREATE DATABASE `project` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;USE `project`;CREATE TABLE `item` (    `id` int(11) NOT NULL auto_increment,    `item_name` varchar(255) NOT NULL,    PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;INSERT INTO `item` VALUES(1, &apos;Hello World.&apos;);INSERT INTO `item` VALUES(2, &apos;Lets go!&apos;);</code></pre><h3 id="部署模型"><a href="#部署模型" class="headerlink" title="部署模型"></a>部署模型</h3><p>然后，我们还需要在 models 目录中创建一个 ItemModel.php 模型，内容如下：</p><pre><code>&lt;?phpclass ItemModel extends Model{    public $_table = &apos;item&apos;;}</code></pre><p>因为 Item 模型继承了 Model基类，所以它拥有 Model 类的所有功能。</p><h3 id="部署控制器"><a href="#部署控制器" class="headerlink" title="部署控制器"></a>部署控制器</h3><p>在 controllers 目录下创建一个 ItemController.php 控制器，内容如下：</p><pre><code>&lt;?phpclass ItemController extends Controller{    public function index()    {        $items = (new ItemModel)-&gt;selectAll();        $this-&gt;assign(&apos;title&apos;, &apos;全部条目&apos;);        $this-&gt;assign(&apos;items&apos;, $items);        $this-&gt;render();    }    public function add()    {        $data[&apos;item_name&apos;] = $_POST[&apos;value&apos;];        $count = (new ItemModel)-&gt;add($data);        $this-&gt;assign(&apos;title&apos;, &apos;添加成功&apos;);        $this-&gt;assign(&apos;count&apos;, $count);        $this-&gt;render();    }    public function view($id = null)    {        $item = (new ItemModel)-&gt;select($id);        $this-&gt;assign(&apos;title&apos;, &apos;正在查看&apos; . $item[&apos;item_name&apos;]);        $this-&gt;assign(&apos;item&apos;, $item);        $this-&gt;render();    }    public function update()    {        $data = array(&apos;id&apos; =&gt; $_POST[&apos;id&apos;], &apos;item_name&apos; =&gt; $_POST[&apos;value&apos;]);        $count = (new ItemModel)-&gt;update($data[&apos;id&apos;], $data);        $this-&gt;assign(&apos;title&apos;, &apos;修改成功&apos;);        $this-&gt;assign(&apos;count&apos;, $count);        $this-&gt;render();    }    public function delete($id = null)    {        $count = (new ItemModel)-&gt;delete($id);        $this-&gt;assign(&apos;title&apos;, &apos;删除成功&apos;);        $this-&gt;assign(&apos;count&apos;, $count);        $this-&gt;render();    }}</code></pre><h3 id="部署视图"><a href="#部署视图" class="headerlink" title="部署视图"></a>部署视图</h3><p>在 views 目录下新建 header.php 和 footer.php 两个页头页脚模板，如下。</p><h4 id="header-php"><a href="#header-php" class="headerlink" title="header.php"></a>header.php</h4><pre><code>&lt;html&gt;&lt;head&gt;    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;    &lt;title&gt;&lt;?php echo $title ?&gt;&lt;/title&gt;    &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/main.css&quot; type=&quot;text/css&quot; /&gt;&lt;/head&gt;&lt;body&gt;    &lt;h1&gt;&lt;?php echo $title ?&gt;&lt;/h1&gt;</code></pre><h4 id="footer-php"><a href="#footer-php" class="headerlink" title="footer.php"></a>footer.php</h4><pre><code>&lt;/body&gt;&lt;/html&gt;</code></pre><p>页头文件用到了main.css样式文件，内容：</p><pre><code>input {    font-family:georgia,times;    font-size:24px;    line-height:1.2em;}a {    color:blue;    font-family:georgia,times;    font-size:20px;    line-height:1.2em;    text-decoration:none;}a:hover {    text-decoration:underline;}h1 {    color:#000000;    font-size:41px;    border-bottom:1px dotted #cccccc;}</code></pre><p>然后，在 views/item 创建以下几个视图文件。</p><h4 id="index-php-浏览数据库内-item-表的所有记录"><a href="#index-php-浏览数据库内-item-表的所有记录" class="headerlink" title="index.php[浏览数据库内 item 表的所有记录]"></a>index.php[浏览数据库内 item 表的所有记录]</h4><pre><code>&lt;form action=&quot;/item/add&quot; method=&quot;post&quot;&gt;    &lt;input type=&quot;text&quot; value=&quot;点击添加&quot; onclick=&quot;this.value=&apos;&apos;&quot; name=&quot;value&quot;&gt;    &lt;input type=&quot;submit&quot; value=&quot;添加&quot;&gt;&lt;/form&gt;&lt;br/&gt;&lt;?php foreach ($items as $item): ?&gt;    &lt;a class=&quot;big&quot; href=&quot;/item/view/&lt;?php echo $item[&apos;id&apos;] ?&gt;&quot; title=&quot;点击修改&quot;&gt;        &lt;span class=&quot;item&quot;&gt;            &lt;?php echo $item[&apos;id&apos;] ?&gt;            &lt;?php echo $item[&apos;item_name&apos;] ?&gt;        &lt;/span&gt;    &lt;/a&gt;    ----    &lt;a class=&quot;big&quot; href=&quot;/item/delete/&lt;?php echo $item[&apos;id&apos;]?&gt;&quot;&gt;删除&lt;/a&gt;&lt;br/&gt;&lt;?php endforeach ?&gt;</code></pre><h4 id="add-php-添加记录"><a href="#add-php-添加记录" class="headerlink" title="add.php[添加记录]"></a>add.php[添加记录]</h4><pre><code>&lt;a class=&quot;big&quot; href=&quot;/item/index&quot;&gt;成功添加&lt;?php echo $count ?&gt;条记录，点击返回&lt;/a&gt;</code></pre><h4 id="view-php-查看单条记录"><a href="#view-php-查看单条记录" class="headerlink" title="view.php[查看单条记录]"></a>view.php[查看单条记录]</h4><pre><code>&lt;form action=&quot;/item/update&quot; method=&quot;post&quot;&gt;    &lt;input type=&quot;text&quot; name=&quot;value&quot; value=&quot;&lt;?php echo $item[&apos;item_name&apos;] ?&gt;&quot;&gt;    &lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&lt;?php echo $item[&apos;id&apos;] ?&gt;&quot;&gt;    &lt;input type=&quot;submit&quot; value=&quot;修改&quot;&gt;&lt;/form&gt;</code></pre><p><a class="big" href="/item/index">返回</a></p><h4 id="update-php-更改记录"><a href="#update-php-更改记录" class="headerlink" title="update.php[更改记录]"></a>update.php[更改记录]</h4><pre><code>&lt;a class=&quot;big&quot; href=&quot;/item/index&quot;&gt;成功修改&lt;?php echo $count ?&gt;项，点击返回&lt;/a&gt;</code></pre><h4 id="delete-php-删除记录"><a href="#delete-php-删除记录" class="headerlink" title="delete.php[删除记录]"></a>delete.php[删除记录]</h4><pre><code>&lt;a href=&quot;/item/index&quot;&gt;成功删除&lt;?php echo $count ?&gt;项，点击返回&lt;/a&gt;</code></pre><h3 id="应用测试"><a href="#应用测试" class="headerlink" title="应用测试"></a>应用测试</h3><p>这样，在浏览器中访问 project程序：<a href="http://localhost/item/index/，就可以看到效果了。" target="_blank" rel="external">http://localhost/item/index/，就可以看到效果了。</a></p>]]></content>
+    
+    <summary type="html">
+    
+      实现一个类似tp的轻量级框架
+    
+    </summary>
+    
+      <category term="框架" scheme="http://martist.cn/categories/%E6%A1%86%E6%9E%B6/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="框架" scheme="http://martist.cn/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+  </entry>
+  
+  <entry>
     <title>nginx中的PHP_VALUE</title>
-    <link href="http://martist.cn/2018/04/20/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
-    <id>http://martist.cn/2018/04/20/nginx中的PHP_VALUE/</id>
+    <link href="http://martist.cn/2018/04/20/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
+    <id>http://martist.cn/2018/04/20/服务部署/nginx中的PHP_VALUE/</id>
     <published>2018-04-19T16:00:00.000Z</published>
     <updated>2018-04-19T11:30:38.665Z</updated>
     
@@ -42,8 +90,8 @@
   
   <entry>
     <title>php7性能分析-xhprof【laravel】</title>
-    <link href="http://martist.cn/2018/04/20/php%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"/>
-    <id>http://martist.cn/2018/04/20/php性能分析入门/</id>
+    <link href="http://martist.cn/2018/04/20/PHP/php%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"/>
+    <id>http://martist.cn/2018/04/20/PHP/php性能分析入门/</id>
     <published>2018-04-19T16:00:00.000Z</published>
     <updated>2018-04-26T11:06:09.048Z</updated>
     
@@ -58,68 +106,18 @@
       <category term="php" scheme="http://martist.cn/categories/php/"/>
     
     
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
       <category term="性能测试" scheme="http://martist.cn/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
   <entry>
-    <title>phper需要注意的web安全</title>
-    <link href="http://martist.cn/2018/04/18/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
-    <id>http://martist.cn/2018/04/18/phper需要注意的web安全/</id>
-    <published>2018-04-17T16:00:00.000Z</published>
-    <updated>2018-04-18T11:27:59.064Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>我一开始想写，思想被局限在后端了，可能是因为我是一名后端开发吧，其实前端也可以做很多事情来防止网络攻击，下面以前后端来分类简单讲讲web安全。</p><h2 id="前端眼里的web安全"><a href="#前端眼里的web安全" class="headerlink" title="前端眼里的web安全"></a>前端眼里的web安全</h2><ul><li>xss</li><li>csrf</li></ul><p>XSS（cross-site scripting跨域脚本攻击）攻击也是最常见的WEB攻击之一，其重点是“跨域”和“客户端执行”。<br>CSRF（cross-site request forgery），翻译为跨站请求伪造，与XSS非常相似，但XSS是利用用户对当前网站的信任来发起攻击，而CSRF是利用网站对用户的信任来发起攻击。<br>推荐阅读：<br><a href="https://www.cnblogs.com/vajoy/p/4176908.html" target="_blank" rel="external">https://www.cnblogs.com/vajoy/p/4176908.html</a><br><a href="https://segmentfault.com/a/1190000006672214" target="_blank" rel="external">https://segmentfault.com/a/1190000006672214</a></p><h2 id="后端眼里的web安全"><a href="#后端眼里的web安全" class="headerlink" title="后端眼里的web安全"></a>后端眼里的web安全</h2><p>SQL注入攻击<br>中间人攻击（会话劫持）<br>文件上传漏洞攻击<br>DoS和DDoS攻击<br>不安全加密<br>后门</p><p>推荐阅读：<br><a href="https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral</a><br><a href="https://segmentfault.com/a/1190000007028595" target="_blank" rel="external">https://segmentfault.com/a/1190000007028595</a><br><a href="https://www.cnblogs.com/luyucheng/p/6234524.html" target="_blank" rel="external">https://www.cnblogs.com/luyucheng/p/6234524.html</a></p><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>目前我也在学习阶段，发现一本书很不多，《白帽子讲web安全》，希望大家可以和我一起学习。</p><p>1</p>]]></content>
-    
-    <summary type="html">
-    
-      关于网络安全，phper开发时候需要注意到的地方
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>加密如何保障安全</title>
-    <link href="http://martist.cn/2018/04/18/%E5%8A%A0%E5%AF%86%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E5%AE%89%E5%85%A8/"/>
-    <id>http://martist.cn/2018/04/18/加密如何保障安全/</id>
-    <published>2018-04-17T16:00:00.000Z</published>
-    <updated>2018-04-19T03:12:12.810Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>你还在用md5+salt方式加密密码吗？PHP5.5引入了Password Hashing函数，内核自带无需安装扩展。</p><h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>  password_get_info — 返回指定散列（hash）的相关信息<br>  password_hash — 创建密码的散列（hash）<br>  password_needs_rehash — 检测散列值是否匹配指定的选项<br>  password_verify — 验证密码是否和散列值匹配</p><p>提供了这4个函数，具体案例可以看 <a href="http://php.net/manual/zh/function.password-hash.php" target="_blank" rel="external">http://php.net/manual/zh/function.password-hash.php</a></p><h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>代码：</p><pre><code>&lt;?php$pwd = password_hash(&apos;123456abc&apos;,PASSWORD_DEFAULT);$v = password_get_info($pwd);if(password_verify(&apos;123456abc&apos;, $pwd)){  echo &apos;yes&apos;;  echo  PHP_EOL;}var_dump($v);  echo  PHP_EOL;var_dump($pwd);  echo  PHP_EOL;</code></pre><p>在cli模式下运行结果：</p><pre><code>$ php b.phpyesarray(3) {  [&quot;algo&quot;]=&gt;  int(1)  [&quot;algoName&quot;]=&gt;  string(6) &quot;bcrypt&quot;  [&quot;options&quot;]=&gt;  array(1) {    [&quot;cost&quot;]=&gt;    int(10)  }}string(60) &quot;$2y$10$PQcdiu8BHfKS.43/RJ5xUeYDdHQ8/vcDSlM6lubIdCiTwso6T9.7.&quot;</code></pre><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>通过password_hash加密后的密码，使用字典方式很难破解，因为每次生成的密码都是不一样的,破解这种加密只能采用暴力破解。加密方法再好，原始密码设置的过于简单都容易被破解，设置复杂的密码才是王道。</p><h2 id="laravel框架中的使用"><a href="#laravel框架中的使用" class="headerlink" title="laravel框架中的使用"></a>laravel框架中的使用</h2><p>这两篇文章从框架源码讲解了Password Hashing函数的应用。<br><a href="http://laravelacademy.org/post/8327.html" target="_blank" rel="external">http://laravelacademy.org/post/8327.html</a><br><a href="http://laravelacademy.org/post/4764.html" target="_blank" rel="external">http://laravelacademy.org/post/4764.html</a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然通过password_hash()创建的哈希密码更加安全，但是却降低了互操作性。<br>如我们使用md5方式，在php中用标准的MD5加密，很容易通过其他语言来校验，因为md5的加密方式其他语言也可以使用。而使用password_hash()加密的哈希值基本只能通过PHP的password_verify来校验。<br>这2种方法各有优劣，是使用md5(或sha1等)+salt(干扰字符串)的方式还是使用password_hash()大家根据具体情况取舍把。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
     <title>深蹲怎么不伤膝盖</title>
-    <link href="http://martist.cn/2018/04/18/%E6%B7%B1%E8%B9%B2%E6%80%8E%E4%B9%88%E4%B8%8D%E4%BC%A4%E8%86%9D%E7%9B%96/"/>
-    <id>http://martist.cn/2018/04/18/深蹲怎么不伤膝盖/</id>
+    <link href="http://martist.cn/2018/04/18/%E5%81%A5%E8%BA%AB/%E6%B7%B1%E8%B9%B2%E6%80%8E%E4%B9%88%E4%B8%8D%E4%BC%A4%E8%86%9D%E7%9B%96/"/>
+    <id>http://martist.cn/2018/04/18/健身/深蹲怎么不伤膝盖/</id>
     <published>2018-04-17T16:00:00.000Z</published>
     <updated>2018-04-18T03:10:11.417Z</updated>
     
@@ -141,9 +139,59 @@
   </entry>
   
   <entry>
+    <title>加密如何保障安全</title>
+    <link href="http://martist.cn/2018/04/18/%E6%9E%B6%E6%9E%84/%E5%8A%A0%E5%AF%86%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E5%AE%89%E5%85%A8/"/>
+    <id>http://martist.cn/2018/04/18/架构/加密如何保障安全/</id>
+    <published>2018-04-17T16:00:00.000Z</published>
+    <updated>2018-04-19T03:12:12.810Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>你还在用md5+salt方式加密密码吗？PHP5.5引入了Password Hashing函数，内核自带无需安装扩展。</p><h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>  password_get_info — 返回指定散列（hash）的相关信息<br>  password_hash — 创建密码的散列（hash）<br>  password_needs_rehash — 检测散列值是否匹配指定的选项<br>  password_verify — 验证密码是否和散列值匹配</p><p>提供了这4个函数，具体案例可以看 <a href="http://php.net/manual/zh/function.password-hash.php" target="_blank" rel="external">http://php.net/manual/zh/function.password-hash.php</a></p><h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>代码：</p><pre><code>&lt;?php$pwd = password_hash(&apos;123456abc&apos;,PASSWORD_DEFAULT);$v = password_get_info($pwd);if(password_verify(&apos;123456abc&apos;, $pwd)){  echo &apos;yes&apos;;  echo  PHP_EOL;}var_dump($v);  echo  PHP_EOL;var_dump($pwd);  echo  PHP_EOL;</code></pre><p>在cli模式下运行结果：</p><pre><code>$ php b.phpyesarray(3) {  [&quot;algo&quot;]=&gt;  int(1)  [&quot;algoName&quot;]=&gt;  string(6) &quot;bcrypt&quot;  [&quot;options&quot;]=&gt;  array(1) {    [&quot;cost&quot;]=&gt;    int(10)  }}string(60) &quot;$2y$10$PQcdiu8BHfKS.43/RJ5xUeYDdHQ8/vcDSlM6lubIdCiTwso6T9.7.&quot;</code></pre><h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>通过password_hash加密后的密码，使用字典方式很难破解，因为每次生成的密码都是不一样的,破解这种加密只能采用暴力破解。加密方法再好，原始密码设置的过于简单都容易被破解，设置复杂的密码才是王道。</p><h2 id="laravel框架中的使用"><a href="#laravel框架中的使用" class="headerlink" title="laravel框架中的使用"></a>laravel框架中的使用</h2><p>这两篇文章从框架源码讲解了Password Hashing函数的应用。<br><a href="http://laravelacademy.org/post/8327.html" target="_blank" rel="external">http://laravelacademy.org/post/8327.html</a><br><a href="http://laravelacademy.org/post/4764.html" target="_blank" rel="external">http://laravelacademy.org/post/4764.html</a></p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>虽然通过password_hash()创建的哈希密码更加安全，但是却降低了互操作性。<br>如我们使用md5方式，在php中用标准的MD5加密，很容易通过其他语言来校验，因为md5的加密方式其他语言也可以使用。而使用password_hash()加密的哈希值基本只能通过PHP的password_verify来校验。<br>这2种方法各有优劣，是使用md5(或sha1等)+salt(干扰字符串)的方式还是使用password_hash()大家根据具体情况取舍把。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>phper需要注意的web安全</title>
+    <link href="http://martist.cn/2018/04/18/PHP/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
+    <id>http://martist.cn/2018/04/18/PHP/phper需要注意的web安全/</id>
+    <published>2018-04-17T16:00:00.000Z</published>
+    <updated>2018-04-18T11:27:59.064Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>我一开始想写，思想被局限在后端了，可能是因为我是一名后端开发吧，其实前端也可以做很多事情来防止网络攻击，下面以前后端来分类简单讲讲web安全。</p><h2 id="前端眼里的web安全"><a href="#前端眼里的web安全" class="headerlink" title="前端眼里的web安全"></a>前端眼里的web安全</h2><ul><li>xss</li><li>csrf</li></ul><p>XSS（cross-site scripting跨域脚本攻击）攻击也是最常见的WEB攻击之一，其重点是“跨域”和“客户端执行”。<br>CSRF（cross-site request forgery），翻译为跨站请求伪造，与XSS非常相似，但XSS是利用用户对当前网站的信任来发起攻击，而CSRF是利用网站对用户的信任来发起攻击。<br>推荐阅读：<br><a href="https://www.cnblogs.com/vajoy/p/4176908.html" target="_blank" rel="external">https://www.cnblogs.com/vajoy/p/4176908.html</a><br><a href="https://segmentfault.com/a/1190000006672214" target="_blank" rel="external">https://segmentfault.com/a/1190000006672214</a></p><h2 id="后端眼里的web安全"><a href="#后端眼里的web安全" class="headerlink" title="后端眼里的web安全"></a>后端眼里的web安全</h2><p>SQL注入攻击<br>中间人攻击（会话劫持）<br>文件上传漏洞攻击<br>DoS和DDoS攻击<br>不安全加密<br>后门</p><p>推荐阅读：<br><a href="https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="external">https://www.cnblogs.com/Miss-mickey/p/6636813.html?utm_source=tuicool&amp;utm_medium=referral</a><br><a href="https://segmentfault.com/a/1190000007028595" target="_blank" rel="external">https://segmentfault.com/a/1190000007028595</a><br><a href="https://www.cnblogs.com/luyucheng/p/6234524.html" target="_blank" rel="external">https://www.cnblogs.com/luyucheng/p/6234524.html</a></p><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>目前我也在学习阶段，发现一本书很不多，《白帽子讲web安全》，希望大家可以和我一起学习。</p><p>1</p>]]></content>
+    
+    <summary type="html">
+    
+      关于网络安全，phper开发时候需要注意到的地方
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
     <title>php-fpm概念理解和优化总结</title>
-    <link href="http://martist.cn/2018/04/17/php-fpm%E4%BC%98%E5%8C%96/"/>
-    <id>http://martist.cn/2018/04/17/php-fpm优化/</id>
+    <link href="http://martist.cn/2018/04/17/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/php-fpm%E4%BC%98%E5%8C%96/"/>
+    <id>http://martist.cn/2018/04/17/服务部署/php-fpm优化/</id>
     <published>2018-04-16T16:00:00.000Z</published>
     <updated>2018-04-19T11:06:48.232Z</updated>
     
@@ -168,8 +216,8 @@
   
   <entry>
     <title>monolog</title>
-    <link href="http://martist.cn/2018/04/13/monolog/"/>
-    <id>http://martist.cn/2018/04/13/monolog/</id>
+    <link href="http://martist.cn/2018/04/13/PHP/monolog/"/>
+    <id>http://martist.cn/2018/04/13/PHP/monolog/</id>
     <published>2018-04-12T16:00:00.000Z</published>
     <updated>2018-04-16T08:55:05.910Z</updated>
     
@@ -184,16 +232,16 @@
       <category term="php" scheme="http://martist.cn/categories/php/"/>
     
     
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   
   <entry>
     <title>关于小产权房的一些看法</title>
-    <link href="http://martist.cn/2018/04/09/%E5%85%B3%E4%BA%8E%E5%B0%8F%E4%BA%A7%E6%9D%83%E6%88%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
-    <id>http://martist.cn/2018/04/09/关于小产权房的一些看法/</id>
+    <link href="http://martist.cn/2018/04/09/%E9%9D%9E%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/%E5%85%B3%E4%BA%8E%E5%B0%8F%E4%BA%A7%E6%9D%83%E6%88%BF%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"/>
+    <id>http://martist.cn/2018/04/09/非技术文章/关于小产权房的一些看法/</id>
     <published>2018-04-08T16:00:00.000Z</published>
     <updated>2018-04-16T07:37:24.915Z</updated>
     
@@ -214,8 +262,8 @@
   
   <entry>
     <title>健身相关文章的推荐</title>
-    <link href="http://martist.cn/2018/04/08/%E5%81%A5%E8%BA%AB%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0%E7%9A%84%E6%8E%A8%E8%8D%90/"/>
-    <id>http://martist.cn/2018/04/08/健身相关文章的推荐/</id>
+    <link href="http://martist.cn/2018/04/08/%E5%81%A5%E8%BA%AB/%E5%81%A5%E8%BA%AB%E7%9B%B8%E5%85%B3%E6%96%87%E7%AB%A0%E7%9A%84%E6%8E%A8%E8%8D%90/"/>
+    <id>http://martist.cn/2018/04/08/健身/健身相关文章的推荐/</id>
     <published>2018-04-07T16:00:00.000Z</published>
     <updated>2018-04-16T02:15:40.514Z</updated>
     
@@ -236,8 +284,8 @@
   
   <entry>
     <title>SaaS的php技术实现</title>
-    <link href="http://martist.cn/2018/04/01/SaaS%E7%9A%84php%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
-    <id>http://martist.cn/2018/04/01/SaaS的php技术实现/</id>
+    <link href="http://martist.cn/2018/04/01/%E6%9E%B6%E6%9E%84/SaaS%E7%9A%84php%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://martist.cn/2018/04/01/架构/SaaS的php技术实现/</id>
     <published>2018-03-31T16:00:00.000Z</published>
     <updated>2018-04-03T03:33:56.321Z</updated>
     
@@ -252,16 +300,16 @@
       <category term="php" scheme="http://martist.cn/categories/php/"/>
     
     
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   
   <entry>
     <title>简单谈接口设计</title>
-    <link href="http://martist.cn/2018/03/20/%E7%AE%80%E5%8D%95%E8%B0%88%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1/"/>
-    <id>http://martist.cn/2018/03/20/简单谈接口设计/</id>
+    <link href="http://martist.cn/2018/03/20/%E6%9E%B6%E6%9E%84/%E7%AE%80%E5%8D%95%E8%B0%88%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1/"/>
+    <id>http://martist.cn/2018/03/20/架构/简单谈接口设计/</id>
     <published>2018-03-19T16:00:00.000Z</published>
     <updated>2018-04-26T11:21:35.998Z</updated>
     
@@ -276,16 +324,16 @@
       <category term="php" scheme="http://martist.cn/categories/php/"/>
     
     
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   
   <entry>
     <title>深蹲膝盖要不要过脚尖</title>
-    <link href="http://martist.cn/2018/03/18/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
-    <id>http://martist.cn/2018/03/18/深蹲膝盖要不要过脚尖/</id>
+    <link href="http://martist.cn/2018/03/18/%E5%81%A5%E8%BA%AB/%E6%B7%B1%E8%B9%B2%E8%86%9D%E7%9B%96%E8%A6%81%E4%B8%8D%E8%A6%81%E8%BF%87%E8%84%9A%E5%B0%96/"/>
+    <id>http://martist.cn/2018/03/18/健身/深蹲膝盖要不要过脚尖/</id>
     <published>2018-03-17T16:00:00.000Z</published>
     <updated>2018-04-12T12:05:03.724Z</updated>
     
@@ -306,8 +354,8 @@
   
   <entry>
     <title>linux之curl命令</title>
-    <link href="http://martist.cn/2018/03/18/linux%E4%B9%8BCURL%E5%91%BD%E4%BB%A4/"/>
-    <id>http://martist.cn/2018/03/18/linux之CURL命令/</id>
+    <link href="http://martist.cn/2018/03/18/LINUX/linux%E4%B9%8BCURL%E5%91%BD%E4%BB%A4/"/>
+    <id>http://martist.cn/2018/03/18/LINUX/linux之CURL命令/</id>
     <published>2018-03-17T16:00:00.000Z</published>
     <updated>2018-04-10T10:16:21.487Z</updated>
     
@@ -328,8 +376,8 @@
   
   <entry>
     <title>nginx的502问题</title>
-    <link href="http://martist.cn/2018/03/14/Nginx%20+%20PHP%EF%BC%88php-fpm%EF%BC%89%E9%81%87%E5%88%B0%E7%9A%84502%20Bad%20Gateway%E9%94%99%E8%AF%AF/"/>
-    <id>http://martist.cn/2018/03/14/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/</id>
+    <link href="http://martist.cn/2018/03/14/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/Nginx%20+%20PHP%EF%BC%88php-fpm%EF%BC%89%E9%81%87%E5%88%B0%E7%9A%84502%20Bad%20Gateway%E9%94%99%E8%AF%AF/"/>
+    <id>http://martist.cn/2018/03/14/服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/</id>
     <published>2018-03-13T16:00:00.000Z</published>
     <updated>2018-04-19T09:38:59.951Z</updated>
     
@@ -354,8 +402,8 @@
   
   <entry>
     <title>关于php的单例模式</title>
-    <link href="http://martist.cn/2018/03/12/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%90%86%E8%A7%A3/"/>
-    <id>http://martist.cn/2018/03/12/单例模式的理解/</id>
+    <link href="http://martist.cn/2018/03/12/%E6%9E%B6%E6%9E%84/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%90%86%E8%A7%A3/"/>
+    <id>http://martist.cn/2018/03/12/架构/单例模式的理解/</id>
     <published>2018-03-11T16:00:00.000Z</published>
     <updated>2018-04-23T08:02:17.540Z</updated>
     
@@ -376,8 +424,8 @@
   
   <entry>
     <title>nginx优化</title>
-    <link href="http://martist.cn/2018/03/11/nginx%E4%BC%98%E5%8C%96/"/>
-    <id>http://martist.cn/2018/03/11/nginx优化/</id>
+    <link href="http://martist.cn/2018/03/11/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/nginx%E4%BC%98%E5%8C%96/"/>
+    <id>http://martist.cn/2018/03/11/服务部署/nginx优化/</id>
     <published>2018-03-10T16:00:00.000Z</published>
     <updated>2018-04-19T09:57:02.056Z</updated>
     
@@ -400,8 +448,8 @@
   
   <entry>
     <title>让我们脱离国定器械</title>
-    <link href="http://martist.cn/2018/03/03/%E8%84%B1%E7%A6%BB%E5%9B%BD%E5%AE%9A%E5%99%A8%E6%A2%B0/"/>
-    <id>http://martist.cn/2018/03/03/脱离国定器械/</id>
+    <link href="http://martist.cn/2018/03/03/%E5%81%A5%E8%BA%AB/%E8%84%B1%E7%A6%BB%E5%9B%BD%E5%AE%9A%E5%99%A8%E6%A2%B0/"/>
+    <id>http://martist.cn/2018/03/03/健身/脱离国定器械/</id>
     <published>2018-03-02T16:00:00.000Z</published>
     <updated>2018-04-12T12:00:05.603Z</updated>
     
@@ -422,8 +470,8 @@
   
   <entry>
     <title>中间件</title>
-    <link href="http://martist.cn/2018/03/02/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
-    <id>http://martist.cn/2018/03/02/中间件/</id>
+    <link href="http://martist.cn/2018/03/02/%E6%9E%B6%E6%9E%84/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    <id>http://martist.cn/2018/03/02/架构/中间件/</id>
     <published>2018-03-01T16:00:00.000Z</published>
     <updated>2018-03-27T07:38:10.575Z</updated>
     
@@ -438,55 +486,9 @@
       <category term="常识" scheme="http://martist.cn/categories/%E5%B8%B8%E8%AF%86/"/>
     
     
-      <category term="常识" scheme="http://martist.cn/tags/%E5%B8%B8%E8%AF%86/"/>
-    
       <category term="web" scheme="http://martist.cn/tags/web/"/>
     
-  </entry>
-  
-  <entry>
-    <title>面向对象的模式方法__tostring()和__invoke()</title>
-    <link href="http://martist.cn/2018/03/01/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95__tostring()%E5%92%8C__invoke()/"/>
-    <id>http://martist.cn/2018/03/01/面向对象的魔术方法__tostring()和__invoke()/</id>
-    <published>2018-02-28T16:00:00.000Z</published>
-    <updated>2018-04-16T07:43:06.650Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="tostring-魔术方法"><a href="#tostring-魔术方法" class="headerlink" title="__tostring()魔术方法"></a>__tostring()魔术方法</h2><p>　　将一个对象当做一个字符串来使用时，会自动调用该方法，并且在该方法中，可以返回一定的字符串，以表明该对象转换为字符串之后的结果。该魔术方法比较常用。<br>　　注意：如果没有定义该方法，则对象无法当做字符串来使用！<br>类里面未定义__tostring()方法的例子：</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //echo 后面为字符串，而对象不是字符串，会报错$v1 = &quot;abc&quot; . $obj1;  //.为字符串连接符，会报错$v2 = &quot;abx&quot; + $obj1;  //+为加法运算符，会报错?&gt;</code></pre><p>3个报错内容分别为</p><pre><code>Catchable fatal error: Object of class A could not be converted to stringCatchable fatal error: Object of class A could not be converted to stringNotice: Object of class A could not be converted to int</code></pre><p>类里面定义__tostring()方法</p><pre><code>&lt;?phpini_set(&apos;display_errors&apos;, 1);class A{    public $name;    public $age;    public $sex;    function __construct($name, $age, $sex){        $this-&gt;name = $name;        $this-&gt;age = $age;        $this-&gt;sex = $sex;       }    function __tostring(){        $str = &quot;姓名：&quot; . $this-&gt;name;           $str .= &quot;年龄：&quot; . $this-&gt;age;            $str .= &quot;，性别：&quot; . $this-&gt;sex;        return $str;   //这里可以返回“任何字符串内容”    }}$obj1 = new A(&apos;张三&apos;, 15, &apos;男&apos;);echo $obj1;    //调用__tostring(),不会报错?&gt;</code></pre><p>运行结果</p><pre><code>姓名：张三年龄：15，性别：男</code></pre><h2 id="invoke-魔术方法"><a href="#invoke-魔术方法" class="headerlink" title="__invoke()魔术方法"></a>__invoke()魔术方法</h2><p>　　将对象当作函数来使用时，会自动调用该方法。通常不推荐这么做。</p><pre><code>class A{    function __invoke(){        echo &quot;&lt;br /&gt;我是一个对象呀，你别把我当作一个函数来调用啊！&quot;;    }}$obj = new A();$obj();    //此时就会调用类中的方法：__invoke()</code></pre><p>结果：</p><pre><code>我是一个对象呀，你别把我当作一个函数来调用啊！</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      php
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>php实现汉诺塔</title>
-    <link href="http://martist.cn/2018/03/01/php%E5%AE%9E%E7%8E%B0%E6%B1%89%E8%AF%BA%E5%A1%94/"/>
-    <id>http://martist.cn/2018/03/01/php实现汉诺塔/</id>
-    <published>2018-02-28T16:00:00.000Z</published>
-    <updated>2018-04-19T09:36:10.739Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a><br>汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。简而言之，有三根相邻的柱子，标号为A,B,C，A柱子上从下到上按金字塔状叠放着n个不同大小的圆盘，要把所有盘子一个一个移动到柱子B上，并且每次移动同一根柱子上都不能出现大盘子在小盘子上方，请问至少需要多少次移动？</p><p>递归过程序如下:<br>1)把n-1个圆从A移到C<br>2)把剩下一个由A移到B<br>3)再把n-1个由C移到B,完成</p><pre><code>&lt;?php  //将所有圆盘从a移到b  function hanuota($n,$a,$b,$c){      global $step;      if($n==1){          $step++;          echo &quot;将圆盘 $n 从 $a 柱子 到 $b 柱子 &lt;br /&gt;&quot;;      }else{          hanuota($n-1,$a,$c,$b);          $step++;          echo &quot;将圆盘 $n 从 $a 柱子 到 $b 柱子 &lt;br /&gt;&quot;;          hanuota($n-1,$c,$b,$a);      }  }  //移动的次数  $step = 0;  hanuota(4, &apos;A&apos;, &apos;B&apos;, &apos;C&apos;);  echo &quot;移动次数：&quot; . $step;  ?&gt;  </code></pre><p>结果:</p><pre><code>将圆盘 1 从 A 柱子 到 C 柱子将圆盘 2 从 A 柱子 到 B 柱子将圆盘 1 从 C 柱子 到 B 柱子将圆盘 3 从 A 柱子 到 C 柱子将圆盘 1 从 B 柱子 到 A 柱子将圆盘 2 从 B 柱子 到 C 柱子将圆盘 1 从 A 柱子 到 C 柱子将圆盘 4 从 A 柱子 到 B 柱子将圆盘 1 从 C 柱子 到 B 柱子将圆盘 2 从 C 柱子 到 A 柱子将圆盘 1 从 B 柱子 到 A 柱子将圆盘 3 从 C 柱子 到 B 柱子将圆盘 1 从 A 柱子 到 C 柱子将圆盘 2 从 A 柱子 到 B 柱子将圆盘 1 从 C 柱子 到 B 柱子移动次数：15</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      算法入门
-    
-    </summary>
-    
-      <category term="算法" scheme="http://martist.cn/categories/%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-      <category term="算法" scheme="http://martist.cn/tags/%E7%AE%97%E6%B3%95/"/>
+      <category term="常识" scheme="http://martist.cn/tags/%E5%B8%B8%E8%AF%86/"/>
     
   </entry>
   

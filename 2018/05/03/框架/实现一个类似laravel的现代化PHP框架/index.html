@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>实现一个类似laravel的现代化PHP框架 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现一个类似laravel的现代化PHP框架">
+<meta name="keywords" content="php,框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现一个类似laravel的现代化PHP框架">
+<meta property="og:url" content="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="实现一个类似laravel的现代化PHP框架">
+<meta property="og:locale" content="简体中文">
+<meta property="og:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/martp目录.png">
+<meta property="og:updated_time" content="2018-05-03T06:39:03.227Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实现一个类似laravel的现代化PHP框架">
+<meta name="twitter:description" content="实现一个类似laravel的现代化PHP框架">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/martp目录.png">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-框架/实现一个类似laravel的现代化PHP框架" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" class="article-date">
+  <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/框架/">框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现一个类似laravel的现代化PHP框架
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>读了JohnLui的7篇博文之后，我想要把学到的东西总结一下，于是写了这篇文章。<br>他的博客地址：<a href="https://lvwenhan.com/sort/php" target="_blank" rel="external">https://lvwenhan.com/sort/php</a></p>
+<h2 id="路由组件Macaw"><a href="#路由组件Macaw" class="headerlink" title="路由组件Macaw"></a>路由组件Macaw</h2><p>推荐 <a href="https://github.com/NoahBuscher/Macaw" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw</a> , 这个包体积小，很优雅。</p>
+<p>下面开始安装它，更改 composer.json：</p>
+<pre><code>{
+  &quot;require&quot;: {
+    &quot;noahbuscher/macaw&quot;: &quot;dev-master&quot;
+  }
+}
+</code></pre><p>运行</p>
+<pre><code>composer update
+</code></pre><p>新建 MFFC/public 文件夹，这个文件夹将是用户唯一可见的部分。在文件夹下新建 index.php 文件：</p>
+<pre><code>&lt;?php
+
+// Autoload 自动载入
+require &apos;../vendor/autoload.php&apos;;
+
+// 路由配置
+require &apos;../config/routes.php&apos;;
+
+上面一行表示引入 Composer 的自动载入功能，下面一行表示载入路由配置文件。新建 MFFC/config 文件夹，在里面新建 routs.php 文件，内容如下：
+
+&lt;?php
+
+use NoahBuscher\Macaw\Macaw;
+
+Macaw::get(&apos;fuck&apos;, function() {
+  echo &quot;成功！&quot;;
+});
+
+Macaw::get(&apos;(:all)&apos;, function($fu) {
+  echo &apos;未匹配到路由&lt;br&gt;&apos;.$fu;
+});
+
+Macaw::dispatch();
+</code></pre><p>然后你就可以在浏览器进行测试了。</p>
+<h3 id="Macaw代码分析"><a href="#Macaw代码分析" class="headerlink" title="Macaw代码分析"></a>Macaw代码分析</h3><p>Macaw 的文档位于 <a href="https://github.com/NoahBuscher/Macaw，请按照你的" target="_blank" rel="external">https://github.com/NoahBuscher/Macaw，请按照你的</a> HTTP 服务软件类型自行设置伪静态，其实跟绝大多数框架一样：“将所有非静态文件全部指向 index.php”。</p>
+<p>Macaw 只有一个文件，去除空行总共也就一百行多一点，通过代码我们能直接看明白它是怎么工作。</p>
+<p>路由文件最后一行的 Macaw::dispatch(); 方法才是真正处理当前 URL 的地方。</p>
+<h2 id="设计mvc"><a href="#设计mvc" class="headerlink" title="设计mvc"></a>设计mvc</h2><h3 id="规划文件夹"><a href="#规划文件夹" class="headerlink" title="规划文件夹"></a>规划文件夹</h3><p>新建 MFFC/app 文件夹，在 app 中创建 controllers、models、views 三个文件夹，开始正式开始踏上 MVC 的征程。</p>
+<h3 id="使用命名空间"><a href="#使用命名空间" class="headerlink" title="使用命名空间"></a>使用命名空间</h3><p>增加一条路由： Macaw::get(‘’, ‘HomeController@home’);，打开浏览器直接访问 <a href="http://127.0.0.1:81/，出现以下提示：" target="_blank" rel="external">http://127.0.0.1:81/，出现以下提示：</a></p>
+<pre><code>Fatal error: Class &apos;HomeController&apos; not found in /Library/WebServer/Documents/wwwroot/MFFC/vendor/codingbean/macaw/Macaw.php on line 93
+</code></pre><p>为什么没找到 HomeController 类？因为我们没有让他自动加载，修改 composer.json 为：</p>
+<pre><code>&quot;autoload&quot;: {
+  &quot;classmap&quot;: [
+    &quot;app/controllers&quot;,
+    &quot;app/models&quot;
+  ]
+}
+</code></pre><p>运行 composer 命令</p>
+<pre><code>composer dump-autoload
+</code></pre><h2 id="ORM组件illuminate-database"><a href="#ORM组件illuminate-database" class="headerlink" title="ORM组件illuminate/database"></a>ORM组件illuminate/database</h2><p>给 composer.json 增加一个 require 项：</p>
+<pre><code>&quot;illuminate/database&quot;: &quot;*&quot;
+</code></pre><p>运行 composer update ，等待安装完成。</p>
+<pre><code>&lt;?php
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+// Autoload 自动载入
+require &apos;../vendor/autoload.php&apos;;
+// Eloquent ORM
+$capsule = new Capsule;
+$capsule-&gt;addConnection(require &apos;../config/database.php&apos;);
+$capsule-&gt;bootEloquent();
+// 路由配置
+require &apos;../config/routes.php&apos;;
+</code></pre><p>新增 config/database.php （注意替换数据库密码）：</p>
+<pre><code>&lt;?php
+
+return [
+  &apos;driver&apos;    =&gt; &apos;mysql&apos;,
+  &apos;host&apos;      =&gt; &apos;localhost&apos;,
+  &apos;database&apos;  =&gt; &apos;mffc&apos;,
+  &apos;username&apos;  =&gt; &apos;root&apos;,
+  &apos;password&apos;  =&gt; &apos;password&apos;,
+  &apos;charset&apos;   =&gt; &apos;utf8&apos;,
+  &apos;collation&apos; =&gt; &apos;utf8_general_ci&apos;,
+  &apos;prefix&apos;    =&gt; &apos;&apos;
+  ];
+</code></pre><p>修改 models/Article.php ：</p>
+<pre><code>&lt;?php
+class Article extends Illuminate\Database\Eloquent\Model
+{
+  public $timestamps = false;
+}
+</code></pre><p>controllers/HomeController.php ：</p>
+<pre><code>&lt;?php
+
+class HomeController extends BaseController
+{
+
+    public function index()
+    {
+        $article = Article::first();
+        require dirname(__FILE__).&apos;/../views/home.php&apos;;//模板文件
+    }
+
+}
+</code></pre><p>更新自动加载配置：</p>
+<pre><code>composer dump-autoload
+</code></pre><p>SQL 语句：</p>
+<pre><code>DROP TABLE IF EXISTS `articles`;
+
+CREATE TABLE `articles` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `content` longtext,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `articles` WRITE;
+/*!40000 ALTER TABLE `articles` DISABLE KEYS */;
+
+INSERT INTO `articles` (`id`, `title`, `content`)
+VALUES
+    (1,&apos;我是标题&apos;,&apos;&lt;h3&gt;我是内容呀~~&lt;/h3&gt;&lt;p&gt;我真的是内容，不信算了，哼~ O(∩_∩)O&lt;/p&gt;&apos;),
+    (2,&apos;我是标题&apos;,&apos;&lt;h3&gt;我是内容呀~~&lt;/h3&gt;&lt;p&gt;我真的是内容，不信算了，哼~ O(∩_∩)O&lt;/p&gt;&apos;);
+
+/*!40000 ALTER TABLE `articles` ENABLE KEYS */;
+UNLOCK TABLES;
+</code></pre><p>刷新页面，可以看到成功出现数据库的数据了。</p>
+<h2 id="错误页面提示组件whoops"><a href="#错误页面提示组件whoops" class="headerlink" title="错误页面提示组件whoops"></a>错误页面提示组件whoops</h2><p>引入错误页面提示组件，修改  composer.json ：</p>
+<pre><code>&quot;require&quot;: {
+
+  &quot;codingbean/macaw&quot;: &quot;dev-master&quot;,
+
+  &quot;illuminate/database&quot;: &quot;*&quot;,
+
+  &quot;filp/whoops&quot;: &quot;*&quot;
+
+},
+</code></pre><p>运行  composer update ，然后在  bootstrap.php  的最后添加：</p>
+<pre><code>// whoops 错误提示
+
+$whoops = new \Whoops\Run;
+
+$whoops-&gt;pushHandler(new \Whoops\Handler\PrettyPageHandler);
+
+$whoops-&gt;register();
+</code></pre><p>下面我们将增加路由配置中  无匹配项  的错误页面，修改  config/routes.php ：</p>
+<pre><code>&lt;?php
+
+use NoahBuscher\Macaw\Macaw;
+
+Macaw::get(&apos;&apos;, &apos;HomeController@home&apos;);
+
+Macaw::get(&apos;fuck&apos;, function() {
+
+  echo &quot;成功！&quot;;
+
+});
+
+Macaw::$error_callback = function() {
+
+  throw new Exception(&quot;路由无匹配项 404 Not Found&quot;);
+
+};
+
+Macaw::dispatch();
+</code></pre><p>这时随便在配的域名后面加上个路由，系统就会报错了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个项目学下来，整个目录结构差不多就这样。</p>
+<p><img src="https://raw.githubusercontent.com/ma1203580780/ma1203580780.github.io/master/images/martp目录.png" alt=""></p>
+<p>里面有几个用到的函数和概念，需要在这里做下笔记。</p>
+<h3 id="PHP写startswith和endswith"><a href="#PHP写startswith和endswith" class="headerlink" title="PHP写startswith和endswith"></a>PHP写startswith和endswith</h3><pre><code>&lt;?php
+
+function starts_with($a,$b){
+    return strpos($a, $b) &gt; 0?true: false;
+}
+
+var_dump(starts_with(&apos;I love she&apos;,&apos;L&apos;));
+
+function end_with($a,$b,$lowerorup=1){
+    // 如果$lowerorup = 0则不用区分大小写
+        $begin= $lowerorup?strpos($a,$b):stripos($a,$b);
+    if($begin){
+    echo &apos;开始于第&apos;,$begin,&apos;个字符&lt;br /&gt;&apos;;
+    echo &apos;结束于&apos;,$begin+strlen($b);
+    }
+}
+
+echo &apos;&lt;br /&gt;&apos;;
+end_with(&apos;I love she&apos;,&apos;Lov&apos;,0);
+</code></pre><h3 id="ctype-lower"><a href="#ctype-lower" class="headerlink" title="ctype_lower()"></a>ctype_lower()</h3><p>做小写字符检测,数字不能通过检测。</p>
+<pre><code>bool ctype_lower ( string $text )
+</code></pre><h3 id="strtolower"><a href="#strtolower" class="headerlink" title="strtolower()"></a>strtolower()</h3><p>函数把字符串转换为小写。</p>
+<p>相关函数：</p>
+<pre><code>lcfirst() - 把字符串中的首字符转换为小写
+strtoupper() - 把字符串转换为大写
+ucfirst() - 把字符串中的首字符转换为大写
+ucwords() - 把字符串中每个单词的首字符转换为大写
+</code></pre><h3 id="extract"><a href="#extract" class="headerlink" title="extract()"></a>extract()</h3><p>该函数使用数组键名作为变量名，使用数组键值作为变量值。针对数组中的每个元素，将在当前符号表中创建对应的一个变量。</p>
+<p>举例：</p>
+<pre><code>&lt;?php
+$a = &quot;Original&quot;;
+$my_array = array(&quot;a&quot; =&gt; &quot;Cat&quot;,&quot;b&quot; =&gt; &quot;Dog&quot;, &quot;c&quot; =&gt; &quot;Horse&quot;);
+extract($my_array);
+echo &quot;\$a = $a; \$b = $b; \$c = $c&quot;;
+?&gt;
+</code></pre><p>结果：</p>
+<pre><code>$a = Cat; $b = Dog; $c = Horse
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjgq601ur007xm52n5asl278m" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">实现一个类似tp的轻量级框架</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/03/框架/实现一个类似laravel的现代化PHP框架/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#路由组件Macaw"><span class="toc-number">1.</span> <span class="toc-text">路由组件Macaw</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Macaw代码分析"><span class="toc-number">1.1.</span> <span class="toc-text">Macaw代码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计mvc"><span class="toc-number">2.</span> <span class="toc-text">设计mvc</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规划文件夹"><span class="toc-number">2.1.</span> <span class="toc-text">规划文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用命名空间"><span class="toc-number">2.2.</span> <span class="toc-text">使用命名空间</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ORM组件illuminate-database"><span class="toc-number">3.</span> <span class="toc-text">ORM组件illuminate/database</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#错误页面提示组件whoops"><span class="toc-number">4.</span> <span class="toc-text">错误页面提示组件whoops</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP写startswith和endswith"><span class="toc-number">5.1.</span> <span class="toc-text">PHP写startswith和endswith</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctype-lower"><span class="toc-number">5.2.</span> <span class="toc-text">ctype_lower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strtolower"><span class="toc-number">5.3.</span> <span class="toc-text">strtolower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#extract"><span class="toc-number">5.4.</span> <span class="toc-text">extract()</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

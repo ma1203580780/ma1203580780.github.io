@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>实现一个类似tp的轻量级框架 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现一个类似tp的轻量级框架">
+<meta name="keywords" content="php,框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实现一个类似tp的轻量级框架">
+<meta property="og:url" content="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="实现一个类似tp的轻量级框架">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-05-02T10:10:22.326Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="实现一个类似tp的轻量级框架">
+<meta name="twitter:description" content="实现一个类似tp的轻量级框架">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-框架/实现一个类似tp的轻量级框架" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/" class="article-date">
+  <time datetime="2018-05-01T16:00:00.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/框架/">框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      实现一个类似tp的轻量级框架
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="MVC框架"><a href="#MVC框架" class="headerlink" title="MVC框架"></a>MVC框架</h2><h3 id="什么是MVC"><a href="#什么是MVC" class="headerlink" title="什么是MVC"></a>什么是MVC</h3><blockquote>
+<p>MVC模式（Model-View-Controller）是软件工程中的一种软件架构模式。</p>
+</blockquote>
+<p>MVC把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。</p>
+<p>PHP中MVC模式也称Web MVC，从上世纪70年代进化而来。</p>
+<p>MVC的目的是实现一种动态的程序设计，便于后续对程序的修改和扩展简化，并且使程序某一部分的重复利用成为可能。</p>
+<p>除此之外，此模式通过对复杂度的简化，使程序结构更加直观。</p>
+<h3 id="MVC各部分的职能"><a href="#MVC各部分的职能" class="headerlink" title="MVC各部分的职能"></a>MVC各部分的职能</h3><pre><code>模型Model – 管理大部分的业务逻辑和所有的数据库逻辑。模型提供了连接和操作数据库的抽象层。
+控制器Controller - 负责响应用户请求、准备数据，以及决定如何展示数据。
+视图View – 负责渲染数据，通过HTML方式呈现给用户。
+</code></pre><h3 id="MVC流程图"><a href="#MVC流程图" class="headerlink" title="MVC流程图"></a>MVC流程图</h3><p>一个典型的Web MVC流程：</p>
+<pre><code>Controller截获用户发出的请求；
+Controller调用Model完成状态的读写操作；
+Controller把数据传递给View；
+View渲染最终结果并呈献给用户。
+</code></pre><h3 id="为什么要自己开发MVC框架"><a href="#为什么要自己开发MVC框架" class="headerlink" title="为什么要自己开发MVC框架"></a>为什么要自己开发MVC框架</h3><p>网络上有大量优秀的MVC框架可供使用，本教程并不是为了开发一个全面的、终极的MVC框架解决方案。</p>
+<p>我们将它看作是一个很好的从内部学习PHP的机会。</p>
+<p>在此过程中，你将学习面向对象编程和MVC设计模式，并学习到开发中的一些注意事项。</p>
+<p>更重要的是，通过自制MVC框架，每个人都可以完全控制自己的框架，将你的想法融入到你开发的框架中。</p>
+<p>虽然不一定是最好的，但是你可以按照自己的方式开发各种功能。</p>
+<h2 id="开始开发自己的MVC框架"><a href="#开始开发自己的MVC框架" class="headerlink" title="开始开发自己的MVC框架"></a>开始开发自己的MVC框架</h2><h3 id="目录准备"><a href="#目录准备" class="headerlink" title="目录准备"></a>目录准备</h3><p>在开始开发前，让我们先来把项目建立好。</p>
+<p>假设我们建立的项目为 project，MVC的框架命名为 fastphp，那么接下来，第一步要把目录结构设置好。</p>
+<p>project  WEB部署目录<br>├─application           应用目录<br>│  ├─controllers        控制器目录<br>│  ├─models             模块目录<br>│  ├─views              视图目录<br>├─config                配置文件目录<br>├─fastphp               框架核心目录<br>├─static                静态文件目录<br>├─index.php             入口文件</p>
+<p>然后把Nginx或者Apache的站点根目录配置到project目录。</p>
+<h3 id="代码规范"><a href="#代码规范" class="headerlink" title="代码规范"></a>代码规范</h3><p>在目录设置好以后，我们接下来规定代码的规范：</p>
+<pre><code>MySQL的表名需小写或小写加下划线，如：item，car_orders。
+模块名（Models）需用大驼峰命名法，即首字母大写，并在名称后添加Model，如：ItemModel，CarModel。
+控制器（Controllers）需用大驼峰命名法，即首字母大写，并在名称后添加Controller，如：ItemController，CarController。
+方法名（Action）需用小驼峰命名法，即首字母小写，如：index，indexPost。
+视图（Views）部署结构为控制器名/行为名，如：item/view.php，car/buy.php。
+</code></pre><p>上述规则是为了程序能更好地相互调用。</p>
+<p>接下来就开始真正的PHP MVC编程了。</p>
+<h3 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h3><p>重定向的目的有两个：设置根目录为project所在位置，以及将所有请求都发送给 index.php 文件。</p>
+<p>如果是Apache服务器，在 project 目录下新建一个 .htaccess 文件，内容为：</p>
+<pre><code>&lt;IfModule mod_rewrite.c&gt;
+
+    RewriteEngine On
+
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+
+    RewriteRule . index.php
+&lt;/IfModule&gt;
+</code></pre><p>如果是Nginx服务器，修改配置文件，在server块中加入如下的重定向：</p>
+<pre><code>location / {
+    try_files $uri $uri/ /index.php$args;
+}
+</code></pre><h4 id="主要原因"><a href="#主要原因" class="headerlink" title="主要原因"></a>主要原因</h4><h5 id="静态文件能直接访问"><a href="#静态文件能直接访问" class="headerlink" title="静态文件能直接访问"></a>静态文件能直接访问</h5><p>如果文件或者目录真实存在，则直接访问存在的文件/目录。</p>
+<p>比如，静态文件static/css/main.css真实存在，就可以直接访问它。</p>
+<h5 id="程序有单一的入口"><a href="#程序有单一的入口" class="headerlink" title="程序有单一的入口"></a>程序有单一的入口</h5><p>这种情况是请求地址不是真实存在的文件或目录，这样请求就会传到 index.php 上。</p>
+<p>例如，访问地址：localhost/item/view/1，在文件系统中并不存在这样的文件或目录。</p>
+<p>那么，Apache或Nginx服务器会把请求发给index.php，并且把域名之后的字符串赋值给REQUEST_URI变量。</p>
+<p>这样在PHP中用$_SERVER[‘REQUEST_URI’]就能拿到/item/view/1；</p>
+<h5 id="可以用来生成美化的URL，利于SEO。"><a href="#可以用来生成美化的URL，利于SEO。" class="headerlink" title="可以用来生成美化的URL，利于SEO。"></a>可以用来生成美化的URL，利于SEO。</h5><h3 id="入口文件"><a href="#入口文件" class="headerlink" title="入口文件"></a>入口文件</h3><p>接下来，在 project 目录下新建 index.php 入口文件，文件内容为：</p>
+<pre><code>&lt;?php
+
+define(&apos;APP_PATH&apos;, __DIR__ . &apos;/&apos;);
+
+
+define(&apos;APP_DEBUG&apos;, true);
+
+
+require(APP_PATH . &apos;fastphp/Fastphp.php&apos;);
+
+
+$config = require(APP_PATH . &apos;config/config.php&apos;);
+
+
+(new Fastphp($config))-&gt;run();
+</code></pre><p>注意，上面的PHP代码中，并没有添加PHP结束符号?&gt;。</p>
+<h4 id="主要原因-1"><a href="#主要原因-1" class="headerlink" title="主要原因"></a>主要原因</h4><p>对于只有 PHP 代码的文件，最好没有结束标志 ?&gt;</p>
+<p>PHP自身并不需要结束符号，不加结束符让程序更加安全，很大程度防止了末尾被注入额外的内容。</p>
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>在入口文件中，我们加载了config.php文件的内容，那它有何作用呢？</p>
+<p>从名称不难看出，它的作用是保存一些常用配置。</p>
+<p>config.php 文件内容如下，作用是定义数据库连接参数参数，以及配置默认控制器名和操作名：</p>
+<pre><code>&lt;?php
+define(&apos;DB_NAME&apos;, &apos;project&apos;);
+define(&apos;DB_USER&apos;, &apos;root&apos;);
+define(&apos;DB_PASSWORD&apos;, &apos;123456&apos;);
+define(&apos;DB_HOST&apos;, &apos;localhost&apos;);
+
+$config[&apos;defaultController&apos;] = &apos;Item&apos;;
+$config[&apos;defaultAction&apos;] = &apos;index&apos;;
+
+return $config;
+</code></pre><p>入口中的$config变量接收到配置参数后，再传给框架的核心类，也就是Fastphp类。</p>
+<h3 id="框架核心类"><a href="#框架核心类" class="headerlink" title="框架核心类"></a>框架核心类</h3><p>入口文件对框架类做了两步操作：实例化，调用run()方法。</p>
+<p>实例化操作接受$config参数配置，并保存到类属性中。</p>
+<p>run()方法则调用用类自身方法，完成：自动加载类文件、监测开发环境、过滤敏感字符、移除全局变量的老用法、和处理路由。</p>
+<pre><code>&lt;?php
+
+class Fastphp
+{
+    protected $_config = [];
+
+    public function __construct($config)
+    {
+        $this-&gt;_config = $config;
+    }
+
+
+    public function run()
+    {
+        spl_autoload_register(array($this, &apos;loadClass&apos;));
+        $this-&gt;setReporting();
+        $this-&gt;removeMagicQuotes();
+        $this-&gt;unregisterGlobals();
+        $this-&gt;setDbConfig();
+        $this-&gt;route();
+    }
+
+
+    public function route()
+    {
+        $controllerName = $this-&gt;_config[&apos;defaultController&apos;];
+        $actionName = $this-&gt;_config[&apos;defaultAction&apos;];
+        $param = array();
+
+        $url = $_SERVER[&apos;REQUEST_URI&apos;];
+
+        $position = strpos($url, &apos;?&apos;);
+        $url = $position === false ? $url : substr($url, 0, $position);
+
+        $url = trim($url, &apos;/&apos;);
+
+        if ($url) {
+
+            $urlArray = explode(&apos;/&apos;, $url);
+
+            $urlArray = array_filter($urlArray);
+
+
+            $controllerName = ucfirst($urlArray[0]);
+
+
+            array_shift($urlArray);
+            $actionName = $urlArray ? $urlArray[0] : $actionName;
+
+
+            array_shift($urlArray);
+            $param = $urlArray ? $urlArray : array();
+        }
+
+
+        $controller = $controllerName . &apos;Controller&apos;;
+        if (!class_exists($controller)) {
+            exit($controller . &apos;控制器不存在&apos;);
+        }
+        if (!method_exists($controller, $actionName)) {
+            exit($actionName . &apos;方法不存在&apos;);
+        }
+
+
+
+
+        $dispatch = new $controller($controllerName, $actionName);
+
+
+
+        call_user_func_array(array($dispatch, $actionName), $param);
+    }
+
+
+    public function setReporting()
+    {
+        if (APP_DEBUG === true) {
+            error_reporting(E_ALL);
+            ini_set(&apos;display_errors&apos;,&apos;On&apos;);
+        } else {
+            error_reporting(E_ALL);
+            ini_set(&apos;display_errors&apos;,&apos;Off&apos;);
+            ini_set(&apos;log_errors&apos;, &apos;On&apos;);
+        }
+    }
+
+
+    public function stripSlashesDeep($value)
+    {
+        $value = is_array($value) ? array_map(array($this, &apos;stripSlashesDeep&apos;), $value) : stripslashes($value);
+        return $value;
+    }
+
+
+    public function removeMagicQuotes()
+    {
+        if (get_magic_quotes_gpc()) {
+            $_GET = isset($_GET) ? $this-&gt;stripSlashesDeep($_GET ) : &apos;&apos;;
+            $_POST = isset($_POST) ? $this-&gt;stripSlashesDeep($_POST ) : &apos;&apos;;
+            $_COOKIE = isset($_COOKIE) ? $this-&gt;stripSlashesDeep($_COOKIE) : &apos;&apos;;
+            $_SESSION = isset($_SESSION) ? $this-&gt;stripSlashesDeep($_SESSION) : &apos;&apos;;
+        }
+    }
+
+
+
+
+
+
+    public function unregisterGlobals()
+    {
+        if (ini_get(&apos;register_globals&apos;)) {
+            $array = array(&apos;_SESSION&apos;, &apos;_POST&apos;, &apos;_GET&apos;, &apos;_COOKIE&apos;, &apos;_REQUEST&apos;, &apos;_SERVER&apos;, &apos;_ENV&apos;, &apos;_FILES&apos;);
+            foreach ($array as $value) {
+                foreach ($GLOBALS[$value] as $key =&gt; $var) {
+                    if ($var === $GLOBALS[$key]) {
+                        unset($GLOBALS[$key]);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public function setDbConfig()
+    {
+        if ($this-&gt;_config[&apos;db&apos;]) {
+            Model::$dbConfig = $this-&gt;_config[&apos;db&apos;];
+        }
+    }
+
+
+    public static function loadClass($class)
+    {
+        $frameworks = __DIR__ . &apos;/&apos; . $class . &apos;.php&apos;;
+        $controllers = APP_PATH . &apos;application/controllers/&apos; . $class . &apos;.php&apos;;
+        $models = APP_PATH . &apos;application/models/&apos; . $class . &apos;.php&apos;;
+
+        if (file_exists($frameworks)) {
+
+            include $frameworks;
+        } elseif (file_exists($controllers)) {
+
+            include $controllers;
+        } elseif (file_exists($models)) {
+
+            include $models;
+        } else {
+
+        }
+    }
+}
+</code></pre><p>下面重点讲解主请求方法<br> route()，它也称路由方法，作用是：截取URL，并解析出控制器名、方法名和URL参数。</p>
+<p>假设我们的 URL 是这样：</p>
+<pre><code>yoursite.com/controllerName/actionName/queryString
+</code></pre><p>当浏览器访问上面的URL，route()从全局变量 $_SERVER[‘REQUEST_URI’]中获取到字符串/controllerName/actionName/queryString。</p>
+<p>然后，会将这个字符串分割成三部分：controller、action 和 queryString。</p>
+<p>例如，URL链接为：yoursite.com/item/view/1/hello，那么route()分割之后，</p>
+<pre><code>Controller名就是：item
+action名就是：view
+URL参数就是：array(1, hello)
+</code></pre><p>分割完成后，再实例化控制器：itemController，并调用其中的view方法 。</p>
+<h3 id="Controller基类"><a href="#Controller基类" class="headerlink" title="Controller基类"></a>Controller基类</h3><p>接下来，就是在 fastphp 中创建MVC基类，包括控制器、模型和视图三个基类。</p>
+<p>新建控制器基类，文件名 Controller.class.php，功能就是总调度，内容如下：</p>
+<pre><code>&lt;?php
+
+class Controller
+{
+    protected $_controller;
+    protected $_action;
+    protected $_view;
+
+
+    public function __construct($controller, $action)
+    {
+        $this-&gt;_controller = $controller;
+        $this-&gt;_action = $action;
+        $this-&gt;_view = new View($controller, $action);
+    }
+
+
+    public function assign($name, $value)
+    {
+        $this-&gt;_view-&gt;assign($name, $value);
+    }
+
+
+    public function render()
+    {
+        $this-&gt;_view-&gt;render();
+    }
+}
+
+Controller 类用assign()方法实现把变量保存到View对象中。
+
+这样，在调用$this-&gt; render() 后视图文件就能显示这些变量。
+</code></pre><h3 id="Model基类"><a href="#Model基类" class="headerlink" title="Model基类"></a>Model基类</h3><pre><code>新建模型基类，继承自数据库操作类Sql类（因为数据库操作比较复杂）。
+</code></pre><h4 id="模型基类-Model-class-php"><a href="#模型基类-Model-class-php" class="headerlink" title="模型基类 Model.class.php"></a>模型基类 Model.class.php</h4><pre><code>&lt;?php
+
+class Model extends Sql
+{
+    protected $_model;
+    protected $_table;
+    public static $dbConfig = [];
+
+    public function __construct()
+    {
+
+        $this-&gt;connect(self::$dbConfig[&apos;host&apos;], self::$dbConfig[&apos;username&apos;], self::$dbConfig[&apos;password&apos;],
+            self::$dbConfig[&apos;dbname&apos;]);
+
+
+        if (!$this-&gt;_table) {
+
+            $this-&gt;_model = get_class($this);
+
+            $this-&gt;_model = substr($this-&gt;_model, 0, -5);
+
+
+            $this-&gt;_table = strtolower($this-&gt;_model);
+        }
+    }
+}
+</code></pre><h4 id="数据库基类-Sql-class-php"><a href="#数据库基类-Sql-class-php" class="headerlink" title="数据库基类 Sql.class.php"></a>数据库基类 Sql.class.php</h4><pre><code>&lt;?php
+
+class Sql
+{
+    protected $_dbHandle;
+    protected $_result;
+    private $filter = &apos;&apos;;
+
+
+    public function connect($host, $username, $password, $dbname)
+    {
+        try {
+            $dsn = sprintf(&quot;mysql:host=%s;dbname=%s;charset=utf8&quot;, $host, $dbname);
+            $option = array(PDO::ATTR_DEFAULT_FETCH_MODE =&gt; PDO::FETCH_ASSOC);
+            $this-&gt;_dbHandle = new PDO($dsn, $username, $password, $option);
+        } catch (PDOException $e) {
+            exit(&apos;错误: &apos; . $e-&gt;getMessage());
+        }
+    }
+
+
+    public function where($where = array())
+    {
+        if (isset($where)) {
+            $this-&gt;filter .= &apos; WHERE &apos;;
+            $this-&gt;filter .= implode(&apos; &apos;, $where);
+        }
+
+        return $this;
+    }
+
+
+    public function order($order = array())
+    {
+        if(isset($order)) {
+            $this-&gt;filter .= &apos; ORDER BY &apos;;
+            $this-&gt;filter .= implode(&apos;,&apos;, $order);
+        }
+
+        return $this;
+    }
+
+
+    public function selectAll()
+    {
+        $sql = sprintf(&quot;select * from `%s` %s&quot;, $this-&gt;_table, $this-&gt;filter);
+        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);
+        $sth-&gt;execute();
+
+        return $sth-&gt;fetchAll();
+    }
+
+
+    public function select($id)
+    {
+        $sql = sprintf(&quot;select * from `%s` where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $id);
+        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);
+        $sth-&gt;execute();
+
+        return $sth-&gt;fetch();
+    }
+
+
+    public function delete($id)
+    {
+        $sql = sprintf(&quot;delete from `%s` where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $id);
+        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);
+        $sth-&gt;execute();
+
+        return $sth-&gt;rowCount();
+    }
+
+
+    public function query($sql)
+    {
+        $sth = $this-&gt;_dbHandle-&gt;prepare($sql);
+        $sth-&gt;execute();
+
+        return $sth-&gt;rowCount();
+    }
+
+
+    public function add($data)
+    {
+        $sql = sprintf(&quot;insert into `%s` %s&quot;, $this-&gt;_table, $this-&gt;formatInsert($data));
+
+        return $this-&gt;query($sql);
+    }
+
+
+    public function update($id, $data)
+    {
+        $sql = sprintf(&quot;update `%s` set %s where `id` = &apos;%s&apos;&quot;, $this-&gt;_table, $this-&gt;formatUpdate($data), $id);
+
+        return $this-&gt;query($sql);
+    }
+
+
+    private function formatInsert($data)
+    {
+        $fields = array();
+        $values = array();
+        foreach ($data as $key =&gt; $value) {
+            $fields[] = sprintf(&quot;`%s`&quot;, $key);
+            $values[] = sprintf(&quot;&apos;%s&apos;&quot;, $value);
+        }
+
+        $field = implode(&apos;,&apos;, $fields);
+        $value = implode(&apos;,&apos;, $values);
+
+        return sprintf(&quot;(%s) values (%s)&quot;, $field, $value);
+    }
+
+
+    private function formatUpdate($data)
+    {
+        $fields = array();
+        foreach ($data as $key =&gt; $value) {
+            $fields[] = sprintf(&quot;`%s` = &apos;%s&apos;&quot;, $key, $value);
+        }
+
+        return implode(&apos;,&apos;, $fields);
+    }
+}
+</code></pre><p>应该说，Sql.class.php 是框架的核心部分。为什么？</p>
+<p>因为通过它，我们创建了一个 SQL 抽象层，可以大大减少了数据库的编程工作。</p>
+<p>虽然 PDO 接口本来已经很简洁，但是抽象之后框架的可灵活性更高。</p>
+<p>这里的数据库句柄$this-&gt;_dbHandle还能用单例模式返回，让数据读写更高效，这部分可自行实现。</p>
+<h3 id="View基类"><a href="#View基类" class="headerlink" title="View基类"></a>View基类</h3><h4 id="视图基类-View-class-php"><a href="#视图基类-View-class-php" class="headerlink" title="视图基类 View.class.php"></a>视图基类 View.class.php</h4><pre><code>&lt;?php
+
+class View
+{
+    protected $variables = array();
+    protected $_controller;
+    protected $_action;
+
+    function __construct($controller, $action)
+    {
+        $this-&gt;_controller = $controller;
+        $this-&gt;_action = $action;
+    }
+
+
+    public function assign($name, $value)
+    {
+        $this-&gt;variables[$name] = $value;
+    }
+
+
+    public function render()
+    {
+        extract($this-&gt;variables);
+        $defaultHeader = APP_PATH . &apos;application/views/header.php&apos;;
+        $defaultFooter = APP_PATH . &apos;application/views/footer.php&apos;;
+
+        $controllerHeader = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/header.php&apos;;
+        $controllerFooter = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/footer.php&apos;;
+        $controllerLayout = APP_PATH . &apos;application/views/&apos; . $this-&gt;_controller . &apos;/&apos; . $this-&gt;_action . &apos;.php&apos;;
+
+
+        if (file_exists($controllerHeader)) {
+            include ($controllerHeader);
+        } else {
+            include ($defaultHeader);
+        }
+
+        include ($controllerLayout);
+
+
+        if (file_exists($controllerFooter)) {
+            include ($controllerFooter);
+        } else {
+            include ($defaultFooter);
+        }
+    }
+}
+</code></pre><p>这样，核心的PHP MVC框架核心就完成了。</p>
+<p>下面我们编写应用来测试框架功能。</p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="部署数据库"><a href="#部署数据库" class="headerlink" title="部署数据库"></a>部署数据库</h3><p>在 SQL 中新建一个 project 数据库，增加一个item 表、并插入两条记录，命令如下：</p>
+<pre><code>CREATE DATABASE `project` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `project`;
+
+CREATE TABLE `item` (
+    `id` int(11) NOT NULL auto_increment,
+    `item_name` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+INSERT INTO `item` VALUES(1, &apos;Hello World.&apos;);
+INSERT INTO `item` VALUES(2, &apos;Lets go!&apos;);
+</code></pre><h3 id="部署模型"><a href="#部署模型" class="headerlink" title="部署模型"></a>部署模型</h3><p>然后，我们还需要在 models 目录中创建一个 ItemModel.php 模型，内容如下：</p>
+<pre><code>&lt;?php
+
+
+class ItemModel extends Model
+{
+    public $_table = &apos;item&apos;;
+}
+</code></pre><p>因为 Item 模型继承了 Model基类，所以它拥有 Model 类的所有功能。</p>
+<h3 id="部署控制器"><a href="#部署控制器" class="headerlink" title="部署控制器"></a>部署控制器</h3><p>在 controllers 目录下创建一个 ItemController.php 控制器，内容如下：</p>
+<pre><code>&lt;?php
+
+class ItemController extends Controller
+{
+
+    public function index()
+    {
+        $items = (new ItemModel)-&gt;selectAll();
+
+        $this-&gt;assign(&apos;title&apos;, &apos;全部条目&apos;);
+        $this-&gt;assign(&apos;items&apos;, $items);
+        $this-&gt;render();
+    }
+
+
+    public function add()
+    {
+        $data[&apos;item_name&apos;] = $_POST[&apos;value&apos;];
+        $count = (new ItemModel)-&gt;add($data);
+
+        $this-&gt;assign(&apos;title&apos;, &apos;添加成功&apos;);
+        $this-&gt;assign(&apos;count&apos;, $count);
+        $this-&gt;render();
+    }
+
+
+    public function view($id = null)
+    {
+        $item = (new ItemModel)-&gt;select($id);
+
+        $this-&gt;assign(&apos;title&apos;, &apos;正在查看&apos; . $item[&apos;item_name&apos;]);
+        $this-&gt;assign(&apos;item&apos;, $item);
+        $this-&gt;render();
+    }
+
+
+    public function update()
+    {
+        $data = array(&apos;id&apos; =&gt; $_POST[&apos;id&apos;], &apos;item_name&apos; =&gt; $_POST[&apos;value&apos;]);
+        $count = (new ItemModel)-&gt;update($data[&apos;id&apos;], $data);
+
+        $this-&gt;assign(&apos;title&apos;, &apos;修改成功&apos;);
+        $this-&gt;assign(&apos;count&apos;, $count);
+        $this-&gt;render();
+    }
+
+
+    public function delete($id = null)
+    {
+        $count = (new ItemModel)-&gt;delete($id);
+
+        $this-&gt;assign(&apos;title&apos;, &apos;删除成功&apos;);
+        $this-&gt;assign(&apos;count&apos;, $count);
+        $this-&gt;render();
+    }
+}
+</code></pre><h3 id="部署视图"><a href="#部署视图" class="headerlink" title="部署视图"></a>部署视图</h3><p>在 views 目录下新建 header.php 和 footer.php 两个页头页脚模板，如下。</p>
+<h4 id="header-php"><a href="#header-php" class="headerlink" title="header.php"></a>header.php</h4><pre><code>&lt;html&gt;
+&lt;head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+    &lt;title&gt;&lt;?php echo $title ?&gt;&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/static/css/main.css&quot; type=&quot;text/css&quot; /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;&lt;?php echo $title ?&gt;&lt;/h1&gt;
+</code></pre><h4 id="footer-php"><a href="#footer-php" class="headerlink" title="footer.php"></a>footer.php</h4><pre><code>&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p>页头文件用到了main.css样式文件，内容：</p>
+<pre><code>input {
+    font-family:georgia,times;
+    font-size:24px;
+    line-height:1.2em;
+}
+
+a {
+    color:blue;
+    font-family:georgia,times;
+    font-size:20px;
+    line-height:1.2em;
+    text-decoration:none;
+}
+
+a:hover {
+    text-decoration:underline;
+}
+
+h1 {
+    color:#000000;
+    font-size:41px;
+    border-bottom:1px dotted #cccccc;
+}
+</code></pre><p>然后，在 views/item 创建以下几个视图文件。</p>
+<h4 id="index-php-浏览数据库内-item-表的所有记录"><a href="#index-php-浏览数据库内-item-表的所有记录" class="headerlink" title="index.php[浏览数据库内 item 表的所有记录]"></a>index.php[浏览数据库内 item 表的所有记录]</h4><pre><code>&lt;form action=&quot;/item/add&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;text&quot; value=&quot;点击添加&quot; onclick=&quot;this.value=&apos;&apos;&quot; name=&quot;value&quot;&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;添加&quot;&gt;
+&lt;/form&gt;
+&lt;br/&gt;
+&lt;?php foreach ($items as $item): ?&gt;
+    &lt;a class=&quot;big&quot; href=&quot;/item/view/&lt;?php echo $item[&apos;id&apos;] ?&gt;&quot; title=&quot;点击修改&quot;&gt;
+        &lt;span class=&quot;item&quot;&gt;
+            &lt;?php echo $item[&apos;id&apos;] ?&gt;
+            &lt;?php echo $item[&apos;item_name&apos;] ?&gt;
+        &lt;/span&gt;
+    &lt;/a&gt;
+    ----
+    &lt;a class=&quot;big&quot; href=&quot;/item/delete/&lt;?php echo $item[&apos;id&apos;]?&gt;&quot;&gt;删除&lt;/a&gt;
+&lt;br/&gt;
+&lt;?php endforeach ?&gt;
+</code></pre><h4 id="add-php-添加记录"><a href="#add-php-添加记录" class="headerlink" title="add.php[添加记录]"></a>add.php[添加记录]</h4><pre><code>&lt;a class=&quot;big&quot; href=&quot;/item/index&quot;&gt;成功添加&lt;?php echo $count ?&gt;条记录，点击返回&lt;/a&gt;
+</code></pre><h4 id="view-php-查看单条记录"><a href="#view-php-查看单条记录" class="headerlink" title="view.php[查看单条记录]"></a>view.php[查看单条记录]</h4><pre><code>&lt;form action=&quot;/item/update&quot; method=&quot;post&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;value&quot; value=&quot;&lt;?php echo $item[&apos;item_name&apos;] ?&gt;&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;&lt;?php echo $item[&apos;id&apos;] ?&gt;&quot;&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;修改&quot;&gt;
+&lt;/form&gt;
+</code></pre><p><a class="big" href="/item/index">返回</a></p>
+<h4 id="update-php-更改记录"><a href="#update-php-更改记录" class="headerlink" title="update.php[更改记录]"></a>update.php[更改记录]</h4><pre><code>&lt;a class=&quot;big&quot; href=&quot;/item/index&quot;&gt;成功修改&lt;?php echo $count ?&gt;项，点击返回&lt;/a&gt;
+</code></pre><h4 id="delete-php-删除记录"><a href="#delete-php-删除记录" class="headerlink" title="delete.php[删除记录]"></a>delete.php[删除记录]</h4><pre><code>&lt;a href=&quot;/item/index&quot;&gt;成功删除&lt;?php echo $count ?&gt;项，点击返回&lt;/a&gt;
+</code></pre><h3 id="应用测试"><a href="#应用测试" class="headerlink" title="应用测试"></a>应用测试</h3><p>这样，在浏览器中访问 project程序：<a href="http://localhost/item/index/，就可以看到效果了。" target="_blank" rel="external">http://localhost/item/index/，就可以看到效果了。</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjgq601uu0084m52nio3qvmju" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          实现一个类似laravel的现代化PHP框架
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">nginx中的PHP_VALUE</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/02/框架/实现一个类似tp的轻量级框架/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MVC框架"><span class="toc-number">1.</span> <span class="toc-text">MVC框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是MVC"><span class="toc-number">1.1.</span> <span class="toc-text">什么是MVC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MVC各部分的职能"><span class="toc-number">1.2.</span> <span class="toc-text">MVC各部分的职能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MVC流程图"><span class="toc-number">1.3.</span> <span class="toc-text">MVC流程图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要自己开发MVC框架"><span class="toc-number">1.4.</span> <span class="toc-text">为什么要自己开发MVC框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始开发自己的MVC框架"><span class="toc-number">2.</span> <span class="toc-text">开始开发自己的MVC框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目录准备"><span class="toc-number">2.1.</span> <span class="toc-text">目录准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码规范"><span class="toc-number">2.2.</span> <span class="toc-text">代码规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重定向"><span class="toc-number">2.3.</span> <span class="toc-text">重定向</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要原因"><span class="toc-number">2.3.1.</span> <span class="toc-text">主要原因</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#静态文件能直接访问"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">静态文件能直接访问</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#程序有单一的入口"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">程序有单一的入口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#可以用来生成美化的URL，利于SEO。"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">可以用来生成美化的URL，利于SEO。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#入口文件"><span class="toc-number">2.4.</span> <span class="toc-text">入口文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要原因-1"><span class="toc-number">2.4.1.</span> <span class="toc-text">主要原因</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件"><span class="toc-number">2.5.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架核心类"><span class="toc-number">2.6.</span> <span class="toc-text">框架核心类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller基类"><span class="toc-number">2.7.</span> <span class="toc-text">Controller基类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Model基类"><span class="toc-number">2.8.</span> <span class="toc-text">Model基类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#模型基类-Model-class-php"><span class="toc-number">2.8.1.</span> <span class="toc-text">模型基类 Model.class.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库基类-Sql-class-php"><span class="toc-number">2.8.2.</span> <span class="toc-text">数据库基类 Sql.class.php</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View基类"><span class="toc-number">2.9.</span> <span class="toc-text">View基类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#视图基类-View-class-php"><span class="toc-number">2.9.1.</span> <span class="toc-text">视图基类 View.class.php</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-number">3.</span> <span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署数据库"><span class="toc-number">3.1.</span> <span class="toc-text">部署数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署模型"><span class="toc-number">3.2.</span> <span class="toc-text">部署模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署控制器"><span class="toc-number">3.3.</span> <span class="toc-text">部署控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署视图"><span class="toc-number">3.4.</span> <span class="toc-text">部署视图</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#header-php"><span class="toc-number">3.4.1.</span> <span class="toc-text">header.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#footer-php"><span class="toc-number">3.4.2.</span> <span class="toc-text">footer.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#index-php-浏览数据库内-item-表的所有记录"><span class="toc-number">3.4.3.</span> <span class="toc-text">index.php[浏览数据库内 item 表的所有记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#add-php-添加记录"><span class="toc-number">3.4.4.</span> <span class="toc-text">add.php[添加记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#view-php-查看单条记录"><span class="toc-number">3.4.5.</span> <span class="toc-text">view.php[查看单条记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#update-php-更改记录"><span class="toc-number">3.4.6.</span> <span class="toc-text">update.php[更改记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete-php-删除记录"><span class="toc-number">3.4.7.</span> <span class="toc-text">delete.php[删除记录]</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用测试"><span class="toc-number">3.5.</span> <span class="toc-text">应用测试</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

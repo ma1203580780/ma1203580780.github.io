@@ -1,21 +1,3 @@
-/*!
- * Elevator.js
- *
- * MIT licensed
- * Copyright (C) 2015 Tim Holman, http://tholman.com
- */
-
-/*********************************************
- * Elevator.js
- *********************************************/
-ar _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?d27cabaa647fd27534f8316b6b3a2ed2";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-
 var Elevator = function (options) {
 
     'use strict';

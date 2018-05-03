@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>laravel核心概念 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="laravel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel核心概念">
+<meta property="og:url" content="http://martist.cn/2017/09/27/LARAVEL/laravel核心概念/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-03T05:33:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="laravel核心概念">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-LARAVEL/laravel核心概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/27/LARAVEL/laravel核心概念/" class="article-date">
+  <time datetime="2017-09-26T16:00:00.000Z" itemprop="datePublished">2017-09-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/laravel/">laravel</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      laravel核心概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>本文是基于laravel 5.1项目源码解析的。</p>
+<h1 id="Ioc"><a href="#Ioc" class="headerlink" title="Ioc"></a>Ioc</h1><p>route.php文件中，</p>
+<pre><code>Class Foo{}//如果没有这个class会报错。
+
+Route::get(&apos;/&apos;,function(Foo $foo){
+  dd($foo);
+});
+</code></pre><p>Foo $foo 是依赖注入的写法，</p>
+<p>laravel框架利用反射机制，尝试解释语义Foo $foo，<br>在laravel内核执行实例化</p>
+<pre><code>$foo = new Foo();
+</code></pre><p>当laravel尝试new依赖的这个类，找不到的话就会报错找不到这个类。</p>
+<p>当laravel找到的依赖的类。这个类本身依赖注入的类不明确时。<br>会爆其他错误：不能解析。</p>
+<p>另一种方式</p>
+<p>当使用App:bind这个方法时，laravel会优先通过这里加载这个类<br>而不是 反射机制 根据命名空间或者require路径去寻找。</p>
+<pre><code>App::bind(&apos;Foo&apos;,function(){
+    dd(&apos;called here&apos;);
+    return new Foo();
+})
+</code></pre><hr>
+<h1 id="service-provider"><a href="#service-provider" class="headerlink" title="service provider"></a>service provider</h1><p>service provider 的类中，有意义的是register（）方法，</p>
+<p>在index.php里面有$app这个变量，这是框架的核心。</p>
+<pre><code>$this-&gt;app-&gt;sigleton(&apos;files&apos;,functionZ(){
+    return new Filesystem;
+})
+</code></pre><p>在这里的‘files’我们可以看做键名，指向Filesystem这个类的实例化。<br>这样我们可以在路由中试用下看看。</p>
+<pre><code>Route::get(&apos;/&apos;,function(Foo $foo){
+  $content = app(&apos;files&apos;)-&gt;get(__DIR__.&apos;/kernel.php&apos;);
+  dd($content);
+});
+//打印出来这个文件的内容
+</code></pre><p>使用service provider中注册并提供一个简明的键名去申明这个类，<br>可以节约代码，易于管理。</p>
+<h1 id="在Ioc容器中添加自己的类"><a href="#在Ioc容器中添加自己的类" class="headerlink" title="在Ioc容器中添加自己的类"></a>在Ioc容器中添加自己的类</h1><p>比如说项目中需要收费的功能，</p>
+<p>app目录下新建目录billing，生成类文件</p>
+<pre><code>Class stripe{
+  public function pay(){
+        dd(&apos;I pay&apos;);
+    }
+}
+</code></pre><p>artisan命令：<br>php artisan  make:provider BillingServicePovider</p>
+<p>在 app/Providers目录下生成BillingServicePovider.php文件，<br>里面有意义的就是register（），我们在这里面注册stripe类。</p>
+<pre><code>public function register(){
+  $this-&gt;app-&gt;bind(&apos;billing&apos;,fintion(){
+    return new Stripe();
+    });
+}
+</code></pre><p>再把它放到IOC容器中，config/app.php中添加。</p>
+<p>此时，app(‘billing’)就可以相当于new Stripe()了。</p>
+<p>app(‘billing’)-&gt;pay();//输出 I pay</p>
+<h1 id="Facade-门面-运行机制"><a href="#Facade-门面-运行机制" class="headerlink" title="Facade(门面)运行机制"></a>Facade(门面)运行机制</h1><p>config/app.php下  alias数组，</p>
+<p>用IDE的查找类的功能点进去，比如点route,Mail<br>进去一个类是继承的Facade，</p>
+<p>里面有 getFacadeAccessor()函数返回一个字符串，//return ‘mailer’;<br>这个字符串对应MailserviceProvider.php中register()的字符串。</p>
+<p>Facade类里面有__callStatic(),里面有</p>
+<pre><code>$instance = static::getFacadeRoot();//IOC容器生成$instance，可以使用真正类中的方法
+
+//看下面
+pubilic static function getFacadeRoot(){
+  return static::resolveFacadeInstance(static::getFacadeAccessor());//app(&apos;mailer&apos;);
+}
+</code></pre><p>流程：</p>
+<p>app.php下的别名数组的值指向一个类，这个类通过返回给Facade一个字符串实现app（‘name’）,<br>然后通过serviceProvider去注册返回实例化之后的类。</p>
+<hr>
+<h1 id="contract-契约"><a href="#contract-契约" class="headerlink" title="contract (契约)"></a>contract (契约)</h1><p>在项目目录framework/src/Illuminate/Contracts下面定义了很多interface。</p>
+<p>面向接口编程。在依赖注入中很大好处。该目录下的类都是接口类。</p>
+<p>比如：Config真正是新的类，在Illuminate\Contracts\Config\Repository，</p>
+<p>app()方法:</p>
+<pre><code>dd(app(&apos;Illuminate\Contracts\Config\Repository&apos;)[&apos;database&apos;][&apos;default&apos;]);//可以得到 mysql
+
+dd(Config::get());//可以看到laravel的配置
+
+dd(app(&apos;config&apos;)[&apos;database&apos;][&apos;default&apos;]);//可以得到 mysql
+</code></pre><p>contract给出整个框架给出的扩展接口，比如config类不能满足你的需求，<br>可以自己集成config接口实现这个类。</p>
+<h1 id="Container的背后"><a href="#Container的背后" class="headerlink" title="Container的背后"></a>Container的背后</h1><p>这几种的返回结果都一样</p>
+<pre><code>dd(Hash::make(&apos;pwd&apos;));//dsdsvdrssrbsssret5u4h6l8m
+
+dd(app(&apos;Hash&apos;)-&gt;make(&apos;pwd&apos;));
+
+dd(app()[&apos;Hash&apos;]-&gt;make(&apos;pwd&apos;));
+
+dd(app(&apos;Illuminate\Hashing\BcryptHasher&apos;)-&gt;make(&apos;pwd&apos;));
+</code></pre><p>想知道laravel单个功能的源代码，比如hash的功能，去serviceProvider去找。</p>
+<pre><code>$this-&gt;app-&gt;singleton(&apos;hash&apos;,function(){
+  return new BcryptHasher;
+})
+</code></pre><p>singleton，bind是在核心的Contianer里面，</p>
+<p>callFunction 是 Clouse ，会在singleton，bind中进行判断。</p>
+<p>singleton，将hash的值保存到container的binding数组。</p>
+<p>make(),build()可以通过serviceProvider、别名实现实例。</p>
+<p>app（）判断传入的是key =&gt; serviceProvider去实现实例</p>
+<p>包含命名空间的类 =&gt; Application.php  中 registerCoreContainerAliases()</p>
+<p>Application.php里面是laravel的核心内容。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/09/27/LARAVEL/laravel核心概念/" data-id="cjgq601qk000hm52nsnjuygt6" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/10/10/PHP/php中的break和continue/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          php中的break和continue
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/09/19/PHP/导出文件并提供下载/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">导出文件并提供下载</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/09/27/LARAVEL/laravel核心概念/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ioc"><span class="toc-number">1.</span> <span class="toc-text">Ioc</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#service-provider"><span class="toc-number">2.</span> <span class="toc-text">service provider</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#在Ioc容器中添加自己的类"><span class="toc-number">3.</span> <span class="toc-text">在Ioc容器中添加自己的类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Facade-门面-运行机制"><span class="toc-number">4.</span> <span class="toc-text">Facade(门面)运行机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#contract-契约"><span class="toc-number">5.</span> <span class="toc-text">contract (契约)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Container的背后"><span class="toc-number">6.</span> <span class="toc-text">Container的背后</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

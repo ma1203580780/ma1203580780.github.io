@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>文件上传OSS三部曲（二） | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php,laravel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件上传OSS三部曲（二）">
+<meta property="og:url" content="http://martist.cn/2016/05/26/PHP/文件上传OSS 三部曲（二）/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png">
+<meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/e796006d97c90765aa0bb498b70495c2.png">
+<meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/863ca729c4b943e6ae34516ed461b18e.png">
+<meta property="og:image" content="http://ohszpnte4.bkt.clouddn.com/image/3ada2871d6b39a6a1ee765410dbe52b8.png">
+<meta property="og:updated_time" content="2017-10-03T05:40:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文件上传OSS三部曲（二）">
+<meta name="twitter:description" content="：-}">
+<meta name="twitter:image" content="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/文件上传OSS 三部曲（二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/05/26/PHP/文件上传OSS 三部曲（二）/" class="article-date">
+  <time datetime="2016-05-25T16:00:00.000Z" itemprop="datePublished">2016-05-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      文件上传OSS三部曲（二）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>本文讲解如何讲解客户端文件上传aliOSS。<br><strong>要点</strong><br>签名在服务端（php）完成，然后直接通过表单上传到OSS 。<br><strong>背景</strong><br>每个用OSS的用户，都会用到上传。由于是网页上传，其中包括一些APP里面的html5页面，对上传的需求很强烈，很多人采用的做法是用户在浏览器／APP上传到应用服务器，然后应用服务器再把文件上传到OSS。<br><img src="http://ohszpnte4.bkt.clouddn.com/image/c436b7458bdf5f618711bf2d949688cd.png" alt=""></p>
+<blockquote>
+<p>这种方法有三个<strong>缺点</strong>，<br>第一：上传慢，先上传到应用服务器，再上传到OSS，网络传送多了一倍，而且OSS是采用BGP带宽，能保证各地各运营商的速度。<br>第二：扩展性不好，如果后续用户多了，应用服务器会成为瓶颈。<br>第三：费用高，因为OSS上传流量是免费的。如果数据直传到OSS，不走应用服务器。那么将能省下几台应用服务器。 </p>
+</blockquote>
+<p>相对于文件上传三部曲（一）的操作，我们提出<strong>改进方案</strong>：</p>
+<blockquote>
+<p>客户端用JS直接签名，然后上传到OSS </p>
+</blockquote>
+<p><img src="http://ohszpnte4.bkt.clouddn.com/image/e796006d97c90765aa0bb498b70495c2.png" alt=""></p>
+<p>OSS的PostObject API细节可以参照(看不懂没有关系)：<br><a href="https://docs.aliyun.com/#/pub/oss/api-reference/object&amp;PostObject" target="_blank" rel="external">https://docs.aliyun.com/#/pub/oss/api-reference/object&amp;PostObject</a><br>这里有一个很严重的安全隐患。就是OSS AccessId/AccessKey暴露在前端页面。可以随意拿到accessid/accesskey. 这是非常不安全的做法<br>将此例子进化，签名及上传policy从后端php代码取。<br>请求逻辑是：<br>1.客户端要上传图片时,到应用服务器取上传的policy及签名<br>2.客户端拿到签名直接上传到OSS<br><img src="http://ohszpnte4.bkt.clouddn.com/image/863ca729c4b943e6ae34516ed461b18e.png" alt=""><br><strong>示例</strong>                              </p>
+<p>直接用网页访问：<a href="http://oss-demo.aliyuncs.com/oss-h5-upload-js-php/index.html" target="_blank" rel="external">http://oss-demo.aliyuncs.com/oss-h5-upload-js-php/index.html</a>  </p>
+<p>用手机测试该上传是否有效。二维码：可以用手机(微信，QQ，手机浏览器等）扫一扫试试（这个不是广告，只是上述网址的二维码。这为了让大家看一下这个实现能在手机端完美运行。）<br>文件上传是上传到一个测试的公共 bucket , 会定时清理，所以不要传一些敏感及重要数据<br><img src="http://ohszpnte4.bkt.clouddn.com/image/3ada2871d6b39a6a1ee765410dbe52b8.png" alt=""><br><strong>原理 </strong></p>
+<p>设置plupload 上传参数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">multipart_params: &#123;</div><div class="line">    &apos;key&apos; : key + &apos;$&#123;filename&#125;&apos;　//后面会介绍到，key是应用服务器返回的，指定用户必须以这个前缀上传文件。</div><div class="line">    &apos;policy&apos;: policyBase64,</div><div class="line">    &apos;OSSAccessKeyId&apos;: accessid,</div><div class="line">    &apos;success_action_status&apos; : &apos;200&apos;, //让服务端返回200,不然，默认会返回204</div><div class="line">    &apos;signature&apos;: signature,</div><div class="line">&#125;,</div></pre></td></tr></table></figure></p>
+<p>js最主要是从后端取到policyBase64, 及accessid,及signature这三个变量。 往后端取这三个变量核心代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">phpUrl = &apos;./php/get.php&apos;</div><div class="line">        xmlhttp.open( &quot;GET&quot;, phpUrl, false );</div><div class="line">        xmlhttp.send( null );</div><div class="line">        var obj = eval (&quot;(&quot; + xmlhttp.responseText+ &quot;)&quot;);</div><div class="line">        host = obj[&apos;host&apos;]</div><div class="line">        policyBase64 = obj[&apos;policy&apos;]</div><div class="line">        accessid = obj[&apos;accessid&apos;]</div><div class="line">        signature = obj[&apos;signature&apos;]</div><div class="line">        expire = parseInt(obj[&apos;expire&apos;])</div><div class="line">        key = obj[&apos;dir&apos;]</div></pre></td></tr></table></figure></p>
+<p> 现在咱们来一起解析一下xmlhttp.responseText（这个是我设计的范围，并不一定要求是以下的格式，但是必须有signature, accessid, policy这三个值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;accessid&quot;:&quot;6MKOqxGiGU4AUk44&quot;,</div><div class="line">&quot;host&quot;:&quot;http://post-test.oss-cn-hangzhou.aliyuncs.com&quot;,</div><div class="line">&quot;policy&quot;:&quot;eyJleHBpcmF0aW9uIjoiMjAxNS0xMS0wNVQyMDoyMzoyM1oiLCJjxb25kaXRpb25zIjpbWyJjcb250ZW50LWxlbmd0aC1yYW5nZSIsMCwxMDQ4NTc2MDAwXSxbInN0YXJ0cy13aXRoIiwiJGtleSIsInVzZXItZGlyXC8iXV19&quot;,</div><div class="line">&quot;signature&quot;:&quot;I2u57FWjTKqX\/AE6doIdyff151E=&quot;,</div><div class="line">&quot;expire&quot;:1446726203,&quot;dir&quot;:&quot;user-dir/&quot;&#125;</div></pre></td></tr></table></figure>
+<p>第一个变量accessid: 指的用户请求的accessid,注意单知道accessid, 对数据不会有影响。<br>第二个变量host: 指的是用户要往哪个域名发往上传请求。<br>第三个变量policy:指的是用户表单上传的策略policy, 是经过base64编码过的字符串<br>第四个变更signature:是对上述第三个变量policy签名后的字符串<br>第五个变量expire:指的是当前上传策略失效时间，这个变量，并不是用来发送到OSS，因为这个已经指定在policy里面，这个变量的含义，后面讲。 </p>
+<p>现在咱们分析一下policy的内容，将其解码后的内容是： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&#123;&quot;expiration&quot;:&quot;2015-11-05T20:23:23Z&quot;,</div><div class="line">&quot;conditions&quot;:[[&quot;content-length-range&quot;,0,1048576000],</div><div class="line">[&quot;starts-with&quot;,&quot;$key&quot;,&quot;user-dir\/&quot;]]</div></pre></td></tr></table></figure>
+<p>这里有一个关键的地方，PolicyText指定了该Policy 上传失效的最终时间。即在这个失效时间之前，都可以利用这个policy上传文件，所以没有必要每次上传，都去后端取签名。减少后端的压力。在这里我的设计是：初始化上传时，每上传一个文件后，取一次签名。然后再上传时，将当前时间跟签名时间对比，看是签名时间是否失效了。如果失效了，就重新取一次签名，如果没有失效就不取。这里就用到了第五个变量expire </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">now = timestamp = Date.parse(new Date()) / 1000;</div><div class="line">[color=#000000]//可以判断当前expire是否超过了当前时间,如果超过了当前时间,就重新取一下.3s 做为缓冲[/color]</div><div class="line">    if (expire &lt; now + 3)</div><div class="line">&#123;  </div><div class="line">　　   .....</div><div class="line">　　   phpUrl = &apos;./php/get.php&apos;</div><div class="line">　　   xmlhttp.open( &quot;GET&quot;, phpUrl, false );</div><div class="line">　　   xmlhttp.send( null );</div><div class="line">　　   ......</div><div class="line">&#125;</div><div class="line">return .</div></pre></td></tr></table></figure>
+<p> 再看一下上面policy 的内容比上面增加了starts-with, 这个指定此次上传的文件名，必须是user-dir开头（这个字符串，用户可以自己指定）<br>　为什么要增加这个的含义是：很多场景，一个应用一个bucket,不同用户的数据，为了防止数字覆盖，每个人上传到OSS，可以有特定的前缀。那么问题来了，那用户获取到这个policy后，是不是在失效期内，都能修改上传前缀，从而上传到别人的目录呢？所以，应用服务器可以在上传时就指定让用户传文件时，必须是某个前缀。如果用户拿到了policy他也没有办法上传别人的前缀上。保证了数据的安全性。 </p>
+<p> 代码下载：<a href=" http://blogxiao.oss-cn-shanghai.aliyuncs.com/oss-h5-upload-js-php.tar.gz" target="_blank" rel="external">Touch Me</a><br> <hr><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> <strong>注意，下面实战讲解：</strong><br> 最近在做一个创业公司网站的新闻模块，新闻视频采用了这种直传的方式。<br> 在这贴上我的代码好了<br> <strong>控制器：</strong></p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">     * 视频上传</div><div class="line">     * */</div><div class="line"></div><div class="line">    public function gmt_iso8601($time) &#123;</div><div class="line">        $dStr = date(&apos;Y-m-d H:i:s&apos;,$time);</div><div class="line">        $expiration = str_replace(&quot; &quot;,&quot;T&quot;,$dStr);</div><div class="line">       return $expiration.&quot;Z&quot;;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    public function ueditor()&#123;</div><div class="line">        return view(&apos;admin.news.ueditor&apos;);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">    public function upload()</div><div class="line">    &#123;</div><div class="line">        $id= &apos;xxxxxxxxxxxxx;</div><div class="line">        $key= &apos;CCCCCCCCCCCCCCCC&apos;;</div><div class="line">        $host = &apos;http://youself.oss-cn-beijing.aliyuncs.com&apos;;</div><div class="line"></div><div class="line">       $now = time();</div><div class="line">        $expire = 30; //设置该policy超时时间是30s. 即这个policy过了这个有效时间，不能访问</div><div class="line">        $end = $now + $expire;</div><div class="line">        $expiration = $this-&gt;gmt_iso8601($end);</div><div class="line">        $dir = &apos;news/video/&apos;;</div><div class="line"></div><div class="line">        //最大文件大小.用户可以自己设置</div><div class="line">        $condition = array(0=&gt;&apos;content-length-range&apos;, 1=&gt;0, 2=&gt;1048576000);</div><div class="line">        $conditions[] = $condition;</div><div class="line"></div><div class="line">        //表示用户上传的数据,必须是以$dir开始, 不然上传会失败,这一步不是必须项,只为了安全起见,防止用户通过policy上传到别人的目录</div><div class="line">        $start = array(0=&gt;&apos;starts-with&apos;, 1=&gt;&apos;$key&apos;, 2=&gt;$dir);</div><div class="line">        $conditions[] = $start;</div><div class="line"></div><div class="line"></div><div class="line">        $arr = array(&apos;expiration&apos;=&gt;$expiration,&apos;conditions&apos;=&gt;$conditions);</div><div class="line">        //echo json_encode($arr);</div><div class="line">        //return;</div><div class="line">        $policy = json_encode($arr);</div><div class="line">        $base64_policy = base64_encode($policy);</div><div class="line">        $string_to_sign = $base64_policy;</div><div class="line">        $signature = base64_encode(hash_hmac(&apos;sha1&apos;, $string_to_sign, $key, true));</div><div class="line"></div><div class="line">        $response = array();</div><div class="line">        $response[&apos;accessid&apos;] = $id;</div><div class="line">        $response[&apos;host&apos;] = $host;</div><div class="line">        $response[&apos;policy&apos;] = $base64_policy;</div><div class="line">        $response[&apos;signature&apos;] = $signature;</div><div class="line">        $response[&apos;expire&apos;] = $end;</div><div class="line">        //这个参数是设置用户上传指定的前缀</div><div class="line">        $response[&apos;dir&apos;] = $dir;</div><div class="line">        echo json_encode($response);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p> <strong>blade模板</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> @section(&apos;script&apos;)</div><div class="line"> //引入js</div><div class="line">    &lt;script src=&apos;&#123;&#123; asset(&apos;js/htmlToOSS/lib/plupload-2.1.2/js/plupload.full.min.js&apos;)&#125;&#125;&apos;&gt;&lt;/script&gt;&quot; +</div><div class="line">    &quot;&lt;script src=&apos;&#123;&#123; asset(&apos;js/htmlToOSS/upload.js&apos;)&#125;&#125;&apos;&gt;&lt;/script&gt;</div><div class="line">@endsection</div><div class="line">```  </div><div class="line"></div><div class="line"> form表单：</div></pre></td></tr></table></figure></p>
+<p> <table class="table table-bordered table-striped table-hover"><br>                  <tr><br>                      <td><br>                      <div style="display:none"><br>                          <form name="theform"><br>                              <input type="radio" name="myradio" value="local_name" checked="true/"> 上传文件名字保持本地文件名字<br>                              <input type="radio" name="myradio" value="random_name"> 上传文件名字是随机文件名, 后缀保留<br>                          </form><br>                      </div></td></tr></table></p>
+<pre><code>      &lt;h4&gt;如有新闻视频,在此飞快上传：&lt;/h4&gt;
+      &lt;div id=&quot;ossfile&quot;&gt;你的浏览器不支持flash,Silverlight或者HTML5！因此不能使用该浏览器进行视频文件上传！&lt;/div&gt;
+
+      &lt;br/&gt;
+
+      &lt;div id=&quot;container&quot; style=&quot;margin-bottom: 20px;&quot;&gt;
+          &lt;a id=&quot;selectfiles&quot; href=&quot;javascript:void(0);&quot; class=&apos;btn&apos;&gt;选择文件&lt;/a&gt;
+          &lt;a id=&quot;postfiles&quot; href=&quot;javascript:void(0);&quot; class=&apos;btn&apos;&gt;开始上传&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;pre id=&quot;console&quot;&gt;&lt;/pre&gt;
+      &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+</code></pre><p>```</p>
+<p><strong> 附录</strong><br><a href="https://bbs.aliyun.com/read/262307.html?spm=5176.bbsl211.0.0.8gmdkz" target="_blank" rel="external">OSS官链</a><br><a href="https://promotion.aliyun.com/ntms/act/ossdoclist.html" target="_blank" rel="external">OSS用户成长</a></p>
+<p><strong>Thanks</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/05/26/PHP/文件上传OSS 三部曲（二）/" data-id="cjgq601sx004em52nydfvxoow" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/24/框架/同步与异步，阻塞与非阻塞/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          同步与异步，阻塞和非阻塞
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/05/22/PHP/文件上传OSS三部曲（一）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">文件上传OSS三部曲（一）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2016/05/26/PHP/文件上传OSS 三部曲（二）/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/">实现一个类似laravel的现代化PHP框架</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/">实现一个类似tp的轻量级框架</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/">nginx中的PHP_VALUE</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/20/PHP/php性能分析入门/">php7性能分析-xhprof【laravel】</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/18/健身/深蹲怎么不伤膝盖/">深蹲怎么不伤膝盖</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

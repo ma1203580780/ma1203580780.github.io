@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>git教程(三) | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git教程(三)">
+<meta property="og:url" content="http://martist.cn/2016/01/05/GIT/git教程3/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-02T09:15:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git教程(三)">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-GIT/git教程3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/01/05/GIT/git教程3/" class="article-date">
+  <time datetime="2016-01-04T16:00:00.000Z" itemprop="datePublished">2016-01-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/git/">git</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      git教程(三)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h1 id="讲下git的工作流程。"><a href="#讲下git的工作流程。" class="headerlink" title="讲下git的工作流程。"></a>讲下git的工作流程。</h1><h2 id="这里我们常用的分支有："><a href="#这里我们常用的分支有：" class="headerlink" title="这里我们常用的分支有："></a>这里我们常用的分支有：</h2><ol>
+<li>主分支（master branch）</li>
+<li>开发分支（develop branch）</li>
+<li>功能分支（feature branch）</li>
+<li>补丁分支（hotfix branch）</li>
+<li>预发分支（release branch）</li>
+</ol>
+<h2 id="流程一（基础）"><a href="#流程一（基础）" class="headerlink" title="流程一（基础）"></a>流程一（基础）</h2><p>几个小伙伴开发一套系统，使用git对项目的代码进行版本控制，这是一种比较方便易于理解的方式。</p>
+<h3 id="情景"><a href="#情景" class="headerlink" title="情景"></a>情景</h3><h4 id="发布和测试部署"><a href="#发布和测试部署" class="headerlink" title="发布和测试部署"></a>发布和测试部署</h4><p>master分支同时是开发服务器和测试服务器本地的当前分支。</p>
+<h4 id="开发新功能"><a href="#开发新功能" class="headerlink" title="开发新功能"></a>开发新功能</h4><p>在master分支上进行切feature分支，开发完之后对其部署在测试服务器上进行测试，测试没有bug即合并进master分支，此时测试服务器的版本是领先于生产服务器的，</p>
+<h4 id="出现bug"><a href="#出现bug" class="headerlink" title="出现bug"></a>出现bug</h4><p>在master分支上切出来一个hotfix分支来改bug，然后生产服务器本地当前分支回滚一个版本。<br>静静的等待bug改好了进行单元测试，有时间的条件下还要回归测试下。然后master合并这个hotfix分支。</p>
+<p>细心地同学应该发现开发分支（develop branch）和预发分支（release branch）没有用到，对不对？如果我们只是做一个不需要上线，或者小众的这样一个应用，简单易于操作的<strong>git flow</strong>是很适合的，但当我们的开发协作扩展至一个5人以上的团队，当版本控制追求版本有层次，提交合并有权限，各分支功能单一等等一些特性的时候，那么就应该升级<strong>git flow</strong>。</p>
+<h2 id="流程二（进阶）"><a href="#流程二（进阶）" class="headerlink" title="流程二（进阶）"></a>流程二（进阶）</h2><p>详见下一篇。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2016/01/05/GIT/git教程3/" data-id="cjgq601q80004m52nkx3mfkug" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2016/01/06/GIT/git教程4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          git教程(四)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/04/GIT/git教程2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">git教程(二)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2016/01/05/GIT/git教程3/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#讲下git的工作流程。"><span class="toc-number">1.</span> <span class="toc-text">讲下git的工作流程。</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#这里我们常用的分支有："><span class="toc-number">1.1.</span> <span class="toc-text">这里我们常用的分支有：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程一（基础）"><span class="toc-number">1.2.</span> <span class="toc-text">流程一（基础）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#情景"><span class="toc-number">1.2.1.</span> <span class="toc-text">情景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#发布和测试部署"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">发布和测试部署</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#开发新功能"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">开发新功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#出现bug"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">出现bug</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流程二（进阶）"><span class="toc-number">1.3.</span> <span class="toc-text">流程二（进阶）</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

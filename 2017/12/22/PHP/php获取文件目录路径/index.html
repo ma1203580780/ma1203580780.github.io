@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>php获取文件目录路径 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php,常识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php获取文件目录路径">
+<meta property="og:url" content="http://martist.cn/2017/12/22/PHP/php获取文件目录路径/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-03-27T07:38:08.117Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php获取文件目录路径">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/php获取文件目录路径" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/12/22/PHP/php获取文件目录路径/" class="article-date">
+  <time datetime="2017-12-21T16:00:00.000Z" itemprop="datePublished">2017-12-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php获取文件目录路径
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a><br>具体代码如下：</p>
+<pre><code>&lt;?php
+
+/**
+
+* PHP获取路径或目录实现
+
+*/
+
+
+
+//魔术变量，获取当前文件的绝对路径
+
+echo &quot;__FILE__: ========&gt; &quot;.__FILE__;
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+//魔术变量，获取当前脚本的目录
+
+echo &quot;__DIR__: ========&gt; &quot;.__DIR__;
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+//dirname返回路径的目录部分,dirname(__FILE__)相当于__DIR__
+
+echo &quot;dirname(__FILE__): ========&gt; &quot;.dirname(__FILE__);
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+//$_SERVER[&apos;PHP_SELF&apos;]和$_SERVER[&apos;SCRIPT_NAME&apos;]的结果一般相同，他们都是获取当前脚本的文件名
+
+//只有当php以cgi方式运行时有区别，但是现在几乎找不到以cgi方式运行php了
+
+echo &apos;$_SERVER[&quot;PHP_SELF&quot;]: ========&gt; &apos;.$_SERVER[&apos;PHP_SELF&apos;];
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+echo &apos;$_SERVER[&quot;SCRIPT_NAME&quot;]: ========&gt; &apos;.$_SERVER[&apos;SCRIPT_NAME&apos;];
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+//当前执行脚本的绝对路径。记住，在CLI方式运行php是获取不到的
+
+echo &apos;$_SERVER[&quot;SCRIPT_FILENAME&quot;]: ========&gt; &apos;.$_SERVER[&apos;SCRIPT_FILENAME&apos;];
+
+echo &apos;&lt;br/&gt;&apos;;
+
+
+
+//当前运行脚本所在的文档根目录。在服务器配置文件中定义。
+
+echo &apos;$_SERVER[&quot;DOCUMENT_ROOT&quot;]: ========&gt; &apos;.$_SERVER[&apos;DOCUMENT_ROOT&apos;];
+
+echo &apos;&lt;br&gt;&apos;;
+
+
+
+//getcwd()返回当前工作目录
+
+echo &quot;getcwd(): ========&gt; &quot;.getcwd();
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/12/22/PHP/php获取文件目录路径/" data-id="cjgq601sg003om52n0weacm2v" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/常识/">常识</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/12/27/LINUX/gitlab搭建/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          gitlab
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/12/21/架构/长轮询/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">长轮询</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/12/22/PHP/php获取文件目录路径/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/">实现一个类似laravel的现代化PHP框架</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/">实现一个类似tp的轻量级框架</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/">nginx中的PHP_VALUE</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/20/PHP/php性能分析入门/">php7性能分析-xhprof【laravel】</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/18/健身/深蹲怎么不伤膝盖/">深蹲怎么不伤膝盖</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

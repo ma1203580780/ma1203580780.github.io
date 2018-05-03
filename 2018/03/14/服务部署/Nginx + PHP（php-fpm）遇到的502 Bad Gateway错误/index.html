@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nginx的502问题 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux,nginx,php-fpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx的502问题">
+<meta property="og:url" content="http://martist.cn/2018/03/14/服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-19T09:38:59.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx的502问题">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/03/14/服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/" class="article-date">
+  <time datetime="2018-03-13T16:00:00.000Z" itemprop="datePublished">2018-03-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php-fpm/">php-fpm</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nginx的502问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="问题所在"><a href="#问题所在" class="headerlink" title="问题所在"></a>问题所在</h2><p>nginx出现502有很多原因，但大部分原因可以归结为资源数量不够用,也就是说后端PHP-fpm处理有问题，nginx将正确的客户端请求发给了后端的php-fpm进程，但是因为php-fpm进程的问题导致不能正确解析php代码，最终返回给了客户端502错误。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>nginx+php出现502 bad gateway，一般这都不是nginx的问题，而是由于 fastcgi或者php的问题导致的，常见的有以下几种(其实解决问题的最好的方式还是自己去看nginx和fastcgi的errorlog):</p>
+<h3 id="php-ini的memory-limit-过小"><a href="#php-ini的memory-limit-过小" class="headerlink" title="php.ini的memory_limit 过小"></a>php.ini的memory_limit 过小</h3><p>如果有个别php程序进程需要占用极大内存时这个必须注意</p>
+<h3 id="php-fpm-conf中max-children或者max-requests设置不合理"><a href="#php-fpm-conf中max-children或者max-requests设置不合理" class="headerlink" title="php-fpm.conf中max_children或者max_requests设置不合理"></a>php-fpm.conf中max_children或者max_requests设置不合理</h3><p>设置过小会因为没有足够的cgi进程处理请求，设置过大会出现一会儿有响应正常，一会儿等很久才有响应的情况，一般情况下children按 照内存计算，比如说1G设置64，2G128。这个根据实际情况自行调整。另外查看当前的PHP FastCGI进程数是否够用的命令为：netstat  -anpo |grep &ldquo;php-cgi&rdquo; | wc -l   如果实际使用的&ldquo;FastCGI进程数&rdquo;接近预设的&ldquo;FastCGI进程数&rdquo;，那么，说明&ldquo;FastCGI进程数&rdquo;不够用，需要增大。</p>
+<h3 id="查看nginx错误日志"><a href="#查看nginx错误日志" class="headerlink" title="查看nginx错误日志"></a>查看nginx错误日志</h3><p>发现 pstream sent too big header while reading response  headerfrom upstream ，则检查client head buffer，fastcgi buffer  size是否过小，可设置为32K。</p>
+<h3 id="php程序执行时间过长而超时"><a href="#php程序执行时间过长而超时" class="headerlink" title="php程序执行时间过长而超时"></a>php程序执行时间过长而超时</h3><p>检查各种timeout设置：</p>
+<p>nginx</p>
+<pre><code>fastcgi_connect_timeout 300
+fastcgi_send_timeout    300
+fastcgi_read_timeout    300
+keepalive_timeout
+</code></pre><p>php-fpm</p>
+<pre><code>request_terminate_timeout
+</code></pre><p>php.ini</p>
+<pre><code>max_execution_time
+</code></pre><h3 id="max-requests【php-fpm】"><a href="#max-requests【php-fpm】" class="headerlink" title="max_requests【php-fpm】"></a>max_requests【php-fpm】</h3><p>php-fpm有一个参数 max_requests ，该参数指明了每个children最多处理多少个请求后便会被关闭。在大量处理请求下，如果该值设置过小会导致children频繁的自杀和建立而浪费 大量时间，若所有的children差不多都在这个时候自杀，则重建前将没有children响应请求，于是出现502  。可以将该值设置大一些或者是0[无限]。</p>
+<h2 id="高并发引起的502"><a href="#高并发引起的502" class="headerlink" title="高并发引起的502"></a>高并发引起的502</h2><p>如果你服务器并发量非常大，那只能先增加机器，然后按以下方式优化会取得更好效果;但如果你并发不大却出现502，一般都可以归结为配置问题，脚本超时问题。</p>
+<h3 id="php-fpm进程数不够用"><a href="#php-fpm进程数不够用" class="headerlink" title="php-fpm进程数不够用"></a>php-fpm进程数不够用</h3><p>使用netstat -napo |grep “php-fpm” | wc -l查看一下当前fastcgi进程个数，如果个数接近conf里配置的上限，就需要调高进程数。<br>但也不能无休止调高，可以根据服务器内存情况，可以把php-fpm子进程数调到100或以上，在4G内存的服务器上200就可以。</p>
+<h3 id="调高调高Linux内核打开文件数量"><a href="#调高调高Linux内核打开文件数量" class="headerlink" title="调高调高Linux内核打开文件数量"></a>调高调高Linux内核打开文件数量</h3><p>可以使用这些命令(必须是root帐号)</p>
+<pre><code>echo &apos;ulimit -HSn 65536&apos;&gt;&gt; /etc/profile
+echo &apos;ulimit -HSn 65536&apos;&gt;&gt; /etc/rc.local
+source /etc/profile
+</code></pre><h3 id="缓存设置比较小"><a href="#缓存设置比较小" class="headerlink" title="缓存设置比较小"></a>缓存设置比较小</h3><p>修改或增加配置到nginx.conf</p>
+<pre><code>proxy_buffer_size 64k;
+proxy_buffers  512k;
+proxy_busy_buffers_size 128k;
+</code></pre><h3 id="运维问题"><a href="#运维问题" class="headerlink" title="运维问题"></a>运维问题</h3><pre><code>recv()failed (104: Connection reset by peer) while reading response header fromupstream
+</code></pre><p>发生这种错误，可能的原因机房网络丢包或者机房有硬件防火墙禁止访问该域名。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/03/14/服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/" data-id="cjgq601tg005cm52nm2nk76kz" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php-fpm/">php-fpm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/03/18/LINUX/linux之CURL命令/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          linux之curl命令
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/03/12/架构/单例模式的理解/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">关于php的单例模式</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/03/14/服务部署/Nginx + PHP（php-fpm）遇到的502 Bad Gateway错误/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题所在"><span class="toc-number">1.</span> <span class="toc-text">问题所在</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-number">2.</span> <span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#php-ini的memory-limit-过小"><span class="toc-number">2.1.</span> <span class="toc-text">php.ini的memory_limit 过小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#php-fpm-conf中max-children或者max-requests设置不合理"><span class="toc-number">2.2.</span> <span class="toc-text">php-fpm.conf中max_children或者max_requests设置不合理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看nginx错误日志"><span class="toc-number">2.3.</span> <span class="toc-text">查看nginx错误日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#php程序执行时间过长而超时"><span class="toc-number">2.4.</span> <span class="toc-text">php程序执行时间过长而超时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#max-requests【php-fpm】"><span class="toc-number">2.5.</span> <span class="toc-text">max_requests【php-fpm】</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高并发引起的502"><span class="toc-number">3.</span> <span class="toc-text">高并发引起的502</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#php-fpm进程数不够用"><span class="toc-number">3.1.</span> <span class="toc-text">php-fpm进程数不够用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调高调高Linux内核打开文件数量"><span class="toc-number">3.2.</span> <span class="toc-text">调高调高Linux内核打开文件数量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存设置比较小"><span class="toc-number">3.3.</span> <span class="toc-text">缓存设置比较小</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运维问题"><span class="toc-number">3.4.</span> <span class="toc-text">运维问题</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

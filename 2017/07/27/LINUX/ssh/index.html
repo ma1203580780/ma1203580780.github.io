@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ssh服务为web生产服务器保驾护航 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssh服务为web生产服务器保驾护航">
+<meta property="og:url" content="http://martist.cn/2017/07/27/LINUX/ssh/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2017-10-03T05:40:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ssh服务为web生产服务器保驾护航">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-LINUX/ssh" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/07/27/LINUX/ssh/" class="article-date">
+  <time datetime="2017-07-26T16:00:00.000Z" itemprop="datePublished">2017-07-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ssh服务为web生产服务器保驾护航
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>我们给自己的博客搭建一个站点，配置lnmp/lamp运行环境可以跑起来，差不多就完事了。但是当我们做的是一个中型或者大型项目，在它需要部署到生产服务器上线运营时，账户安全方面需要做些什么？</p>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><pre><code>apt-get install openssh-server
+</code></pre><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><pre><code>/etc/init.d/ssh start  
+</code></pre><h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><pre><code>ssh  martist@192.168.123.3
+//ssh远程连接服务器，需要输入用户密码
+</code></pre><h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="主机名管理"><a href="#主机名管理" class="headerlink" title="主机名管理"></a>主机名管理</h3><p>一个中型甚至大型的的项目，往往需要对多台服务器进行管理，如生产服务器，测试服务器，管理服务器等等。因此需要对每一台服务器的主机名进行管理，通过修改各个服务器的/etc/hostname文件修改本地系统名，重启可以看到。</p>
+<h3 id="密钥ssh登录"><a href="#密钥ssh登录" class="headerlink" title="密钥ssh登录"></a>密钥ssh登录</h3><p>linux或Mac下生成密钥的命令是 <code>ssh-keygen -t rsa</code> 默认生成路径在家目录的.ssh目录下。id_rsa 文件保存的是本机的私钥，id_rsa.pub文件保存的是公钥。<br> ifconfig命令查看服务器的IP地址，注意如果你是用的是阿里云ECS，此处查看到的是内网IP而非公网IP。<br>在被登录的服务器的家目录下的.ssh目录（如果不存在就创建一个）创建一个authorized_keys 文件，并将生成的公钥文件的内容放到里面，就可以在本地使用密钥登陆这台服务器了。</p>
+<pre><code>ssh  martist@192.168.123.3
+//此时不需要输入用户名密码
+</code></pre><p>如果我们关闭密码登陆，转而使用ssh密钥登录，更可以确保服务安全（注意：关闭密码登陆前，一定要确保能够正常使用ssh密钥登陆）。</p>
+<h3 id="关闭密码登陆"><a href="#关闭密码登陆" class="headerlink" title="关闭密码登陆"></a>关闭密码登陆</h3><p>找到/etc/ssh/sshd_config 修改PasswordAuthentication 属性 yes。<br>在第52行，yes改为no，禁用密码登陆（慎用）。</p>
+<h2 id="详细实战分析"><a href="#详细实战分析" class="headerlink" title="详细实战分析"></a>详细实战分析</h2><p>线上：阿里云ECS云服务器 Ubuntu14.04lts </p>
+<p>Manager服务器生成ssh密钥</p>
+<pre><code>ssh-keygen -t rsa  //一路回车
+</code></pre><p>生成的密钥保存在家目录下，进入.ssh目录下，</p>
+<pre><code>ls//查看文件
+id_rsa id_rsa.pub know_hosts 
+</code></pre><p>Manager服务器上在 /etc/hosts 文件里加上重定向的名字，如测试服务器，DB服务器和Manager服务器分别起一个重定向名字便于管理多台web服务器。<br>修改本地定向网络ip（阿里云的内网ip）的文件 </p>
+<pre><code>vi /etc/hosts 
+//写入 10.162.48.184 FWEB1
+//每次在终端输入‘FWEB1’，就代表‘10.162.48.184’。
+</code></pre><p>在mannager服务器上，试一下ssh登录web1服务器</p>
+<pre><code>ssh root@FWEB1  
+</code></pre><p>退出</p>
+<pre><code>exit
+</code></pre><p>在mannager服务器上，试一下文件上传web1服务器</p>
+<pre><code>scp  ./id_rsa.pub root@FWEB1:/root
+</code></pre><p>现在还是需要输入密码，不过等一会把密钥加到web服务器上，再从manager登录web服务器，就不需要输入密码了。</p>
+<p>在web1服务器，家目录下创建.ssh目录</p>
+<pre><code>ssh root@FWEB1 // 输入密码
+mkdir ~/.ssh
+</code></pre><p>在web1服务器，把id_rsa.pub传递到.ssh/目录下</p>
+<p>   cat id_rsa.pub &gt;&gt; .ssh/id_rsa.pub   </p>
+<p>此时，再从id_rsa.pub设置到web服务器（FWEB1）本地.</p>
+<p>文件改名</p>
+<pre><code>mv id_rsa.pub authorized_keys
+</code></pre><p>给执行权限</p>
+<pre><code>chmod 600 ./authorized_keys
+</code></pre><p>退出ssh远程登录</p>
+<pre><code>exit
+</code></pre><p>此时回到manager服务器</p>
+<pre><code> ssh  root@FWEB1
+//此时密码不用输就可以进入FWEB1
+</code></pre><p>随便上传个文件，试试</p>
+<pre><code>scp know_hosts root@FWEB1:/tmp/
+</code></pre><p>此后，在manager服务器向web服务器，scp传送东西,不需要再输入密码了。</p>
+<p>原理：manager服务器私钥自己留着，把公钥给所有的web，DB，备份服务器，就可以便捷管理了。</p>
+<h3 id="关闭web服务器的密码登陆"><a href="#关闭web服务器的密码登陆" class="headerlink" title="关闭web服务器的密码登陆"></a>关闭web服务器的密码登陆</h3><p>找到/etc/ssh/sshd_config 修改PasswordAuthentication 属性 yes。在第52行，yes改为no，禁用密码登陆。<br>修改sshd_config文件中ssh端口，ssh端口默认为 22. 把端口号改为1000以上的数值。</p>
+<pre><code>默认：Port:22
+改为：Port 1678
+</code></pre><p>:wq //退出vi编辑器。</p>
+<pre><code>reboot //重启生效
+</code></pre><p>ssh登录目的服务器命令</p>
+<p>   root@FWEB1</p>
+<p>有点麻烦？可以创建自己的别名</p>
+<pre><code>vi ~/.bash_profile
+//写入  alias fewb1=&apos;ssh root@FWEB1 -p 1678&apos;
+//(-p 为端口号)
+</code></pre><p>好，:wq 保存退出。</p>
+<p>使他生效</p>
+<pre><code>source .bash_profile 
+</code></pre><p>查看别名</p>
+<pre><code>alias
+</code></pre><p>在manager服务器下，把某个文件夹下全部文件推送到web服务器。</p>
+<pre><code>scp -p 1678 ./* root@FWEB1:/tmp/ 
+//（需要被传送文件的web服务器有这个文件夹）
+</code></pre><p>把服务器其上的东西上传上去，是这样写， 把web服务器的东西下载到本地，只要把这俩目录倒过来，就可以了。</p>
+<p>技巧：</p>
+<pre><code>cd ~
+mkdir sh 
+vi pushcode.sh
+//在这里写shell脚本
+</code></pre><p>shell脚本的写法，开头‘#！’，后面是 shell可执行命令的位置。</p>
+<pre><code> #！/bin/sh
+
+scp -p 1678 ./var/www.machuang.name/* root@FWEB1:/var/www/machuang.name
+</code></pre><p>好！:wq 保存推出。</p>
+<p>给执行权限</p>
+<pre><code>chmod 755 /root/sh/pushcode.sh
+</code></pre><p>Ls查看下</p>
+<pre><code>ls /root/sh
+</code></pre><p>此时看到pushcode.sh变成绿色，就对了。以后敲入这段命令，就可以完成上传代码的功能了。</p>
+<pre><code>/root/sh/pushcode.sh
+</code></pre><p>就可以执行脚本内的命令了，此时再加一个别名。</p>
+<pre><code>cd ~
+vi .bash_profile
+//写入  alias pushcode=&apos;/root/sh/pushcode.sh&apos;
+//:wq 保存退出
+</code></pre><p>好，使它生效，否则要重启才能生效。</p>
+<pre><code>source .bash_profile
+</code></pre><p>上传代码：</p>
+<pre><code>pushcode
+</code></pre><p>这样一个具备业务逻辑的ssh服务使用就展现在你面前了，单一的使用一个工具并不显得立体，多种linux软件和命令有机结合在一起才能迸发出更大的能量。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/07/27/LINUX/ssh/" data-id="cjgq601r3001nm52ndxdsu4y9" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/07/29/LINUX/Vagrant之入门1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          Vagrant之入门
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/21/LINUX/Vagrant/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Vagrant-流行的环境部署工具</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/07/27/LINUX/ssh/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景"><span class="toc-number">1.</span> <span class="toc-text">场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-number">2.</span> <span class="toc-text">ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动"><span class="toc-number">2.2.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用"><span class="toc-number">2.3.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-number">3.</span> <span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#主机名管理"><span class="toc-number">3.1.</span> <span class="toc-text">主机名管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#密钥ssh登录"><span class="toc-number">3.2.</span> <span class="toc-text">密钥ssh登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭密码登陆"><span class="toc-number">3.3.</span> <span class="toc-text">关闭密码登陆</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#详细实战分析"><span class="toc-number">4.</span> <span class="toc-text">详细实战分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭web服务器的密码登陆"><span class="toc-number">4.1.</span> <span class="toc-text">关闭web服务器的密码登陆</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

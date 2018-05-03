@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>php中的break和continue | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="语法知识">
+<meta name="keywords" content="php,语法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php中的break和continue">
+<meta property="og:url" content="http://martist.cn/2017/10/10/PHP/php中的break和continue/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="语法知识">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-10T09:00:54.818Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php中的break和continue">
+<meta name="twitter:description" content="语法知识">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/php中的break和continue" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/10/10/PHP/php中的break和continue/" class="article-date">
+  <time datetime="2017-10-09T16:00:00.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php中的break和continue
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a><br>PHP中的循环结构大致有for循环，while循环，do{} while 循环以及foreach循环几种，不管哪种循环中，在PHP中跳出循环大致有这么几种方式：</p>
+<pre><code>&lt;?php
+$i = 1;
+while (true) { // 这里看上去这个循环会一直执行
+    if ($i==2) {// 2跳过不显示
+        $i++;
+        continue;
+    } else if ($i==5) {// 但到这里$i=5就跳出循循环了
+        break;
+    } else {
+        echo $i . &apos;&lt;br&gt;&apos;;
+    }
+    $i++;
+}
+exit;
+echo &apos;这里不输出&apos;;
+?&gt;
+</code></pre><p>结果:</p>
+<pre><code>1
+3
+4
+</code></pre><h2 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h2><p>continue 是用来用在循环结构中，控制程序放弃本次循环continue语句之后的代码并转而进行下一次循环。continue本身并不跳出循环结构，只是放弃这一次循环。</p>
+<h2 id="break"><a href="#break" class="headerlink" title="break"></a>break</h2><p>break是被用在上面所提的各种循环和switch语句中的。他的作用是跳出当前的语法结构，执行下面的语句。break语句可以带一个参数n，表示跳出循环的层数，如果要跳出多重循环的话，可以用n来表示跳出的层数，如果不带参数默认是跳出本重循环。</p>
+<h2 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h2><p>goto实际上只是一个运算符，和其他语言一样，PHP中也不鼓励滥用goto，滥用goto会导致程序的可读性严重下降。goto的作用是将程序的执行从当前位置跳转到其他任意位置，goto本身并没有要结束的循环的作用，但其跳转位置的作用使得其可以作为跳出循环使用。但PHP5.3及以上版本停止了对goto的支持，所以应该尽量避免使用goto。</p>
+<h2 id="exit"><a href="#exit" class="headerlink" title="exit"></a>exit</h2><p>exit是用来结束程序执行的。可以用在任何地方，本身没有跳出循环的含义。exit可以带一个参数，如果参数是字符串，PHP将会直接把字符串输出，如果参数是integer整形（范围是0-254），那个参数将会被作为结束状态使用。</p>
+<h2 id="return"><a href="#return" class="headerlink" title="return"></a>return</h2><p>return 语句是用来结束一段代码，并返回一个参数的。可以从一个函数里调用，也可以从一个include()或者require()语句包含的文件里来调用，也可以是在主程序里调用，如果是在函数里调用程序将会马上结束运行并返回参数，如果是include()或者require()语句包含的文件中被调用，程序执行将会马上返回到调用该文件的程序，而返回值将作为include()或者require()的返回值。而如果是在主程序中调用，那么主程序将会马上停止执行。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2017/10/10/PHP/php中的break和continue/" data-id="cjgq601s9003dm52n44ggjk01" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语法/">语法</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2017/10/12/PHP/提取字符串中的数字/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          提取字符串中的数字
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/09/27/LARAVEL/laravel核心概念/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">laravel核心概念</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2017/10/10/PHP/php中的break和continue/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#continue"><span class="toc-number">1.</span> <span class="toc-text">continue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#break"><span class="toc-number">2.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#goto"><span class="toc-number">3.</span> <span class="toc-text">goto</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exit"><span class="toc-number">4.</span> <span class="toc-text">exit</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#return"><span class="toc-number">5.</span> <span class="toc-text">return</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

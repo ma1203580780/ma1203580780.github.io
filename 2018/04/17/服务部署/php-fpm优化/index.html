@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>php-fpm概念理解和优化总结 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux,nginx,php-fpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php-fpm概念理解和优化总结">
+<meta property="og:url" content="http://martist.cn/2018/04/17/服务部署/php-fpm优化/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-04-19T11:06:48.232Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php-fpm概念理解和优化总结">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-服务部署/php-fpm优化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/17/服务部署/php-fpm优化/" class="article-date">
+  <time datetime="2018-04-16T16:00:00.000Z" itemprop="datePublished">2018-04-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php-fpm/">php-fpm</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php-fpm概念理解和优化总结
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>fpm 是FastCGI Process Manager (FPM)的简拼。php-fpm就是FastCGI的后端实现。并提供了进程管理的功能。</p>
+<h2 id="关键词"><a href="#关键词" class="headerlink" title="关键词"></a>关键词</h2><p>因本文提到的概念比较多，首先提炼下关键词，读者不解之处可以自行百度。</p>
+<ul>
+<li>Apache</li>
+<li>nginx</li>
+<li>反向代理</li>
+<li>cgi</li>
+<li>fastcgi</li>
+<li>php-fpm</li>
+<li>进程</li>
+<li>并发</li>
+<li>kill命令</li>
+</ul>
+<p>Web Server 一般指Apache、Nginx、IIS、Lighttpd、Tomcat等服务器，Web Application 一般指PHP、Java、Asp.net等应用程序。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ul>
+<li>支持平滑停止/启动的高级进程管理功能；</li>
+<li>可以工作于不同的 uid/gid/chroot 环境下，并监听不同的端口和使用不同的 php.ini 配置文件（可取代 safe_mode 的设置）；</li>
+<li>stdout 和 stderr 日志记录;</li>
+<li>在发生意外情况的时候能够重新启动并缓存被破坏的 opcode;</li>
+<li>文件上传优化支持;</li>
+<li>“慢日志” - 记录脚本（不仅记录文件名，还记录 PHP backtrace 信息，可以使用 ptrace或者类似工具读取和分析远程进程的运行数据）运行所导致的异常缓慢;</li>
+<li>fastcgi_finish_request() - 特殊功能：用于在请求完成和刷新数据后，继续在后台执行耗时的工作（录入视频转换、统计处理等）；</li>
+<li>动态／静态子进程产生；</li>
+<li>基本 SAPI 运行状态信息（类似Apache的 mod_status）；</li>
+<li>基于 php.ini 的配置文件。</li>
+</ul>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="php-fpm-conf"><a href="#php-fpm-conf" class="headerlink" title="php-fpm.conf"></a>php-fpm.conf</h3><p>首先要找到php-fpm.conf配置文件,查看pid的配置路径</p>
+<p>···<br>    machuangdeMacBook-Pro:etc machuang$  ps aux | grep php-fpm<br>    machuang          1619   0.0  0.0  4267768    888 s000  S+   10:17上午   0:00.00 grep php-fpm<br>    _www              1610   0.0  0.0  4327128    856   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm –daemonize –fpm-config /usr/local/etc/php/7.1/php-fpm.conf –pid /usr/local/var/run/php-fpm.pid<br>    _www              1609   0.0  0.0  4328152    892   ??  S    10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm –daemonize –fpm-config /usr/local/etc/php/7.1/php-fpm.conf –pid /usr/local/var/run/php-fpm.pid<br>    root              1608   0.0  0.0  4326104   1108   ??  Ss   10:17上午   0:00.00 /usr/local/Cellar/php71/7.1.11_22/sbin/php-fpm –daemonize –fpm-config /usr/local/etc/php/7.1/php-fpm.conf –pid /usr/local/var/run/php-fpm.pid<br>···</p>
+<h3 id="查看php-fpm进程数"><a href="#查看php-fpm进程数" class="headerlink" title="查看php-fpm进程数"></a>查看php-fpm进程数</h3><pre><code>ps aux | grep -c php-fpm
+</code></pre><p>此处应该减一，因为这条命令也被统计进去了。同时统计进去的还有php-fom的master worker进程。</p>
+<h3 id="参数详解"><a href="#参数详解" class="headerlink" title="参数详解"></a>参数详解</h3><p>见文末。</p>
+<h2 id="nginx和php-fpm的工作机制"><a href="#nginx和php-fpm的工作机制" class="headerlink" title="nginx和php-fpm的工作机制"></a>nginx和php-fpm的工作机制</h2><p>Nginx通过类似反向代理的功能将动态请求转向后端Php-fpm。</p>
+<p>FastCGI 是一个协议，它是应用程序和 WEB 服务器连接的桥梁。Nginx 并不能直接与 PHP-FPM 通信，而是将请求通过 FastCGI 交给 PHP-FPM 处理。<br>下面是nginx的虚拟主机配置内容：</p>
+<pre><code>location ~ \.php$ {
+    try_files $uri /index.php =404;
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+}
+</code></pre><p>这里 fastcgi_pass 就是把所有 php 请求转发给 php-fpm 进行处理。通过 netstat 命令可以看到，127.0.0.1:9000 这个端口上运行的进程就是 php-fpm.</p>
+<h3 id="Nginx-反向代理"><a href="#Nginx-反向代理" class="headerlink" title="Nginx 反向代理"></a>Nginx 反向代理</h3><p>Nginx 反向代理最重要的指令是 proxy_pass，如：</p>
+<pre><code>location ^~ /seckill_query/ {
+    proxy_pass http://ris.xxmail.gdrive:8090/;
+    proxy_set_header Host ris.xxmail.gdrive;
+}
+
+location ^~ /push_message/ {
+    proxy_pass http://channel.xxmail.gdrive:8090/;
+    proxy_set_header Host channel.xxmail.gdrive;
+}
+
+location ^~ /data/ {
+    proxy_pass http://ds.xxmail.gdrive:8087/;
+    proxy_set_header Host ds.xxmail.gdrive;
+}
+</code></pre><p>通过 location 匹配 url 路径，将其转发到另外一个服务器处理。</p>
+<p>通过负载均衡 upstream 也可以实现反向代理。</p>
+<h3 id="Nginx-负载均衡"><a href="#Nginx-负载均衡" class="headerlink" title="Nginx 负载均衡"></a>Nginx 负载均衡</h3><p>介绍一下 upstream 模块：</p>
+<pre><code>负载均衡模块用于从”upstream”指令定义的后端主机列表中选取一台主机。nginx先使用负载均衡模块找到一台主机，再使用upstream模块实现与这台主机的交互。
+</code></pre><p>负载均衡配置：</p>
+<pre><code>upstream php-upstream {
+    ip_hash;
+
+    server 192.168.0.1;
+    server 192.168.0.2;
+}
+
+location / {
+    root   html;
+    index  index.html index.htm;
+    proxy_pass http://php-upstream;
+}
+</code></pre><p>该例定义了一个 php-upstream 的负载均衡配置，通过 proxy_pass 反向代理指令应用这个配置。这里用的 ip_hash 算法，负载均衡的算法有多种，就不一一列举了。</p>
+<p>负载均衡也可以用在 fastcgi_pass 上。</p>
+<p>如：</p>
+<pre><code>fastcgi_pass http://php-upstream
+</code></pre><p>如果使用负载均衡，可能存在一个 session 失效的问题，你的每次请求可能分配到不同的服务器，一个解决方法是把 Memcached 或 Redis 作为 session 存储的方式，而且还可以提高性能。</p>
+<p>反向代理和负载均衡这两个词经常出现在一起，但他们实际上是不同的概念，负载均衡它更多的是强调的是一种算法或策略，将请求分布到不同的机器上，因此实际上也起到了反向代理的作用。<br>可以说是使用反向代理和算法实现了负载均衡。</p>
+<h3 id="proxy-pass-和-fastcgi-pass-的区别"><a href="#proxy-pass-和-fastcgi-pass-的区别" class="headerlink" title="proxy_pass 和 fastcgi_pass 的区别"></a>proxy_pass 和 fastcgi_pass 的区别</h3><p>一个是反向代理模块，一个是转发给 factcgi 后端处理。</p>
+<pre><code>fastcgi_pass
+
+客户端----[HTTP]----webserver(nginx)----[fastcgi]----fastcgi服务(php-fpm)
+
+proxy_pass
+
+客户端----[HTTP]----webserver(nginx)----[HTTP]----webserver(nginx)
+</code></pre><h3 id="webserver配置和运行"><a href="#webserver配置和运行" class="headerlink" title="webserver配置和运行"></a>webserver配置和运行</h3><p>1、配置nginx.conf文件</p>
+<p>进入nginx目录下，编辑 nginx.conf文件。<br>如图，在nginx.conf最后一行，</p>
+<ul>
+<li><p>添加include文件（引入虚拟主机的配置目录）</p>
+<p>  include /usr/local/etc/nginx/erver/*</p>
+</li>
+<li><p>添加对应的server（进入上面include的路径，添加一个server）</p>
+</li>
+</ul>
+<p>比如新建一个文件,路径为 /usr/local/etc/nginx/erver/www.example.com.conf，内容如下：</p>
+<pre><code>server {
+    listen       80; #监听80端口，接收http请求
+    server_name  www.example.com; #就是网站地址
+    root /usr/local/etc/nginx/www/huxintong_admin; # 准备存放代码工程的路径
+    #路由到网站根目录www.example.com时候的处理
+    location / {
+        index index.php; #跳转到www.example.com/index.php
+        autoindex on;
+    }   
+
+    #当请求网站下php文件的时候，反向代理到php-fpm
+    location ~ \.php$ {
+        include /usr/local/etc/nginx/fastcgi.conf; #加载nginx的fastcgi模块
+        fastcgi_intercept_errors on;
+        fastcgi_pass   127.0.0.1:9000; #nginx fastcgi进程监听的IP地址和端口
+    }
+
+}
+</code></pre><p>总而言之：当我们访问www.example.com的时候，处理流程是这样的：</p>
+<pre><code>www.example.com
+      |
+      |
+    Nginx
+      |
+      |
+路由到www.example.com/index.php
+      |
+      |
+加载nginx的fast-cgi模块
+      |
+      |
+fast-cgi监听127.0.0.1:9000地址
+      |
+      |
+www.example.com/index.php请求到达127.0.0.1:9000
+      |
+      |
+   等待处理...
+</code></pre><p>下面我们启用php的php-fpm来处理这个请求，打开php-fpm.conf文件，我们看到如下配置：</p>
+<pre><code>listen 127.0.0.1:9000
+</code></pre><p>即:php-fpm模块监听127.0.0.1:9000端口，等待请求到来去处理。</p>
+<h3 id="nginx与php-fpm的结合后的完整流程"><a href="#nginx与php-fpm的结合后的完整流程" class="headerlink" title="nginx与php-fpm的结合后的完整流程"></a>nginx与php-fpm的结合后的完整流程</h3><pre><code>www.example.com
+       |
+       |
+     Nginx
+       |
+       |
+路由到www.example.com/index.php
+       |
+       |
+加载nginx的fast-cgi模块
+       |
+       |
+fast-cgi监听127.0.0.1:9000地址
+       |
+       |
+www.example.com/index.php请求到达127.0.0.1:9000
+       |
+       |
+php-fpm 监听127.0.0.1:9000
+       |
+       |
+php-fpm 接收到请求，启用worker进程处理请求
+       |
+       |
+php-fpm 处理完请求，返回给nginx
+       |
+       |
+nginx将结果通过http返回给浏览器
+</code></pre><p>下面继续相信研究php-fpm是具体怎么工作的。</p>
+<h2 id="Nginx和fastcgi的通信机制"><a href="#Nginx和fastcgi的通信机制" class="headerlink" title="Nginx和fastcgi的通信机制"></a>Nginx和fastcgi的通信机制</h2><p>我们来看一段Nginx中fastcgi_pass的配置：</p>
+<p>   location ~ .php$ {<br>        root           /home/wwwroot;<br>        fastcgi_pass   127.0.0.1:9000;</p>
+<pre><code>    #fastcgi_pass  unix:/var/run/php-fpm/php-fpm.sock;
+    #fastcgi_pass  unix:/tmp/php-cgi.sock;
+    try_files $uri /index.php =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+}
+</code></pre><h3 id="两种方式"><a href="#两种方式" class="headerlink" title="两种方式"></a>两种方式</h3><p>Nginx和PHP-FPM的进程间通信有两种方式,一种是TCP,一种是UNIX Domain Socket.</p>
+<p>其中TCP是IP加端口,可以跨服务器.而UNIX Domain Socket不经过网络,只能用于Nginx跟PHP-FPM都在同一服务器的场景.用哪种取决于你的PHP-FPM配置:</p>
+<pre><code>方式1:
+php-fpm.conf: listen = 127.0.0.1:9000
+nginx.conf: fastcgi_pass 127.0.0.1:9000;
+方式2:
+php-fpm.conf: listen = /tmp/php-fpm.sock
+nginx.conf: fastcgi_pass unix:/tmp/php-fpm.sock;
+</code></pre><p>其中php-fpm.sock是一个文件,由php-fpm生成,类型是srw-rw—-.</p>
+<h3 id="UNIX-Domain-Socket和tcp链接的区别"><a href="#UNIX-Domain-Socket和tcp链接的区别" class="headerlink" title="UNIX Domain Socket和tcp链接的区别"></a>UNIX Domain Socket和tcp链接的区别</h3><p>UNIX Domain Socket可用于两个没有亲缘关系的进程,是目前广泛使用的IPC机制,比如X Window服务器和GUI程序之间就是通过UNIX Domain Socket通讯的.这种通信方式是发生在系统内核里而不会在网络里传播.UNIX Domain Socket和长连接都能避免频繁创建TCP短连接而导致TIME_WAIT连接过多的问题.对于进程间通讯的两个程序,UNIX Domain Socket的流程不会走到TCP那层,直接以文件形式,以stream socket通讯.如果是TCP Socket,则需要走到IP层,对于非同一台服务器上,TCP Socket走的就更多了.</p>
+<pre><code>UNIX Domain Socket:
+Nginx &lt;=&gt; socket &lt;=&gt; PHP-FPM
+TCP Socket(本地回环):
+Nginx &lt;=&gt; socket &lt;=&gt; TCP/IP &lt;=&gt; socket &lt;=&gt; PHP-FPM
+TCP Socket(Nginx和PHP-FPM位于不同服务器):
+Nginx &lt;=&gt; socket &lt;=&gt; TCP/IP &lt;=&gt; 物理层 &lt;=&gt; 路由器 &lt;=&gt; 物理层 &lt;=&gt; TCP/IP &lt;=&gt; socket &lt;=&gt; PHP-FPM
+</code></pre><p>像mysql命令行客户端连接mysqld服务也类似有这两种方式:</p>
+<p>使用Unix Socket连接(默认):</p>
+<pre><code>mysql -uroot -p --protocol=socket --socket=/tmp/mysql.sock
+</code></pre><p>使用TCP连接:</p>
+<pre><code>mysql -uroot -p --protocol=tcp --host=127.0.0.1 --port=3306
+</code></pre><h2 id="php-fpm的运行机制"><a href="#php-fpm的运行机制" class="headerlink" title="php-fpm的运行机制"></a>php-fpm的运行机制</h2><h3 id="多进程架构"><a href="#多进程架构" class="headerlink" title="多进程架构"></a>多进程架构</h3><p>php-fpm是一种master（主）/worker（子）多进程架构。<br>master进程主要负责CGI及PHP环境初始化、事件监听、子进程状态等等，worker进程负责处理php请求。<br>在介绍运行原理之前，我们先了解下它的几种运行模式。</p>
+<h3 id="运行模式"><a href="#运行模式" class="headerlink" title="运行模式"></a>运行模式</h3><p>php-fpm支持三种运行模式，分别为static、ondemand、dynamic，默认为dynamic 。</p>
+<pre><code>static : 静态模式，启动时分配固定的worker进程。
+ondemand: 按需分配，当收到用户请求时fork worker进程。
+dynamic: 动态模式，启动时分配固定的进程。伴随着请求数增加，在设定的浮动范围调整worker进程。
+</code></pre><p>这三种模式各有千秋，大家可以根据不同的环境调整相应的配置。</p>
+<h3 id="运行原理"><a href="#运行原理" class="headerlink" title="运行原理"></a>运行原理</h3><p>php-fpm采用master/worker架构设计，前面简单地描述master和worker进程模块的功能。下面将详细讲解这两个模块的运行原理。<br>master进程</p>
+<p>master进程工作流程分为4个阶段，</p>
+<pre><code>初始化cgi-----&gt; 初始化php环境  -----&gt; 初始化php-fpm -----&gt; 运行php-fpm
+</code></pre><ol>
+<li>cgi初始化阶段：分别调用fcgi_init()和 sapi_startup()函数，注册进程信号以及初始化sapi_globals全局变量。</li>
+<li>php环境初始化阶段：由cgi_sapi_module.startup 触发。实际调用php_cgi_startup函数，而php_cgi_startup内部又调用php_module_startup执行。 php_module_startup主要功能：a).加载和解析php配置；b).加载php模块并记入函数符号表(function_table)；c).加载zend扩展 ; d).设置禁用函数和类库配置；e).注册回收内存方法；</li>
+<li>php-fpm初始化阶段：执行fpm_init()函数。负责解析php-fpm.conf文件配置，获取进程相关参数（允许进程打开的最大文件数等）,初始化进程池及事件模型等操作。</li>
+<li>php-fpm运行阶段：执行fpm_run() 函数，运行后主进程发生阻塞。该阶段分为两部分：fork子进程 和 循环事件。fork子进程部分交由fpm_children_create_initial函数处理（ 注：ondemand模式在fpm_pctl_on_socket_accept函数创建）。循环事件部分通过fpm_event_loop函数处理，其内部是一个死循环，负责事件的收集工作。</li>
+</ol>
+<h3 id="worker进程"><a href="#worker进程" class="headerlink" title="worker进程"></a>worker进程</h3><p>worker进程分为 接收客户端请求、处理请求、请求结束三个阶段。</p>
+<ol>
+<li><p>接收客户端请求：执行fcgi_accept_request函数，其内部通过调用accept 函数获取客户端请求。</p>
+<p> //请求锁<br> FCGI_LOCK(req-&gt;listen_socket);<br> req-&gt;fd = accept(listen_socket, (struct sockaddr *)&amp;sa, &amp;len);<br> //释放锁<br> FCGI_UNLOCK(req-&gt;listen_socket);</p>
+</li>
+</ol>
+<p>从上面的代码，可以注意到accept之前有一个请求锁的操作，这么设计是为了避免请求出现“惊群”的现象。当然，这是一个可选的选项，可以取消该功能。</p>
+<ol>
+<li><p>处理请求阶段：首先，分别调用fpm_request_info、php_request_startup获取请求内容及注册全局变量($_GET、$_POST、$_SERVER、$_ENV、$_FILES)；然后根据请求信息调用php_fopen_primary_script访问脚本文件；最后交给php_execute_script执行。php_execute_script内部调用zend_execute_scripts方法将脚本交给zend引擎处理。</p>
+</li>
+<li><p>请求结束阶段：执行php_request_shutdown函数。此时 回调register_shutdown_function注册的函数及__destruct()方法，发送响应内容、释放内存等操作。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>php-fpm采用master/worker架构设计， master进程负责CGI、PHP公共环境的初始化及事件监听操作。worker进程负责请求的处理功能。在worker进程处理请求时，无需再次初始化PHP运行环境，这也是php-fpm性能优异的原因之一。</p>
+<h2 id="CGI、FastCGI、php-fpm的关系"><a href="#CGI、FastCGI、php-fpm的关系" class="headerlink" title="CGI、FastCGI、php-fpm的关系"></a>CGI、FastCGI、php-fpm的关系</h2><h3 id="CGI（Common-Gateway-Interface）"><a href="#CGI（Common-Gateway-Interface）" class="headerlink" title="CGI（Common Gateway Interface）"></a>CGI（Common Gateway Interface）</h3><p>最初，CGI 是在 1993 年由美国国家超级电脑应用中心（NCSA）为 NCSA HTTPd Web 服务器开发的。</p>
+<p>这个 Web 服务器使用了 UNIX shell 环境变量 来保存从 Web 服务器传递出去的参数，然后生成一个运行 CGI 的独立进程。CGI的第一个实现是 Perl 写的 1。</p>
+<ul>
+<li>效率低下：每一个连接 fork 一个进程处理。</li>
+<li>功能十分有限：CGI只能收到一个请求，输出一个响应。很难在CGI体系去对Web请求的控制，例如：用户认证等。</li>
+</ul>
+<p>正因为这些问题，在CGI诞生后的很长一段时间，各种Web Server都还是采用API这种强绑定的方式去支持Web开发，其中Apache的mod_php就属于这种方式。所以后面就有大神提出了FastCGI标准。</p>
+<h3 id="FastCGI（Fast-Common-Gateway-Interface）"><a href="#FastCGI（Fast-Common-Gateway-Interface）" class="headerlink" title="FastCGI（Fast Common Gateway Interface）"></a>FastCGI（Fast Common Gateway Interface）</h3><p>FastCGI使用进程/线程池来处理一连串的请求。这些进程/线程由FastCGI服务器管理，而不是Web服务器。 当进来一个请求时，Web服务器把环境变量和这个页面请求通过一个Socket长连接传递给FastCGI进程。所以FastCGI有如下的优点：</p>
+<p>性能：通过进程/线程池规避了CGI开辟新的进程的开销。<br>兼容：非常容易改造现有CGI标准的程序。<br>语言无关：FastCGI是一套标准，理论上讲只要能进行标准输出（stdout）的语言都可以作为FastCGI标准的Web后端。<br>下面是一个简单FastCGI后端的伪代码</p>
+<pre><code>void main(void)
+{
+int count = 0;
+  while(FCGI_Accept() &gt;= 0) {
+    printf(“Content-type: text/html\r\n”);
+    printf(“\r\n”);
+    printf(“Hello world!\r\n”);
+    printf(“Request number %d.”, count++);
+  }
+exit(0);
+}
+</code></pre><ul>
+<li>Web Server隔离：FastCGI后端和Web Server运行在不同的进程中，后端的任何故障不会导致Web Server挂掉。</li>
+<li>专利：没有Apache mod_php之类的私有API的知识产权问题。</li>
+<li>扩展：FastCGI后端和Web Server通过Socket进行通信，两者可以分布式部署并方便进行横向扩展。</li>
+</ul>
+<p>所以FastCGI一推出就几乎获得了所有主流Web Server的支持，Apache、Lighttpd、IIS、Cherokee……</p>
+<p>But，事情总是还有改进的余地的，FastCGI这套工作模式实际上没有什么太大缺陷，但是有些不安分的Python程序猿觉得，FastCGI标准下写异步的Web服务还是不太方便，如果能够收到请求后CGI端去处理，处理完毕后通过Callback回调来返回结果，那样岂不是很Cool？！所以WSGI就被创造出来了：</p>
+<h3 id="WSGI（Web-Server-Gateway-Interface）"><a href="#WSGI（Web-Server-Gateway-Interface）" class="headerlink" title="WSGI（Web Server Gateway Interface）"></a>WSGI（Web Server Gateway Interface）</h3><p>Web服务器网关接口（Web Server Gateway Interface，缩写为WSGI）是为Python语言定义的Web服务器和Web应用程序或框架之间的一种简单而通用的接口。</p>
+<p>当Web Server收到一个请求后，可以通过Socket把环境变量和一个Callback回调函数传给后端Web应用，Web应用在完成页面组装后通过Callback把内容返回给Web Server。这样做的优点有很多：</p>
+<ul>
+<li>异步化，通过Callback将Web请求的工作拆解开，可以很方便的在一个线程空间里同时处理多个Web请求。</li>
+<li>方便进行各种负载均衡和请求转发，不会造成后端Web应用阻塞。</li>
+</ul>
+<p>Web开发有3P：Perl、Python、PHP。<br>Perl是1987年发布的，Python是1989年，PHP是1995年。CGI标准提出的时候正是Perl如日中天的时候，所以CGI的提出当时也是主要为了解决Perl作为Web编程语言的需求。熟悉正则（regex）的程序员可能知道正则的事实标准叫做pcre（Perl兼容正则表达式，Perl Compatible Regular Expressions），这也从一个侧面体现了Perl作为一个古老的语言在当时对各种业界标准的影响。</p>
+<h3 id="简而言之"><a href="#简而言之" class="headerlink" title="简而言之"></a>简而言之</h3><ul>
+<li>CGI：是 Web Server 与 Web Application 之间数据交换的一种协议。</li>
+<li>FastCGI：同 CGI，是一种通信协议，但比 CGI 在效率上做了一些优化。同样，SCGI 协议与 FastCGI 类似。</li>
+<li>PHP-CGI：是 PHP （Web Application）对 Web Server 提供的 CGI 协议的接口程序。</li>
+<li>PHP-FPM：是 PHP（Web Application）对 Web Server 提供的 FastCGI 协议的接口程序，额外还提供了相对智能一些任务管理。</li>
+</ul>
+<h2 id="进程数和并发数的关系"><a href="#进程数和并发数的关系" class="headerlink" title="进程数和并发数的关系"></a>进程数和并发数的关系</h2><p>PHP-FPM 采用 master/worker 多进程架构。<br>即：众多的 worker 进程组成了进程池，等待 master 进程分配任务，而且每个 worker 进程只能同时处理单个任务，前一个处理结束，才能为下一个服务。<br>PHP-FPM 是 1:1 模型。单机情况下，如果 PHP-FPM 配置的最大子进程数为 20，那么就最多可以并发处理 20 个请求。之后的请求会进行排队，这个排队由fpm主进程完成，nginx采用的是异步IO模型，不会产生阻塞。</p>
+<h2 id="php-fpm-进程管理"><a href="#php-fpm-进程管理" class="headerlink" title="php-fpm 进程管理"></a>php-fpm 进程管理</h2><p>进程包含 master 进程和 worker 进程两种进程。<br>master 进程只有一个，负责监听端口，接收来自 Web Server 的请求，而 worker 进程则一般有多个(具体数量根据实际需要配置)，每个进程内部都嵌入了一个 PHP 解释器，是 PHP 代码真正执行的地方。</p>
+<h2 id="php-fpm和进程数量的关系"><a href="#php-fpm和进程数量的关系" class="headerlink" title="php-fpm和进程数量的关系"></a>php-fpm和进程数量的关系</h2><h3 id="php-fpm的两种进程管理模式"><a href="#php-fpm的两种进程管理模式" class="headerlink" title="php-fpm的两种进程管理模式"></a>php-fpm的两种进程管理模式</h3><p>php-fpm的进程数也是可以根据设置分为动态和静态的。<br>一种是直接开启指定数量的php-fpm进程，不再增加或者减少；<br>另一种则是开始的时候开启一定数量的php-fpm进程，当请求量变大的时候，动态的增加php-fpm进程数到上限，当空闲的时候自动释放空闲的进程数到一个下限。</p>
+<p>这两种不同的执行方式，可以根据服务器的实际需求来进行调整。 这里先说一下涉及到这个的几个参数吧，他们分别是</p>
+<pre><code>pm
+pm.max_children
+pm.start_servers
+pm.min_spare_servers
+pm.max_spare_servers
+</code></pre><p>pm表示使用那种方式，有两个值可以选择，就是static（静态）或者dynamic（动态）。 在更老一些的版本中，dynamic被称作apache-like。这个要注意看配置文件给出的说明了。PHP5.3 php-fpm的默认静态处理方式会使得php-cgi的进程长期占用内存而无法释放，这也是导致nginx出错的原因之 一，因此可以将php-fpm的处理方式改成apache模式。</p>
+<p>下面4个参数的意思分别为：</p>
+<pre><code>pm.max_children：静态方式下开启的php-fpm进程数量。 pm.start_servers：动态方式下的起始php-fpm进程数量。 pm.min_spare_servers：动态方式下的最小php-fpm进程数量。 pm.max_spare_servers：动态方式下的最大php-fpm进程数量。
+</code></pre><p>如果dm设置为static，那么其实只有pm.max_children这个参数生效。系统会开启设置的数量个php-fpm进程。<br> 如果dm设置为dynamic，那么pm.max_children参数失效，后面3个参数生效。</p>
+<p> 系统会在php-fpm运行开始的时候启动 pm.start_servers个php-fpm进程，然后根据系统的需求动态在pm.min_spare_servers和 pm.max_spare_servers之间调整php-fpm进程数。</p>
+<h3 id="那么，对于我们的服务器，选择哪种执行方式比较好呢？"><a href="#那么，对于我们的服务器，选择哪种执行方式比较好呢？" class="headerlink" title="那么，对于我们的服务器，选择哪种执行方式比较好呢？"></a>那么，对于我们的服务器，选择哪种执行方式比较好呢？</h3><p> 事实上，跟Apache一样，我们运行的PHP程序在执行完成后，或多或少会有内存泄露的问题。 这也是为什么开始的时候一个php-fpm进程只占用3M左右内存，运行一段时间后就会上升到20-30M的原因了。所以，动态方式因为会结束掉多余的进程，可以回收释放一些内存，所以推荐在内存较少的服务器或者VPS上使用。具体最大数量根据 内存/20M 得到。比如说512M的VPS，议pm.max_spare_servers设置为20。至于pm.min_spare_servers，则建议根据服务器的负载情况来设置，比较合适的值在5~10之间。 然后对于比较大内存的服务器来说，设置为静态的话会提高效率。因为频繁开关php-fpm进程也会有时滞，所以内存够大的情况下开静态效果会更好。数量也可以根据内存/30M 得到。比如说2GB内存的服务器，可以设置为50；4GB内存可以设置为100等。</p>
+<h2 id="php-fpm操作"><a href="#php-fpm操作" class="headerlink" title="php-fpm操作"></a>php-fpm操作</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><pre><code>/usr/local/php/sbin/php-fpm
+</code></pre><h3 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h3><p>master进程可以理解以下信号</p>
+<pre><code>INT, TERM 立刻终止
+QUIT 平滑终止
+USR1 重新打开日志文件
+USR2 平滑重载所有worker进程并重新载入配置和二进制模块
+</code></pre><p>关闭命令</p>
+<pre><code>kill -QUIT 42891
+</code></pre><h3 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h3><p>先查看php-fpm的master进程号</p>
+<pre><code># ps aux|grep php-fpm
+root     21891  0.0  0.0 112660   960 pts/3    R+   16:18   0:00 grep --color=auto php-fpm
+root     42891  0.0  0.1 182796  1220 ?        Ss   4月18   0:19 php-fpm: master process (/usr/local/php/etc/php-fpm.conf)
+nobody   42892  0.0  0.6 183000  6516 ?        S    4月18   0:07 php-fpm: pool www
+nobody   42893  0.0  0.6 183000  6508 ?        S    4月18   0:17 php-fpm: pool www
+</code></pre><p>重启命令</p>
+<pre><code>kill -USR2 42891
+</code></pre><p>上面方案一般是没有生成php-fpm.pid文件时使用，如果要生成php-fpm.pid，使用下面这种方案：</p>
+<p>上面master进程可以看到，matster使用的是/usr/local/php/etc/php-fpm.conf这个配置文件，cat /usr/local/php/etc/php-fpm.conf 发现：</p>
+<pre><code>[global]
+; Pid file
+; Note: the default prefix is /usr/local/php/var
+; Default Value: none
+;pid = run/php-fpm.pid
+</code></pre><p>pid文件路径应该位于/usr/local/php/var/run/php-fpm.pid，由于注释掉，所以没有生成，我们把注释去除，再kill -USR2 42891 重启php-fpm,便会生成pid文件，下次就可以使用以下命令重启,关闭php-fpm了：</p>
+<pre><code>php-fpm 关闭：
+kill -INT &apos;cat /usr/local/php/var/run/php-fpm.pid&apos;
+php-fpm 重启：
+kill -USR2 &apos;cat /usr/local/php/var/run/php-fpm.pid&apos;
+</code></pre><h2 id="优化总结"><a href="#优化总结" class="headerlink" title="优化总结"></a>优化总结</h2><h3 id="避免程序跑死（hang）"><a href="#避免程序跑死（hang）" class="headerlink" title="避免程序跑死（hang）"></a>避免程序跑死（hang）</h3><p>在负载较高的服务器上定时重载php-fpm，reload可以平滑重启而不影响生产系统的php脚本运行，每15分钟reload一次，定时任务如下：</p>
+<pre><code>0-59/15 * * * * /usr/local/php/sbin/php-fpm reload
+</code></pre><h3 id="增加最大处理请求数"><a href="#增加最大处理请求数" class="headerlink" title="增加最大处理请求数"></a>增加最大处理请求数</h3><p>最大处理请求数是指一个php-fpm的worker进程在处理多少个请求后就终止掉，master进程会重新respawn新的。该配置可以避免php解释器自身或程序引起的memory leaks。默认值是500，可以修改为如下配置：</p>
+<pre><code>pm.max_requests = 1024
+</code></pre><p>这段配置的意思是，当一个 PHP-CGI 进程处理的请求数累积到 500 个后，自动重启该进程。<br>但是为什么要重启进程呢？</p>
+<p>一般在项目中，我们多多少少都会用到一些 PHP 的第三方库，这些第三方库经常存在内存泄漏问题，如果不定期重启 PHP-CGI 进程，势必造成内存使用量不断增长。因此 PHP-FPM 作为 PHP-CGI 的管理器，提供了这么一项监控功能，对请求达到指定次数的 PHP-CGI 进程进行重启，保证内存使用量不增长。</p>
+<p>正是因为这个机制，在高并发的站点中，经常导致 502 错误，我猜测原因是 PHP-FPM 对从 NGINX 过来的请求队列没处理好。不过我目前用的还是 PHP 5.3.2，不知道在 PHP 5.3.3 中是否还存在这个问题。</p>
+<p>目前我们的解决方法是，把这个值尽量设置大些，尽可能减少 PHP-CGI 重新 SPAWN 的次数，同时也能提高总体性能。在我们自己实际的生产环境中发现，内存泄漏并不明显，因此我们将这个值设置得非常大（204800）。大家要根据自己的实际情况设置这个值，不能盲目地加大。</p>
+<h3 id="优化动态fpm进程数"><a href="#优化动态fpm进程数" class="headerlink" title="优化动态fpm进程数"></a>优化动态fpm进程数</h3><pre><code>pm.max_children = 100
+pm.start_servers = 30
+pm.min_spare_servers = 20
+pm.max_spare_servers = 100
+pm.max_requests = 500
+</code></pre><p>对于我们的服务器，选择哪种执行方式比较好呢？事实上，跟Apache一样，运行的PHP程序在执行完成后，或多或少会有内存泄露的问题。<br>这也是为什么开始的时候一个php-fpm进程只占用3M左右内存，运行一段时间后就会上升到20-30M的原因了。<br>对于内存大的服务器（比如8G以上）来说，指定静态的max_children实际上更为妥当，因为这样不需要进行额外的进程数目控制，会提高效率。<br>因为频繁开关php-fpm进程也会有时滞，所以内存够大的情况下开静态效果会更好。数量也可以根据 内存/30M 得到，比如8GB内存可以设置为100，<br>那么php-fpm耗费的内存就能控制在 2G-3G的样子。如果内存稍微小点，比如1G，那么指定静态的进程数量更加有利于服务器的稳定。<br>这样可以保证php-fpm只获取够用的内存，将不多的内存分配给其他应用去使用，会使系统的运行更加畅通。<br>对于小内存的服务器来说，比如256M内存的VPS，即使按照一个20M的内存量来算，10个php-cgi进程就将耗掉200M内存，那系统的崩溃就应该很正常了。<br>因此应该尽量地控制php-fpm进程的数量，大体明确其他应用占用的内存后，给它指定一个静态的小数量，会让系统更加平稳一些。或者使用动态方式，<br>因为动态方式会结束掉多余的进程，可以回收释放一些内存，所以推荐在内存较少的服务器或VPS上使用。具体最大数量根据 内存/20M 得到。<br>比如说512M的VPS，建议pm.max_spare_servers设置为20。至于pm.min_spare_servers，则建议根据服务器的负载情况来设置，比如服务器上只是部署php环境的话，比较合适的值在5~10之间。</p>
+<h2 id="php-fpm-config的参数配置"><a href="#php-fpm-config的参数配置" class="headerlink" title="php-fpm.config的参数配置"></a>php-fpm.config的参数配置</h2><p>FPM 使用类似 php.ini 语法的 php-fpm.conf 和进程池配置文件。<br>php-fpm.conf 全局配置段</p>
+<h4 id="pid-string"><a href="#pid-string" class="headerlink" title="pid string"></a>pid string</h4><p>   PID 文件的位置。默认为空。</p>
+<h4 id="error-log-string"><a href="#error-log-string" class="headerlink" title="error_log string"></a>error_log string</h4><p>   错误日志的位置。默认：#INSTALL_PREFIX#/log/php-fpm.log。 如果设置为 “syslog”，日志将不会写入本地文件，而是发送到 syslogd。</p>
+<h4 id="log-level-string"><a href="#log-level-string" class="headerlink" title="log_level string"></a>log_level string</h4><p>   错误级别。可用级别为：alert（必须立即处理），error（错误情况），warning（警告情况），notice（一般重要信息），debug（调试信息）。默认：notice。</p>
+<h4 id="syslog-facility-string"><a href="#syslog-facility-string" class="headerlink" title="syslog.facility string"></a>syslog.facility string</h4><p>   设置何种程序记录消息，默认值：daemon。</p>
+<h4 id="syslog-ident-string"><a href="#syslog-ident-string" class="headerlink" title="syslog.ident string"></a>syslog.ident string</h4><p>   为每条信息添加前缀。 如果在同一台服务器上运行了多个 FPM 实例，可以修改此默认值来满足需求。默认值：php-fpm。</p>
+<h4 id="emergency-restart-threshold-int"><a href="#emergency-restart-threshold-int" class="headerlink" title="emergency_restart_threshold int"></a>emergency_restart_threshold int</h4><p>   如果子进程在 emergency_restart_interval 设定的时间内收到该参数设定次数的 SIGSEGV 或者 SIGBUS退出信息号，则FPM会重新启动。0 表示“关闭该功能”。默认值：0（关闭）。</p>
+<h4 id="emergency-restart-interval-mixed"><a href="#emergency-restart-interval-mixed" class="headerlink" title="emergency_restart_interval mixed"></a>emergency_restart_interval mixed</h4><p>   emergency_restart_interval 用于设定平滑重启的间隔时间。这么做有助于解决加速器中共享内存的使用问题。可用单位：s（秒），m（分），h（小时）或者 d（天）。默认单位：s（秒）。默认值：0（关闭）。</p>
+<h4 id="process-control-timeout-mixed"><a href="#process-control-timeout-mixed" class="headerlink" title="process_control_timeout mixed"></a>process_control_timeout mixed</h4><p>   设置子进程接受主进程复用信号的超时时间。可用单位：s（秒），m（分），h（小时）或者 d（天）。默认单位：s（秒）。默认值：0（关闭）。</p>
+<h4 id="process-max-int"><a href="#process-max-int" class="headerlink" title="process.max int"></a>process.max int</h4><p>   Fork 的最大 FPM 进程数。使用动态管理进程数时，此设计可以控制在一个进程池内的全局进程数量。 使用需谨慎。默认值：0。</p>
+<h4 id="process-priority-int"><a href="#process-priority-int" class="headerlink" title="process.priority int"></a>process.priority int</h4><p>   设置 master 进程的 nice(2) 优先级（如果设置了此值）。 可以是 -19（最高优先级）到 20 （更低优先级）。 默认值：不设置。</p>
+<h4 id="daemonize-boolean"><a href="#daemonize-boolean" class="headerlink" title="daemonize boolean"></a>daemonize boolean</h4><p>   设置 FPM 在后台运行。设置“no”将 FPM 保持在前台运行用于调试。默认值：yes。</p>
+<h4 id="rlimit-files-int"><a href="#rlimit-files-int" class="headerlink" title="rlimit_files int"></a>rlimit_files int</h4><p>   设置 master 进程的打开文件描述符 rlimit 数。</p>
+<h4 id="rlimit-core-int"><a href="#rlimit-core-int" class="headerlink" title="rlimit_core int"></a>rlimit_core int</h4><p>   设置 master 进程最大 core 的 rlimit 尺寸。 默认值：0。</p>
+<h4 id="events-mechanism-string"><a href="#events-mechanism-string" class="headerlink" title="events.mechanism string"></a>events.mechanism string</h4><p>   设置 FPM 使用的事件机制。 可用以下选项：select、pool、epoll、kqueue (*BSD)、port (Solaris)。 默认值：不设置（自动检测）</p>
+<h4 id="systemd-interval-int"><a href="#systemd-interval-int" class="headerlink" title="systemd_interval int"></a>systemd_interval int</h4><p>   使用 systemd 集成的 FPM 时，设置间歇秒数，报告健在通知给 systemd。 设置为 0 表示禁用。默认值：10。</p>
+<h3 id="运行配置区段"><a href="#运行配置区段" class="headerlink" title="运行配置区段"></a>运行配置区段</h3><p>在FPM中，可以使用不同的设置来运行多个进程池。 这些设置可以针对每个进程池单独设置。</p>
+<h4 id="listen-string"><a href="#listen-string" class="headerlink" title="listen string"></a>listen string</h4><p>   设置接受 FastCGI 请求的地址。可用格式为：’ip:port’，’port’，’/path/to/unix/socket’。每个进程池都需要设置。</p>
+<h4 id="listen-backlog-int"><a href="#listen-backlog-int" class="headerlink" title="listen.backlog int"></a>listen.backlog int</h4><p>   设置 listen(2) 的 backlog 最大值。“-1”表示无限制。默认值：-1。</p>
+<h4 id="listen-allowed-clients-string"><a href="#listen-allowed-clients-string" class="headerlink" title="listen.allowed_clients string"></a>listen.allowed_clients string</h4><p>   设置允许连接到 FastCGI 的服务器 IPV4 地址。等同于 PHP FastCGI (5.2.2+) 中的 FCGI_WEB_SERVER_ADDRS 环境变量。仅对 TCP 监听起作用。每个地址是用逗号分隔，如果没有设置或者为空，则允许任何服务器请求连接。默认值：any。 PHP 5.5.20 和 5.6.4起，开始支持 IPv6 地址。</p>
+<h4 id="listen-owner-string"><a href="#listen-owner-string" class="headerlink" title="listen.owner string"></a>listen.owner string</h4><p>   如果使用了 Unix 套接字，表示它的权限。在 Linux 中必须设置读/写权限，以便用于 WEB 服务器连接。 在很多 BSD 派生的系统中可以忽略权限允许自由连接。 默认值：运行所使用的用户和组，权限为 0660。</p>
+<h4 id="listen-group-string"><a href="#listen-group-string" class="headerlink" title="listen.group string"></a>listen.group string</h4><p>   参见 listen.owner。</p>
+<h4 id="listen-mode-string"><a href="#listen-mode-string" class="headerlink" title="listen.mode string"></a>listen.mode string</h4><p>   参见 listen.owner。</p>
+<h4 id="listen-acl-users-string"><a href="#listen-acl-users-string" class="headerlink" title="listen.acl_users string"></a>listen.acl_users string</h4><p>   当系统支持 POSIX ACL（Access Control Lists）时，可以设置使用此选项。 当设置了的时候，将会忽略 listen.owner 和 listen.group。 值是逗号分割的用户名列表。 PHP 5.6.5 起可用。</p>
+<h4 id="listen-acl-groups-string"><a href="#listen-acl-groups-string" class="headerlink" title="listen.acl_groups string"></a>listen.acl_groups string</h4><p>   参见 listen.acl_users。 值是逗号分割的用户组名称列表。 PHP 5.6.5 起可用。</p>
+<h4 id="user-string"><a href="#user-string" class="headerlink" title="user string"></a>user string</h4><p>   FPM 进程运行的Unix用户。必须设置。</p>
+<h4 id="group-string"><a href="#group-string" class="headerlink" title="group string"></a>group string</h4><p>   FPM 进程运行的 Unix 用户组。如果不设置，就使用默认用户的用户组。</p>
+<h4 id="pm-string"><a href="#pm-string" class="headerlink" title="pm string"></a>pm string</h4><p>   设置进程管理器如何管理子进程。可用值：static，ondemand，dynamic。必须设置。</p>
+<p>   static - 子进程的数量是固定的（pm.max_children）。</p>
+<p>   ondemand - 进程在有需求时才产生（当请求时才启动。与 dynamic 相反，在服务启动时 pm.start_servers 就启动了。</p>
+<p>   dynamic - 子进程的数量在下面配置的基础上动态设置：pm.max_children，pm.start_servers，pm.min_spare_servers，pm.max_spare_servers。</p>
+<h4 id="pm-max-children-int"><a href="#pm-max-children-int" class="headerlink" title="pm.max_children int"></a>pm.max_children int</h4><p>   pm 设置为 static 时表示创建的子进程的数量，pm 设置为 dynamic 时表示最大可创建的子进程的数量。必须设置。</p>
+<p>   该选项设置可以同时提供服务的请求数限制。类似 Apache 的 mpm_prefork 中 MaxClients 的设置和 普通PHP FastCGI中的 PHP_FCGI_CHILDREN 环境变量。</p>
+<h4 id="pm-start-servers-in"><a href="#pm-start-servers-in" class="headerlink" title="pm.start_servers in"></a>pm.start_servers in</h4><p>   设置启动时创建的子进程数目。仅在 pm 设置为 dynamic 时使用。默认值：min_spare_servers + (max_spare_servers - min_spare_servers) / 2。</p>
+<h4 id="pm-min-spare-servers-int"><a href="#pm-min-spare-servers-int" class="headerlink" title="pm.min_spare_servers int"></a>pm.min_spare_servers int</h4><p>   设置空闲服务进程的最低数目。仅在 pm 设置为 dynamic 时使用。必须设置。</p>
+<h4 id="pm-max-spare-servers-int"><a href="#pm-max-spare-servers-int" class="headerlink" title="pm.max_spare_servers int"></a>pm.max_spare_servers int</h4><p>   设置空闲服务进程的最大数目。仅在 pm 设置为 dynamic 时使用。必须设置。</p>
+<h4 id="pm-process-idle-timeout-mixed"><a href="#pm-process-idle-timeout-mixed" class="headerlink" title="pm.process_idle_timeout mixed"></a>pm.process_idle_timeout mixed</h4><p>   秒数，多久之后结束空闲进程。 仅当设置 pm 为 ondemand。 可用单位：s（秒），m（分），h（小时）或者 d（天）。默认单位：10s。</p>
+<h4 id="pm-max-requests-int"><a href="#pm-max-requests-int" class="headerlink" title="pm.max_requests int"></a>pm.max_requests int</h4><p>   设置每个子进程重生之前服务的请求数。对于可能存在内存泄漏的第三方模块来说是非常有用的。如果设置为 ‘0’ 则一直接受请求，等同于 PHP_FCGI_MAX_REQUESTS 环境变量。默认值：0。</p>
+<h4 id="pm-status-path-string"><a href="#pm-status-path-string" class="headerlink" title="pm.status_path string"></a>pm.status_path string</h4><p>   FPM 状态页面的网址。如果没有设置，则无法访问状态页面，默认值：无。</p>
+<h4 id="ping-path-string"><a href="#ping-path-string" class="headerlink" title="ping.path string"></a>ping.path string</h4><p>   FPM 监控页面的 ping 网址。如果没有设置，则无法访问 ping 页面。该页面用于外部检测 FPM 是否存活并且可以响应请求。请注意必须以斜线开头（/）。</p>
+<h4 id="ping-response-string"><a href="#ping-response-string" class="headerlink" title="ping.response string"></a>ping.response string</h4><p>   用于定义 ping 请求的返回响应。返回为 HTTP 200 的 text/plain 格式文本。默认值：pong。</p>
+<h4 id="process-priority-int-1"><a href="#process-priority-int-1" class="headerlink" title="process.priority int"></a>process.priority int</h4><p>   设置 worker 的 nice(2)优先级（如果设置了的话）。 该值从 -19（最高优先级） 到 20（更低优先级）。 默认值：不设置</p>
+<h4 id="prefix-string"><a href="#prefix-string" class="headerlink" title="prefix string"></a>prefix string</h4><p>   检测路径时使用的前缀。</p>
+<h4 id="request-terminate-timeout-mixed"><a href="#request-terminate-timeout-mixed" class="headerlink" title="request_terminate_timeout mixed"></a>request_terminate_timeout mixed</h4><p>   设置单个请求的超时中止时间。该选项可能会对 php.ini 设置中的 ‘max_execution_time’ 因为某些特殊原因没有中止运行的脚本有用。设置为 ‘0’ 表示 ‘Off’。可用单位：s（秒），m（分），h（小时）或者 d（天）。默认单位：s（秒）。默认值：0（关闭）。</p>
+<h4 id="request-slowlog-timeout-mixed"><a href="#request-slowlog-timeout-mixed" class="headerlink" title="request_slowlog_timeout mixed"></a>request_slowlog_timeout mixed</h4><p>   当一个请求该设置的超时时间后，就会将对应的 PHP 调用堆栈信息完整写入到慢日志中。设置为 ‘0’ 表示 ‘Off’。可用单位：s（秒），m（分），h（小时）或者 d（天）。默认单位：s（秒）。默认值：0（关闭）。</p>
+<h4 id="slowlog-string"><a href="#slowlog-string" class="headerlink" title="slowlog string"></a>slowlog string</h4><p>   慢请求的记录日志。默认值：#INSTALL_PREFIX#/log/php-fpm.log.slow。</p>
+<h4 id="rlimit-files-int-1"><a href="#rlimit-files-int-1" class="headerlink" title="rlimit_files int"></a>rlimit_files int</h4><p>   设置文件打开描述符的 rlimit 限制。默认值：系统定义值。</p>
+<h4 id="rlimit-core-int-1"><a href="#rlimit-core-int-1" class="headerlink" title="rlimit_core int"></a>rlimit_core int</h4><p>   设置核心 rlimit 最大限制值。可用值：’unlimited’，0 或者正整数。默认值：系统定义值。</p>
+<h4 id="chroot-string"><a href="#chroot-string" class="headerlink" title="chroot string"></a>chroot string</h4><p>   启动时的 Chroot 目录。所定义的目录需要是绝对路径。如果没有设置，则 chroot 不被使用。</p>
+<h4 id="chdir-string"><a href="#chdir-string" class="headerlink" title="chdir string"></a>chdir string</h4><p>   设置启动目录，启动时会自动 Chdir 到该目录。所定义的目录需要是绝对路径。默认值：当前目录，或者根目录（chroot时）。</p>
+<h4 id="catch-workers-output-boolean"><a href="#catch-workers-output-boolean" class="headerlink" title="catch_workers_output boolean"></a>catch_workers_output boolean</h4><p>   重定向运行过程中的 stdout 和 stderr 到主要的错误日志文件中。如果没有设置，stdout 和 stderr 将会根据 FastCGI 的规则被重定向到 /dev/null。默认值：无。</p>
+<h4 id="clear-env-boolean"><a href="#clear-env-boolean" class="headerlink" title="clear_env boolean"></a>clear_env boolean</h4><p>   为 FPM worker 进程清除环境变量。 在进程池配置文件里设置环境变量前，阻止任意系统的环境变量进入 FPM worker 进程。 自 PHP 5.4.27、 5.5.11 和 5.6.0 起。 默认值: Yes</p>
+<h4 id="security-limit-extensions-string"><a href="#security-limit-extensions-string" class="headerlink" title="security.limit_extensions string"></a>security.limit_extensions string</h4><p>   限制 FPM 允许解析的脚本扩展名。 此设置可以预防 web 服务器配置的错误。 应当限制 FPM 仅仅解析 .php 扩展名，阻止恶意用户使用其他扩展名运行 php 代码。 默认值： .php .phar</p>
+<h4 id="access-log-string"><a href="#access-log-string" class="headerlink" title="access.log string"></a>access.log string</h4><p>   Access log 文件。 默认值：不设置</p>
+<h4 id="access-format-string"><a href="#access-format-string" class="headerlink" title="access.format string"></a>access.format string</h4><p>   access log 的格式。 默认值: “%R - %u %t \”%m %r\” %s”</p>
+<p>还可以在为一个运行池传递附加的环境变量，或者更新 PHP 的配置值。可以在进程池配置文件中如下面的配置参数来做到：</p>
+<h4 id="Example-1-给运行池传递环境变量和设置-PHP-的配置值"><a href="#Example-1-给运行池传递环境变量和设置-PHP-的配置值" class="headerlink" title="Example #1 给运行池传递环境变量和设置 PHP 的配置值"></a>Example #1 给运行池传递环境变量和设置 PHP 的配置值</h4><pre><code>env[HOSTNAME] = $HOSTNAME
+env[PATH] = /usr/local/bin:/usr/bin:/bin
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp
+
+php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f www@my.domain.com
+php_flag[display_errors] = off
+php_admin_value[error_log] = /var/log/fpm-php.www.log
+php_admin_flag[log_errors] = on
+php_admin_value[memory_limit] = 32M
+</code></pre><p>PHP配置值通过 php_value 或者 php_flag 设置，并且会覆盖以前的值。请注意 disable_functions 或者 disable_classes 在 php.ini 之中定义的值不会被覆盖掉，但是会将新的设置附加在原有值的后面。</p>
+<p>使用 php_admin_value 或者 php_admin_flag 定义的值，不能被 PHP 代码中的 ini_set() 覆盖。</p>
+<p>自 5.3.3 起，也可以通过 web 服务器设置 PHP 的设定。</p>
+<h4 id="Example-2-在-nginx-conf-中设定-PHP"><a href="#Example-2-在-nginx-conf-中设定-PHP" class="headerlink" title="Example #2 在 nginx.conf 中设定 PHP"></a>Example #2 在 nginx.conf 中设定 PHP</h4><pre><code>set $php_value &quot;pcre.backtrack_limit=424242&quot;;
+set $php_value &quot;$php_value \n pcre.recursion_limit=99999&quot;;
+fastcgi_param  PHP_VALUE $php_value;
+
+fastcgi_param  PHP_ADMIN_VALUE &quot;open_basedir=/var/www/htdocs&quot;;
+</code></pre><h4 id="Caution"><a href="#Caution" class="headerlink" title="Caution"></a>Caution</h4><p>由于这些设定是以 FastCGI 标头传递给 php-fpm，php-fpm 不应绑定到外部网可以访问的地址上，否则任何人都能修改 PHP 的配置选项了。参见 listen.allowed_clients。</p>
+<h3 id="各项配置解析"><a href="#各项配置解析" class="headerlink" title="各项配置解析"></a>各项配置解析</h3><pre><code>pid = run/php-fpm.pid
+#pid设置，默认在安装目录中的var/run/php-fpm.pid，建议开启
+
+error_log = log/php-fpm.log
+#错误日志，默认在安装目录中的var/log/php-fpm.log
+
+log_level = notice
+#错误级别. 可用级别为: alert（必须立即处理）, error（错误情况）, warning（警告情况）, notice（一般重要信息）, debug（调试信息）. 默认: notice.
+
+emergency_restart_threshold = 60
+emergency_restart_interval = 60s
+#表示在emergency_restart_interval所设值内出现SIGSEGV或者SIGBUS错误的php-cgi进程数如果超过 emergency_restart_threshold个，php-fpm就会优雅重启。这两个选项一般保持默认值。
+
+process_control_timeout = 0
+#设置子进程接受主进程复用信号的超时时间. 可用单位: s(秒), m(分), h(小时), 或者 d(天) 默认单位: s(秒). 默认值: 0.
+
+daemonize = yes
+#后台执行fpm,默认值为yes，如果为了调试可以改为no。在FPM中，可以使用不同的设置来运行多个进程池。 这些设置可以针对每个进程池单独设置。
+
+listen = 127.0.0.1:9000
+#fpm监听端口，即nginx中php处理的地址，一般默认值即可。可用格式为: ‘ip:port’, ‘port’, ‘/path/to/unix/socket’. 每个进程池都需要设置.
+
+listen.backlog = -1
+#backlog数，-1表示无限制，由操作系统决定，此行注释掉就行。backlog含义参考：
+
+http://www.3gyou.cc/?p=41
+
+listen.allowed_clients = 127.0.0.1
+#允许访问FastCGI进程的IP，设置any为不限制IP，如果要设置其他主机的nginx也能访问这台FPM进程，listen处要设置成本地可被访问的IP。默认值是any。每个地址是用逗号分隔. 如果没有设置或者为空，则允许任何服务器请求连接
+
+listen.owner = www
+listen.group = www
+listen.mode = 0666
+#unix socket设置选项，如果使用tcp方式访问，这里注释即可。
+
+user = www
+group = www
+#启动进程的帐户和组
+
+pm = dynamic #对于专用服务器，pm可以设置为static。
+#如何控制子进程，选项有static和dynamic。如果选择static，则由pm.max_children指定固定的子进程数。如果选择dynamic，则由下开参数决定：
+pm.max_children #，子进程最大数
+pm.start_servers #，启动时的进程数
+pm.min_spare_servers #，保证空闲进程数最小值，如果空闲进程小于此值，则创建新的子进程
+pm.max_spare_servers #，保证空闲进程数最大值，如果空闲进程大于此值，此进行清理
+
+pm.max_requests = 1000
+#设置每个子进程重生之前服务的请求数. 对于可能存在内存泄漏的第三方模块来说是非常有用的. 如果设置为 ’0′ 则一直接受请求. 等同于 PHP_FCGI_MAX_REQUESTS 环境变量. 默认值: 0.
+
+pm.status_path = /status
+#FPM状态页面的网址. 如果没有设置, 则无法访问状态页面. 默认值: none. munin监控会使用到
+
+ping.path = /ping
+#FPM监控页面的ping网址. 如果没有设置, 则无法访问ping页面. 该页面用于外部检测FPM是否存活并且可以响应请求. 请注意必须以斜线开头 (/)。
+
+ping.response = pong
+#用于定义ping请求的返回相应. 返回为 HTTP 200 的 text/plain 格式文本. 默认值: pong.
+
+request_terminate_timeout = 0
+#设置单个请求的超时中止时间. 该选项可能会对php.ini设置中的’max_execution_time’因为某些特殊原因没有中止运行的脚本有用. 设置为 ’0′ 表示 ‘Off’.当经常出现502错误时可以尝试更改此选项。
+
+request_slowlog_timeout = 10s
+#当一个请求该设置的超时时间后，就会将对应的PHP调用堆栈信息完整写入到慢日志中. 设置为 ’0′ 表示 ‘Off’
+
+slowlog = log/$pool.log.slow
+#慢请求的记录日志,配合request_slowlog_timeout使用
+
+rlimit_files = 1024
+#设置文件打开描述符的rlimit限制. 默认值: 系统定义值默认可打开句柄是1024，可使用 ulimit -n查看，ulimit -n 2048修改。
+
+rlimit_core = 0
+#设置核心rlimit最大限制值. 可用值: ‘unlimited’ 、0或者正整数. 默认值: 系统定义值.
+
+chroot =
+#启动时的Chroot目录. 所定义的目录需要是绝对路径. 如果没有设置, 则chroot不被使用.
+
+chdir =
+#设置启动目录，启动时会自动Chdir到该目录. 所定义的目录需要是绝对路径. 默认值: 当前目录，或者/目录（chroot时）
+
+catch_workers_output = yes
+#重定向运行过程中的stdout和stderr到主要的错误日志文件中. 如果没有设置, stdout 和 stderr 将会根据FastCGI的规则被重定向到 /dev/null . 默认值: 空.
+</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://php.net/manual/zh/install.fpm.configuration.php" target="_blank" rel="external">http://php.net/manual/zh/install.fpm.configuration.php</a><br><a href="http://blog.51reboot.com/cgi-fastcgi-wsgi/" target="_blank" rel="external">http://blog.51reboot.com/cgi-fastcgi-wsgi/</a><br><a href="https://www.awaimai.com/371.html" target="_blank" rel="external">https://www.awaimai.com/371.html</a><br><a href="https://www.cnblogs.com/ahaii/p/5776809.html" target="_blank" rel="external">https://www.cnblogs.com/ahaii/p/5776809.html</a><br><a href="https://blog.csdn.net/mijar2016/article/details/53311986" target="_blank" rel="external">https://blog.csdn.net/mijar2016/article/details/53311986</a></p>
+<p>1</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/04/17/服务部署/php-fpm优化/" data-id="cjgq601tz006em52n7t1t9qjg" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php-fpm/">php-fpm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/18/PHP/phper需要注意的web安全/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          phper需要注意的web安全
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/13/PHP/monolog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">monolog</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/04/17/服务部署/php-fpm优化/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#关键词"><span class="toc-number">1.</span> <span class="toc-text">关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#功能"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#php-fpm-conf"><span class="toc-number">3.1.</span> <span class="toc-text">php-fpm.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看php-fpm进程数"><span class="toc-number">3.2.</span> <span class="toc-text">查看php-fpm进程数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数详解"><span class="toc-number">3.3.</span> <span class="toc-text">参数详解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nginx和php-fpm的工作机制"><span class="toc-number">4.</span> <span class="toc-text">nginx和php-fpm的工作机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-反向代理"><span class="toc-number">4.1.</span> <span class="toc-text">Nginx 反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx-负载均衡"><span class="toc-number">4.2.</span> <span class="toc-text">Nginx 负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxy-pass-和-fastcgi-pass-的区别"><span class="toc-number">4.3.</span> <span class="toc-text">proxy_pass 和 fastcgi_pass 的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#webserver配置和运行"><span class="toc-number">4.4.</span> <span class="toc-text">webserver配置和运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx与php-fpm的结合后的完整流程"><span class="toc-number">4.5.</span> <span class="toc-text">nginx与php-fpm的结合后的完整流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx和fastcgi的通信机制"><span class="toc-number">5.</span> <span class="toc-text">Nginx和fastcgi的通信机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#两种方式"><span class="toc-number">5.1.</span> <span class="toc-text">两种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UNIX-Domain-Socket和tcp链接的区别"><span class="toc-number">5.2.</span> <span class="toc-text">UNIX Domain Socket和tcp链接的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-fpm的运行机制"><span class="toc-number">6.</span> <span class="toc-text">php-fpm的运行机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#多进程架构"><span class="toc-number">6.1.</span> <span class="toc-text">多进程架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行模式"><span class="toc-number">6.2.</span> <span class="toc-text">运行模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行原理"><span class="toc-number">6.3.</span> <span class="toc-text">运行原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#worker进程"><span class="toc-number">6.4.</span> <span class="toc-text">worker进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">6.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CGI、FastCGI、php-fpm的关系"><span class="toc-number">7.</span> <span class="toc-text">CGI、FastCGI、php-fpm的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CGI（Common-Gateway-Interface）"><span class="toc-number">7.1.</span> <span class="toc-text">CGI（Common Gateway Interface）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FastCGI（Fast-Common-Gateway-Interface）"><span class="toc-number">7.2.</span> <span class="toc-text">FastCGI（Fast Common Gateway Interface）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WSGI（Web-Server-Gateway-Interface）"><span class="toc-number">7.3.</span> <span class="toc-text">WSGI（Web Server Gateway Interface）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简而言之"><span class="toc-number">7.4.</span> <span class="toc-text">简而言之</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#进程数和并发数的关系"><span class="toc-number">8.</span> <span class="toc-text">进程数和并发数的关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-fpm-进程管理"><span class="toc-number">9.</span> <span class="toc-text">php-fpm 进程管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-fpm和进程数量的关系"><span class="toc-number">10.</span> <span class="toc-text">php-fpm和进程数量的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#php-fpm的两种进程管理模式"><span class="toc-number">10.1.</span> <span class="toc-text">php-fpm的两种进程管理模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#那么，对于我们的服务器，选择哪种执行方式比较好呢？"><span class="toc-number">10.2.</span> <span class="toc-text">那么，对于我们的服务器，选择哪种执行方式比较好呢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-fpm操作"><span class="toc-number">11.</span> <span class="toc-text">php-fpm操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动"><span class="toc-number">11.1.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭"><span class="toc-number">11.2.</span> <span class="toc-text">关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重启"><span class="toc-number">11.3.</span> <span class="toc-text">重启</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化总结"><span class="toc-number">12.</span> <span class="toc-text">优化总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#避免程序跑死（hang）"><span class="toc-number">12.1.</span> <span class="toc-text">避免程序跑死（hang）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增加最大处理请求数"><span class="toc-number">12.2.</span> <span class="toc-text">增加最大处理请求数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优化动态fpm进程数"><span class="toc-number">12.3.</span> <span class="toc-text">优化动态fpm进程数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-fpm-config的参数配置"><span class="toc-number">13.</span> <span class="toc-text">php-fpm.config的参数配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pid-string"><span class="toc-number">13.0.1.</span> <span class="toc-text">pid string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#error-log-string"><span class="toc-number">13.0.2.</span> <span class="toc-text">error_log string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#log-level-string"><span class="toc-number">13.0.3.</span> <span class="toc-text">log_level string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#syslog-facility-string"><span class="toc-number">13.0.4.</span> <span class="toc-text">syslog.facility string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#syslog-ident-string"><span class="toc-number">13.0.5.</span> <span class="toc-text">syslog.ident string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#emergency-restart-threshold-int"><span class="toc-number">13.0.6.</span> <span class="toc-text">emergency_restart_threshold int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#emergency-restart-interval-mixed"><span class="toc-number">13.0.7.</span> <span class="toc-text">emergency_restart_interval mixed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process-control-timeout-mixed"><span class="toc-number">13.0.8.</span> <span class="toc-text">process_control_timeout mixed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process-max-int"><span class="toc-number">13.0.9.</span> <span class="toc-text">process.max int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process-priority-int"><span class="toc-number">13.0.10.</span> <span class="toc-text">process.priority int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#daemonize-boolean"><span class="toc-number">13.0.11.</span> <span class="toc-text">daemonize boolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rlimit-files-int"><span class="toc-number">13.0.12.</span> <span class="toc-text">rlimit_files int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rlimit-core-int"><span class="toc-number">13.0.13.</span> <span class="toc-text">rlimit_core int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#events-mechanism-string"><span class="toc-number">13.0.14.</span> <span class="toc-text">events.mechanism string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#systemd-interval-int"><span class="toc-number">13.0.15.</span> <span class="toc-text">systemd_interval int</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行配置区段"><span class="toc-number">13.1.</span> <span class="toc-text">运行配置区段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-string"><span class="toc-number">13.1.1.</span> <span class="toc-text">listen string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-backlog-int"><span class="toc-number">13.1.2.</span> <span class="toc-text">listen.backlog int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-allowed-clients-string"><span class="toc-number">13.1.3.</span> <span class="toc-text">listen.allowed_clients string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-owner-string"><span class="toc-number">13.1.4.</span> <span class="toc-text">listen.owner string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-group-string"><span class="toc-number">13.1.5.</span> <span class="toc-text">listen.group string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-mode-string"><span class="toc-number">13.1.6.</span> <span class="toc-text">listen.mode string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-acl-users-string"><span class="toc-number">13.1.7.</span> <span class="toc-text">listen.acl_users string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#listen-acl-groups-string"><span class="toc-number">13.1.8.</span> <span class="toc-text">listen.acl_groups string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#user-string"><span class="toc-number">13.1.9.</span> <span class="toc-text">user string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#group-string"><span class="toc-number">13.1.10.</span> <span class="toc-text">group string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-string"><span class="toc-number">13.1.11.</span> <span class="toc-text">pm string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-max-children-int"><span class="toc-number">13.1.12.</span> <span class="toc-text">pm.max_children int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-start-servers-in"><span class="toc-number">13.1.13.</span> <span class="toc-text">pm.start_servers in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-min-spare-servers-int"><span class="toc-number">13.1.14.</span> <span class="toc-text">pm.min_spare_servers int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-max-spare-servers-int"><span class="toc-number">13.1.15.</span> <span class="toc-text">pm.max_spare_servers int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-process-idle-timeout-mixed"><span class="toc-number">13.1.16.</span> <span class="toc-text">pm.process_idle_timeout mixed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-max-requests-int"><span class="toc-number">13.1.17.</span> <span class="toc-text">pm.max_requests int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pm-status-path-string"><span class="toc-number">13.1.18.</span> <span class="toc-text">pm.status_path string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ping-path-string"><span class="toc-number">13.1.19.</span> <span class="toc-text">ping.path string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ping-response-string"><span class="toc-number">13.1.20.</span> <span class="toc-text">ping.response string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#process-priority-int-1"><span class="toc-number">13.1.21.</span> <span class="toc-text">process.priority int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#prefix-string"><span class="toc-number">13.1.22.</span> <span class="toc-text">prefix string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#request-terminate-timeout-mixed"><span class="toc-number">13.1.23.</span> <span class="toc-text">request_terminate_timeout mixed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#request-slowlog-timeout-mixed"><span class="toc-number">13.1.24.</span> <span class="toc-text">request_slowlog_timeout mixed</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slowlog-string"><span class="toc-number">13.1.25.</span> <span class="toc-text">slowlog string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rlimit-files-int-1"><span class="toc-number">13.1.26.</span> <span class="toc-text">rlimit_files int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rlimit-core-int-1"><span class="toc-number">13.1.27.</span> <span class="toc-text">rlimit_core int</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#chroot-string"><span class="toc-number">13.1.28.</span> <span class="toc-text">chroot string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#chdir-string"><span class="toc-number">13.1.29.</span> <span class="toc-text">chdir string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#catch-workers-output-boolean"><span class="toc-number">13.1.30.</span> <span class="toc-text">catch_workers_output boolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#clear-env-boolean"><span class="toc-number">13.1.31.</span> <span class="toc-text">clear_env boolean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#security-limit-extensions-string"><span class="toc-number">13.1.32.</span> <span class="toc-text">security.limit_extensions string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#access-log-string"><span class="toc-number">13.1.33.</span> <span class="toc-text">access.log string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#access-format-string"><span class="toc-number">13.1.34.</span> <span class="toc-text">access.format string</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Example-1-给运行池传递环境变量和设置-PHP-的配置值"><span class="toc-number">13.1.35.</span> <span class="toc-text">Example #1 给运行池传递环境变量和设置 PHP 的配置值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Example-2-在-nginx-conf-中设定-PHP"><span class="toc-number">13.1.36.</span> <span class="toc-text">Example #2 在 nginx.conf 中设定 PHP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Caution"><span class="toc-number">13.1.37.</span> <span class="toc-text">Caution</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#各项配置解析"><span class="toc-number">13.2.</span> <span class="toc-text">各项配置解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">14.</span> <span class="toc-text">参考</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
