@@ -9,11 +9,11 @@
 <meta name="keywords" content="php,laravel">
 <meta property="og:type" content="article">
 <meta property="og:title" content="laravel路由组件源码分析">
-<meta property="og:url" content="http://martist.cn/2016/05/03/LARAVEL/laravel路由组件源码分析/index.html">
+<meta property="og:url" content="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/index.html">
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-05-03T12:10:49.080Z">
+<meta property="og:updated_time" content="2018-05-04T01:32:23.665Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="laravel路由组件源码分析">
 <meta name="twitter:description" content="：-}">
@@ -71,8 +71,8 @@
       <div class="outer">
         <section id="main"><article id="post-LARAVEL/laravel路由组件源码分析" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/05/03/LARAVEL/laravel路由组件源码分析/" class="article-date">
-  <time datetime="2016-05-02T16:00:00.000Z" itemprop="datePublished">2016-05-03</time>
+    <a href="/2018/05/03/LARAVEL/laravel路由组件源码分析/" class="article-date">
+  <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
 </a>
     
   <div class="article-category">
@@ -120,7 +120,7 @@ Macaw::get(&apos;(:all)&apos;, function($fu) {
 
 Macaw::dispatch();
 </code></pre><p>然后你就可以在浏览器进行测试了,具体源码可以参见本文最下面。</p>
-<h2 id="基础补习"><a href="#基础补习" class="headerlink" title="基础补习"></a>基础补习</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">array_push() 函数向第一个参数的数组尾部添加一个或多个元素（入栈），然后返回新数组的长度。</div><div class="line">strtoupper() 函数把字符串转换为大写。</div><div class="line"></div><div class="line">strpos() 函数查找字符串在另一字符串中第一次出现的位置（区分大小写）</div><div class="line">strrpos() - 查找字符串在另一字符串中最后一次出现的位置（区分大小写）</div><div class="line"></div><div class="line">stripos() - 查找字符串在另一字符串中第一次出现的位置（不区分大小写）</div><div class="line">strripos() - 查找字符串在另一字符串中最后一次出现的位置（不区分大小写）</div><div class="line"></div><div class="line">parse_url — 解析 URL，返回其组成部分</div><div class="line"></div><div class="line">$_SERVER[&apos;REQUEST_URI&apos;]  域名之后的路由部分</div><div class="line">$_SERVER[&apos;REQUEST_METHOD&apos;] 请求方式，如GET，POST</div><div class="line"></div><div class="line">preg_replace 函数执行一个正则表达式的搜索和替换</div><div class="line"></div><div class="line">call_user_func()：调用一个回调函数处理字符串,可以用匿名函数，可以用有名函数，可以传递类的方法，</div><div class="line">call_user_func_array()： 调用回调函数，并把一个数组参数作为回调函数的参数</div></pre></td></tr></table></figure>
+<h2 id="基础补习"><a href="#基础补习" class="headerlink" title="基础补习"></a>基础补习</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">array_push() 函数向第一个参数的数组尾部添加一个或多个元素（入栈），然后返回新数组的长度。</div><div class="line">strtoupper() 函数把字符串转换为大写。</div><div class="line"></div><div class="line">strpos() 函数查找字符串在另一字符串中第一次出现的位置（区分大小写）</div><div class="line">strrpos() 查找字符串在另一字符串中最后一次出现的位置（区分大小写）</div><div class="line"></div><div class="line">stripos()  查找字符串在另一字符串中第一次出现的位置（不区分大小写）</div><div class="line">strripos()  查找字符串在另一字符串中最后一次出现的位置（不区分大小写）</div><div class="line"></div><div class="line">parse_url()  解析 URL，返回其组成部分</div><div class="line">preg_replace()  函数执行一个正则表达式的搜索和替换</div><div class="line"></div><div class="line">$_SERVER[&apos;REQUEST_URI&apos;]  域名之后的路由部分</div><div class="line">$_SERVER[&apos;REQUEST_METHOD&apos;] 请求方式，如GET，POST</div><div class="line"></div><div class="line">call_user_func() 调用一个回调函数处理字符串,可以用匿名函数，可以用有名函数，可以传递类的方法，</div><div class="line">call_user_func_array()  调用回调函数，并把一个数组参数作为回调函数的参数</div></pre></td></tr></table></figure>
 <h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>一开始进入路由：</p>
 <pre><code>Macaw::get(&apos;success&apos;, function() {
     echo &quot;进入成功！&quot;;
@@ -332,7 +332,7 @@ class Macaw {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjgra7woy000hc62nkwh3h08c" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjgrabk05000kfv2nb3legoo8" class="article-share-link">Share</a>
       
       
       
@@ -345,19 +345,10 @@ class Macaw {
     
 <nav id="article-nav">
   
-    <a href="/2016/05/19/PHP/七牛云jssdk应用总结/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          七牛云js-sdk应用总结
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/03/27/GIT/git教程5/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">git教程(五)</div>
+      <div class="article-nav-title">实现一个类似laravel的现代化PHP框架</div>
     </a>
   
 </nav>
@@ -373,7 +364,7 @@ class Macaw {
       <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
        
-            <div id="SOHUCS" sid="2016/05/03/LARAVEL/laravel路由组件源码分析/"> </div>
+            <div id="SOHUCS" sid="2018/05/03/LARAVEL/laravel路由组件源码分析/"> </div>
     
       
       
