@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记住密码基本原理 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记住密码基本原理">
+<meta property="og:url" content="http://martist.cn/2018/05/08/PHP/记住密码基本原理/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-05-08T02:42:40.535Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记住密码基本原理">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/记住密码基本原理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/08/PHP/记住密码基本原理/" class="article-date">
+  <time datetime="2018-05-07T16:00:00.000Z" itemprop="datePublished">2018-05-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      记住密码基本原理
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="怎么在浏览器退出登录后保持状态"><a href="#怎么在浏览器退出登录后保持状态" class="headerlink" title="怎么在浏览器退出登录后保持状态"></a>怎么在浏览器退出登录后保持状态</h2><p>SESSION信息存储在服务端，相对于存储在客户端的COOKIE更为安全，所以正常一般网站在用于“判断用户是否登录”时，确实是使用SESSION，例如可以在SESSION里存储如下一个数组：</p>
+<pre><code>//验证用户名和密码成功后
+$_SESSION[&apos;userinfo&apos;] = [
+  &apos;uid&apos; =&gt; 123,
+  &apos;username&apos; =&gt; &apos;testuser&apos;
+];
+</code></pre><p>而后在需要验证登录的地方加入类似如下判断</p>
+<pre><code>if(empty($_SESSION[&apos;userinfo&apos;]) || empty($_SESSION[&apos;userinfo&apos;][&apos;uid&apos;])){
+  //未登录，引导登录
+}
+</code></pre><p>以上是使用SESSION做用户登录的基本存储和验证逻辑，当然实际开发过程中会将这部分的代码封装</p>
+<p>我们都知道，SESSION一般是通过在COOKIE里记录一个KEY为PHPSESSID的COOKIE来保持上下文的，而这个PHPSESSID的COOKIE的有效期是设置为“会话”，意味着关闭浏览器后该COOKIE被销毁，相应的后端SESSION也就销毁，如图<br>另外，由于PHP的Session本身就有GC的机制，一般默认1440秒内页面没有刷新动作（准确的说是没有新的请求来刷新该PHPSESSID的生命周期），该SESSION也就被自动回收，伴随着用户的登录就失效了。</p>
+<p>虽然COOKIE保存在客户端，不安全，易被伪造，这是客观存在的事实，但要实现这个“记住我”，还确实就得用到COOKIE，我们能做的是尽量去提高伪造的门槛。</p>
+<h2 id="一个参考的设计方案"><a href="#一个参考的设计方案" class="headerlink" title="一个参考的设计方案"></a>一个参考的设计方案</h2><h3 id="签名机制"><a href="#签名机制" class="headerlink" title="签名机制"></a>签名机制</h3><p>1、将用户信息，比如一个[‘uid’=&gt;123, ‘username’=&gt;’testuser’]的数组，序列化后成为字符串，使用可逆加密算法加密该字符串，写到一个Key为userinfo的COOKIE里<br>2、由于可逆加密算法容易被解密，一旦加密的规则被别人猜测到以后，就可以轻易篡改这个COOKIE的内容，然后自行根据加密规则加密后伪造，所以，我们另外加入一个infodig的COOKIE，是将以上的userinfo的COOKIE内容，加入salt后使用不可逆加密算法生成散列，至于salt咱们可以自己定，总之要对外保密，不可逆算法例如md5，甚至多次加盐多次md5<br>3、以上两个COOKIE，为增强安全性，防止用户被XSS攻击后拿到，可以设置http-only属性</p>
+<h3 id="数据验证"><a href="#数据验证" class="headerlink" title="数据验证"></a>数据验证</h3><p>服务端判断存在以上两个COOKIE后<br>1、验证infodig与userinfo是否匹配（将userinfo的内容使用生成infodig的方法计算后，与COOKIE传上来的infodig匹配是否一致）<br>2、infodig验证通过后，使用解密算法解密userinfo串，得到用户信息，如果用户信息里的uid存在用户表中，则写SESSION，通过SESSION保持本次会话</p>
+<p>总而言之，使用COOKIE记录用户信息是可行的（当然不建议把用户敏感的东西存在COOKIE，例如邮箱、手机、甚至密码，只记录对登录有用的部分，例如uid、username等标识，以及nickname可能会在某些地方提升用户体验），可以确定的是，这个COOKIE对用户可见，我们要做的就是两点：<br>1、尽量让用户看不懂，而只有我们服务端自己认识（可逆加密算法）；<br>2、即使用户看懂了，他也不能够轻易的伪造（不可逆的散列算法）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/08/PHP/记住密码基本原理/" data-id="cjgygwpjl004vx92nta15t16i" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/07/服务部署/nginx如何配置重定向/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">nginx如何配置重定向</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/08/PHP/记住密码基本原理/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#怎么在浏览器退出登录后保持状态"><span class="toc-number">1.</span> <span class="toc-text">怎么在浏览器退出登录后保持状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一个参考的设计方案"><span class="toc-number">2.</span> <span class="toc-text">一个参考的设计方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#签名机制"><span class="toc-number">2.1.</span> <span class="toc-text">签名机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据验证"><span class="toc-number">2.2.</span> <span class="toc-text">数据验证</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

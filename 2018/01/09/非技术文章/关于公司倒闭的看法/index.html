@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>关于公司倒闭的看法 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="北漂生活">
+<meta name="keywords" content="生活">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于公司倒闭的看法">
+<meta property="og:url" content="http://martist.cn/2018/01/09/非技术文章/关于公司倒闭的看法/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="北漂生活">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-05-07T08:04:09.628Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于公司倒闭的看法">
+<meta name="twitter:description" content="北漂生活">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-非技术文章/关于公司倒闭的看法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/09/非技术文章/关于公司倒闭的看法/" class="article-date">
+  <time datetime="2018-01-08T16:00:00.000Z" itemprop="datePublished">2018-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/生活/">生活</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于公司倒闭的看法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>去年年底11月26号，那天中午还在和产品讨论需求，6点钟还在开发，6点过了会CTO通知7点钟和老板开个电话会议。</p>
+<p>说了件事，公司要倒闭，你们的薪水先欠着。</p>
+<p>从6，7月份时候拉投资，就隐隐感到公司产品做得有问题。</p>
+<h2 id="几点原因"><a href="#几点原因" class="headerlink" title="几点原因"></a>几点原因</h2><ol>
+<li>测试环节过于冗余，明明还没有1.0版本，开发环境，测试环境，预发布环境，正式环境搞的飞起，增加了版本控制和环境部署管理的复杂度。</li>
+<li>缺乏code-review，基本属于开发完了，这件事情就算交代了，代码层面上的隐患和健壮性没人管，一些耦合性高又特么复用性差的代码结构，导致后期需求变更和扩展变得艰难。实话实说，项目最后做成了View-Controller架构。</li>
+<li>恕我直言，CTO水平不高，或者说曾经水平是ok的，可惜奔40的人了，带创业项目需要事无巨细亲自上的时候，都上不了。连php的namespace和composer都不知道，如何把控这个项目。</li>
+<li>没有专门的测试工程师配置，由产品经理来测试。</li>
+<li>产品经理是CTO的媳妇。</li>
+<li>CTO是老板的好友。</li>
+<li>多次出去拿app给VC演示，每次都出bug不该追责么</li>
+</ol>
+<h2 id="代码上的问题"><a href="#代码上的问题" class="headerlink" title="代码上的问题"></a>代码上的问题</h2><ul>
+<li>function，class，路由，变量命名没有遵循规范</li>
+<li>ajax和页面提交没有防csrf攻击</li>
+<li>登录注册页面的验证码没有防频率点击</li>
+<li>项目中好多的拼接sql的地方【php为什么在5的大版本中开始启用新的方式【pdo】访问数据库，而非mysql_connect($host, $username, $password)这种废弃的方式，主要就是为了防sql注入，然而拼接sql来使用pdo而非是按照变量替换的方式去使用，让php源码作者的初衷毁于一旦】</li>
+<li>没有git flow </li>
+<li>没有规划，草率开发<br>开发之前指定开发任务，然后阶段验收，而不是开发验收完了，产品出现了问题，产品和测试忽视的问题推给开发者。</li>
+<li>加班问题<br>在主动加班，提前完成既定的开发任务之后，请假我认为是没有问题的。公司不能把业务流程导致的代码隐患也算到开发者的头上，一些代码级别的隐患都不能，你能责怪windows的开发者没能在熊猫烧香前修补漏洞么，因此克扣工资或者炒鱿鱼？一个产品从一个idea到做大做强，中间有很多部门的心血，不能把锅都甩给开发者，如果没有足够的时间，就不能要求产品每个环节的细节做足。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/01/09/非技术文章/关于公司倒闭的看法/" data-id="cjgygwpkn0074x92n3vl6d09p" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活/">生活</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/02/07/框架/PHP Reflection API详解/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          PHP Reflection API详解
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/01/02/PHP/错误和异常/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">错误和异常</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/01/09/非技术文章/关于公司倒闭的看法/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#几点原因"><span class="toc-number">1.</span> <span class="toc-text">几点原因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码上的问题"><span class="toc-number">2.</span> <span class="toc-text">代码上的问题</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
