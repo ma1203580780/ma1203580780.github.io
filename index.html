@@ -41,7 +41,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -104,7 +104,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel核心概念/" data-id="cjh1wmoc5000hmz2nakjg1d9f" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel核心概念/" data-id="cjh1wro72000hp02nv4ra1so3" class="article-share-link">分享</a>
       
       
       
@@ -153,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" data-id="cjh1wmoc8000pmz2nu16hfyvk" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" data-id="cjh1wro74000kp02ngu9uuabb" class="article-share-link">分享</a>
       
       
       
@@ -202,7 +202,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/08/PHP/记住密码基本原理/" data-id="cjh1wmoet0054mz2nvrr6lfb6" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/08/PHP/记住密码基本原理/" data-id="cjh1wro9p004yp02nvfrvuc05" class="article-share-link">分享</a>
       
       
       
@@ -251,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/07/服务部署/nginx如何配置重定向/" data-id="cjh1wmoff006emz2nzjam565w" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/07/服务部署/nginx如何配置重定向/" data-id="cjh1wroa7006ap02no4aqdbt3" class="article-share-link">分享</a>
       
       
       
@@ -300,7 +300,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjh1wmocc000wmz2nfcpkjds9" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjh1wro78000wp02n5e0r19ld" class="article-share-link">分享</a>
       
       
       
@@ -349,7 +349,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjh1wmoc6000kmz2npq6x7sdr" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjh1wro75000pp02n3smn8uxh" class="article-share-link">分享</a>
       
       
       
@@ -398,7 +398,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjh1wmogs008nmz2nhyea187k" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjh1wrobi008op02nqgbdwzyr" class="article-share-link">分享</a>
       
       
       
@@ -438,27 +438,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <!-- Table of Contents -->
+        <p>：-}
         
-        <p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p>
-<p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)
-</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p>
-<ol>
-<li><p>不启用opacache的流程</p>
-<p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p>
-</li>
-<li><p>启用opacache的流程</p>
-<p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p>
-</li>
-</ol>
-<h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码
-</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>
-
+          <p class="article-more-link">
+            <a href="/2018/05/03/PHP/ opcache 和 php jit/#more">继续阅读全文 »</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/" data-id="cjh1wmodl0034mz2ncusjryhx" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/" data-id="cjh1wro8d002vp02n07sxm1t2" class="article-share-link">分享</a>
       
       
       
@@ -507,7 +496,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjh1wmogv008rmz2nnsi3er1o" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjh1wrobj008sp02ni8vyaxlf" class="article-share-link">分享</a>
       
       
       
@@ -556,7 +545,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/01/PHP/深入PHP源码/" data-id="cjh1wmoes0051mz2nchd0go6z" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/01/PHP/深入PHP源码/" data-id="cjh1wro9n004vp02n6zbggqgm" class="article-share-link">分享</a>
       
       
       
@@ -573,7 +562,7 @@
 
 
   <nav id="page-nav">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">Next&raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/">下一页&raquo;</a>
   </nav>
 
 
@@ -611,7 +600,7 @@ var _hmt = _hmt || [];
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title categories">Categories</h3>
+    <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/">Mac</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OpenStack学习笔记/">OpenStack学习笔记</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/entrepreneurship/">entrepreneurship</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/laravel/">laravel</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php/">php</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php-fpm/">php-fpm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/人生/">人生</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/健身/">健身</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/常识/">常识</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/框架/">框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/自我介绍/">自我介绍</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -621,7 +610,7 @@ var _hmt = _hmt || [];
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title tagcloud">Tag Cloud</h3>
+    <h3 class="widget-title tagcloud">标签云</h3>
     <div class="widget tagcloud">
       <a href="/tags/Mac/" style="font-size: 15.1px;">Mac</a> <a href="/tags/MySQL/" style="font-size: 17.3px;">MySQL</a> <a href="/tags/OpenStack/" style="font-size: 14px;">OpenStack</a> <a href="/tags/entrepreneurship/" style="font-size: 17.3px;">entrepreneurship</a> <a href="/tags/git/" style="font-size: 20.6px;">git</a> <a href="/tags/gitlab/" style="font-size: 14px;">gitlab</a> <a href="/tags/laravel/" style="font-size: 21.7px;">laravel</a> <a href="/tags/linux/" style="font-size: 23.9px;">linux</a> <a href="/tags/mac/" style="font-size: 16.2px;">mac</a> <a href="/tags/nginx/" style="font-size: 19.5px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 14px;">nodejs</a> <a href="/tags/php/" style="font-size: 25px;">php</a> <a href="/tags/php-fpm/" style="font-size: 16.2px;">php-fpm</a> <a href="/tags/phpstrom/" style="font-size: 14px;">phpstrom</a> <a href="/tags/redis/" style="font-size: 14px;">redis</a> <a href="/tags/seo/" style="font-size: 14px;">seo</a> <a href="/tags/vagrant/" style="font-size: 16.2px;">vagrant</a> <a href="/tags/web/" style="font-size: 22.8px;">web</a> <a href="/tags/云服务，docker/" style="font-size: 14px;">云服务，docker</a> <a href="/tags/人生/" style="font-size: 16.2px;">人生</a> <a href="/tags/健身/" style="font-size: 18.4px;">健身</a> <a href="/tags/常识/" style="font-size: 19.5px;">常识</a> <a href="/tags/性能测试/" style="font-size: 14px;">性能测试</a> <a href="/tags/感悟/" style="font-size: 15.1px;">感悟</a> <a href="/tags/框架/" style="font-size: 17.3px;">框架</a> <a href="/tags/生活/" style="font-size: 18.4px;">生活</a> <a href="/tags/算法/" style="font-size: 14px;">算法</a> <a href="/tags/语法/" style="font-size: 14px;">语法</a> <a href="/tags/进程/" style="font-size: 14px;">进程</a>
     </div>
@@ -630,7 +619,7 @@ var _hmt = _hmt || [];
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title recent-posts">Recent Posts</h3>
+    <h3 class="widget-title recent-posts">最新文章</h3>
     <div class="widget">
       <ul>
         
@@ -661,7 +650,7 @@ var _hmt = _hmt || [];
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title archive">Archives</h3>
+    <h3 class="widget-title archive">归档</h3>
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">January 2012</a><span class="archive-list-count">1</span></li></ul>
     </div>
@@ -716,10 +705,10 @@ var _hmt = _hmt || [];
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>

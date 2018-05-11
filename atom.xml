@@ -183,17 +183,13 @@
     <link href="http://martist.cn/2018/05/03/PHP/%20opcache%20%E5%92%8C%20php%20jit/"/>
     <id>http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/</id>
     <published>2018-05-02T16:00:00.000Z</published>
-    <updated>2018-05-03T06:30:02.355Z</updated>
+    <updated>2018-05-11T11:56:59.664Z</updated>
     
-    <content type="html"><![CDATA[<p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p><p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p><ol><li><p>不启用opacache的流程</p><p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p></li><li><p>启用opacache的流程</p><p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p></li></ol><h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p><p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p><ol><li><p>不启用opacache的流程</p><p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p></li><li><p>启用opacache的流程</p><p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p></li></ol><h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>]]></content>
     
     <summary type="html">
     
-      
-      
-        &lt;p&gt;opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。&lt;/p&gt;
-&lt;p&gt;JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。&lt;/p&gt;
-      
+      &lt;p&gt;：-}
     
     </summary>
     
@@ -251,6 +247,30 @@
   </entry>
   
   <entry>
+    <title>nginx中的PHP_VALUE</title>
+    <link href="http://martist.cn/2018/04/20/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
+    <id>http://martist.cn/2018/04/20/服务部署/nginx中的PHP_VALUE/</id>
+    <published>2018-04-19T16:00:00.000Z</published>
+    <updated>2018-04-19T11:30:38.665Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>PHP_VALUE实现了动态修改php的配置项 ，而不需要去改项目代码。</p><p>我们一般修改php的配置项都是在php.ini中修改。在php,ini中的修改会影响到所有使用php的程序。假如我想让修改只在某个域名下生效，该如何做呢?首先想到的可能是使用ini_set()方法在脚本中修改。但是这个只能修改作用域为PHP_INI_USER和PHP_INI_ALL的配置项。所以我们用PHP_VALUE这个更好的做法。</p><h3 id="PHP配置指令作用域说明"><a href="#PHP配置指令作用域说明" class="headerlink" title="PHP配置指令作用域说明"></a>PHP配置指令作用域说明</h3><p>PHP总共有4个配置指令作用域，分别是PHP_INI_USER，PHP_INI_PERDIR，PHP_INI_SYSTEM，PHP_INI_ALL。这些作用域限制了指令是否可以被修改，在那里可以被修改。php的每个配置项都会有一个作用域。下面是对四种作用域的说明。</p><pre><code>作用域类型         说明PHP_INI_USER     可在用户脚本(如 ini_set())或Windows注册表(PHP 5.3 起)以及.user.ini中设定PHP_INI_PERDIR   可在 php.ini，.htaccess 或 httpd.conf 中设定PHP_INI_SYSTEM   可在 php.ini 或 httpd.conf 中设定PHP_INI_ALL      可在任何地方设定</code></pre><p>例如 output_buffering 指令是属于 PHP_INI_PERDIR，因而就不能用 ini_set() 来设定。但是 display_errors 指令是属于 PHP_INI_ALL 因而就可以在任何地方被设定，包括 ini_set()。httpd.conf相比ini_set()中可以设定更多级别的配置项。</p><h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>如果是apache+php的组合，我们可以在apache的配置文件中加入如下指令即可。</p><pre><code>PHP_VALUE auto_prepend_file /home/www/bo56.com/header.php</code></pre><p>如果是nginx+php组合，可以加入如下指令</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php&quot;;</code></pre><p>注意，nginx中多次使用 PHP_VALUE时，最后的一个会覆盖之前的。如果想设置多个配置项，需要写在一起，然后用换行分割。如：</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php \n auto_append_file=/home/www/bo56.com/external/footer.php&quot;;</code></pre><h2 id="fastcgi-pass配置"><a href="#fastcgi-pass配置" class="headerlink" title="fastcgi_pass配置"></a>fastcgi_pass配置</h2><p>我们看到nginx的虚拟主机server中的fastcgi_param，这是什么呢，引起了我的好奇心，下面讲解下。</p><p>Nginx 的 fastcgi 模块提供了 fastcgi_param 指令来主要处理这些映射关系，其主要完成的工作是将 Nginx 中的变量翻译成 PHP 中能够理解的变量。</p><pre><code>fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;#脚本文件请求的路径,也就是说当访问127.0.0.1/index.php的时候，需要读取网站根目录下面的index.php文件，如果没有配置这一配置项时，nginx不回去网站根目录下访问.php文件，所以返回空白fastcgi_param QUERY_STRING $query_string;                        #请求的参数;如?app=123fastcgi_param REQUEST_METHOD $request_method;                    #请求的动作(GET,POST)fastcgi_param CONTENT_TYPE $content_type;                        #请求头中的Content-Type字段fastcgi_param CONTENT_LENGTH $content_length;                    #请求头中的Content-length字段。fastcgi_param SCRIPT_NAME $fastcgi_script_name;                  #脚本名称fastcgi_param REQUEST_URI $request_uri;                          #请求的地址不带参数fastcgi_param DOCUMENT_URI $document_uri;                        #与$uri相同。fastcgi_param DOCUMENT_ROOT $document_root;                      #网站的根目录。在server配置中root指令中指定的值fastcgi_param SERVER_PROTOCOL $server_protocol;                  #请求使用的协议，通常是HTTP/1.0或HTTP/1.1。fastcgi_param GATEWAY_INTERFACE CGI/1.1;                         #cgi 版本fastcgi_param SERVER_SOFTWARE nginx/$nginx_version;              #nginx 版本号，可修改、隐藏fastcgi_param REMOTE_ADDR $remote_addr;                          #客户端IPfastcgi_param REMOTE_PORT $remote_port;                          #客户端端口fastcgi_param SERVER_ADDR $server_addr;                          #服务器IP地址fastcgi_param SERVER_PORT $server_port;                          #服务器端口fastcgi_param SERVER_NAME $server_name;                          #服务器名，域名在server配置中指定的server_namefastcgi_param PATH_INFO $path_info;                             #可自定义变量-- PHP only, required if PHP was built with --enable-force-cgi-redirectfastcgi_param REDIRECT_STATUS 200;</code></pre><p>在php可打印出上面的服务环境变量<br>如：</p><pre><code>echo $_SERVER[&apos;REMOTE_ADDR&apos;]</code></pre><h2 id="open-basedir限制目录"><a href="#open-basedir限制目录" class="headerlink" title="open_basedir限制目录"></a>open_basedir限制目录</h2><p>open_basedir 将PHP所能打开的文件限制在指定的目录树中，包括文件本身。当程序要使用例如fopen()或file_get_contents()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开。</p><p>本指令不受安全模式打开或关闭的影响。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>httpd.conf中的VritualHost</p><pre><code>php_admin_value open_basedir &quot;指定目录&quot;</code></pre><p>nginx fastcgi.conf</p><pre><code>fastcgi_param PHP_VALUE &quot;open_basedir=指定目录&quot;</code></pre><p>1</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="nginx" scheme="http://martist.cn/categories/nginx/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="nginx" scheme="http://martist.cn/tags/nginx/"/>
+    
+  </entry>
+  
+  <entry>
     <title>php7性能分析-xhprof【laravel】</title>
     <link href="http://martist.cn/2018/04/20/PHP/php%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"/>
     <id>http://martist.cn/2018/04/20/PHP/php性能分析入门/</id>
@@ -273,30 +293,6 @@
       <category term="web" scheme="http://martist.cn/tags/web/"/>
     
       <category term="性能测试" scheme="http://martist.cn/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>nginx中的PHP_VALUE</title>
-    <link href="http://martist.cn/2018/04/20/%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2/nginx%E4%B8%AD%E7%9A%84PHP_VALUE/"/>
-    <id>http://martist.cn/2018/04/20/服务部署/nginx中的PHP_VALUE/</id>
-    <published>2018-04-19T16:00:00.000Z</published>
-    <updated>2018-04-19T11:30:38.665Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>PHP_VALUE实现了动态修改php的配置项 ，而不需要去改项目代码。</p><p>我们一般修改php的配置项都是在php.ini中修改。在php,ini中的修改会影响到所有使用php的程序。假如我想让修改只在某个域名下生效，该如何做呢?首先想到的可能是使用ini_set()方法在脚本中修改。但是这个只能修改作用域为PHP_INI_USER和PHP_INI_ALL的配置项。所以我们用PHP_VALUE这个更好的做法。</p><h3 id="PHP配置指令作用域说明"><a href="#PHP配置指令作用域说明" class="headerlink" title="PHP配置指令作用域说明"></a>PHP配置指令作用域说明</h3><p>PHP总共有4个配置指令作用域，分别是PHP_INI_USER，PHP_INI_PERDIR，PHP_INI_SYSTEM，PHP_INI_ALL。这些作用域限制了指令是否可以被修改，在那里可以被修改。php的每个配置项都会有一个作用域。下面是对四种作用域的说明。</p><pre><code>作用域类型         说明PHP_INI_USER     可在用户脚本(如 ini_set())或Windows注册表(PHP 5.3 起)以及.user.ini中设定PHP_INI_PERDIR   可在 php.ini，.htaccess 或 httpd.conf 中设定PHP_INI_SYSTEM   可在 php.ini 或 httpd.conf 中设定PHP_INI_ALL      可在任何地方设定</code></pre><p>例如 output_buffering 指令是属于 PHP_INI_PERDIR，因而就不能用 ini_set() 来设定。但是 display_errors 指令是属于 PHP_INI_ALL 因而就可以在任何地方被设定，包括 ini_set()。httpd.conf相比ini_set()中可以设定更多级别的配置项。</p><h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>如果是apache+php的组合，我们可以在apache的配置文件中加入如下指令即可。</p><pre><code>PHP_VALUE auto_prepend_file /home/www/bo56.com/header.php</code></pre><p>如果是nginx+php组合，可以加入如下指令</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php&quot;;</code></pre><p>注意，nginx中多次使用 PHP_VALUE时，最后的一个会覆盖之前的。如果想设置多个配置项，需要写在一起，然后用换行分割。如：</p><pre><code>fastcgi_param PHP_VALUE &quot;auto_prepend_file=/home/www/bo56.com/header.php \n auto_append_file=/home/www/bo56.com/external/footer.php&quot;;</code></pre><h2 id="fastcgi-pass配置"><a href="#fastcgi-pass配置" class="headerlink" title="fastcgi_pass配置"></a>fastcgi_pass配置</h2><p>我们看到nginx的虚拟主机server中的fastcgi_param，这是什么呢，引起了我的好奇心，下面讲解下。</p><p>Nginx 的 fastcgi 模块提供了 fastcgi_param 指令来主要处理这些映射关系，其主要完成的工作是将 Nginx 中的变量翻译成 PHP 中能够理解的变量。</p><pre><code>fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;#脚本文件请求的路径,也就是说当访问127.0.0.1/index.php的时候，需要读取网站根目录下面的index.php文件，如果没有配置这一配置项时，nginx不回去网站根目录下访问.php文件，所以返回空白fastcgi_param QUERY_STRING $query_string;                        #请求的参数;如?app=123fastcgi_param REQUEST_METHOD $request_method;                    #请求的动作(GET,POST)fastcgi_param CONTENT_TYPE $content_type;                        #请求头中的Content-Type字段fastcgi_param CONTENT_LENGTH $content_length;                    #请求头中的Content-length字段。fastcgi_param SCRIPT_NAME $fastcgi_script_name;                  #脚本名称fastcgi_param REQUEST_URI $request_uri;                          #请求的地址不带参数fastcgi_param DOCUMENT_URI $document_uri;                        #与$uri相同。fastcgi_param DOCUMENT_ROOT $document_root;                      #网站的根目录。在server配置中root指令中指定的值fastcgi_param SERVER_PROTOCOL $server_protocol;                  #请求使用的协议，通常是HTTP/1.0或HTTP/1.1。fastcgi_param GATEWAY_INTERFACE CGI/1.1;                         #cgi 版本fastcgi_param SERVER_SOFTWARE nginx/$nginx_version;              #nginx 版本号，可修改、隐藏fastcgi_param REMOTE_ADDR $remote_addr;                          #客户端IPfastcgi_param REMOTE_PORT $remote_port;                          #客户端端口fastcgi_param SERVER_ADDR $server_addr;                          #服务器IP地址fastcgi_param SERVER_PORT $server_port;                          #服务器端口fastcgi_param SERVER_NAME $server_name;                          #服务器名，域名在server配置中指定的server_namefastcgi_param PATH_INFO $path_info;                             #可自定义变量-- PHP only, required if PHP was built with --enable-force-cgi-redirectfastcgi_param REDIRECT_STATUS 200;</code></pre><p>在php可打印出上面的服务环境变量<br>如：</p><pre><code>echo $_SERVER[&apos;REMOTE_ADDR&apos;]</code></pre><h2 id="open-basedir限制目录"><a href="#open-basedir限制目录" class="headerlink" title="open_basedir限制目录"></a>open_basedir限制目录</h2><p>open_basedir 将PHP所能打开的文件限制在指定的目录树中，包括文件本身。当程序要使用例如fopen()或file_get_contents()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开。</p><p>本指令不受安全模式打开或关闭的影响。</p><h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>httpd.conf中的VritualHost</p><pre><code>php_admin_value open_basedir &quot;指定目录&quot;</code></pre><p>nginx fastcgi.conf</p><pre><code>fastcgi_param PHP_VALUE &quot;open_basedir=指定目录&quot;</code></pre><p>1</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="nginx" scheme="http://martist.cn/categories/nginx/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="nginx" scheme="http://martist.cn/tags/nginx/"/>
     
   </entry>
   

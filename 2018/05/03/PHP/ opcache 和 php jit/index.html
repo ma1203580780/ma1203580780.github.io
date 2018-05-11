@@ -5,18 +5,18 @@
   
   <title>opcache 和 php jit | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
+  <meta name="description" content="：-}">
 <meta name="keywords" content="php">
 <meta property="og:type" content="article">
 <meta property="og:title" content="opcache 和 php jit">
 <meta property="og:url" content="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
+<meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-05-03T06:30:02.355Z">
+<meta property="og:updated_time" content="2018-05-11T11:56:59.664Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="opcache 和 php jit">
-<meta name="twitter:description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
+<meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -97,7 +97,8 @@
       
         <!-- Table of Contents -->
         
-        <p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p>
+        <p>：-} <a id="more"></a></p>
+<p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p>
 <p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p>
 <h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)
 </code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p>
@@ -115,7 +116,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/" data-id="cjh1wmodl0034mz2ncusjryhx" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/" data-id="cjh1wro8d002vp02n07sxm1t2" class="article-share-link">分享</a>
       
       
       
@@ -129,7 +130,7 @@
 <nav id="article-nav">
   
     <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
           实现一个类似laravel的现代化PHP框架
@@ -139,7 +140,7 @@
   
   
     <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">实现一个类似tp的轻量级框架</div>
     </a>
   
@@ -176,7 +177,7 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#区别"><span class="toc-number">1.</span> <span class="toc-text">区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正常的转码流程"><span class="toc-number">1.1.</span> <span class="toc-text">正常的转码流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#opacache的流程"><span class="toc-number">1.2.</span> <span class="toc-text">opacache的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jit的流程"><span class="toc-number">1.3.</span> <span class="toc-text">jit的流程</span></a></li></ol></li></ol>
           </div>
@@ -208,10 +209,10 @@
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
