@@ -43,25 +43,13 @@
     <link href="http://martist.cn/2018/05/10/LARAVEL/laravel%E7%9A%84IOC%E5%AE%B9%E5%99%A8%E5%92%8Cphp%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/"/>
     <id>http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/</id>
     <published>2018-05-09T16:00:00.000Z</published>
-    <updated>2018-05-11T04:21:06.281Z</updated>
+    <updated>2018-05-11T11:54:40.887Z</updated>
     
-    <content type="html"><![CDATA[<p>以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载</p><pre><code>&lt;?php/**** 工具类，使用该类来实现自动依赖注入。**/class Ioc {    static $i = 0;    // 获得类的对象实例    public static function getInstance($className) {        $paramArr = self::getMethodParams($className);        var_dump($paramArr);die;        return (new ReflectionClass($className))-&gt;newInstanceArgs($paramArr);//newInstanceArgs 从给出的参数创建一个新的类实例。    }    /**     * 执行类的方法     * @param  [type] $className  [类名]     * @param  [type] $methodName [方法名称]     * @param  [type] $params     [额外的参数]     * @return [type]             [description]     */    public static function make($className, $methodName, $params = []) {        // 获取类的实例        $instance = self::getInstance($className);        // 获取该方法所需要依赖注入的参数        $paramArr = self::getMethodParams($className, $methodName);        return $instance-&gt;{$methodName}(...array_merge($paramArr, $params));// ... 可变函数参数    }    /**     * 获得类的方法参数，只获得有类型的参数     * @param  [type] $className   [description]     * @param  [type] $methodsName [description]     * @return [type]              [description]     */    protected static function getMethodParams($className, $methodsName = &apos;__construct&apos;) {self::$i++;        // 通过反射获得该类        $class = new ReflectionClass($className);        echo  &quot;&lt;pre&gt;&quot;;        // print_r($class);        $paramArr = []; // 记录参数，和参数类型        // dd($class);  //       ReflectionClass Object        // (        //     [name] =&gt; B        // )        // 判断该类是否有构造函数        if ($class-&gt;hasMethod($methodsName)) {            // 获得构造函数            $construct = $class-&gt;getMethod($methodsName); //getMethod 检查方法是否已定义            // dd($construct);              //ReflectionMethod Object            // (            //     [name] =&gt; __construct            //     [class] =&gt; B            // )            // 判断构造函数是否有参数            $params = $construct-&gt;getParameters();// 获取参数            // dd($params);            //  Array            // (            //     [0] =&gt; ReflectionParameter Object            //         (            //             [name] =&gt; a            //         )            // )            if (count($params) &gt; 0) {                // 判断参数类型                foreach ($params as $key =&gt; $param) {                    if ($paramClass = $param-&gt;getClass()) { //getClass 获得类型提示类                        // dd($paramClass);      //                   ReflectionClass Object                        // (                        //     [name] =&gt; A                        // )                        // 获得参数类型名称                        $paramClassName = $paramClass-&gt;getName(); //获取类名                        // dd($paramClassName);                        // A                        // 获得参数类型                        $args = self::getMethodParams($paramClassName);                        // print_r($args);                        // Array                        // (                        // )                        // Array                        // (                        //     [0] =&gt; C Object                        //         (                        //         )                        // )                        $paramArr[] = (new ReflectionClass($paramClass-&gt;getName()))-&gt;newInstanceArgs($args);                         // print_r($paramArr);//                         Array                        // (                        //     [0] =&gt; C Object                        //         (                        //         )                        // )//                         Array                        // (                        //     [0] =&gt; A Object                        //         (                        //             [cObj:protected] =&gt; C Object                        //                 (                        //                 )                        //         )                        // )                        //  newInstanceArgs 从给出的参数创建一个新的类实例。                    }                }            }        }        return $paramArr;    }}class A {    protected $cObj;    /**     * 用于测试多级依赖注入 B依赖A，A依赖C     * @param C $c [description]     */    public function __construct(C $c) {        $this-&gt;cObj = $c;    }    public function aa() {        echo &apos;this is A-&gt;test&apos;;    }    public function aac() {        $this-&gt;cObj-&gt;cc();    }}class B {    protected $aObj;    /**     * 测试构造函数依赖注入     * @param A $a [使用引来注入A]     */    public function __construct(A $a) {        $this-&gt;aObj = $a;    }    /**     * [测试方法调用依赖注入]     * @param  C      $c [依赖注入C]     * @param  string $b [这个是自己手动填写的参数]     * @return [type]    [description]     */    public function bb(C $c, $b) {        $c-&gt;cc();        echo &quot;\r\n&quot;;        echo &apos;params:&apos; . $b;    }    /**     * 验证依赖注入是否成功     * @return [type] [description]     */    public function bbb() {        $this-&gt;aObj-&gt;aac();    }}class C {    public function cc() {        echo &apos;this is C-&gt;cc&apos;;    }}function dd($dd){    echo &quot;&lt;pre&gt;&quot;;    print_r($dd);    die;}//实例化B，B构造依赖A,A构造依赖C.// 使用Ioc来创建B类的实例，B的构造函数依赖A类，A的构造函数依赖C类。$bObj = Ioc::getInstance(&apos;B&apos;);$bObj-&gt;bbb(); // 输出：this is C-&gt;cc ， 说明依赖注入成功。// 打印$bObj// var_dump($bObj);// // 打印结果，可以看出B中有A实例，A中有C实例，说明依赖注入成功。// object(B)#3 (1) {//   [&quot;aObj&quot;:protected]=&gt;//   object(A)#7 (1) {//     [&quot;cObj&quot;:protected]=&gt;//     object(C)#10 (0) {//     }//   }// }Ioc::make(&apos;B&apos;, &apos;bb&apos;, [&apos;this is param b&apos;]);// // 输出结果，可以看出依赖注入成功。// this is C-&gt;cc// params:this is param b</code></pre>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载</p><pre><code>&lt;?php/**** 工具类，使用该类来实现自动依赖注入。**/class Ioc {    static $i = 0;    // 获得类的对象实例    public static function getInstance($className) {        $paramArr = self::getMethodParams($className);        var_dump($paramArr);die;        return (new ReflectionClass($className))-&gt;newInstanceArgs($paramArr);//newInstanceArgs 从给出的参数创建一个新的类实例。    }    /**     * 执行类的方法     * @param  [type] $className  [类名]     * @param  [type] $methodName [方法名称]     * @param  [type] $params     [额外的参数]     * @return [type]             [description]     */    public static function make($className, $methodName, $params = []) {        // 获取类的实例        $instance = self::getInstance($className);        // 获取该方法所需要依赖注入的参数        $paramArr = self::getMethodParams($className, $methodName);        return $instance-&gt;{$methodName}(...array_merge($paramArr, $params));// ... 可变函数参数    }    /**     * 获得类的方法参数，只获得有类型的参数     * @param  [type] $className   [description]     * @param  [type] $methodsName [description]     * @return [type]              [description]     */    protected static function getMethodParams($className, $methodsName = &apos;__construct&apos;) {self::$i++;        // 通过反射获得该类        $class = new ReflectionClass($className);        echo  &quot;&lt;pre&gt;&quot;;        // print_r($class);        $paramArr = []; // 记录参数，和参数类型        // dd($class);  //       ReflectionClass Object        // (        //     [name] =&gt; B        // )        // 判断该类是否有构造函数        if ($class-&gt;hasMethod($methodsName)) {            // 获得构造函数            $construct = $class-&gt;getMethod($methodsName); //getMethod 检查方法是否已定义            // dd($construct);              //ReflectionMethod Object            // (            //     [name] =&gt; __construct            //     [class] =&gt; B            // )            // 判断构造函数是否有参数            $params = $construct-&gt;getParameters();// 获取参数            // dd($params);            //  Array            // (            //     [0] =&gt; ReflectionParameter Object            //         (            //             [name] =&gt; a            //         )            // )            if (count($params) &gt; 0) {                // 判断参数类型                foreach ($params as $key =&gt; $param) {                    if ($paramClass = $param-&gt;getClass()) { //getClass 获得类型提示类                        // dd($paramClass);      //                   ReflectionClass Object                        // (                        //     [name] =&gt; A                        // )                        // 获得参数类型名称                        $paramClassName = $paramClass-&gt;getName(); //获取类名                        // dd($paramClassName);                        // A                        // 获得参数类型                        $args = self::getMethodParams($paramClassName);                        // print_r($args);                        // Array                        // (                        // )                        // Array                        // (                        //     [0] =&gt; C Object                        //         (                        //         )                        // )                        $paramArr[] = (new ReflectionClass($paramClass-&gt;getName()))-&gt;newInstanceArgs($args);                         // print_r($paramArr);//                         Array                        // (                        //     [0] =&gt; C Object                        //         (                        //         )                        // )//                         Array                        // (                        //     [0] =&gt; A Object                        //         (                        //             [cObj:protected] =&gt; C Object                        //                 (                        //                 )                        //         )                        // )                        //  newInstanceArgs 从给出的参数创建一个新的类实例。                    }                }            }        }        return $paramArr;    }}class A {    protected $cObj;    /**     * 用于测试多级依赖注入 B依赖A，A依赖C     * @param C $c [description]     */    public function __construct(C $c) {        $this-&gt;cObj = $c;    }    public function aa() {        echo &apos;this is A-&gt;test&apos;;    }    public function aac() {        $this-&gt;cObj-&gt;cc();    }}class B {    protected $aObj;    /**     * 测试构造函数依赖注入     * @param A $a [使用引来注入A]     */    public function __construct(A $a) {        $this-&gt;aObj = $a;    }    /**     * [测试方法调用依赖注入]     * @param  C      $c [依赖注入C]     * @param  string $b [这个是自己手动填写的参数]     * @return [type]    [description]     */    public function bb(C $c, $b) {        $c-&gt;cc();        echo &quot;\r\n&quot;;        echo &apos;params:&apos; . $b;    }    /**     * 验证依赖注入是否成功     * @return [type] [description]     */    public function bbb() {        $this-&gt;aObj-&gt;aac();    }}class C {    public function cc() {        echo &apos;this is C-&gt;cc&apos;;    }}function dd($dd){    echo &quot;&lt;pre&gt;&quot;;    print_r($dd);    die;}//实例化B，B构造依赖A,A构造依赖C.// 使用Ioc来创建B类的实例，B的构造函数依赖A类，A的构造函数依赖C类。$bObj = Ioc::getInstance(&apos;B&apos;);$bObj-&gt;bbb(); // 输出：this is C-&gt;cc ， 说明依赖注入成功。// 打印$bObj// var_dump($bObj);// // 打印结果，可以看出B中有A实例，A中有C实例，说明依赖注入成功。// object(B)#3 (1) {//   [&quot;aObj&quot;:protected]=&gt;//   object(A)#7 (1) {//     [&quot;cObj&quot;:protected]=&gt;//     object(C)#10 (0) {//     }//   }// }Ioc::make(&apos;B&apos;, &apos;bb&apos;, [&apos;this is param b&apos;]);// // 输出结果，可以看出依赖注入成功。// this is C-&gt;cc// params:this is param b</code></pre>]]></content>
     
     <summary type="html">
     
-      
-      
-        &lt;p&gt;以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;?php
-/**
-*
-* 工具类，使用该类来实现自动依赖注入。
-*
-*/
-class Ioc {
-
-    sta
-      
+      &lt;p&gt;：-}
     
     </summary>
     
@@ -160,9 +148,9 @@ class Ioc {
       <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
     
     
-      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
-    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
     
   </entry>
   
@@ -187,6 +175,32 @@ class Ioc {
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
       <category term="框架" scheme="http://martist.cn/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>opcache 和 php jit</title>
+    <link href="http://martist.cn/2018/05/03/PHP/%20opcache%20%E5%92%8C%20php%20jit/"/>
+    <id>http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/</id>
+    <published>2018-05-02T16:00:00.000Z</published>
+    <updated>2018-05-03T06:30:02.355Z</updated>
+    
+    <content type="html"><![CDATA[<p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p><p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p><ol><li><p>不启用opacache的流程</p><p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p></li><li><p>启用opacache的流程</p><p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p></li></ol><h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。&lt;/p&gt;
+&lt;p&gt;JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。&lt;/p&gt;
+      
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
@@ -219,17 +233,13 @@ class Ioc {
     <link href="http://martist.cn/2018/05/01/PHP/%E6%B7%B1%E5%85%A5PHP%E6%BA%90%E7%A0%81/"/>
     <id>http://martist.cn/2018/05/01/PHP/深入PHP源码/</id>
     <published>2018-04-30T16:00:00.000Z</published>
-    <updated>2018-05-11T11:51:37.377Z</updated>
+    <updated>2018-05-11T11:54:42.337Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="源码目录结构"><a href="#源码目录结构" class="headerlink" title="源码目录结构"></a>源码目录结构</h2><p>PHP的源码在结构上非常清晰。下面先简单介绍一下PHP源码的目录结构。</p><pre><code>根目录: / 这个目录包含的东西比较多，主要包含一些说明文件以及设计方案。 其实项目中的这些README文件是非常值得阅读的例如：    /README.PHP4-TO-PHP5-THIN-CHANGES 这个文件就详细列举了PHP4和PHP5的一些差异。    还有有一个比较重要的文件/CODING_STANDARDS，如果要想写PHP扩展的话，这个文件一定要阅读一下， 不管你个人的代码风格是什么样，怎么样使用缩进和花括号，既然来到了这样一个团体里就应该去适应这样的规范，这样在阅读代码或者别人阅读你的 代码是都会更轻松。build 顾名思义，这里主要放置一些和源码编译相关的一些文件，比如开始构建之前的buildconf脚本等文件，还有一些检查环境的脚本等。ext 官方扩展目录，包括了绝大多数PHP的函数的定义和实现，如array系列，pdo系列，spl系列等函数的实现，都在这个目录中。个人写的扩展在测试时也可以放到这个目录，方便测试和调试。main 这里存放的就是PHP最为核心的文件了，主要实现PHP的基本设施，这里和Zend引擎不一样，Zend引擎主要实现语言最核心的语言运行环境。Zend Zend引擎的实现目录，比如脚本的词法语法解析，opcode的执行以及扩展机制的实现等等。pear “PHP 扩展与应用仓库”，包含PEAR的核心文件。sapi 包含了各种服务器抽象层的代码，例如apache的mod_php，cgi，fastcgi以及fpm等等接口。TSRM PHP的线程安全是构建在TSRM库之上的，PHP实现中常见的*G宏通常是对TSRM的封装，TSRM(Thread Safe Resource Manager)线程安全资源管理器。tests PHP的测试脚本集合，包含PHP各项功能的测试文件win32 这个目录主要包括Windows平台相关的一些实现，比如sokcet的实现在Windows下和*Nix平台就不太一样，同时也包括了Windows下编译PHP相关的脚本。</code></pre><p>继续学下去，看来还是要学c…</p><h2 id="学习地址"><a href="#学习地址" class="headerlink" title="学习地址"></a>学习地址</h2><p><a href="http://www.php-internals.com/book/?p=chapt01/01-02-code-structure" target="_blank" rel="external">http://www.php-internals.com/book/?p=chapt01/01-02-code-structure</a></p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="源码目录结构"><a href="#源码目录结构" class="headerlink" title="源码目录结构"></a>源码目录结构</h2><p>PHP的源码在结构上非常清晰。下面先简单介绍一下PHP源码的目录结构。</p><pre><code>根目录: / 这个目录包含的东西比较多，主要包含一些说明文件以及设计方案。 其实项目中的这些README文件是非常值得阅读的例如：    /README.PHP4-TO-PHP5-THIN-CHANGES 这个文件就详细列举了PHP4和PHP5的一些差异。    还有有一个比较重要的文件/CODING_STANDARDS，如果要想写PHP扩展的话，这个文件一定要阅读一下， 不管你个人的代码风格是什么样，怎么样使用缩进和花括号，既然来到了这样一个团体里就应该去适应这样的规范，这样在阅读代码或者别人阅读你的 代码是都会更轻松。build 顾名思义，这里主要放置一些和源码编译相关的一些文件，比如开始构建之前的buildconf脚本等文件，还有一些检查环境的脚本等。ext 官方扩展目录，包括了绝大多数PHP的函数的定义和实现，如array系列，pdo系列，spl系列等函数的实现，都在这个目录中。个人写的扩展在测试时也可以放到这个目录，方便测试和调试。main 这里存放的就是PHP最为核心的文件了，主要实现PHP的基本设施，这里和Zend引擎不一样，Zend引擎主要实现语言最核心的语言运行环境。Zend Zend引擎的实现目录，比如脚本的词法语法解析，opcode的执行以及扩展机制的实现等等。pear “PHP 扩展与应用仓库”，包含PEAR的核心文件。sapi 包含了各种服务器抽象层的代码，例如apache的mod_php，cgi，fastcgi以及fpm等等接口。TSRM PHP的线程安全是构建在TSRM库之上的，PHP实现中常见的*G宏通常是对TSRM的封装，TSRM(Thread Safe Resource Manager)线程安全资源管理器。tests PHP的测试脚本集合，包含PHP各项功能的测试文件win32 这个目录主要包括Windows平台相关的一些实现，比如sokcet的实现在Windows下和*Nix平台就不太一样，同时也包括了Windows下编译PHP相关的脚本。</code></pre><p>继续学下去，看来还是要学c…</p><h2 id="学习地址"><a href="#学习地址" class="headerlink" title="学习地址"></a>学习地址</h2><p><a href="http://www.php-internals.com/book/?p=chapt01/01-02-code-structure" target="_blank" rel="external">http://www.php-internals.com/book/?p=chapt01/01-02-code-structure</a></p>]]></content>
     
     <summary type="html">
     
-      
-      
-        &lt;h2 id=&quot;源码目录结构&quot;&gt;&lt;a href=&quot;#源码目录结构&quot; class=&quot;headerlink&quot; title=&quot;源码目录结构&quot;&gt;&lt;/a&gt;源码目录结构&lt;/h2&gt;&lt;p&gt;PHP的源码在结构上非常清晰。下面先简单介绍一下PHP源码的目录结构。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;根目录
-      
+      &lt;p&gt;：-}
     
     </summary>
     
@@ -291,30 +301,6 @@ class Ioc {
   </entry>
   
   <entry>
-    <title>深蹲怎么不伤膝盖</title>
-    <link href="http://martist.cn/2018/04/18/%E5%81%A5%E8%BA%AB/%E6%B7%B1%E8%B9%B2%E6%80%8E%E4%B9%88%E4%B8%8D%E4%BC%A4%E8%86%9D%E7%9B%96/"/>
-    <id>http://martist.cn/2018/04/18/健身/深蹲怎么不伤膝盖/</id>
-    <published>2018-04-17T16:00:00.000Z</published>
-    <updated>2018-04-18T03:10:11.417Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="关于膝关节"><a href="#关于膝关节" class="headerlink" title="关于膝关节"></a>关于膝关节</h2><p>膝关节是人体运动最多、负重最大的关节之一。<br>膝关节承受来自人体的所有重量，甚至是额外的负重。据研究显示，两腿同时站立无屈曲时，双膝关节分别承受膝以上体重的一半，约43%的体重；单腿站立时约承受2倍体重；平地行走时，膝关节承载的负荷可达体重的2至3倍；平地快速行走时，可增加到体重的4.3倍；而上下楼时则分别达到4.4倍和4.9倍；跑步时负重大约是4倍；打球时大约是6倍；蹲和跪时可增高至约8倍。</p><p>膝关节的位置与结构，使它比其他关节承受更大的冲击和压力，是很容易发生运动损伤的关节。</p><h2 id="膝关节弹响的原因"><a href="#膝关节弹响的原因" class="headerlink" title="膝关节弹响的原因"></a>膝关节弹响的原因</h2><h3 id="膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。"><a href="#膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。" class="headerlink" title="膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。"></a>膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。</h3><p>解决方法：深蹲前或运动前充分热身，活动开髋关节、膝关节、踝关节，提高组织温度。那么如何热身呢：一般准备活动部分（5-10分钟）：进行慢跑或跳跃目的：提高心率肌肉温度，降低关节肌肉的粘滞性，使血液循环2. 专项活动部分（10-12分钟）：可以进行动态拉伸和专项技能相关训练。比如深蹲前你可以你可以做原地高抬腿100次，充分活动关节。目的：进一步在运动模式下激活肌肉。</p><h3 id="柔韧性不好"><a href="#柔韧性不好" class="headerlink" title="柔韧性不好"></a>柔韧性不好</h3><p>要想让膝关节在负重运动的时候没有摩擦，就要要保持膝关节在负重运动中下的空间。所以呢大腿肌肉就需要有很好的柔韧性。如果柔韧性不好肌肉过紧膝关节肌肉把关节向中间挤压关节软骨。随着咱们的训练，肌肉越来越发达，如果做不好柔韧性练习就会导致肌肉越来越近，关节间隙会越来越小。解决方法：滚泡沫轴。拉伸肌肉。注意大腿前侧，后侧，内侧，外侧肌肉的拉伸，组间和训练前后要及时拉伸，放松肌肉，防止关节过紧。</p><h3 id="强化你的膝盖"><a href="#强化你的膝盖" class="headerlink" title="强化你的膝盖"></a>强化你的膝盖</h3><p>可能有的人会问，既练习肌肉的柔韧性和力量会不会冲突呢，答案是不会的。肌肉本身是既有力量又有弹性和伸展性的。好的健美运动员，在肌肉收缩的时候像铁一样硬，但是松下来之后用手抓能够陷进去。强化你膝关节部的稳定，训练脚的肌肉群，除了股四头(quadriceps)之外，尤其是膕绳肌(hamstrings)及臀肌(glutes)。</p><h3 id="改善髋关节的灵活性"><a href="#改善髋关节的灵活性" class="headerlink" title="改善髋关节的灵活性"></a>改善髋关节的灵活性</h3><p>膝盖的功用是稳定，而髋关节的目的在于灵活性。髋关节缺乏活动性时，膝盖就必须补偿回来，势必会增加膝盖的负担。</p><h3 id="改善脚踝的灵活性"><a href="#改善脚踝的灵活性" class="headerlink" title="改善脚踝的灵活性"></a>改善脚踝的灵活性</h3><p>跟第四点是同样的说明，脚踝缺乏活动性，膝盖就必须补偿回来，势必会增加膝盖的负担。</p><h3 id="活化臀肌"><a href="#活化臀肌" class="headerlink" title="活化臀肌"></a>活化臀肌</h3><p>髋屈肌过紧．髋关节会缺乏活动性，也连带影响了臀肌的运作。臀肌无力会导致脚后跟离开地面、膝关节弯曲。</p><h3 id="下蹲的技术动作"><a href="#下蹲的技术动作" class="headerlink" title="下蹲的技术动作"></a>下蹲的技术动作</h3><p>正确的深蹲动作(Squat Correctly.)脚长及躯干的长度影响你在进行深蹲时，膝盖的位置。根据每个人的状 ，在进行深蹲时，有人的膝盖可能会超过脚趾，而有人不会，所以要注意，应在以下几点：</p><h4 id="比水平高度在低一点"><a href="#比水平高度在低一点" class="headerlink" title="比水平高度在低一点"></a>比水平高度在低一点</h4><p>平行高度的深蹲，对于身体后方的肌肉群(posterior chain)训练较少，会导致身体肌肉的失衡。所以建议是髋关节(hip joint)的高度要低于膝关节。 并且腘绳肌的力量本来就比股四头肌要弱，如果腘绳肌力量低于股四头肌力量的60％就很容易出问题。</p><h4 id="往后坐"><a href="#往后坐" class="headerlink" title="往后坐"></a>往后坐</h4><p>做深蹲的重点是，先是臀是往后坐的，不是脚往前弯。 膝外开．趾外开(Knees out, Toes out.) 训练你的内缩肌群。</p><h4 id="后脚跟请著地"><a href="#后脚跟请著地" class="headerlink" title="后脚跟请著地"></a>后脚跟请著地</h4><p>脚跟著离地在进行深蹲时，膝盖也承受压力。很多举重的动作，都会造成膝盖的受伤，所以先从合适的动作开始训练起，再渐进式的开始增加重量，让肌肉在渐进成长的情况下，去负荷更重的重量。</p><h4 id="重点动作"><a href="#重点动作" class="headerlink" title="重点动作"></a>重点动作</h4><p>1 两脚分开与肩同宽，脚尖稍微外旋，左右脚对准11点5分的方向。</p><p>2 膝盖打开，髋部打开。</p><p>3 在蹲和起的过程中，膝盖对准脚尖，膝盖角度始终保持不变。4 节奏缓慢。</p><h3 id="膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。"><a href="#膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。" class="headerlink" title="膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。"></a>膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
-    
-    
-      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
-    
-      <category term="生活" scheme="http://martist.cn/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
     <title>phper需要注意的web安全</title>
     <link href="http://martist.cn/2018/04/18/PHP/phper%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84web%E5%AE%89%E5%85%A8/"/>
     <id>http://martist.cn/2018/04/18/PHP/phper需要注意的web安全/</id>
@@ -337,6 +323,30 @@ class Ioc {
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
       <category term="web" scheme="http://martist.cn/tags/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深蹲怎么不伤膝盖</title>
+    <link href="http://martist.cn/2018/04/18/%E5%81%A5%E8%BA%AB/%E6%B7%B1%E8%B9%B2%E6%80%8E%E4%B9%88%E4%B8%8D%E4%BC%A4%E8%86%9D%E7%9B%96/"/>
+    <id>http://martist.cn/2018/04/18/健身/深蹲怎么不伤膝盖/</id>
+    <published>2018-04-17T16:00:00.000Z</published>
+    <updated>2018-04-18T03:10:11.417Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="关于膝关节"><a href="#关于膝关节" class="headerlink" title="关于膝关节"></a>关于膝关节</h2><p>膝关节是人体运动最多、负重最大的关节之一。<br>膝关节承受来自人体的所有重量，甚至是额外的负重。据研究显示，两腿同时站立无屈曲时，双膝关节分别承受膝以上体重的一半，约43%的体重；单腿站立时约承受2倍体重；平地行走时，膝关节承载的负荷可达体重的2至3倍；平地快速行走时，可增加到体重的4.3倍；而上下楼时则分别达到4.4倍和4.9倍；跑步时负重大约是4倍；打球时大约是6倍；蹲和跪时可增高至约8倍。</p><p>膝关节的位置与结构，使它比其他关节承受更大的冲击和压力，是很容易发生运动损伤的关节。</p><h2 id="膝关节弹响的原因"><a href="#膝关节弹响的原因" class="headerlink" title="膝关节弹响的原因"></a>膝关节弹响的原因</h2><h3 id="膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。"><a href="#膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。" class="headerlink" title="膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。"></a>膝关节温度低，运动时尚发凉发紧，肌肉粘滞性大，血液循环不好。</h3><p>解决方法：深蹲前或运动前充分热身，活动开髋关节、膝关节、踝关节，提高组织温度。那么如何热身呢：一般准备活动部分（5-10分钟）：进行慢跑或跳跃目的：提高心率肌肉温度，降低关节肌肉的粘滞性，使血液循环2. 专项活动部分（10-12分钟）：可以进行动态拉伸和专项技能相关训练。比如深蹲前你可以你可以做原地高抬腿100次，充分活动关节。目的：进一步在运动模式下激活肌肉。</p><h3 id="柔韧性不好"><a href="#柔韧性不好" class="headerlink" title="柔韧性不好"></a>柔韧性不好</h3><p>要想让膝关节在负重运动的时候没有摩擦，就要要保持膝关节在负重运动中下的空间。所以呢大腿肌肉就需要有很好的柔韧性。如果柔韧性不好肌肉过紧膝关节肌肉把关节向中间挤压关节软骨。随着咱们的训练，肌肉越来越发达，如果做不好柔韧性练习就会导致肌肉越来越近，关节间隙会越来越小。解决方法：滚泡沫轴。拉伸肌肉。注意大腿前侧，后侧，内侧，外侧肌肉的拉伸，组间和训练前后要及时拉伸，放松肌肉，防止关节过紧。</p><h3 id="强化你的膝盖"><a href="#强化你的膝盖" class="headerlink" title="强化你的膝盖"></a>强化你的膝盖</h3><p>可能有的人会问，既练习肌肉的柔韧性和力量会不会冲突呢，答案是不会的。肌肉本身是既有力量又有弹性和伸展性的。好的健美运动员，在肌肉收缩的时候像铁一样硬，但是松下来之后用手抓能够陷进去。强化你膝关节部的稳定，训练脚的肌肉群，除了股四头(quadriceps)之外，尤其是膕绳肌(hamstrings)及臀肌(glutes)。</p><h3 id="改善髋关节的灵活性"><a href="#改善髋关节的灵活性" class="headerlink" title="改善髋关节的灵活性"></a>改善髋关节的灵活性</h3><p>膝盖的功用是稳定，而髋关节的目的在于灵活性。髋关节缺乏活动性时，膝盖就必须补偿回来，势必会增加膝盖的负担。</p><h3 id="改善脚踝的灵活性"><a href="#改善脚踝的灵活性" class="headerlink" title="改善脚踝的灵活性"></a>改善脚踝的灵活性</h3><p>跟第四点是同样的说明，脚踝缺乏活动性，膝盖就必须补偿回来，势必会增加膝盖的负担。</p><h3 id="活化臀肌"><a href="#活化臀肌" class="headerlink" title="活化臀肌"></a>活化臀肌</h3><p>髋屈肌过紧．髋关节会缺乏活动性，也连带影响了臀肌的运作。臀肌无力会导致脚后跟离开地面、膝关节弯曲。</p><h3 id="下蹲的技术动作"><a href="#下蹲的技术动作" class="headerlink" title="下蹲的技术动作"></a>下蹲的技术动作</h3><p>正确的深蹲动作(Squat Correctly.)脚长及躯干的长度影响你在进行深蹲时，膝盖的位置。根据每个人的状 ，在进行深蹲时，有人的膝盖可能会超过脚趾，而有人不会，所以要注意，应在以下几点：</p><h4 id="比水平高度在低一点"><a href="#比水平高度在低一点" class="headerlink" title="比水平高度在低一点"></a>比水平高度在低一点</h4><p>平行高度的深蹲，对于身体后方的肌肉群(posterior chain)训练较少，会导致身体肌肉的失衡。所以建议是髋关节(hip joint)的高度要低于膝关节。 并且腘绳肌的力量本来就比股四头肌要弱，如果腘绳肌力量低于股四头肌力量的60％就很容易出问题。</p><h4 id="往后坐"><a href="#往后坐" class="headerlink" title="往后坐"></a>往后坐</h4><p>做深蹲的重点是，先是臀是往后坐的，不是脚往前弯。 膝外开．趾外开(Knees out, Toes out.) 训练你的内缩肌群。</p><h4 id="后脚跟请著地"><a href="#后脚跟请著地" class="headerlink" title="后脚跟请著地"></a>后脚跟请著地</h4><p>脚跟著离地在进行深蹲时，膝盖也承受压力。很多举重的动作，都会造成膝盖的受伤，所以先从合适的动作开始训练起，再渐进式的开始增加重量，让肌肉在渐进成长的情况下，去负荷更重的重量。</p><h4 id="重点动作"><a href="#重点动作" class="headerlink" title="重点动作"></a>重点动作</h4><p>1 两脚分开与肩同宽，脚尖稍微外旋，左右脚对准11点5分的方向。</p><p>2 膝盖打开，髋部打开。</p><p>3 在蹲和起的过程中，膝盖对准脚尖，膝盖角度始终保持不变。4 节奏缓慢。</p><h3 id="膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。"><a href="#膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。" class="headerlink" title="膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。"></a>膝关节有受伤有疼痛时，请停止能引起膝关节4分疼痛以上的动作。膝关节至关重要，大家一定要保护好自己的膝关节。</h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="健身" scheme="http://martist.cn/categories/%E5%81%A5%E8%BA%AB/"/>
+    
+    
+      <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
+    
+      <category term="生活" scheme="http://martist.cn/tags/%E7%94%9F%E6%B4%BB/"/>
     
   </entry>
   
@@ -470,30 +480,6 @@ class Ioc {
     <summary type="html">
     
       对我们phper来讲，这些概念不难理解
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>简单谈接口设计</title>
-    <link href="http://martist.cn/2018/03/20/%E6%9E%B6%E6%9E%84/%E7%AE%80%E5%8D%95%E8%B0%88%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1/"/>
-    <id>http://martist.cn/2018/03/20/架构/简单谈接口设计/</id>
-    <published>2018-03-19T16:00:00.000Z</published>
-    <updated>2018-04-26T11:21:35.998Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>关于接口设计，需要注意区分pc,wap,app不同端的接口请求和通用性，以及实现签名鉴权，访问控制等功能。</p><h2 id="接口参数定义"><a href="#接口参数定义" class="headerlink" title="接口参数定义"></a>接口参数定义</h2><p>接口设计中往可以抽象出一些新的公共参数，从事了近三年的接口开发工作中，我目前能想到了一些较为常见的公共接口参数如下：</p><table><thead><tr><th>公共参数</th><th style="text-align:center">含意</th><th>定义该参数的意义</th></tr></thead><tbody><tr><td>timestamp</td><td style="text-align:center">毫秒级时间戳</td><td>1.客户端的请求时间标示 2.后端可以做请求过期验证 3.该参数参与签名算法增加签名的唯一性</td></tr><tr><td>app_key/source</td><td style="text-align:center">签名公钥(来源)</td><td>签名算法的公钥，后端通过公钥可以得到对应的私钥（也就是来源的意义）</td></tr><tr><td>sign</td><td style="text-align:center">接口签名</td><td>通过请求的参数和定义好的签名算法生成接口签名，作用防止中间人篡改请求参数</td></tr><tr><td>did</td><td style="text-align:center">设备ID</td><td>设备的唯一标示，生成规则例如android的mac地址的md5和ios曾今udid(目前无法获取)的md5, 1:数据收集 2.便于问题追踪 3.消息推送标示</td></tr></tbody></table><h2 id="接口版本化"><a href="#接口版本化" class="headerlink" title="接口版本化"></a>接口版本化</h2><p>我不太习惯把版本号直接放到路由里面去，还有其他方式可以区别版本，比如get、post传参。</p><h2 id="接口安全性"><a href="#接口安全性" class="headerlink" title="接口安全性"></a>接口安全性</h2><h3 id="过期验证"><a href="#过期验证" class="headerlink" title="过期验证"></a>过期验证</h3><p>通过时间戳进行验证</p><pre><code>if (microtime(true)*1000 - $_REQUEST[&apos;timestamp&apos;] &gt; 5000) {    throw new \Exception(401, &apos;Expired request&apos;);}</code></pre><h3 id="签名验证-公钥校验省略，如果是saas，密钥可能不同"><a href="#签名验证-公钥校验省略，如果是saas，密钥可能不同" class="headerlink" title="签名验证(公钥校验省略，如果是saas，密钥可能不同)"></a>签名验证(公钥校验省略，如果是saas，密钥可能不同)</h3><p>通过配对私钥的加密算法产生签名，请求中携带签名进行鉴权。</p><pre><code>$params = ksort($_REQUEST);unset($params[&apos;sign&apos;]);$sign = md5(sha1(implode(&apos;-&apos;, $params) . $_REQUEST[&apos;app_key&apos;]));if ($sign !== $_REQUEST[&apos;sign&apos;]) {    throw new \Exception(401, &apos;Invalid sign&apos;);}</code></pre><h3 id="重放攻击"><a href="#重放攻击" class="headerlink" title="重放攻击"></a>重放攻击</h3><p>防止一次相同请求多次攻击API服务器。</p><pre><code> /** @params noise string 随机字符串或随机正整数，与 Timestamp 联合起来, 用于防止重放攻击 例如腾讯云是6位随机正整数 */$key = md5(&quot;{$_REQUEST[&apos;REQUEST_URI&apos;]}-{$_REQUEST[&apos;timestamp&apos;]}-{$_REQUEST[&apos;noise&apos;]}-{$_REQUEST[&apos;did&apos;]}&quot;);if ($redisInstance-&gt;exists($key)) {    throw new \Exception(401, &apos;Repeated request&apos;);}</code></pre><h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><p>防止同一ip频繁访问API服务器。</p><pre><code>$key = md5(&quot;{$_REQUEST[&apos;REQUEST_URI&apos;]}-{$_REQUEST[&apos;REMOTE_ADDR&apos;]}-{$_REQUEST[&apos;did&apos;]}&quot;);if ($redisInstance-&gt;get($key) &gt; 60) {    throw new \Exception(401, &apos;Request limit&apos;);}$redisInstance-&gt;incre($key);</code></pre><h3 id="转义"><a href="#转义" class="headerlink" title="转义"></a>转义</h3><p>防止注入，xss等攻击。</p><pre><code>$username = htmlspecialchars($_REQUEST[&apos;username&apos;]);</code></pre><h2 id="接口的解耦设计"><a href="#接口的解耦设计" class="headerlink" title="接口的解耦设计"></a>接口的解耦设计</h2><ol><li>活用中间件、钩子</li><li>借口多用post请求，少用get</li><li>废弃的代码及时删掉，或者注释掉并且标注</li><li>接口文件合理切割（laravel，lumen等有接口文件的框架）</li><li>服务间调用不要私钥公钥相同，免得一破百破</li></ol><h2 id="接口的状态码"><a href="#接口的状态码" class="headerlink" title="接口的状态码"></a>接口的状态码</h2><p>推荐一些公用的，如果还有私信，广播，商城等状态码可以另加。</p><pre><code>200 -&gt; 正常400 -&gt; 缺少公共必传参数或者业务必传参数401 -&gt; 接口校验失败 例如签名403 -&gt; 没有该接口的访问权限499 -&gt; 上游服务响应时间超过接口设置的超时时间500 -&gt; 代码错误501 -&gt; 不支持的接口method502 -&gt; 上游服务返回的数据格式不正确503 -&gt; 上游服务超时504 -&gt; 上游服务不可用</code></pre><p>转自：<a href="http://tigerb.cn/2018/03/13/api/" target="_blank" rel="external">http://tigerb.cn/2018/03/13/api/</a></p><p>1</p>]]></content>
-    
-    <summary type="html">
-    
-      接口设计
     
     </summary>
     

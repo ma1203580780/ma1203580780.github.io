@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>10年 | MARTIST</title>
+  <title>opcache 和 php jit | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="每个人只有一种命运">
-<meta name="keywords" content="人生,感悟">
+  <meta name="description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
+<meta name="keywords" content="php">
 <meta property="og:type" content="article">
-<meta property="og:title" content="10年">
-<meta property="og:url" content="http://martist.cn/2014/05/20/非技术文章/2016即将过去，未来10年当如何/index.html">
+<meta property="og:title" content="opcache 和 php jit">
+<meta property="og:url" content="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/index.html">
 <meta property="og:site_name" content="MARTIST">
-<meta property="og:description" content="每个人只有一种命运">
+<meta property="og:description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-02T04:57:10.000Z">
+<meta property="og:updated_time" content="2018-05-03T06:30:02.355Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="10年">
-<meta name="twitter:description" content="每个人只有一种命运">
+<meta name="twitter:title" content="opcache 和 php jit">
+<meta name="twitter:description" content="opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。 JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。 区别正常的转码流程源代码(人认识)-&amp;gt;字节码(解释器认识)-&amp;gt;机器码(硬件认识) opacache的流程来看下PHP的执行流程，假设有">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
   
@@ -69,14 +69,14 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-非技术文章/2016即将过去，未来10年当如何" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-PHP/ opcache 和 php jit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2014/05/20/非技术文章/2016即将过去，未来10年当如何/" class="article-date">
-  <time datetime="2014-05-20T14:30:00.000Z" itemprop="datePublished">2014-05-20</time>
+    <a href="/2018/05/03/PHP/ opcache 和 php jit/" class="article-date">
+  <time datetime="2018-05-02T16:00:00.000Z" itemprop="datePublished">2018-05-03</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/人生/">人生</a>
+    <a class="article-category-link" href="/categories/php/">php</a>
   </div>
 
   </div>
@@ -87,7 +87,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      10年
+      opcache 和 php jit
     </h1>
   
 
@@ -97,59 +97,29 @@
       
         <!-- Table of Contents -->
         
-        <p>：-} <a id="more"></a></p>
-<h3 id="一：这10年，一定要有自己的方向"><a href="#一：这10年，一定要有自己的方向" class="headerlink" title="一：这10年，一定要有自己的方向"></a>一：这10年，一定要有自己的方向</h3><pre><code>1、没有方向感，是最要命的  
-2、不管起点有多低，都要坦然接受
-3、围绕自己的兴趣爱好选择职业
-4、做自己最擅长的事
-5、从最容易实现的目标开始做起
-</code></pre><h3 id="二：这10年，要做哪些准备？"><a href="#二：这10年，要做哪些准备？" class="headerlink" title="二：这10年，要做哪些准备？"></a>二：这10年，要做哪些准备？</h3><pre><code>1、要过语言关
-2、要有一样看家本领
-3、掌握工作的全部
-4、把知识变成能力
-5、向成功的人学习
-6、走在时代的最前沿
-7、随时记下一闪即逝的灵感
-</code></pre><h3 id="三：这10年，要培养的几种能力"><a href="#三：这10年，要培养的几种能力" class="headerlink" title="三：这10年，要培养的几种能力"></a>三：这10年，要培养的几种能力</h3><pre><code>1、会大会小会来事
-2、把话说到点子上
-3、抓住问题的关键
-4、不放弃，不抛弃
-5、控制自己的情绪和行为
-6、站在对方的位置上
-</code></pre><h3 id="四：这10年，要认识到的问题"><a href="#四：这10年，要认识到的问题" class="headerlink" title="四：这10年，要认识到的问题"></a>四：这10年，要认识到的问题</h3><pre><code>1、用出色的业绩树立自己的品牌
-2、世上的事，最怕认真二字
-3、任何时候，都保持一颗正直的心
-4、用双肩扛起自己的责任
-5、让更多的人记住你
-6、工作不仅仅是为了赚钱
-7、进入成功人的圈子
-</code></pre><h3 id="五：这10年，绝对不能浪费的东西"><a href="#五：这10年，绝对不能浪费的东西" class="headerlink" title="五：这10年，绝对不能浪费的东西"></a>五：这10年，绝对不能浪费的东西</h3><pre><code>1、抓住生活中的点滴空闲
-2、用心善待身边的每一个人
-3、把每份工作都当成历练自己的舞台
-4、端好信誉那个碗
-5、抓住擦身而过的机会
-</code></pre><h3 id="六：这10年，如何对待金钱？"><a href="#六：这10年，如何对待金钱？" class="headerlink" title="六：这10年，如何对待金钱？"></a>六：这10年，如何对待金钱？</h3><pre><code>1、成家成名之前，先成为有钱人
-2、能创业就去创业
-3、从小做起，一分钱也要赚
-4、随波逐流永远成不了富翁
-5、把废物变成宝贝
-6、先满足别人的需求
-7、在为客户服务上做文章 　
-    8、让钱在流动中升值
-</code></pre><h3 id="七：这10年，发展重心放在什么位置？"><a href="#七：这10年，发展重心放在什么位置？" class="headerlink" title="七：这10年，发展重心放在什么位置？"></a>七：这10年，发展重心放在什么位置？</h3><pre><code>1、抓住当下，做好手边的工作
-2、在细节上下功夫
-3、把时间和精力用在最能创造效益的地方
-4、注重个人的成长和积累
-5、成功之前做该做的事，成功之后做想做的事
-</code></pre>
+        <p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p>
+<p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)
+</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p>
+<ol>
+<li><p>不启用opacache的流程</p>
+<p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p>
+</li>
+<li><p>启用opacache的流程</p>
+<p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p>
+</li>
+</ol>
+<h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码
+</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2014/05/20/非技术文章/2016即将过去，未来10年当如何/" data-id="cjh1wmoh2008zmz2nhtmtymxo" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/" data-id="cjh1wmodl0034mz2ncusjryhx" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/人生/">人生</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/感悟/">感悟</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
 
     </footer>
   </div>
@@ -158,19 +128,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2014/07/22/MACBOOK/mac使用笔记/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          mac系统快捷操作笔记（一）
+          实现一个类似laravel的现代化PHP框架
         
       </div>
     </a>
   
   
-    <a href="/2013/03/20/服务部署/nginx/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/05/02/框架/实现一个类似tp的轻量级框架/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">nginx入门</div>
+      <div class="article-nav-title">实现一个类似tp的轻量级框架</div>
     </a>
   
 </nav>
@@ -186,7 +156,7 @@
       <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
        
-            <div id="SOHUCS" sid="2014/05/20/非技术文章/2016即将过去，未来10年当如何/"> </div>
+            <div id="SOHUCS" sid="2018/05/03/PHP/ opcache 和 php jit/"> </div>
     
       
       
@@ -208,7 +178,7 @@
       
         <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一：这10年，一定要有自己的方向"><span class="toc-number">1.</span> <span class="toc-text">一：这10年，一定要有自己的方向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二：这10年，要做哪些准备？"><span class="toc-number">2.</span> <span class="toc-text">二：这10年，要做哪些准备？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三：这10年，要培养的几种能力"><span class="toc-number">3.</span> <span class="toc-text">三：这10年，要培养的几种能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四：这10年，要认识到的问题"><span class="toc-number">4.</span> <span class="toc-text">四：这10年，要认识到的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五：这10年，绝对不能浪费的东西"><span class="toc-number">5.</span> <span class="toc-text">五：这10年，绝对不能浪费的东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六：这10年，如何对待金钱？"><span class="toc-number">6.</span> <span class="toc-text">六：这10年，如何对待金钱？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七：这10年，发展重心放在什么位置？"><span class="toc-number">7.</span> <span class="toc-text">七：这10年，发展重心放在什么位置？</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#区别"><span class="toc-number">1.</span> <span class="toc-text">区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正常的转码流程"><span class="toc-number">1.1.</span> <span class="toc-text">正常的转码流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#opacache的流程"><span class="toc-number">1.2.</span> <span class="toc-text">opacache的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jit的流程"><span class="toc-number">1.3.</span> <span class="toc-text">jit的流程</span></a></li></ol></li></ol>
           </div>
       </div>
     </div>
