@@ -1,11 +1,5 @@
 //uA Code From - https://raw.githubusercontent.com/levonlin/Tinnypp/master/source/js/embed.js
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?d27cabaa647fd27534f8316b6b3a2ed2";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
+
 
 function ua_build_html(evt){
     var e=evt.post;
