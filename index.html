@@ -69,6 +69,343 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-LARAVEL/laravel核心概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/10/LARAVEL/laravel核心概念/" class="article-date">
+  <time datetime="2018-05-09T16:00:00.000Z" itemprop="datePublished">2018-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/laravel/">laravel</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/10/LARAVEL/laravel核心概念/">laravel的核心</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>：-}
+        
+          <p class="article-more-link">
+            <a href="/2018/05/10/LARAVEL/laravel核心概念/#more">继续阅读全文 »</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel核心概念/" data-id="cjh1wj0wr000cld2nmzx912op" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-LARAVEL/laravel的IOC容器和php反射机制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" class="article-date">
+  <time datetime="2018-05-09T16:00:00.000Z" itemprop="datePublished">2018-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/laravel/">laravel</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/">laravel的IOC容器和php反射机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载</p>
+<pre><code>&lt;?php
+/**
+*
+* 工具类，使用该类来实现自动依赖注入。
+*
+*/
+class Ioc {
+
+    static $i = 0;
+
+    // 获得类的对象实例
+    public static function getInstance($className) {
+
+        $paramArr = self::getMethodParams($className);
+        var_dump($paramArr);die;
+        return (new ReflectionClass($className))-&gt;newInstanceArgs($paramArr);//newInstanceArgs 从给出的参数创建一个新的类实例。
+    }
+
+    /**
+     * 执行类的方法
+     * @param  [type] $className  [类名]
+     * @param  [type] $methodName [方法名称]
+     * @param  [type] $params     [额外的参数]
+     * @return [type]             [description]
+     */
+    public static function make($className, $methodName, $params = []) {
+
+        // 获取类的实例
+        $instance = self::getInstance($className);
+
+        // 获取该方法所需要依赖注入的参数
+        $paramArr = self::getMethodParams($className, $methodName);
+
+        return $instance-&gt;{$methodName}(...array_merge($paramArr, $params));// ... 可变函数参数
+    }
+
+    /**
+     * 获得类的方法参数，只获得有类型的参数
+     * @param  [type] $className   [description]
+     * @param  [type] $methodsName [description]
+     * @return [type]              [description]
+     */
+    protected static function getMethodParams($className, $methodsName = &apos;__construct&apos;) {
+self::$i++;
+        // 通过反射获得该类
+        $class = new ReflectionClass($className);
+        echo  &quot;&lt;pre&gt;&quot;;
+        // print_r($class);
+        $paramArr = []; // 记录参数，和参数类型
+        // dd($class);
+  //       ReflectionClass Object
+        // (
+        //     [name] =&gt; B
+        // )
+
+        // 判断该类是否有构造函数
+        if ($class-&gt;hasMethod($methodsName)) {
+            // 获得构造函数
+            $construct = $class-&gt;getMethod($methodsName); //getMethod 检查方法是否已定义
+            // dd($construct);  
+            //ReflectionMethod Object
+            // (
+            //     [name] =&gt; __construct
+            //     [class] =&gt; B
+            // )
+
+            // 判断构造函数是否有参数
+            $params = $construct-&gt;getParameters();// 获取参数
+            // dd($params);
+            //  Array
+            // (
+            //     [0] =&gt; ReflectionParameter Object
+            //         (
+            //             [name] =&gt; a
+            //         )
+            // )
+
+
+            if (count($params) &gt; 0) {
+
+                // 判断参数类型
+                foreach ($params as $key =&gt; $param) {
+
+                    if ($paramClass = $param-&gt;getClass()) { //getClass 获得类型提示类
+                        // dd($paramClass);
+      //                   ReflectionClass Object
+                        // (
+                        //     [name] =&gt; A
+                        // )
+
+                        // 获得参数类型名称
+                        $paramClassName = $paramClass-&gt;getName(); //获取类名
+                        // dd($paramClassName);
+                        // A
+
+                        // 获得参数类型
+                        $args = self::getMethodParams($paramClassName);
+                        // print_r($args);
+                        // Array
+                        // (
+                        // )
+                        // Array
+                        // (
+                        //     [0] =&gt; C Object
+                        //         (
+                        //         )
+
+                        // )
+
+
+                        $paramArr[] = (new ReflectionClass($paramClass-&gt;getName()))-&gt;newInstanceArgs($args); 
+                        // print_r($paramArr);
+//                         Array
+                        // (
+                        //     [0] =&gt; C Object
+                        //         (
+                        //         )
+
+                        // )
+//                         Array
+                        // (
+                        //     [0] =&gt; A Object
+                        //         (
+                        //             [cObj:protected] =&gt; C Object
+                        //                 (
+                        //                 )
+                        //         )
+                        // )
+                        //  newInstanceArgs 从给出的参数创建一个新的类实例。
+
+                    }
+                }
+            }
+        }
+
+        return $paramArr;
+    }
+}
+
+
+class A {
+
+    protected $cObj;
+
+    /**
+     * 用于测试多级依赖注入 B依赖A，A依赖C
+     * @param C $c [description]
+     */
+    public function __construct(C $c) {
+
+        $this-&gt;cObj = $c;
+    }
+
+    public function aa() {
+
+        echo &apos;this is A-&gt;test&apos;;
+    }
+
+    public function aac() {
+
+        $this-&gt;cObj-&gt;cc();
+    }
+}
+
+class B {
+
+    protected $aObj;
+
+    /**
+     * 测试构造函数依赖注入
+     * @param A $a [使用引来注入A]
+     */
+    public function __construct(A $a) {
+
+        $this-&gt;aObj = $a;
+    }
+
+    /**
+     * [测试方法调用依赖注入]
+     * @param  C      $c [依赖注入C]
+     * @param  string $b [这个是自己手动填写的参数]
+     * @return [type]    [description]
+     */
+    public function bb(C $c, $b) {
+
+        $c-&gt;cc();
+        echo &quot;\r\n&quot;;
+
+        echo &apos;params:&apos; . $b;
+    }
+
+    /**
+     * 验证依赖注入是否成功
+     * @return [type] [description]
+     */
+    public function bbb() {
+
+        $this-&gt;aObj-&gt;aac();
+    }
+}
+
+class C {
+
+    public function cc() {
+
+        echo &apos;this is C-&gt;cc&apos;;
+    }
+}
+
+function dd($dd){
+    echo &quot;&lt;pre&gt;&quot;;
+    print_r($dd);
+    die;
+}
+
+
+//实例化B，B构造依赖A,A构造依赖C.
+
+// 使用Ioc来创建B类的实例，B的构造函数依赖A类，A的构造函数依赖C类。
+$bObj = Ioc::getInstance(&apos;B&apos;);
+$bObj-&gt;bbb(); // 输出：this is C-&gt;cc ， 说明依赖注入成功。
+
+// 打印$bObj
+// var_dump($bObj);
+
+// // 打印结果，可以看出B中有A实例，A中有C实例，说明依赖注入成功。
+// object(B)#3 (1) {
+//   [&quot;aObj&quot;:protected]=&gt;
+//   object(A)#7 (1) {
+//     [&quot;cObj&quot;:protected]=&gt;
+//     object(C)#10 (0) {
+//     }
+//   }
+// }
+
+
+Ioc::make(&apos;B&apos;, &apos;bb&apos;, [&apos;this is param b&apos;]);
+
+// // 输出结果，可以看出依赖注入成功。
+// this is C-&gt;cc
+// params:this is param b
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" data-id="cjh1wj0wt000hld2n36fjt1l1" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
     <article id="post-PHP/记住密码基本原理" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/05/08/PHP/记住密码基本原理/" class="article-date">
@@ -104,7 +441,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/08/PHP/记住密码基本原理/" data-id="cjgygwpjl004vx92nta15t16i" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/08/PHP/记住密码基本原理/" data-id="cjh1wj0yx0050ld2n4kajoagh" class="article-share-link">分享</a>
       
       
       
@@ -153,7 +490,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/07/服务部署/nginx如何配置重定向/" data-id="cjgygwpk80065x92n7jf38ttv" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/07/服务部署/nginx如何配置重定向/" data-id="cjh1wj119007qld2n45k4fw08" class="article-share-link">分享</a>
       
       
       
@@ -202,7 +539,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjgygwphh000kx92nauiihx89" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjh1wj0wy000wld2n4unhrqoj" class="article-share-link">分享</a>
       
       
       
@@ -251,7 +588,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjgygwphm000wx92ntjaxht4z" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/03/LARAVEL/laravel路由组件源码分析/" data-id="cjh1wj0wv000pld2nbadaborh" class="article-share-link">分享</a>
       
       
       
@@ -300,7 +637,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjgygwplo009qx92n66mvp329" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" data-id="cjh1wj13d00b2ld2nccxh9ul8" class="article-share-link">分享</a>
       
       
       
@@ -349,11 +686,72 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjgygwpln009nx92nqyexqgod" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjh1wj13e00b5ld2njmdyw1ak" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/框架/">框架</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+ 
+
+
+  
+    <article id="post-PHP/深入PHP源码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/01/PHP/深入PHP源码/" class="article-date">
+  <time datetime="2018-04-30T16:00:00.000Z" itemprop="datePublished">2018-05-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/01/PHP/深入PHP源码/">PHP源码【学习笔记】</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="源码目录结构"><a href="#源码目录结构" class="headerlink" title="源码目录结构"></a>源码目录结构</h2><p>PHP的源码在结构上非常清晰。下面先简单介绍一下PHP源码的目录结构。</p>
+<pre><code>根目录: / 这个目录包含的东西比较多，主要包含一些说明文件以及设计方案。 其实项目中的这些README文件是非常值得阅读的例如：
+    /README.PHP4-TO-PHP5-THIN-CHANGES 这个文件就详细列举了PHP4和PHP5的一些差异。
+    还有有一个比较重要的文件/CODING_STANDARDS，如果要想写PHP扩展的话，这个文件一定要阅读一下， 不管你个人的代码风格是什么样，怎么样使用缩进和花括号，既然来到了这样一个团体里就应该去适应这样的规范，这样在阅读代码或者别人阅读你的 代码是都会更轻松。
+build 顾名思义，这里主要放置一些和源码编译相关的一些文件，比如开始构建之前的buildconf脚本等文件，还有一些检查环境的脚本等。
+ext 官方扩展目录，包括了绝大多数PHP的函数的定义和实现，如array系列，pdo系列，spl系列等函数的实现，都在这个目录中。个人写的扩展在测试时也可以放到这个目录，方便测试和调试。
+main 这里存放的就是PHP最为核心的文件了，主要实现PHP的基本设施，这里和Zend引擎不一样，Zend引擎主要实现语言最核心的语言运行环境。
+Zend Zend引擎的实现目录，比如脚本的词法语法解析，opcode的执行以及扩展机制的实现等等。
+pear “PHP 扩展与应用仓库”，包含PEAR的核心文件。
+sapi 包含了各种服务器抽象层的代码，例如apache的mod_php，cgi，fastcgi以及fpm等等接口。
+TSRM PHP的线程安全是构建在TSRM库之上的，PHP实现中常见的*G宏通常是对TSRM的封装，TSRM(Thread Safe Resource Manager)线程安全资源管理器。
+tests PHP的测试脚本集合，包含PHP各项功能的测试文件
+win32 这个目录主要包括Windows平台相关的一些实现，比如sokcet的实现在Windows下和*Nix平台就不太一样，同时也包括了Windows下编译PHP相关的脚本。
+</code></pre><p>继续学下去，看来还是要学c…</p>
+<h2 id="学习地址"><a href="#学习地址" class="headerlink" title="学习地址"></a>学习地址</h2><p><a href="http://www.php-internals.com/book/?p=chapt01/01-02-code-structure" target="_blank" rel="external">http://www.php-internals.com/book/?p=chapt01/01-02-code-structure</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/01/PHP/深入PHP源码/" data-id="cjh1wj0yr004mld2nnvkkuvw7" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
 
     </footer>
   </div>
@@ -398,158 +796,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/20/PHP/php性能分析入门/" data-id="cjgygwpj0003tx92nfe07akm6" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/04/20/PHP/php性能分析入门/" data-id="cjh1wj0yj0048ld2nvwbotetm" class="article-share-link">分享</a>
       
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能测试/">性能测试</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-服务部署/nginx中的PHP_VALUE" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/" class="article-date">
-  <time datetime="2018-04-19T16:00:00.000Z" itemprop="datePublished">2018-04-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/nginx/">nginx</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/20/服务部署/nginx中的PHP_VALUE/">nginx中的PHP_VALUE</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>：-}
-        
-          <p class="article-more-link">
-            <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/20/服务部署/nginx中的PHP_VALUE/" data-id="cjgygwpk5005xx92nu8s6ick4" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-健身/深蹲怎么不伤膝盖" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/04/18/健身/深蹲怎么不伤膝盖/" class="article-date">
-  <time datetime="2018-04-17T16:00:00.000Z" itemprop="datePublished">2018-04-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/健身/">健身</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/18/健身/深蹲怎么不伤膝盖/">深蹲怎么不伤膝盖</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>：-}
-        
-          <p class="article-more-link">
-            <a href="/2018/04/18/健身/深蹲怎么不伤膝盖/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/18/健身/深蹲怎么不伤膝盖/" data-id="cjgygwpju005mx92nkx34st28" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/健身/">健身</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生活/">生活</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
- 
-
-
-  
-    <article id="post-架构/加密如何保障安全" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/04/18/架构/加密如何保障安全/" class="article-date">
-  <time datetime="2018-04-17T16:00:00.000Z" itemprop="datePublished">2018-04-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/php/">php</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/04/18/架构/加密如何保障安全/">加密如何保障安全</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>：-}
-        
-          <p class="article-more-link">
-            <a href="/2018/04/18/架构/加密如何保障安全/#more">继续阅读全文 »</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/18/架构/加密如何保障安全/" data-id="cjgygwpl40088x92n6di1mysp" class="article-share-link">分享</a>
-      
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
 
     </footer>
   </div>
@@ -602,7 +853,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title categories">分类</h3>
     <div class="widget" id="categories">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/">Mac</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OpenStack学习笔记/">OpenStack学习笔记</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/entrepreneurship/">entrepreneurship</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/laravel/">laravel</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php/">php</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php-fpm/">php-fpm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/人生/">人生</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/健身/">健身</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/常识/">常识</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/框架/">框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/自我介绍/">自我介绍</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Mac/">Mac</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OpenStack学习笔记/">OpenStack学习笔记</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/entrepreneurship/">entrepreneurship</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/laravel/">laravel</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/mac/">mac</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php/">php</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php-fpm/">php-fpm</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/人生/">人生</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/健身/">健身</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/常识/">常识</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/框架/">框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/生活/">生活</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/自我介绍/">自我介绍</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -624,6 +875,14 @@ var _hmt = _hmt || [];
       <ul>
         
           <li>
+            <a href="/2018/05/10/LARAVEL/laravel核心概念/">laravel的核心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/">laravel的IOC容器和php反射机制</a>
+          </li>
+        
+          <li>
             <a href="/2018/05/08/PHP/记住密码基本原理/">记住密码基本原理</a>
           </li>
         
@@ -635,14 +894,6 @@ var _hmt = _hmt || [];
             <a href="/2018/05/05/LARAVEL/正确的理解IOC/">正确的理解IOC</a>
           </li>
         
-          <li>
-            <a href="/2018/05/03/LARAVEL/laravel路由组件源码分析/">laravel路由组件源码分析</a>
-          </li>
-        
-          <li>
-            <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/">实现一个类似laravel的现代化PHP框架</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -652,7 +903,7 @@ var _hmt = _hmt || [];
   <div class="widget-wrap">
     <h3 class="widget-title archive">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">January 2012</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">March 2018</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">February 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">January 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">October 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">March 2017</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">November 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">March 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">January 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">December 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">March 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">December 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/07/">July 2014</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/05/">May 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/03/">March 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/02/">February 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/01/">January 2012</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

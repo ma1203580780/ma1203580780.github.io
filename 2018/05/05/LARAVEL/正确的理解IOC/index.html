@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-05-09T02:10:58.034Z">
+<meta property="og:updated_time" content="2018-05-10T09:13:29.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正确的理解IOC">
 <meta name="twitter:description" content="：-}">
@@ -257,7 +257,7 @@ $superman_3 = $container-&gt;make(&apos;superman&apos;, &apos;xpower&apos;);
 </code></pre><p>通过最初的 绑定（bind） 操作，我们向 工厂类 注册了这些依赖，这些依赖在生产指令下达之时便会执行。</p>
 <p>我们彻底的解除了 实例 与 创建 的依赖关系，更重要的是，容器类也丝毫没有和他们产生任何依赖！我们通过注册、绑定的方式向容器中添加一段可以被执行的回调（可以是匿名函数、非匿名函数、类的方法）作为生产一个类的实例的 脚本 ，只有在真正的 生产（make） 操作被调用执行时，才会触发。</p>
 <p>这样一种方式，使得我们更容易在创建一个实例的同时解决其依赖关系，并且更加灵活。当有新的需求，只需另外绑定一个“生产脚本”即可。</p>
-<h3 id="更高级的用法"><a href="#更高级的用法" class="headerlink" title="更高级的用法"></a>更高级的用法</h3><p>实际上类也不应当依赖$di对象，依赖注入的意思是通过反射分析类所依赖的其他类，从容器中获取相应的对象并自动注入到类里面。啦 ravel 就是这种写法。此处推荐laravel作者写的书，中文译名叫《从百草园到三味书屋》。</p>
+<h3 id="更高级的用法"><a href="#更高级的用法" class="headerlink" title="更高级的用法"></a>更高级的用法</h3><p>实际上类也不应当依赖$di对象，依赖注入的意思是通过反射分析类所依赖的其他类，从容器中获取相应的对象并自动注入到类里面。laravel 就是这种写法。此处推荐laravel作者写的书，中文译名叫《从百草园到三味书屋》。</p>
 <h2 id="laravel中的IOC容器源码分析"><a href="#laravel中的IOC容器源码分析" class="headerlink" title="laravel中的IOC容器源码分析"></a>laravel中的IOC容器源码分析</h2><p>laravel中的 IoC 容器会根据类的依赖需求，自动在注册、绑定的一堆实例中搜寻符合的依赖需求，并自动注入到构造函数参数中去。</p>
 <p>自动搜寻依赖需求的功能，是通过反射（Reflection）实现的。</p>
 <p>laravel中有这些概念：</p>
@@ -399,7 +399,7 @@ print_r(array_reduce($a,&quot;myfunction&quot;));
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjgygwphh000kx92nauiihx89" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/05/05/LARAVEL/正确的理解IOC/" data-id="cjh1wj0wy000wld2n4unhrqoj" class="article-share-link">分享</a>
       
       
       

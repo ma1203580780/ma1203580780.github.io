@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>laravel的IOC容器和php反射机制 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载 &amp;lt;?php /** * * 工具类，使用该类来实现自动依赖注入。 * */ class Ioc {      static $i = 0;      // 获得类的对象实例     public static function getInstance($className">
+<meta name="keywords" content="laravel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel的IOC容器和php反射机制">
+<meta property="og:url" content="http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载 &amp;lt;?php /** * * 工具类，使用该类来实现自动依赖注入。 * */ class Ioc {      static $i = 0;      // 获得类的对象实例     public static function getInstance($className">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-05-11T04:21:06.281Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="laravel的IOC容器和php反射机制">
+<meta name="twitter:description" content="以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载 &amp;lt;?php /** * * 工具类，使用该类来实现自动依赖注入。 * */ class Ioc {      static $i = 0;      // 获得类的对象实例     public static function getInstance($className">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-LARAVEL/laravel的IOC容器和php反射机制" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" class="article-date">
+  <time datetime="2018-05-09T16:00:00.000Z" itemprop="datePublished">2018-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/laravel/">laravel</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      laravel的IOC容器和php反射机制
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>以下是代码实例，利用反射可以寻找类的【构造函数中的参数】，然后根据【类型提示类】，利用反射机制实例化类，从而实现依赖加载</p>
+<pre><code>&lt;?php
+/**
+*
+* 工具类，使用该类来实现自动依赖注入。
+*
+*/
+class Ioc {
+
+    static $i = 0;
+
+    // 获得类的对象实例
+    public static function getInstance($className) {
+
+        $paramArr = self::getMethodParams($className);
+        var_dump($paramArr);die;
+        return (new ReflectionClass($className))-&gt;newInstanceArgs($paramArr);//newInstanceArgs 从给出的参数创建一个新的类实例。
+    }
+
+    /**
+     * 执行类的方法
+     * @param  [type] $className  [类名]
+     * @param  [type] $methodName [方法名称]
+     * @param  [type] $params     [额外的参数]
+     * @return [type]             [description]
+     */
+    public static function make($className, $methodName, $params = []) {
+
+        // 获取类的实例
+        $instance = self::getInstance($className);
+
+        // 获取该方法所需要依赖注入的参数
+        $paramArr = self::getMethodParams($className, $methodName);
+
+        return $instance-&gt;{$methodName}(...array_merge($paramArr, $params));// ... 可变函数参数
+    }
+
+    /**
+     * 获得类的方法参数，只获得有类型的参数
+     * @param  [type] $className   [description]
+     * @param  [type] $methodsName [description]
+     * @return [type]              [description]
+     */
+    protected static function getMethodParams($className, $methodsName = &apos;__construct&apos;) {
+self::$i++;
+        // 通过反射获得该类
+        $class = new ReflectionClass($className);
+        echo  &quot;&lt;pre&gt;&quot;;
+        // print_r($class);
+        $paramArr = []; // 记录参数，和参数类型
+        // dd($class);
+  //       ReflectionClass Object
+        // (
+        //     [name] =&gt; B
+        // )
+
+        // 判断该类是否有构造函数
+        if ($class-&gt;hasMethod($methodsName)) {
+            // 获得构造函数
+            $construct = $class-&gt;getMethod($methodsName); //getMethod 检查方法是否已定义
+            // dd($construct);  
+            //ReflectionMethod Object
+            // (
+            //     [name] =&gt; __construct
+            //     [class] =&gt; B
+            // )
+
+            // 判断构造函数是否有参数
+            $params = $construct-&gt;getParameters();// 获取参数
+            // dd($params);
+            //  Array
+            // (
+            //     [0] =&gt; ReflectionParameter Object
+            //         (
+            //             [name] =&gt; a
+            //         )
+            // )
+
+
+            if (count($params) &gt; 0) {
+
+                // 判断参数类型
+                foreach ($params as $key =&gt; $param) {
+
+                    if ($paramClass = $param-&gt;getClass()) { //getClass 获得类型提示类
+                        // dd($paramClass);
+      //                   ReflectionClass Object
+                        // (
+                        //     [name] =&gt; A
+                        // )
+
+                        // 获得参数类型名称
+                        $paramClassName = $paramClass-&gt;getName(); //获取类名
+                        // dd($paramClassName);
+                        // A
+
+                        // 获得参数类型
+                        $args = self::getMethodParams($paramClassName);
+                        // print_r($args);
+                        // Array
+                        // (
+                        // )
+                        // Array
+                        // (
+                        //     [0] =&gt; C Object
+                        //         (
+                        //         )
+
+                        // )
+
+
+                        $paramArr[] = (new ReflectionClass($paramClass-&gt;getName()))-&gt;newInstanceArgs($args); 
+                        // print_r($paramArr);
+//                         Array
+                        // (
+                        //     [0] =&gt; C Object
+                        //         (
+                        //         )
+
+                        // )
+//                         Array
+                        // (
+                        //     [0] =&gt; A Object
+                        //         (
+                        //             [cObj:protected] =&gt; C Object
+                        //                 (
+                        //                 )
+                        //         )
+                        // )
+                        //  newInstanceArgs 从给出的参数创建一个新的类实例。
+
+                    }
+                }
+            }
+        }
+
+        return $paramArr;
+    }
+}
+
+
+class A {
+
+    protected $cObj;
+
+    /**
+     * 用于测试多级依赖注入 B依赖A，A依赖C
+     * @param C $c [description]
+     */
+    public function __construct(C $c) {
+
+        $this-&gt;cObj = $c;
+    }
+
+    public function aa() {
+
+        echo &apos;this is A-&gt;test&apos;;
+    }
+
+    public function aac() {
+
+        $this-&gt;cObj-&gt;cc();
+    }
+}
+
+class B {
+
+    protected $aObj;
+
+    /**
+     * 测试构造函数依赖注入
+     * @param A $a [使用引来注入A]
+     */
+    public function __construct(A $a) {
+
+        $this-&gt;aObj = $a;
+    }
+
+    /**
+     * [测试方法调用依赖注入]
+     * @param  C      $c [依赖注入C]
+     * @param  string $b [这个是自己手动填写的参数]
+     * @return [type]    [description]
+     */
+    public function bb(C $c, $b) {
+
+        $c-&gt;cc();
+        echo &quot;\r\n&quot;;
+
+        echo &apos;params:&apos; . $b;
+    }
+
+    /**
+     * 验证依赖注入是否成功
+     * @return [type] [description]
+     */
+    public function bbb() {
+
+        $this-&gt;aObj-&gt;aac();
+    }
+}
+
+class C {
+
+    public function cc() {
+
+        echo &apos;this is C-&gt;cc&apos;;
+    }
+}
+
+function dd($dd){
+    echo &quot;&lt;pre&gt;&quot;;
+    print_r($dd);
+    die;
+}
+
+
+//实例化B，B构造依赖A,A构造依赖C.
+
+// 使用Ioc来创建B类的实例，B的构造函数依赖A类，A的构造函数依赖C类。
+$bObj = Ioc::getInstance(&apos;B&apos;);
+$bObj-&gt;bbb(); // 输出：this is C-&gt;cc ， 说明依赖注入成功。
+
+// 打印$bObj
+// var_dump($bObj);
+
+// // 打印结果，可以看出B中有A实例，A中有C实例，说明依赖注入成功。
+// object(B)#3 (1) {
+//   [&quot;aObj&quot;:protected]=&gt;
+//   object(A)#7 (1) {
+//     [&quot;cObj&quot;:protected]=&gt;
+//     object(C)#10 (0) {
+//     }
+//   }
+// }
+
+
+Ioc::make(&apos;B&apos;, &apos;bb&apos;, [&apos;this is param b&apos;]);
+
+// // 输出结果，可以看出依赖注入成功。
+// this is C-&gt;cc
+// params:this is param b
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/" data-id="cjh1wj0wt000hld2n36fjt1l1" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/10/LARAVEL/laravel核心概念/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          laravel的核心
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/08/PHP/记住密码基本原理/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">记住密码基本原理</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title recent-posts">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/10/LARAVEL/laravel核心概念/">laravel的核心</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/10/LARAVEL/laravel的IOC容器和php反射机制/">laravel的IOC容器和php反射机制</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/08/PHP/记住密码基本原理/">记住密码基本原理</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/07/服务部署/nginx如何配置重定向/">nginx如何配置重定向</a>
+          </li>
+        
+          <li>
+            <a href="/2018/05/05/LARAVEL/正确的理解IOC/">正确的理解IOC</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
