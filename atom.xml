@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-05-11T11:49:59.799Z</updated>
+  <updated>2018-05-16T08:55:54.675Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>php代码规范</title>
+    <link href="http://martist.cn/2018/05/16/PHP/php%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83/"/>
+    <id>http://martist.cn/2018/05/16/PHP/php代码规范/</id>
+    <published>2018-05-15T16:00:00.000Z</published>
+    <updated>2018-05-16T08:55:54.675Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>规范有以下优点：</p><pre><code>高效编码 - 避免了过多的选择造成的『决策时间』浪费；风格统一 - 最大程度统一了开发团队成员代码书写风格和思路，代码阅读起来如出一辙；减少错误 - 减小初级工程师的犯错几率。</code></pre><h2 id="开发哲学"><a href="#开发哲学" class="headerlink" title="开发哲学"></a>开发哲学</h2><p>因为篇幅原因本规范无法涉及到项目里每一块代码的编写标准，所以此处重点说明下此规范遵循的『开发哲学』，开发中请把其当做指明灯，来指引你做决策：</p><pre><code>DRY –「Don&apos;t Repeat Yourself」不写重复的逻辑代码；约定俗成 - 「Convention Over Configuration」，优先选择框架提倡的做法，不过度配置；KISS - 「Keep it Simple, Stupid」提倡简单易读的代码，不写高深、晦涩难懂的代码，不过度设计；主厨精选 - 让有经验的人来为你选择方案，不独创方案；官方提倡 - 优先选择官方推崇的方案。</code></pre><h2 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h2><p>以下是一些优秀的『程序设计理念』：</p><pre><code>MVC - Model, View, Controller ，以 MVC 为核心，严格控制 Controller 的可读性和代码行数；Restful - 利用『资源化概念』和标准的 HTTP 动词来组织你的程序；</code></pre><p>在此规范中，我们会将使用这两套理念作为程序设计基础。这些设计理念为我们设计程序提供了依据，遵循这些理念，能让程序变得清晰易读。</p><h2 id="不要过于灵活"><a href="#不要过于灵活" class="headerlink" title="不要过于灵活"></a>不要过于灵活</h2><p>在开发中如果完成一个动作的实现方式过多，建议框架统一方式，易于其他人或多年后的自己阅读代码。</p><h2 id="创建指定版本laravel"><a href="#创建指定版本laravel" class="headerlink" title="创建指定版本laravel"></a>创建指定版本laravel</h2><p>通过安装指定版本的laravel，让项目更加稳定和获得更长时间维护。</p><pre><code>composer create-project laravel/laravel project-name --prefer-dist &quot;5.5.*&quot;</code></pre><h2 id="密钥存放"><a href="#密钥存放" class="headerlink" title="密钥存放"></a>密钥存放</h2><pre><code>硬代码，直接写死。- ❌ 可维护性低写死在 config/app.php 文件中。 - ❌ 无法区分环境进行配置存储于 .env 文件中，使用 env() 方法直接读取。 - ❌ 虽然解决了环境变量问题但是不推荐存储在 .env 和 config/app.php 文件中，然后使用 config() 函数来读取。- ✅ 最佳实践</code></pre><p>这样做主要有以下几个优势：</p><pre><code>定义分明，config() 是配置信息，env() 只是用来区分不同环境；统一放置于 config 中还可以利用框架的 配置信息缓存功能 来提高运行效率；代码健壮性， config() 在 env() 之上多出来一个抽象层，会使代码更加健壮，更加灵活。</code></pre><h2 id="readme-md-文档"><a href="#readme-md-文档" class="headerlink" title="readme.md 文档"></a>readme.md 文档</h2><pre><code>「项目概述」- 介绍说明项目的一些情况，类似于简单的产品说明，简单的功能描述，项目相关链接等，500 字以内；「运行环境」- 运行环境说明，系统要求等信息；「开发环境部署/安装」- 一步一步引导说明，保证项目新成员能最快速的，没有歧义的部署好开发环境；「服务器架构说明」- 最好能有服务器架构图，从用户浏览器请求开始，包括后端缓存服务使用等都描述清楚（主要体现为软件的使用），配合「运行环境」区块内容，可作为线上环境部署的依据；「代码上线」- 介绍代码上线流程，需要执行哪些步骤；「扩展包说明」- 表格列出所有使用的扩展包，还有在哪些业务逻辑或者用例中使用了此扩展包；「自定义 Artisan 命令列表」- 以表格形式罗列出所有自定义的命令，说明用途，指出调用场景；「队列列表」- 以表格形式罗列出项目所有队列接口，说明用途，指出调用场景。</code></pre><h2 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h2><p>开发中用到最多的是psr-1和psr-2的开发规范，对其他psr规范有好奇心的可以自行学习。</p><h3 id="PSR-1"><a href="#PSR-1" class="headerlink" title="PSR-1"></a>PSR-1</h3><h4 id="类名"><a href="#类名" class="headerlink" title="类名"></a>类名</h4><p> 必须 遵循 StudlyCaps 大写开头的驼峰命名规范；</p><h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><p>所有字母都 必须 大写，单词间用下划线分隔；</p><h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>必须 符合 camelCase 式的小写开头驼峰命名规范。</p><p>PHP代码 必须 且只可使用 不带 BOM 的 UTF-8 编码。</p><h4 id="类的属性"><a href="#类的属性" class="headerlink" title="类的属性"></a>类的属性</h4><pre><code>大写开头的驼峰式 ($StudlyCaps)小写开头的驼峰式 ($camelCase)下划线分隔式 ($under_score)</code></pre><p>本规范不做强制要求，但无论遵循哪种命名方式，都 应该 在一定的范围内保持一致。这个范围可以是整个团队、整个包、整个类或整个方法。</p><h3 id="PSR-2"><a href="#PSR-2" class="headerlink" title="PSR-2"></a>PSR-2</h3><h4 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h4><pre><code>代码 必须 使用 4 个空格符而不是「Tab 键」进行缩进。每行的字符数 应该 软性保持在 80 个之内，理论上 一定不可 多于 120 个，但 一定不可 有硬性限制。每个 namespace 命名空间声明语句和 use 声明语句块后面，必须 插入一个空白行。类的开始花括号（{） 必须 写在函数声明后自成一行，结束花括号（}）也 必须 写在函数主体后自成一行。方法的开始花括号（{） 必须 写在函数声明后自成一行，结束花括号（}）也 必须 写在函数主体后自成一行。类的属性和方法 必须 添加访问修饰符（private、protected 以及 public），abstract 以及 final 必须 声明在访问修饰符之前，而 static 必须 声明在访问修饰符之后。控制结构的关键字后 必须 要有一个空格符，而调用方法或函数时则 一定不可 有。控制结构的开始花括号（{） 必须 写在声明的同一行，而结束花括号（}） 必须 写在主体后自成一行。控制结构的开始左括号后和结束右括号前，都 一定不可 有空格符。</code></pre><h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><pre><code>&lt;?phpnamespace Vendor\Package;use FooInterface;use BarClass as Bar;use OtherVendor\OtherPackage\BazClass;class Foo extends Bar implements FooInterface{    public function sampleMethod($a, $b = null)    {        if ($a === $b) {            bar();        } elseif ($a &gt; $b) {            $foo-&gt;bar($arg1);        } else {            BazClass::bar($arg2, $arg3);        }    }    final public static function bar()    {        // 方法体    }}1</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      如今外包和remote工作越来越多，代码规范尤为重要
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
   
   <entry>
     <title>laravel的核心</title>
@@ -148,9 +170,31 @@
       <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
     
     
+      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
+    
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
-      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
+  </entry>
+  
+  <entry>
+    <title>opcache 和 php jit</title>
+    <link href="http://martist.cn/2018/05/03/PHP/%20opcache%20%E5%92%8C%20php%20jit/"/>
+    <id>http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/</id>
+    <published>2018-05-02T16:00:00.000Z</published>
+    <updated>2018-05-11T11:56:59.664Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p><p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p><ol><li><p>不启用opacache的流程</p><p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p></li><li><p>启用opacache的流程</p><p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p></li></ol><h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
@@ -175,28 +219,6 @@
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
       <category term="框架" scheme="http://martist.cn/tags/%E6%A1%86%E6%9E%B6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>opcache 和 php jit</title>
-    <link href="http://martist.cn/2018/05/03/PHP/%20opcache%20%E5%92%8C%20php%20jit/"/>
-    <id>http://martist.cn/2018/05/03/PHP/ opcache 和 php jit/</id>
-    <published>2018-05-02T16:00:00.000Z</published>
-    <updated>2018-05-11T11:56:59.664Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>opcache 是用于缓存 zend 引擎编译生成的 opcode，下次就无需编译。</p><p>JIT编译（just-in-time compilation），即即时编译，狭义指某段代码即将第一次被执行时进行编译，而后则不用编译直接执行，它为动态编译的一种特例。</p><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="正常的转码流程"><a href="#正常的转码流程" class="headerlink" title="正常的转码流程"></a>正常的转码流程</h3><pre><code>源代码(人认识)-&gt;字节码(解释器认识)-&gt;机器码(硬件认识)</code></pre><h3 id="opacache的流程"><a href="#opacache的流程" class="headerlink" title="opacache的流程"></a>opacache的流程</h3><p>来看下PHP的执行流程，假设有个a.php文件</p><ol><li><p>不启用opacache的流程</p><p> a.php-&gt;经过zend编译-&gt;opcode-&gt;PHP解释器-&gt;机器码</p></li><li><p>启用opacache的流程</p><p> a.php-&gt;查找opacache缓存，如果没有则进行zend编译为opcode并缓存-&gt;opacode-&gt;PHP解释器-&gt;机器码</p></li></ol><h3 id="jit的流程"><a href="#jit的流程" class="headerlink" title="jit的流程"></a>jit的流程</h3><pre><code>a.php-&gt;编译-&gt;机器码</code></pre><p>启用jit以后都只执行机器码，不编译，效率上高了很多。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
     
   </entry>
   
@@ -461,30 +483,6 @@
     
     
       <category term="健身" scheme="http://martist.cn/tags/%E5%81%A5%E8%BA%AB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SaaS的php技术实现</title>
-    <link href="http://martist.cn/2018/04/01/%E6%9E%B6%E6%9E%84/SaaS%E7%9A%84php%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
-    <id>http://martist.cn/2018/04/01/架构/SaaS的php技术实现/</id>
-    <published>2018-03-31T16:00:00.000Z</published>
-    <updated>2018-04-03T03:33:56.321Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="SOFTWARE-AS-A-SERVICE"><a href="#SOFTWARE-AS-A-SERVICE" class="headerlink" title="SOFTWARE AS A SERVICE"></a>SOFTWARE AS A SERVICE</h3><p>在某些方面，SaaS非常类似于早些年的瘦客户端软件模式，其中客户端（在这种情况下通常是Web浏览器）提供对服务器上运行的软件的访问点。 SaaS是消费者最熟悉的云服务形式。 SaaS将管理软件及其部署的任务转移到第三方服务。最熟悉的业务SaaS应用程序是客户关系管理应用程序，如Salesforce，像Google Apps这样的生产力软件，以及Box和Dropbox等存储解决方案的软件。</p><p>使用SaaS应用程序往往会降低软件所有权成本，因为不需要技术人员来管理软件的安装，管理和升级，同时这也可以降低软件许可的成本。SaaS应用程序通常在订阅模式上被提出来。</p><h3 id="PLATFORM-AS-A-SERVICE"><a href="#PLATFORM-AS-A-SERVICE" class="headerlink" title="PLATFORM AS A SERVICE"></a>PLATFORM AS A SERVICE</h3><p>PaaS提供比SaaS低一级的功能，通常提供可以开发和部署软件的平台。 PaaS提供者抽象处理服务器的大部分工作，并为客户提供了操作系统和服务器软件以及底层服务器硬件和网络基础设施的环境，使用户可以自由地关注业务端可扩展性及其产品或服务的应用开发。</p><p>与大多数云服务一样，PaaS是建立在虚拟化技术之上的。企业可以根据需要申请资源，随着需求的增长而不是以冗余资源投入硬件。</p><p>PaaS提供商的例子包括Heroku，Google App Engine和Red Hat的OpenShift。</p><h3 id="INFRASTRUCTURE-AS-A-SERVICE"><a href="#INFRASTRUCTURE-AS-A-SERVICE" class="headerlink" title="INFRASTRUCTURE AS A SERVICE"></a>INFRASTRUCTURE AS A SERVICE</h3><p>继续朝服务的下层看，我们就可以看到云服务的基本构件。 IaaS由高度自动化和可扩展的计算资源组成，由云存储和可以自动配置，计量和可用的按需网络功能组成。</p><p>IaaS提供商通过仪表板以及API（API可能没有）提供这些云服务器及其相关资源。 IaaS客户可以直接访问其服务器和存储，就像传统服务器一样，但这样拥有更高级别的可扩展性。 IaaS的用户可以在云中外包和构建“虚拟数据中心”，并可以访问许多与传统数据中心相同的技术和资源功能，而无需投资于服务器容量规划或物理管理维护。</p><p>IaaS是最灵活的云计算模式，允许自动的服务器，处理能力，存储和网络的自动部署。 IaaS客户对基础设施拥有真正的控制，比PaaS或SaaS服务的用户不知道高到哪里去了。 IaaS的主要用途包括PaaS，SaaS和网络规模应用程序的实际开发和部署。</p><p>有很多提供商提供Iaas，比如Navisite，Exoscale和Softlayer，具有自己独特的价格方案和服务组合可供选择。</p><p>ComputeNext（作者的网站）为IaaS提供一个经纪服务，以便你可以确保为您的应用需求选择合适的IaaS提供商。通过使用单一API对20多个云提供商进行归一化的访问，您可以比较提供商的价格和性能，从而找到最佳配置，然后构建和部署，而不会被绑死到一个平台。</p><p>具体例子可以参考：<a href="https://www.zhihu.com/question/21641778/answer/95652959" target="_blank" rel="external">https://www.zhihu.com/question/21641778/answer/95652959</a></p><h3 id="通俗的讲pass和saas的区别"><a href="#通俗的讲pass和saas的区别" class="headerlink" title="通俗的讲pass和saas的区别"></a>通俗的讲pass和saas的区别</h3><p>paas给你一个完善的开发，测试，上线的环境，应用工程代码还是需要你来开发，在开发过程需要的一些服务已经帮你做好，比如：短信服务，邮件服务，分布式文件系统服务，域名备案服务，网络端负载均衡服务，数据库端负载主从热备服务，分片服务，vpn服务，https服务，各个线上服务器的监控统计服务等；saas是应用工程帮你做好，你只需要调整下页面配置，即可上线运营，有点类似淘宝平台与淘宝入驻商家之间的关系。</p><h2 id="程序设计"><a href="#程序设计" class="headerlink" title="程序设计"></a>程序设计</h2><h3 id="分层设计"><a href="#分层设计" class="headerlink" title="分层设计"></a>分层设计</h3><p>saas系统分层大概是：  </p><blockquote><p>租户识别&gt;应用层&gt;数据访问层&gt;缓存层&gt;数据库  </p></blockquote><p>业务代码都是写在应用层。<br>租户识别可以用spring拦截器实现，然后使用ThreadLocal传递给后端<br>数据库和缓存层对应用层应该是透明的。程序员在写代码的时候，只关心业务逻辑，不应该担心多租户的问题。</p><h3 id="数据隔离"><a href="#数据隔离" class="headerlink" title="数据隔离"></a>数据隔离</h3><p>saas系统说起来很简单，任何系统似乎加个tenant_id(租户id)就变成saas系统了。比如原来的用户登录是：</p><pre><code>select username,password from users where email=&apos;abc@qq.com&apos;</code></pre><p>改成</p><pre><code>select username,password from users where email=&apos;abc@qq.com&apos; and tenant_id =1;</code></pre><p>对于复杂业务的saas系统，这样做法非常危险，而且开发效率很低。你想想如果那个程序员写sql时候忘了加 “ and tenant_id =1” . 结果不堪设想。<br>比较好做法是在数据库访问层对SQL进行改写。</p><pre><code>TenantContext.exec(&quot;select username,password from users where email=&apos;abc@qq.com&apos; &quot;);</code></pre><p>在连接池根据TenatnContext改写Sql.<br>这样做好处是，一来程序猿最多把系统搞down了，也不至于信息串了互相泄露。二来将来做分表分库也很方便，上层应用不用修改。</p><h3 id="租户识别方案"><a href="#租户识别方案" class="headerlink" title="租户识别方案"></a>租户识别方案</h3><p>比较好做法是通过url识别租户。系统是给租户生成一个随机的三级域名，比如 abc.crm.baidu.com.   如果客户想使用自己的域名，可以在cname到我们生成的三级域名，并在管理系统里面做绑定。<br>这样一个租户可以有两个域名，访问saas,一个随机生成的三级域名，另外一个租户自己的域名.代码里面可以根据过来的域名，判断是那个租户然后初始化TenantContext.<br>如果不想通过域名来做，也可以通过登录名来判断。这种方式要涉及到租户切换问题。</p><h3 id="租户管理系统（计费，订购，定制，充值，催缴）"><a href="#租户管理系统（计费，订购，定制，充值，催缴）" class="headerlink" title="租户管理系统（计费，订购，定制，充值，催缴）"></a>租户管理系统（计费，订购，定制，充值，催缴）</h3><p>Saas系统是必须考虑计费系统和租户控制系统。这个系统需要都是独立设计。比如那个租户购买了那些模块，一个月多少钱。租户可以创建最多的用户数。计费到期邮件提醒等功能。<br>计费方式一般有两种，周期性计费，类似月租方案，和使用量计费,用多少付多少。 周期性计费比较简单。也可以两者结合起来。</p><h3 id="定制化开发"><a href="#定制化开发" class="headerlink" title="定制化开发"></a>定制化开发</h3><p>SAAS的优势在于一套系统多人使用，似乎和定制化开发有冲突。比如A客户想要A功能，B客户不想要。但定制化开发是无法避免的，比如CRM系统这样复杂的系统，不可能一套系统满足所有公司的要求。定制化开发尽可能分系统，分模块去做。然后通过控制台中配置不同租户订购不同模块，那些模块可以在前端页面上显示。不同的子系统需要分开部署。前端可通过nginx根据url分发，比如 abc.crm.baidu.com/bi/xxx/xx这个地址，就分发到BI子系统。不要尝试OSGI去搞模块化，这个是个大坑。<br>还有开发和产品，现有需求一定要分析清楚，不要一上线发现后患无穷。新功能尽量做的独立可以配置。</p><h3 id="灰度升级"><a href="#灰度升级" class="headerlink" title="灰度升级"></a>灰度升级</h3><p>SAAS付费企业客户对系统问题都特别敏感。 为了减少升级可能出现问题的影响范围，一般都采用灰度升级策略。如果使用了url来区分不同租户，灰度升级配置就会很方便。可以配置nginx 来根据域名做分发，比如租户A（aaa.com）到实例1（版本1.0），租户B(bbb.com)到实例2(版本). 当需要域名配置非常多的时候，nginx配置文档会乱。这块时候可以考虑使用nignx_lua来写一些扩展模块。</p><h2 id="技术实现"><a href="#技术实现" class="headerlink" title="技术实现"></a>技术实现</h2><h3 id="关于多租户的数据隔离方案"><a href="#关于多租户的数据隔离方案" class="headerlink" title="关于多租户的数据隔离方案"></a>关于多租户的数据隔离方案</h3><h4 id="独立数据库"><a href="#独立数据库" class="headerlink" title="独立数据库"></a>独立数据库</h4><p>这是第一种方案，即一个租户一个数据库，这种方案的用户数据隔离级别最高，安全性最好，但成本较高。<br>优点：<br>为不同的租户提供独立的数据库，有助于简化数据模型的扩展设计，满足不同租户的独特需求；如果出现故障，恢复数据比较简单。<br>缺点：<br>增多了数据库的安装数量，随之带来维护成本和购置成本的增加。<br>这种方案与传统的一个客户、一套数据、一套部署类似，差别只在于软件统一部署在运营商那里。如果面对的是银行、医院等需要非常高数据隔离级别的租户，可以选择这种模式，提高租用的定价。如果定价较低，产品走低价路线，这种方案一般对运营商来说是无法承受的。</p><h4 id="共享数据库，隔离数据架构"><a href="#共享数据库，隔离数据架构" class="headerlink" title="共享数据库，隔离数据架构"></a>共享数据库，隔离数据架构</h4><p>这是第二种方案，即多个或所有租户共享Database，但是每个租户一个Schema（也可叫做一个user）。<br>优点：<br>为安全性要求较高的租户提供了一定程度的逻辑数据隔离，并不是完全隔离；每个数据库可支持更多的租户数量。<br>缺点：<br>如果出现故障，数据恢复比较困难，因为恢复数据库将牵涉到其他租户的数据；<br>如果需要跨租户统计数据，存在一定困难。</p><h4 id="共享数据库，共享数据架构"><a href="#共享数据库，共享数据架构" class="headerlink" title="共享数据库，共享数据架构"></a>共享数据库，共享数据架构</h4><p>这是第三种方案，即租户共享同一个Database、同一个Schema，但在表中增加TenantID多租户的数据字段。这是共享程度最高、隔离级别最低的模式。<br>优点：<br>三种方案比较，第三种方案的维护和购置成本最低，允许每个数据库支持的租户数量最多。<br>缺点：<br>隔离级别最低，安全性最低，需要在设计开发时加大对安全的开发量；<br>数据备份和恢复最困难，需要逐表逐条备份和还原。<br>如果希望以最少的服务器为最多的租户提供服务，并且租户接受牺牲隔离级别换取降低成本，这种方案最适合。</p><h3 id="选择合理的实现模式"><a href="#选择合理的实现模式" class="headerlink" title="选择合理的实现模式"></a>选择合理的实现模式</h3><p>衡量三种模式主要考虑的因素是隔离还是共享。</p><h4 id="成本角度因素"><a href="#成本角度因素" class="headerlink" title="成本角度因素"></a>成本角度因素</h4><p>隔离性越好，设计和实现的难度和成本越高，初始成本越高。共享性越好，同一运营成本下支持的用户越多，运营成本越低。</p><h4 id="安全因素"><a href="#安全因素" class="headerlink" title="安全因素"></a>安全因素</h4><p>要考虑业务和客户的安全方面的要求。安全性要求越高，越要倾向于隔离。</p><h4 id="租户数量因素"><a href="#租户数量因素" class="headerlink" title="租户数量因素"></a>租户数量因素</h4><p>系统要支持多少租户？上百？上千还是上万？可能的租户越多，越倾向于共享。<br>平均每个租户要存储数据需要的空间大小。存贮的数据越多，越倾向于隔离。<br>每个租户的同时访问系统的最终用户数量。需要支持的越多，越倾向于隔离。<br>是否想针对每一租户提供附加的服务，例如数据的备份和恢复等。这方面的需求越多， 越倾向于隔离。</p><h4 id="信息监管因素"><a href="#信息监管因素" class="headerlink" title="信息监管因素"></a>信息监管因素</h4><p>要考虑政府，机关，企业，公司的安全和信息监管相关的一些政策和规定。</p><h3 id="基于laravel框架开发SaaS系统"><a href="#基于laravel框架开发SaaS系统" class="headerlink" title="基于laravel框架开发SaaS系统"></a>基于laravel框架开发SaaS系统</h3><ol><li>利用laravel内置的前置中间件对租户请求域名进行判断，进而区分租户。</li><li>每个租户的密钥来对应请求域名，后端鉴权通过每个租户不同的密钥和请求域名来制造签名，中心API服务器以此鉴权。实现ACL，防止数据遭窃。</li><li>分库分表，实现数据隔离，可以使分库作为本公司master数据库的一个备库扩展库，从而实现读写分离，数据安全，查询优化等功能。</li><li>为saas用户提供服务器前端项目，不提供数据链接，服务器前端项目为可转发请求的服务治理中间件功能的框架（curl，guzzle），租户可以买账号直接使用系统，也可以搭在自己服务器，自行增减配置运维，写前端代码添加个性化的内容比如商标、首页、详情页等等。后端接口维护在本公司的服务器，如果系统有bug可以随时处理而不需要去所有租户的服务器重新部署，实现平滑升级。</li></ol><p>1</p>]]></content>
-    
-    <summary type="html">
-    
-      对我们phper来讲，这些概念不难理解
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   

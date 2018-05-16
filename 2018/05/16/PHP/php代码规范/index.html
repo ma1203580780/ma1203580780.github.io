@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>php代码规范 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如今外包和remote工作越来越多，代码规范尤为重要">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php代码规范">
+<meta property="og:url" content="http://martist.cn/2018/05/16/PHP/php代码规范/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="如今外包和remote工作越来越多，代码规范尤为重要">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-05-16T08:55:54.675Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php代码规范">
+<meta name="twitter:description" content="如今外包和remote工作越来越多，代码规范尤为重要">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/php代码规范" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/16/PHP/php代码规范/" class="article-date">
+  <time datetime="2018-05-15T16:00:00.000Z" itemprop="datePublished">2018-05-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php代码规范
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>规范有以下优点：</p>
+<pre><code>高效编码 - 避免了过多的选择造成的『决策时间』浪费；
+风格统一 - 最大程度统一了开发团队成员代码书写风格和思路，代码阅读起来如出一辙；
+减少错误 - 减小初级工程师的犯错几率。
+</code></pre><h2 id="开发哲学"><a href="#开发哲学" class="headerlink" title="开发哲学"></a>开发哲学</h2><p>因为篇幅原因本规范无法涉及到项目里每一块代码的编写标准，所以此处重点说明下此规范遵循的『开发哲学』，开发中请把其当做指明灯，来指引你做决策：</p>
+<pre><code>DRY –「Don&apos;t Repeat Yourself」不写重复的逻辑代码；
+约定俗成 - 「Convention Over Configuration」，优先选择框架提倡的做法，不过度配置；
+KISS - 「Keep it Simple, Stupid」提倡简单易读的代码，不写高深、晦涩难懂的代码，不过度设计；
+主厨精选 - 让有经验的人来为你选择方案，不独创方案；
+官方提倡 - 优先选择官方推崇的方案。
+</code></pre><h2 id="设计理念"><a href="#设计理念" class="headerlink" title="设计理念"></a>设计理念</h2><p>以下是一些优秀的『程序设计理念』：</p>
+<pre><code>MVC - Model, View, Controller ，以 MVC 为核心，严格控制 Controller 的可读性和代码行数；
+Restful - 利用『资源化概念』和标准的 HTTP 动词来组织你的程序；
+</code></pre><p>在此规范中，我们会将使用这两套理念作为程序设计基础。这些设计理念为我们设计程序提供了依据，遵循这些理念，能让程序变得清晰易读。</p>
+<h2 id="不要过于灵活"><a href="#不要过于灵活" class="headerlink" title="不要过于灵活"></a>不要过于灵活</h2><p>在开发中如果完成一个动作的实现方式过多，建议框架统一方式，易于其他人或多年后的自己阅读代码。</p>
+<h2 id="创建指定版本laravel"><a href="#创建指定版本laravel" class="headerlink" title="创建指定版本laravel"></a>创建指定版本laravel</h2><p>通过安装指定版本的laravel，让项目更加稳定和获得更长时间维护。</p>
+<pre><code>composer create-project laravel/laravel project-name --prefer-dist &quot;5.5.*&quot;
+</code></pre><h2 id="密钥存放"><a href="#密钥存放" class="headerlink" title="密钥存放"></a>密钥存放</h2><pre><code>硬代码，直接写死。- ❌ 可维护性低
+写死在 config/app.php 文件中。 - ❌ 无法区分环境进行配置
+存储于 .env 文件中，使用 env() 方法直接读取。 - ❌ 虽然解决了环境变量问题但是不推荐
+存储在 .env 和 config/app.php 文件中，然后使用 config() 函数来读取。- ✅ 最佳实践
+</code></pre><p>这样做主要有以下几个优势：</p>
+<pre><code>定义分明，config() 是配置信息，env() 只是用来区分不同环境；
+统一放置于 config 中还可以利用框架的 配置信息缓存功能 来提高运行效率；
+代码健壮性， config() 在 env() 之上多出来一个抽象层，会使代码更加健壮，更加灵活。
+</code></pre><h2 id="readme-md-文档"><a href="#readme-md-文档" class="headerlink" title="readme.md 文档"></a>readme.md 文档</h2><pre><code>「项目概述」- 介绍说明项目的一些情况，类似于简单的产品说明，简单的功能描述，项目相关链接等，500 字以内；
+「运行环境」- 运行环境说明，系统要求等信息；
+「开发环境部署/安装」- 一步一步引导说明，保证项目新成员能最快速的，没有歧义的部署好开发环境；
+「服务器架构说明」- 最好能有服务器架构图，从用户浏览器请求开始，包括后端缓存服务使用等都描述清楚（主要体现为软件的使用），配合「运行环境」区块内容，可作为线上环境部署的依据；
+「代码上线」- 介绍代码上线流程，需要执行哪些步骤；
+「扩展包说明」- 表格列出所有使用的扩展包，还有在哪些业务逻辑或者用例中使用了此扩展包；
+「自定义 Artisan 命令列表」- 以表格形式罗列出所有自定义的命令，说明用途，指出调用场景；
+「队列列表」- 以表格形式罗列出项目所有队列接口，说明用途，指出调用场景。
+</code></pre><h2 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h2><p>开发中用到最多的是psr-1和psr-2的开发规范，对其他psr规范有好奇心的可以自行学习。</p>
+<h3 id="PSR-1"><a href="#PSR-1" class="headerlink" title="PSR-1"></a>PSR-1</h3><h4 id="类名"><a href="#类名" class="headerlink" title="类名"></a>类名</h4><p> 必须 遵循 StudlyCaps 大写开头的驼峰命名规范；</p>
+<h4 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h4><p>所有字母都 必须 大写，单词间用下划线分隔；</p>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><p>必须 符合 camelCase 式的小写开头驼峰命名规范。</p>
+<p>PHP代码 必须 且只可使用 不带 BOM 的 UTF-8 编码。</p>
+<h4 id="类的属性"><a href="#类的属性" class="headerlink" title="类的属性"></a>类的属性</h4><pre><code>大写开头的驼峰式 ($StudlyCaps)
+小写开头的驼峰式 ($camelCase)
+下划线分隔式 ($under_score)
+</code></pre><p>本规范不做强制要求，但无论遵循哪种命名方式，都 应该 在一定的范围内保持一致。这个范围可以是整个团队、整个包、整个类或整个方法。</p>
+<h3 id="PSR-2"><a href="#PSR-2" class="headerlink" title="PSR-2"></a>PSR-2</h3><h4 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h4><pre><code>代码 必须 使用 4 个空格符而不是「Tab 键」进行缩进。
+
+每行的字符数 应该 软性保持在 80 个之内，理论上 一定不可 多于 120 个，但 一定不可 有硬性限制。
+
+每个 namespace 命名空间声明语句和 use 声明语句块后面，必须 插入一个空白行。
+
+类的开始花括号（{） 必须 写在函数声明后自成一行，结束花括号（}）也 必须 写在函数主体后自成一行。
+
+方法的开始花括号（{） 必须 写在函数声明后自成一行，结束花括号（}）也 必须 写在函数主体后自成一行。
+
+类的属性和方法 必须 添加访问修饰符（private、protected 以及 public），abstract 以及 final 必须 声明在访问修饰符之前，而 static 必须 声明在访问修饰符之后。
+
+控制结构的关键字后 必须 要有一个空格符，而调用方法或函数时则 一定不可 有。
+
+控制结构的开始花括号（{） 必须 写在声明的同一行，而结束花括号（}） 必须 写在主体后自成一行。
+控制结构的开始左括号后和结束右括号前，都 一定不可 有空格符。
+</code></pre><h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><pre><code>&lt;?php
+namespace Vendor\Package;
+
+use FooInterface;
+use BarClass as Bar;
+use OtherVendor\OtherPackage\BazClass;
+
+class Foo extends Bar implements FooInterface
+{
+    public function sampleMethod($a, $b = null)
+    {
+        if ($a === $b) {
+            bar();
+        } elseif ($a &gt; $b) {
+            $foo-&gt;bar($arg1);
+        } else {
+            BazClass::bar($arg2, $arg3);
+        }
+    }
+
+    final public static function bar()
+    {
+        // 方法体
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/16/PHP/php代码规范/" data-id="cjh8vkxws00443v2n37nda7xx" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/10/LARAVEL/laravel核心概念/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">laravel的核心</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/16/PHP/php代码规范/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#优势"><span class="toc-number">1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开发哲学"><span class="toc-number">2.</span> <span class="toc-text">开发哲学</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计理念"><span class="toc-number">3.</span> <span class="toc-text">设计理念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不要过于灵活"><span class="toc-number">4.</span> <span class="toc-text">不要过于灵活</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建指定版本laravel"><span class="toc-number">5.</span> <span class="toc-text">创建指定版本laravel</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#密钥存放"><span class="toc-number">6.</span> <span class="toc-text">密钥存放</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#readme-md-文档"><span class="toc-number">7.</span> <span class="toc-text">readme.md 文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码风格"><span class="toc-number">8.</span> <span class="toc-text">代码风格</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PSR-1"><span class="toc-number">8.1.</span> <span class="toc-text">PSR-1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#类名"><span class="toc-number">8.1.1.</span> <span class="toc-text">类名</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常量"><span class="toc-number">8.1.2.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法"><span class="toc-number">8.1.3.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类的属性"><span class="toc-number">8.1.4.</span> <span class="toc-text">类的属性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PSR-2"><span class="toc-number">8.2.</span> <span class="toc-text">PSR-2</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#概览"><span class="toc-number">8.2.1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实例"><span class="toc-number">8.2.2.</span> <span class="toc-text">实例</span></a></li></ol></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
