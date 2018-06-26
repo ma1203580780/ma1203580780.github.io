@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -734,7 +734,7 @@ h1 {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjivq9ajd00cw8b2nsxybhodz" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/05/02/框架/实现一个类似tp的轻量级框架/" data-id="cjivqnpv80095e02n4g1ienu6" class="article-share-link">Delen</a>
       
       
       
@@ -747,18 +747,18 @@ h1 {
     
 <nav id="article-nav">
   
-    <a href="/2018/05/03/PHP/ opcache 和 php jit/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+    <a href="/2018/05/03/框架/实现一个类似laravel的现代化PHP框架/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
       <div class="article-nav-title">
         
-          opcache 和 php jit
+          实现一个类似laravel的现代化PHP框架
         
       </div>
     </a>
   
   
     <a href="/2018/05/01/PHP/深入PHP源码/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">Ouder</strong>
       <div class="article-nav-title">PHP源码【学习笔记】</div>
     </a>
   
@@ -795,7 +795,7 @@ h1 {
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MVC框架"><span class="toc-number">1.</span> <span class="toc-text">MVC框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是MVC"><span class="toc-number">1.1.</span> <span class="toc-text">什么是MVC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MVC各部分的职能"><span class="toc-number">1.2.</span> <span class="toc-text">MVC各部分的职能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MVC流程图"><span class="toc-number">1.3.</span> <span class="toc-text">MVC流程图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么要自己开发MVC框架"><span class="toc-number">1.4.</span> <span class="toc-text">为什么要自己开发MVC框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始开发自己的MVC框架"><span class="toc-number">2.</span> <span class="toc-text">开始开发自己的MVC框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#目录准备"><span class="toc-number">2.1.</span> <span class="toc-text">目录准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码规范"><span class="toc-number">2.2.</span> <span class="toc-text">代码规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重定向"><span class="toc-number">2.3.</span> <span class="toc-text">重定向</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要原因"><span class="toc-number">2.3.1.</span> <span class="toc-text">主要原因</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#静态文件能直接访问"><span class="toc-number">2.3.1.1.</span> <span class="toc-text">静态文件能直接访问</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#程序有单一的入口"><span class="toc-number">2.3.1.2.</span> <span class="toc-text">程序有单一的入口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#可以用来生成美化的URL，利于SEO。"><span class="toc-number">2.3.1.3.</span> <span class="toc-text">可以用来生成美化的URL，利于SEO。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#入口文件"><span class="toc-number">2.4.</span> <span class="toc-text">入口文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#主要原因-1"><span class="toc-number">2.4.1.</span> <span class="toc-text">主要原因</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置文件"><span class="toc-number">2.5.</span> <span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架核心类"><span class="toc-number">2.6.</span> <span class="toc-text">框架核心类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Controller基类"><span class="toc-number">2.7.</span> <span class="toc-text">Controller基类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Model基类"><span class="toc-number">2.8.</span> <span class="toc-text">Model基类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#模型基类-Model-class-php"><span class="toc-number">2.8.1.</span> <span class="toc-text">模型基类 Model.class.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据库基类-Sql-class-php"><span class="toc-number">2.8.2.</span> <span class="toc-text">数据库基类 Sql.class.php</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#View基类"><span class="toc-number">2.9.</span> <span class="toc-text">View基类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#视图基类-View-class-php"><span class="toc-number">2.9.1.</span> <span class="toc-text">视图基类 View.class.php</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用"><span class="toc-number">3.</span> <span class="toc-text">应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署数据库"><span class="toc-number">3.1.</span> <span class="toc-text">部署数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署模型"><span class="toc-number">3.2.</span> <span class="toc-text">部署模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署控制器"><span class="toc-number">3.3.</span> <span class="toc-text">部署控制器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署视图"><span class="toc-number">3.4.</span> <span class="toc-text">部署视图</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#header-php"><span class="toc-number">3.4.1.</span> <span class="toc-text">header.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#footer-php"><span class="toc-number">3.4.2.</span> <span class="toc-text">footer.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#index-php-浏览数据库内-item-表的所有记录"><span class="toc-number">3.4.3.</span> <span class="toc-text">index.php[浏览数据库内 item 表的所有记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#add-php-添加记录"><span class="toc-number">3.4.4.</span> <span class="toc-text">add.php[添加记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#view-php-查看单条记录"><span class="toc-number">3.4.5.</span> <span class="toc-text">view.php[查看单条记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#update-php-更改记录"><span class="toc-number">3.4.6.</span> <span class="toc-text">update.php[更改记录]</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete-php-删除记录"><span class="toc-number">3.4.7.</span> <span class="toc-text">delete.php[删除记录]</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用测试"><span class="toc-number">3.5.</span> <span class="toc-text">应用测试</span></a></li></ol></li></ol>
           </div>
