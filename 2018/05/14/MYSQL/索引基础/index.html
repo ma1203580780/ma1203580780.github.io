@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>索引基础 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引基础">
+<meta property="og:url" content="http://martist.cn/2018/05/14/MYSQL/索引基础/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-06-06T02:28:42.960Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="索引基础">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-MYSQL/索引基础" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/14/MYSQL/索引基础/" class="article-date">
+  <time datetime="2018-05-13T16:00:00.000Z" itemprop="datePublished">2018-05-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      索引基础
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>索引基础——B-Tree、B+Tree、红黑树、B*Tree数据结构</p>
+<h2 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h2><p>B-Tree（并不是B“减”树，横杠为连接符，容易被误导）是一种多路搜索树（并不是二叉的）：</p>
+<p>1.定义任意非叶子结点最多只有M个儿子；且M&gt;2；</p>
+<p>2.根结点的儿子数为[2, M]；</p>
+<p>3.除根结点以外的非叶子结点的儿子数为[M/2, M]；</p>
+<p>4.每个结点存放至少M/2-1（取上整）和至多M-1个关键字；（至少2个关键字）</p>
+<p>5.非叶子结点的关键字个数=指向儿子的指针个数-1；</p>
+<p>6.非叶子结点的关键字：K[1], K[2], …, K[M-1]；且K[i] &lt; K[i+1]；</p>
+<p>7.非叶子结点的指针：P[1], P[2], …, P[M]；其中P[1]指向关键字小于K[1]的子树，P[M]指向关键字大于K[M-1]的子树，其它P[i]指向关键字属于(K[i-1], K[i])的子树；</p>
+<p>8.所有叶子结点位于同一层；</p>
+<p>如：（M=3）</p>
+<p>B-树的搜索，从根结点开始，对结点内的关键字（有序）序列进行二分查找，如果命中则结束，否则进入查询关键字所属范围的儿子结点；重复，直到所对应的儿子指针为空，或已经是叶子结点；</p>
+<h2 id="B-树的特性"><a href="#B-树的特性" class="headerlink" title="B-树的特性"></a>B-树的特性</h2><p>1.关键字集合分布在整颗树中；</p>
+<p>2.任何一个关键字出现且只出现在一个结点中；</p>
+<p>3.搜索有可能在非叶子结点结束；</p>
+<p>4.其搜索性能等价于在关键字全集内做一次二分查找；</p>
+<p>5.自动层次控制；<br>由于限制了除根结点以外的非叶子结点，至少含有M/2个儿子，确保了结点的至少利用率，其最底搜索性能为：其中，M为设定的非叶子结点最多子树个数，N为关键字总数；所以B-树的性能总是等价于二分查找（与M值无关），也就没有B树平衡的问题；由于M/2的限制，在插入结点时，如果结点已满，需要将结点分裂为两个各占M/2的结点；删除结点时，需将两个不足M/2的兄弟结点合并；</p>
+<h2 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h2><p>B+树是B-树的变体，也是一种多路搜索树：其定义基本与B-树同，除了：<br>1.非叶子结点的子树指针与关键字个数相同；<br>2.非叶子结点的子树指针P[i]，指向关键字值属于[K[i], K[i+1])的子树（B-树是开区间）；<br>3.为所有叶子结点增加一个链指针；<br>4.所有关键字都在叶子结点出现；<br>如：（M=3）<br>B+的搜索与B-树也基本相同，区别是B+树只有达到叶子结点才命中（B-树可以在<br>非叶子结点命中），其性能也等价于在关键字全集做一次二分查找；</p>
+<h2 id="B-的特性"><a href="#B-的特性" class="headerlink" title="B+的特性"></a>B+的特性</h2><p>1.所有关键字都出现在叶子结点的链表中（稠密索引），且链表中的关键字恰好是有序的；<br>2.不可能在非叶子结点命中；<br>3.非叶子结点相当于是叶子结点的索引（稀疏索引），叶子结点相当于是存储（关键字）数据的数据层；<br>4.更适合文件索引系统；</p>
+<h2 id="B-树-1"><a href="#B-树-1" class="headerlink" title="B*树"></a>B*树</h2><p>是B+树的变体，在B+树的非根和非叶子结点再增加指向兄弟的指针；<br>B<em>树定义了非叶子结点关键字个数至少为(2/3)</em>M，即块的最低使用率为2/3（代替B+树的1/2）；<br>B+树的分裂：当一个结点满时，分配一个新的结点，并将原结点中1/2的数据复制到新结点，最后在父结点中增加新结点的指针；B+树的分裂只影响原结点和父结点，而不会影响兄弟结点，所以它不需要指向兄弟的指针；<br>B<em>树的分裂：当一个结点满时，如果它的下一个兄弟结点未满，那么将一部分数据移到兄弟结点中，再在原结点插入关键字，最后修改父结点中兄弟结点的关键字（因为兄弟结点的关键字范围改变了）；如果兄弟也满了，则在原结点与兄弟结点之间增加新结点，并各复制1/3的数据到新结点，最后在父结点增加新结点的指针；所以，B</em>树分配新结点的概率比B+树要低，空间使用率更高；</p>
+<h2 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h2><p>红黑树（Red-Black Tree）是二叉搜索树（Binary Search Tree）的一种改进。我们知道二叉搜索树在最坏的情况下可能会变成一个链表（当所有节点按从小到大的顺序依次插入后）。而红黑树在每一次插入或删除节点之后都会花O（log N）的时间来对树的结构作修改，以保持树的平衡。也就是说，红黑树的查找方法与二叉搜索树完全一样；插入和删除节点的的方法前半部分节与二叉搜索树完全一样，而后半部分添加了一些修改树的结构的操作。</p>
+<p>红黑树的每个节点上的属性除了有一个key、3个指针：parent、lchild、rchild以外，还多了一个属性：color。它只能是两种颜色：红或黑。而红黑树除了具有二叉搜索树的所有性质之外，还具有以下4点性质：</p>
+<ol>
+<li>根节点是黑色的。</li>
+<li>空节点是黑色的（红黑树中，根节点的parent以及所有叶节点lchild、rchild都不指向NULL，而是指向一个定义好的空节点）。</li>
+<li>红色节点的父、左子、右子节点都是黑色。</li>
+<li>在任何一棵子树中，每一条从根节点向下走到空节点的路径上包含的黑色节点数量都相同。</li>
+</ol>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>B树：二叉树，每个结点只存储一个关键字，等于则命中，小于走左结点，大于走右结点；</p>
+<p>B-树：多路搜索树，每个结点存储M/2到M个关键字，非叶子结点存储指向关键字范围的子结点；所有关键字在整颗树中出现，且只出现一次，非叶子结点可以命中；</p>
+<p>B+树：在B-树基础上，为叶子结点增加链表指针，所有关键字都在叶子结点中出现，非叶子结点作为叶子结点的索引；B+树总是到叶子结点才命中；</p>
+<p>B*树：在B+树基础上，为非叶子结点也增加链表指针，将结点的最低利用率从1/2提高到2/3；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/05/14/MYSQL/索引基础/" data-id="cjivq9aeo00428b2nsxt8dnkb" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/14/MYSQL/性能测试/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          性能测试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/05/14/MYSQL/聚簇索引/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">聚簇索引(clustered index)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/05/14/MYSQL/索引基础/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">Content</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#B树"><span class="toc-number">1.</span> <span class="toc-text">B树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-树的特性"><span class="toc-number">2.</span> <span class="toc-text">B-树的特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-树"><span class="toc-number">3.</span> <span class="toc-text">B+树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-的特性"><span class="toc-number">4.</span> <span class="toc-text">B+的特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#B-树-1"><span class="toc-number">5.</span> <span class="toc-text">B*树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#红黑树"><span class="toc-number">6.</span> <span class="toc-text">红黑树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">7.</span> <span class="toc-text">小结</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

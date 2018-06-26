@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2017-10-02T02:39:23.000Z">
+<meta property="og:updated_time" content="2018-06-01T01:57:48.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="乐观锁与悲观锁">
 <meta name="twitter:description" content="：-}">
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -98,11 +98,10 @@
         <!-- Table of Contents -->
         
         <p>：-} <a id="more"></a></p>
-<p>在数据库的锁机制中介绍过，数据库管理系统（DBMS）中的并发控制的任务是确保在多个事务同时存取数据库中同一数据时不破坏事务的隔离性和统一性以及数据库的统一性。        </p>
+<p>数据库管理系统（DBMS）中的并发控制的任务是确保在多个事务同时存取数据库中同一数据时不破坏事务的隔离性和统一性以及数据库的统一性。        </p>
 <p>乐观并发控制(乐观锁)和悲观并发控制（悲观锁）是并发控制主要采用的技术手段。          </p>
 <p>无论是悲观锁还是乐观锁，都是人们定义出来的概念，可以认为是一种思想。其实不仅仅是数据库系统中有乐观锁和悲观锁的概念，像memcache、hibernate、tair等都有类似的概念。              </p>
 <p>针对于不同的业务场景，应该选用不同的并发控制方式。所以，不要把乐观并发控制和悲观并发控制狭义的理解为DBMS中的概念，更不要把他们和数据中提供的锁机制（行锁、表锁、排他锁、共享锁）混为一谈。其实，在DBMS中，悲观锁正是利用数据库本身提供的锁机制来实现的。            </p>
-<p>下面来分别学习一下悲观锁和乐观锁。 </p>
 <h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2><p>在关系数据库管理系统里，悲观并发控制（又名“悲观锁”，Pessimistic Concurrency Control，缩写“PCC”）是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。如果一个事务执行的操作都某行数据应用了锁，那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作。悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。    </p>
 <p>悲观锁，正如其名，它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度(悲观)，因此，在整个数据处理过程中，将数据处于锁定状态。 悲观锁的实现，往往依靠数据库提供的锁机制 （也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，也无法保证外部系统不会修改数据）。       </p>
 <p>在数据库中，悲观锁的流程如下：<br>在对任意记录进行修改前，先尝试为该记录加上排他锁（exclusive locking）。              </p>
@@ -140,7 +139,7 @@ where id=#{id} and version=#{version};
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2015/03/22/MYSQL/悲观锁与乐观锁/" data-id="cjh8vkxwa00323v2na94rs8jd" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2015/03/22/MYSQL/悲观锁与乐观锁/" data-id="cjivq9aec003i8b2n4ge8wkyl" class="article-share-link">Share</a>
       
       
       
@@ -154,7 +153,7 @@ where id=#{id} and version=#{version};
 <nav id="article-nav">
   
     <a href="/2015/10/12/LINUX/添加或删除ubuntu用户和组/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
+      <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
           ubuntu的用户和用户组
@@ -164,7 +163,7 @@ where id=#{id} and version=#{version};
   
   
     <a href="/2014/12/02/非技术文章/ 鱼骨图实践/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">鱼骨图</div>
     </a>
   
@@ -201,7 +200,7 @@ where id=#{id} and version=#{version};
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Content</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#悲观锁"><span class="toc-number">1.</span> <span class="toc-text">悲观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#乐观锁"><span class="toc-number">2.</span> <span class="toc-text">乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用版本号实现乐观锁"><span class="toc-number">3.</span> <span class="toc-text">使用版本号实现乐观锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优点与不足"><span class="toc-number">4.</span> <span class="toc-text">优点与不足</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用自OPEN经验"><span class="toc-number">5.</span> <span class="toc-text">引用自OPEN经验</span></a></li></ol>
           </div>
@@ -233,10 +232,10 @@ where id=#{id} and version=#{version};
   <div class="outer">
     <div id="footer-left">
       &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
-      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
