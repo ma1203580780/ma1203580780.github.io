@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>web架构优化的几个点 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web架构优化的几个点">
+<meta property="og:url" content="http://martist.cn/2018/06/18/linux性能调优/性能调优的点/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-07-19T10:33:17.917Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="web架构优化的几个点">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux性能调优/性能调优的点" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/06/18/linux性能调优/性能调优的点/" class="article-date">
+  <time datetime="2018-06-17T16:00:00.000Z" itemprop="datePublished">2018-06-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      web架构优化的几个点
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>举一个例子，抽奖。<br>抽奖是一个典型的高并发场景应用，平时流量不多，但遇到大促活动，流量就会暴增，今年我司的717周年庆期间的日均UV就超过百万。零点时刻一时间风起云涌，网站加载缓慢，到零点30分nginx开始报http 502错误。</p>
+<p>此处做下笔记：</p>
+<pre><code>wikipedia上这么解释：
+502 Bad Gateway
+The server was acting as a gateway or proxy and received an invalid response from the upstream server.
+503 Service Unavailable
+The server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.
+504 Gateway Time-out
+The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.
+</code></pre><h2 id="502-Bad-Gateway"><a href="#502-Bad-Gateway" class="headerlink" title="502 Bad Gateway"></a>502 Bad Gateway</h2><p>fpm进程挂掉或者后端程序过长时间未返回。<br>编写一个简单的php脚本gateway.php进行测试，内容很简单 &lt;?php sleep(10);echo ‘ok;’?&gt; ，开始下面的测试：</p>
+<p>1.启动nginx，不启动fpm，直接 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway错误且nginx的error log出现错误</p>
+<pre><code>2017/02/10 19:08:21 [error] 216#216: *84 connect() failed (111: Connection refused) while connecting to upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;
+</code></pre><p>2.启动fpm，修改php-fpm.conf中request_terminate_timeout的值为5s。继续 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway。nginx和php-fpm分别报错</p>
+<pre><code>// nginx error log
+2017/02/10 19:10:57 [error] 246#246: *88 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;
+
+// php-fpm error log
+[10-Feb-2017 19:10:57] WARNING: [pool www] child 242, script &apos;/home/website/default/gateway.php&apos; (request: &quot;GET /gateway.php&quot;) execution timed out (6.205572 sec), terminating
+[10-Feb-2017 19:10:57] WARNING: [pool www] child 242 exited on signal 15 (SIGTERM) after 36.692467 seconds from start
+</code></pre><h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>当遇到这个状态码的时候表示服务临时不可用，比如nginx配置了频率限制而client端又超过了配置的限制后就会收到503的响应。</p>
+<h2 id="504-Gateway-Time-out"><a href="#504-Gateway-Time-out" class="headerlink" title="504 Gateway Time-out"></a>504 Gateway Time-out</h2><p>nginx的fastcgi模块有一个fastcgi_read_timeout配置，它表示从FastCGI server获取数据的超时时间。如果超过这个配置客户端就是收到504的响应。还以 gateway.php 举例（修改fastcgi_read_timeout的值为5s）：</p>
+<pre><code>// nginx error log
+2017/02/12 14:57:26 [error] 138#138: *1113 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;
+</code></pre><h2 id="整体设计"><a href="#整体设计" class="headerlink" title="整体设计"></a>整体设计</h2><p>在我看来，能提高服务器应对并发的能力的方式无非两种：</p>
+<pre><code>限流削峰：通过降低实际抵达服务器的并发量，降低服务器处理压力；
+性能优化：从前台到硬件，优化系统各方面性能，提高服务器处理能力。
+</code></pre><h3 id="服务部署层面"><a href="#服务部署层面" class="headerlink" title="服务部署层面"></a>服务部署层面</h3><pre><code>web服务器和应用服务器集群分离
+应用服务器集群,做负载均衡,对话共享
+静态资源cdn
+防cc
+访问频率限制
+增加服务实时监控
+预计高并发前适时提升带宽
+</code></pre><h3 id="项目层面"><a href="#项目层面" class="headerlink" title="项目层面"></a>项目层面</h3><pre><code>减少http请求
+使用浏览器缓存
+启用gzip压缩
+css文件放在页面最上面
+javascript文件最下面
+增加队列，异步
+代码分层，增加复用性
+禁止for循环sql操作
+增加缓存，热点缓存，列表缓存
+</code></pre><h2 id="硬件层面"><a href="#硬件层面" class="headerlink" title="硬件层面"></a>硬件层面</h2><pre><code>提高磁盘io速率，使用ssd硬盘
+cpu升配，增加内存
+</code></pre><h2 id="数据库方面"><a href="#数据库方面" class="headerlink" title="数据库方面"></a>数据库方面</h2><h3 id="逻辑允许的情况下不访问数据库"><a href="#逻辑允许的情况下不访问数据库" class="headerlink" title="逻辑允许的情况下不访问数据库"></a>逻辑允许的情况下不访问数据库</h3><pre><code>使用缓存
+使用页面静态化
+</code></pre><h3 id="必须访问就优化"><a href="#必须访问就优化" class="headerlink" title="必须访问就优化"></a>必须访问就优化</h3><pre><code>参数配置
+索引优化
+sql优化
+分离数据库中活跃的数据
+读写分离
+批量读取和延迟修改
+使用搜索引擎搜索数据库中的数据
+使用NoSQL和Hadoop等技术
+</code></pre><h2 id="高并发和高可用"><a href="#高并发和高可用" class="headerlink" title="高并发和高可用"></a>高并发和高可用</h2><pre><code>高并发
+</code></pre><p>即在单位时间内的并发请求数非常高，因此对网站的吞吐能力和处理能力比较高。例如12306，淘宝等。</p>
+<pre><code>高可用
+</code></pre><p>即对网站的稳定性要求比较高，比如不允许停止服务，某台机器出问题后不影响网站的正常访问等。</p>
+<p>互联网应用中，通常面临的问题是前者——高并发。</p>
+<p>高并发又分为cpu密集型和io密集型。前者要求网站的计算能力要高，后者要求网站的吞吐能力要高。</p>
+<h2 id="http和tcp"><a href="#http和tcp" class="headerlink" title="http和tcp"></a>http和tcp</h2><h3 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP 2.0"></a>HTTP 2.0</h3><p>HTTP 2.0标准于2015年5月以RFC 7540正式发布，Google Chrome、Mozilla Firefox、Microsoft Edge和Opera已支持HTTP 2.0，并默认启用。Internet Explorer自IE 11开始支持HTTP 2.0，目前谷歌、Facebook、Twitter 等服务器已经采用2.0协议。</p>
+<p>2016年4月26日 nginx-1.10.0 stable 也已经提供了对 HTTP 2.0的支持，理论上不需要对程序进行优化，仅仅更换 HTTP 2.0，就可以有效的提升50%以上的性能。</p>
+<h3 id="客户端优化"><a href="#客户端优化" class="headerlink" title="客户端优化"></a>客户端优化</h3><pre><code>重用TCP连接至关重要，频繁的三次握手是对性能极大的浪费
+
+不能让数据传输的更快，可以让数据传输的更短
+
+压缩数据，减少不必要的比特传输
+
+再快也快不不过什么也不用发，能少发就少发
+
+消除不必要的连接和数据传输本身就是很大的优化，优化好TCP是所有应用高性能的前提和基础。
+</code></pre><h3 id="浏览器优化"><a href="#浏览器优化" class="headerlink" title="浏览器优化"></a>浏览器优化</h3><pre><code>减少DNS查找：每一次主机名解析都需要一次网络往返，从而增加请求的延迟时间，同时还会阻塞后续请求。
+
+重用TCP连接：尽可能使用持久连接，以消除 TCP 握手和慢启动延迟（Keep-Alive
+
+减少HTTP重定向：HTTP 重定向极费时间，特别是不同域名之间的重定向，更加费时；这里面既有额外的 DNS 查询、 * TCP握手，还有其他延迟。最佳的重定向次数为零。
+
+HTTPS优化：启用TLS的会话缓存和无状态恢复及共享（可以减少HTTPS后续验证时间）
+
+去掉不必要的资源：任何请求都不如没有请求快。
+
+在客户端缓存资源：应该缓存应用资源，从而避免每次请求都发送相同的内容。浏览器提供了 Cache-Control，Last-Modified 和 ETag 首部提供验证机制，可以让不经常变更的内容直接从本地获取避免重复访问服务器拉取同样的资源，要说最快的网络请求，那就是不用发送请求就能获取资源。
+
+传输压缩过的内容：传输前应该压缩应用资源，把要传输的字节减至最少：确保对每种要传输的资源采用最好的压缩手段。 图片一般会占到一个网页需要传输的总字节数的一半，HTML、 CSS 和 JavaScript 等文本资源的大小经过 gzip 压缩平均可以减少 60%~80。
+
+打包资源减少HTTP请求：拼接资源如图片精灵技术，合并CSS，JS等文件以减少HTTP请求。
+
+合理设置资源域名：HTTP 规定为了防止客户端同时发起的请求过多给服务器造成自我DDOS，客户端对于单个域名一次最多不可发起超过6个并行请求，因此页面中同域名下资源太多，会造成等待6个资源的返而以防造成请求阻塞，可以用多个域名来突破并行请求数量。
+</code></pre><h2 id="借鉴"><a href="#借鉴" class="headerlink" title="借鉴"></a>借鉴</h2><p><a href="https://my.oschina.net/u/3833719/blog/1801552" target="_blank" rel="external">https://my.oschina.net/u/3833719/blog/1801552</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/06/18/linux性能调优/性能调优的点/" data-id="cjjtv62fz0095fa2n003w1crx" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/06/25/WEB/网络协议须知/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          网络协议须知
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/18/linux性能调优/linux性能查看/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">ubuntu性能查看</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/06/18/linux性能调优/性能调优的点/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#502-Bad-Gateway"><span class="toc-number">1.</span> <span class="toc-text">502 Bad Gateway</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#503-Service-Unavailable"><span class="toc-number">2.</span> <span class="toc-text">503 Service Unavailable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#504-Gateway-Time-out"><span class="toc-number">3.</span> <span class="toc-text">504 Gateway Time-out</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#整体设计"><span class="toc-number">4.</span> <span class="toc-text">整体设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务部署层面"><span class="toc-number">4.1.</span> <span class="toc-text">服务部署层面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目层面"><span class="toc-number">4.2.</span> <span class="toc-text">项目层面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件层面"><span class="toc-number">5.</span> <span class="toc-text">硬件层面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库方面"><span class="toc-number">6.</span> <span class="toc-text">数据库方面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#逻辑允许的情况下不访问数据库"><span class="toc-number">6.1.</span> <span class="toc-text">逻辑允许的情况下不访问数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#必须访问就优化"><span class="toc-number">6.2.</span> <span class="toc-text">必须访问就优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高并发和高可用"><span class="toc-number">7.</span> <span class="toc-text">高并发和高可用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#http和tcp"><span class="toc-number">8.</span> <span class="toc-text">http和tcp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-2-0"><span class="toc-number">8.1.</span> <span class="toc-text">HTTP 2.0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端优化"><span class="toc-number">8.2.</span> <span class="toc-text">客户端优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#浏览器优化"><span class="toc-number">8.3.</span> <span class="toc-text">浏览器优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#借鉴"><span class="toc-number">9.</span> <span class="toc-text">借鉴</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

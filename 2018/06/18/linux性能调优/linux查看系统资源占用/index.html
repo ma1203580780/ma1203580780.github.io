@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-07-08T10:42:42.408Z">
+<meta property="og:updated_time" content="2018-07-09T03:10:00.766Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ubuntu查看系统资源占用">
 <meta name="twitter:description" content="：-}">
@@ -151,8 +151,8 @@ Cpu(s): 99.8%us[用户空间占用CPU百分比],
 0.1%sy[内核空间占用CPU百分比],
 0.0%ni[用户进程空间内改变过优先级的进程占用CPU百分比],
 0.2%id[空闲CPU百分比], 0.0%wa[等待输入输出的CPU时间百分比],
-0.0%hi[],
-0.0%st[],
+0.0% hi — [硬中断（Hardware IRQ）占用CPU的百分比],
+0.0% si — [软中断（Software Interrupts）占用CPU的百分比],
 Mem: 4147888k total[物理内存总量],
 2493092k used[使用的物理内存总量],
 1654796k free[空闲内存总量],
@@ -161,8 +161,66 @@ Swap:  5144568k total[交换区总量],
 56k used[使用的交换区总量],
 5144512k free[空闲交换区总量],
 2013180k cached[缓冲的交换区总量],
-</code></pre><h2 id="free"><a href="#free" class="headerlink" title="free"></a>free</h2><p> free命令可以显示当前系统未使用的和已使用的内存数目，还可以显示被内核使用的内存缓冲区。</p>
-<p>语法</p>
+</code></pre><p>第七行以下：各进程（任务）的状态监控</p>
+<pre><code>PID — 进程id
+USER — 进程所有者
+PR — 进程优先级
+NI — nice值。负值表示高优先级，正值表示低优先级
+VIRT — 进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES
+RES — 进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA
+SHR — 共享内存大小，单位kb
+S — 进程状态。D=不可中断的睡眠状态 R=运行 S=睡眠 T=跟踪/停止 Z=僵尸进程
+%CPU — 上次更新到现在的CPU时间占用百分比
+%MEM — 进程使用的物理内存百分比
+TIME+ — 进程使用的CPU时间总计，单位1/100秒
+COMMAND — 进程名称（命令名/命令行）
+</code></pre><p>top命令的补充</p>
+<p>top命令是Linux上进行系统监控的首选命令，但有时候却达不到我们的要求，比如当前这台服务器，top监控有很大的局限性。这台服务器运行着websphere集群，有两个节点服务，就是【top视图 01】中的老大、老二两个java进程，top命令的监控最小单位是进程，所以看不到我关心的java线程数和客户连接数，而这两个指标是java的web服务非常重要的指标，通常我用ps和netstate两个命令来补充top的不足。</p>
+<p>监控java线程数：</p>
+<pre><code>ps -eLf | grep java | wc -l
+</code></pre><p>监控网络客户连接数：</p>
+<pre><code>netstat -n | grep tcp | grep 侦听端口 | wc -l
+</code></pre><p>上面两个命令，可改动grep的参数，来达到更细致的监控要求。</p>
+<p>在Linux系统“一切都是文件”的思想贯彻指导下，所有进程的运行状态都可以用文件来获取。系统根目录/proc中，每一个数字子目录的名字都是运行中的进程的PID，进入任一个进程目录，可通过其中文件或目录来观察进程的各项运行指标，例如task目录就是用来描述进程中线程的，因此也可以通过下面的方法获取某进程中运行中的线程数量（PID指的是进程ID）：</p>
+<pre><code>ls /proc/PID/task | wc -l
+</code></pre><p>在linux中还有一个命令pmap，来输出进程内存的状况，可以用来分析线程堆栈：</p>
+<pre><code>pmap PID
+</code></pre><p>大家都熟悉Linux下可以通过top命令来查看所有进程的内存，CPU等信息。除此之外，还有其他一些命令，可以得到更详细的信息，例如进程相关</p>
+<p>cat /proc/your_PID/status  </p>
+<p>通过top或ps -ef | grep ‘进程名’ 得到进程的PID。该命令可以提供进程状态、文件句柄数、内存使用情况等信息。<br>内存相关</p>
+<pre><code>vmstat -s -S M  
+</code></pre><p>该可以查看包含内存每个项目的报告，通过-S M或-S k可以指定查看的单位，默认为kb。结合watch命令就可以看到动态变化的报告了。</p>
+<p>也可用  </p>
+<pre><code>cat /proc/meminfo  
+</code></pre><p>要看cpu的配置信息可用</p>
+<pre><code>cat /proc/cpuinfo  
+</code></pre><p>它能显示诸如CPU核心数，时钟频率、CPU型号等信息。</p>
+<p>要查看cpu波动情况的，尤其是多核机器上，可使用</p>
+<pre><code>mpstat -P ALL 10 
+</code></pre><p>该命令可间隔10秒钟采样一次CPU的使用情况，每个核的情况都会显示出来，例如，每个核的idle情况等。<br>只需查看均值的，可用</p>
+<pre><code>iostat -c 
+</code></pre><p>IO相关</p>
+<pre><code>iostat -P ALL  
+</code></pre><p>该命令可查看所有设备使用率、读写字节数等信息。</p>
+<p>另外，htop ，有时间可以用一下。</p>
+<h2 id="Linux查看物理CPU个数、核数、逻辑CPU个数"><a href="#Linux查看物理CPU个数、核数、逻辑CPU个数" class="headerlink" title="Linux查看物理CPU个数、核数、逻辑CPU个数"></a>Linux查看物理CPU个数、核数、逻辑CPU个数</h2><pre><code># 总核数 = 物理CPU个数 X 每颗物理CPU的核数
+# 总逻辑CPU数 = 物理CPU个数 X 每颗物理CPU的核数 X 超线程数
+
+# 查看物理CPU个数
+cat /proc/cpuinfo| grep &quot;physical id&quot;| sort| uniq| wc -l
+
+# 查看每个物理CPU中core的个数(即核数)
+cat /proc/cpuinfo| grep &quot;cpu cores&quot;| uniq
+
+# 查看逻辑CPU的个数
+cat /proc/cpuinfo| grep &quot;processor&quot;| wc -l
+
+# 查看CPU信息（型号）
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+## free
+free命令可以显示当前系统未使用的和已使用的内存数目，还可以显示被内核使用的内存缓冲区。
+</code></pre><p>语法</p>
 <pre><code>free(选项)
 </code></pre><p>选项</p>
 <pre><code>-b：以Byte为单位显示内存使用情况；
@@ -274,12 +332,12 @@ uptime
 time
 vmstat
 mpstat
-</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://man.linuxde.net" target="_blank" rel="external">http://man.linuxde.net</a></p>
+</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://man.linuxde.net" target="_blank" rel="external">http://man.linuxde.net</a><br><a href="https://www.cnblogs.com/dragonsuc/p/5512797.html" target="_blank" rel="external">https://www.cnblogs.com/dragonsuc/p/5512797.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/06/18/linux性能调优/linux查看系统资源占用/" data-id="cjjcpyhi0009zmn2nc3h7dim2" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/06/18/linux性能调优/linux查看系统资源占用/" data-id="cjjtv62fq008mfa2nyalaxuj5" class="article-share-link">分享</a>
       
       
       
@@ -292,19 +350,19 @@ mpstat
     
 <nav id="article-nav">
   
-    <a href="/2018/06/25/WEB/网络协议须知/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/06/18/linux性能调优/linux性能查看/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          网络协议须知
+          ubuntu性能查看
         
       </div>
     </a>
   
   
-    <a href="/2018/06/01/MYSQL/多列索引/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/06/05/Elecctron/electron的存储/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">多列索引</div>
+      <div class="article-nav-title">electron入门</div>
     </a>
   
 </nav>
@@ -342,7 +400,7 @@ mpstat
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#top命令"><span class="toc-number">1.</span> <span class="toc-text">top命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#free"><span class="toc-number">2.</span> <span class="toc-text">free</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uptime"><span class="toc-number">3.</span> <span class="toc-text">uptime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vmstat"><span class="toc-number">4.</span> <span class="toc-text">vmstat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他相关命令"><span class="toc-number">5.</span> <span class="toc-text">其他相关命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#top命令"><span class="toc-number">1.</span> <span class="toc-text">top命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux查看物理CPU个数、核数、逻辑CPU个数"><span class="toc-number">2.</span> <span class="toc-text">Linux查看物理CPU个数、核数、逻辑CPU个数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#uptime"><span class="toc-number">3.</span> <span class="toc-text">uptime</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vmstat"><span class="toc-number">4.</span> <span class="toc-text">vmstat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他相关命令"><span class="toc-number">5.</span> <span class="toc-text">其他相关命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
           </div>
       </div>
     </div>
