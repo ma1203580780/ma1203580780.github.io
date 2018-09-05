@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>feed流的技术实现 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="谈谈我对feed的理解">
+<meta name="keywords" content="php,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="feed流的技术实现">
+<meta property="og:url" content="http://martist.cn/2018/08/24/架构/feed流的技术实现/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="谈谈我对feed的理解">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-08-27T06:21:19.072Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="feed流的技术实现">
+<meta name="twitter:description" content="谈谈我对feed的理解">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-架构/feed流的技术实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/24/架构/feed流的技术实现/" class="article-date">
+  <time datetime="2018-08-23T16:00:00.000Z" itemprop="datePublished">2018-08-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      feed流的技术实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>我们现在好多软件都有一个类似朋友圈的功能：微博、微信、QQ…… 只要涉及到好友、粉丝这样的 app 或者是网站，一定有这样的一个功能。那这个功能是怎么样来实现的呢？</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>简单来说，Feeds这块主要包括两块内容</p>
+<pre><code>生成feeds
+更新feed
+</code></pre><h3 id="生成feeds"><a href="#生成feeds" class="headerlink" title="生成feeds"></a>生成feeds</h3><p>比如我们已经关注的人做了特定操作，我们需要把这些活动加入你的feeds，让你接收到。<br>比如某大牌明星发了个微博，这时候我们首先找到明星的所有关注者，然后给需要推送的关注者推送此微博，大家可以把每个人的feeds简单想象为一个个的有序列表，推送很简单，就是在每个人的列表末尾添加这个操作。</p>
+<h3 id="更新feeds"><a href="#更新feeds" class="headerlink" title="更新feeds"></a>更新feeds</h3><p>你新关注了一个人，需要把他的活动加入已有feeds。这时候我们需要取出此人的活动历史，然后按照时间顺序把这些历史塞到你的feeds中。此操作的复杂度会比较高，需要使用合适的数据结构来达到最佳性能，目前是O(log(N))。</p>
+<h3 id="取消关注"><a href="#取消关注" class="headerlink" title="取消关注"></a>取消关注</h3><p>你的关注点做了一些更新操作，比如你取消关注了一个人，那么他的动态就要在feeds中清除掉。</p>
+<h2 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h2><p>我们可以在用常用的mysql设计个2个数据表，一个表存人和人的关注关系，一个表存发布动态的信息。这样通过链表查询就可以实现feeds流了。但是我们知道feeds流的数据量级应该会非常大，性能和可用性就会直线下降，单一依靠mysql实现feeds已经无法应对业务的增长。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="推模式"><a href="#推模式" class="headerlink" title="推模式"></a>推模式</h3><p>什么是推模式？推模式就是，用户A关注了用户B，用户B每发送一个动态，后台遍历用户B的粉丝，往他们粉丝的feed里面推送一条动态。</p>
+<h3 id="拉模式"><a href="#拉模式" class="headerlink" title="拉模式"></a>拉模式</h3><p>与推模式相反，拉模式则是，用户每次刷新feed第一页，都去遍历关注的人，把最新的动态拉取回来。</p>
+<p>但是，不管推模式还是拉模式都存在若关注数量或者粉丝数量过多，导致遍历时间太长的问题，怎么去解决 ？这里就出现了第三种模式，推拉模式。</p>
+<h3 id="推拉模式"><a href="#推拉模式" class="headerlink" title="推拉模式"></a>推拉模式</h3><p>这是一种折中的解决方案，就是在线推，离线拉。粉丝几百上千万， 跟你发布动态同时在线的肯定也就只有那么顶天几百几千几万，何况这类大V很少，只推给在线的粉丝，离线的粉丝上线后，再去拉取动态即可！但是，不管是什么模式，每个用户都会维护一个类似发件箱跟收件箱的东西，保存自己发过的动态以及Feed动态（具体实现看下面），来完成推与拉。</p>
+<p>而这里讲的，肯定就是推拉模式，用户A关注了用户B ， 用户B发布动态则将动态推进用户A的feed，这里使用redis的zset实现，sort为time（记得以毫秒为时间戳，秒级在数据量达到一定程度后，会有读取不到的问题，比如以时间戳为分页页码），value为具体的动态 ID（为什么是动态ID， 其实很简单， 就是因为动态的内容可以进行缓存，在redis里面全部走ID，修改动态内容也需要修改一处，动态内容可以保存在hash结构里）， 每个用户维护一个zset保存我发布的动态，一个zset保存我的feed动态，过期时间3~7天看情况而定。为什么要设计过期时间后面会细说。</p>
+<p>OK，全局维护一个在线用户列表，怎么设计这个就自己琢磨了，为了防止用户挂后台导致与服务端为离线状态，所以最好是1~3小时未操作或者离线时间不大于3小时的，都当做在线处理，反正这个看情况定。</p>
+<p>那么，当用户发了一条动态后，后台会有以下这些操作：<br>在线推： 异步遍历在线的粉丝，将动态ID，添加到粉丝的Feed中。<br>离线拉： 离线用户打开APP后，我们是会请求一个公共的入口接口，主做统计以及其他初始化操作，在这里，我们也开了一个异步线程，对用户进行Feed更新操作，防止用户进入APP后等待拉取时间过长，毕竟关注成千上万的人肯定有（其实万单位以下遍历都很快）。拉取过程其实就是把自己最后一条Feed的时间戳取出，去遍历关注的人的feed，将大于该时间的ID全部拉取回来。用户进入APP后，刷新即可看到最新操作。</p>
+<p>另：如果有Feed新消息数提示的需求，可以在推拉的同时进行增加， 刷新feed时清空即可。</p>
+<h2 id="用户feed里面过长，占用内存怎么办？"><a href="#用户feed里面过长，占用内存怎么办？" class="headerlink" title="用户feed里面过长，占用内存怎么办？"></a>用户feed里面过长，占用内存怎么办？</h2><p>我是这么处理的，一个用户的feed第一次拉取的时候，feed长度为500条，在我们APP里，相当于50页，而后的数据，都走数据库。</p>
+<p>大页码翻页其实就是个伪需求而且耗性能的东西，用户除了第一次用这个APP，才会翻到底，第一次使用， 能有几个动态 ？而对于二次使用以上的用户，一般来讲， 翻了几页就已经到达上一次看过的地方了，所以500条数据，在关注量一般的情况下，内容已经足够消费，甚至达到疲劳，可能有关注量很大的用户他的Feed每天可能有很多很多动态，但是，不用说，肯定是做广告的，关注一堆人等着回粉，这种人更不会去消费内容，50页的内容，翻起来都累。当然，并不是说放弃了这些人，feed找不到走数据库嘛~~~~爱走不走，想走就给我翻50页再说~</p>
+<h2 id="每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适-？"><a href="#每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适-？" class="headerlink" title="每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适 ？"></a>每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适 ？</h2><p>这里就回到上面那个问题了，为什么要给feed的key设计过期时间？为什么是设计3~7天过期时间？</p>
+<p>原因有以下：</p>
+<pre><code>一、一个用户3~7天不打开APP，可能已经对APP失去兴趣了，打开几率很小，或者已经被卸载了，没有存在的意义了。
+二、3~7天未登陆APP，关注的人发的动态也不少了，Feed未拉取回来的数据肯定也不少，那么这时候去遍历其实拉取量很大，那么还不如直接全部重新拉一边或者拉取用户最后登陆时间后产出的数据。
+</code></pre><p>到这里，其实已经差不多了，大部分业务逻辑已经足够满足，并且速度也理想，目前我们线上这种模式走了半年，feed一般都是10~80ms响应完毕。</p>
+<pre><code>&lt;?php 
+echo &apos;求关注 求喜欢&apos;;
+?&gt;
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/08/24/架构/feed流的技术实现/" data-id="cjlosuipp00cb9l2njdr6vlpd" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/06/PHP/数组合并/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">数组合并</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/08/24/架构/feed流的技术实现/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">Content</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#场景"><span class="toc-number">1.</span> <span class="toc-text">场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#功能"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#生成feeds"><span class="toc-number">2.1.</span> <span class="toc-text">生成feeds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新feeds"><span class="toc-number">2.2.</span> <span class="toc-text">更新feeds</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#取消关注"><span class="toc-number">2.3.</span> <span class="toc-text">取消关注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#难点"><span class="toc-number">3.</span> <span class="toc-text">难点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-number">4.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#推模式"><span class="toc-number">4.1.</span> <span class="toc-text">推模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拉模式"><span class="toc-number">4.2.</span> <span class="toc-text">拉模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#推拉模式"><span class="toc-number">4.3.</span> <span class="toc-text">推拉模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用户feed里面过长，占用内存怎么办？"><span class="toc-number">5.</span> <span class="toc-text">用户feed里面过长，占用内存怎么办？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适-？"><span class="toc-number">6.</span> <span class="toc-text">每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适 ？</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

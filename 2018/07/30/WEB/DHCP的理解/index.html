@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>DHCP | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="web,协议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DHCP">
+<meta property="og:url" content="http://martist.cn/2018/07/30/WEB/DHCP的理解/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-07-31T10:41:03.120Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DHCP">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-WEB/DHCP的理解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/30/WEB/DHCP的理解/" class="article-date">
+  <time datetime="2018-07-29T16:00:00.000Z" itemprop="datePublished">2018-07-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DHCP
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="类比"><a href="#类比" class="headerlink" title="类比"></a>类比</h2><p>为了便于理解，我们把DHCP客户机比做餐馆里的客人，DHCP服务器比做服务员（一个餐馆里也可以有多个服务员），IP地址比做客户需要的食物。可以这样描述整个过程：</p>
+<p>客人走进餐馆，问：“有没有服务员啊？”（DHCP discover），<br>多个服务员同时回答：“有，我这有鸡翅”“有，我这有汉堡”（DHCP offer）。<br>客人说：“好吧，我要一份汉堡”（DHCP request，这个客人比较死板，总是选择第一次听到的食物），<br>端着汉堡的服务员回应了一声：“来啦”（DHCP ack），并把食物端到客人面前，供其享用（将网卡和IP地址绑定）。<br>客人下次来的时候，就直接找上次那个服务员点自己喜欢的汉堡了（DHCP request），如果还有汉堡，服务员会再次确认并上菜（DHCP ack），而如果已经卖完了，服务员则会告诉客人：“不好意思，已经卖完了”（DHCP nack）。<br>当然，服务员隔一段时间会来收拾一次桌子，除非客人特别说明这菜还要继续吃的，服务员会将剩菜端走。</p>
+<h2 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h2><p>DHCP（Dynamic Host Configuration Protocol，动态主机配置协议）是一个局域网的网络协议，使用UDP协议工作。<br>主要有两个用途：给内部网络或网络服务供应商自动分配IP地址，给用户或者内部网络管理员作为对所有计算机作中央管理的手段。</p>
+<h2 id="DHCP的简介"><a href="#DHCP的简介" class="headerlink" title="DHCP的简介"></a>DHCP的简介</h2><p>动态主机配置协议（Dynamic Host Configuration Protocol，DHCP）是用于对多个客户计算机集中分配IP地址以及IP地址相关的信息的协议，这样就能将IP地址和TCP/IP的设置统一管理起来，而避免不必要的地址冲突的问题，因此常常用在网络中对众多计算机的管理方面，节省了网络管理员手工设置和分配地址的麻烦。</p>
+<p>除了能够方便管理之外，DHCP还能略微达到节省IP地址的目的。假设网络中有50个计算机，但只有40个 IP地址，但是这50台计算机不会同时启动，IP地址应该满足要求。DHCP也能用于统一设置其他的一些IP设置，如缺省路由、DNS服务器等等，使用它能减少一个大型网络的管理任务。</p>
+<p>DHCP是从原有的BootP协议发展起来的，原来的目的是为无盘工作站分配IP地址的协议，当前更多的用于集中管理IP地址。然而DHCP协议也有其缺点，例如一台DHCP客户计算机没有一个固定的IP地址，而对于提供网络服务的服务器来讲，经常变化的IP地址并不适合。并且当前的DNS协议并不能和DHCP协作，为DHCP客户直接提供主机名解析任务。</p>
+<p>DHCP服务优点：网络管理员可以验证IP地址和其它配置参数，而不用去检查每个主机；DHCP不会同时租借相同的IP地址给两台主机；DHCP管理员可以约束特定的计算机使用特定的IP地址；可以为每个DHCP作用域设置很多选项；客户机在不同子网间移动时不需要重新设置IP地址。</p>
+<p>但同时也存在不少缺点：DHCP不能发现网络上非DHCP客户机已经在使用的IP地址；当网络上存在多个DHCP服务器时，一个DHCP服务器不能查出已被其它服务器租出去的IP地址；DHCP服务器不能跨路由器与客户机通信，除非路由器允许BOOTP转发。</p>
+<h2 id="工作过程"><a href="#工作过程" class="headerlink" title="工作过程"></a>工作过程</h2><p>DHCP工作时要求客户机和服务器进行交互，由客户机通过广播向服务器发起申请IP地址的请求，然后由服务器分配一个IP地址以及其他的TCP/IP设置信息。整个过程可以分为以下步骤：</p>
+<p>IP地址租用申请：DHCP客户机的TCP/IP首次启动时，就要执行DHCP客户程序，以进行TCP/IP 的设置。由于此时客户机的TCP/IP还没有设置完毕，就只能使用广播的方式发送DHCP请求信息包，广播包使用 UDP端口67和68进行发送，广播信息中包括了客户机的网络界面的硬件地址和计算机名字，以提供DHCP服务器进行分配。</p>
+<p>IP地址租用提供：当接收到DHCP客户机的广播信息之后，所有的DHCP服务器均为这个客户机分配一个合适的IP地址，将这些IP地址、网络掩码、租用时间等信息，按照DHCP客户提供的硬件地址发送回DHCP客户机。这个过程中对DHCP服务器没有对客户计算机进行限制，因此客户机能收到多个IP地址提供信息。</p>
+<p>IP地址租用选择：由于客户机接收到多个服务器发送的多个IP地址提供信息，客户机将选择一个IP地址，拒绝其他提供的IP地址，以便这些地址能分配给其他客户。客户机将向它选择的服务器发送选择租用信息。</p>
+<p>IP地址租用确认：服务器将收到客户的选择信息，如果也没有例外发生，将回应一个确认信息，将这个IP地址真正分配给这个客户机。客户机就能使用这个IP地址及相关的TCP/IP数据，来设置自己的TCP/IP堆栈。</p>
+<p>更新租用：DHCP中，每个IP地址是有一定租期的，若租期已到，DHCP服务器就能够将这个IP地址重新分配给其他计算机。因此每个客户计算机应该提前续租它已经租用的IP地址，服务器将回应客户机的请求并更新该客户机的租期设置。一旦服务器返回不能续租的信息，那么DHCP客户机只能在租期到达时放弃原有的IP地址，重新申请一个新 IP地址。为了避免发生问题，续租在租期达到50%时就将启动，如果没有成功将不断启动续租请求过程。</p>
+<p>释放IP地址租用：客户机可以主动释放自己的IP地址请求，也可以不释放，但也不续租，等待租期过期而释放占用的IP地址资源。</p>
+<p>由于DHCP依赖于广播信息，因此一般的情况下，客户机和服务器应该位于同一个网络之内。然而可以设置网络中的路由器为可以转发BootP广播包，使得服务器和客户机可以位于两个不同的网络中。然而配置转发广播信息，不是一个很好的解决办法，更好的办法为使用DHCP中转计算机，DHCP中转计算机和DHCP客户机位于同一个网络中，来回应客户机的租用请求，然而它不维护DHCP数据和拥有IP地址资源，它只是将请求通过TCP/IP转发给位于另一个网络上的DHCP服务器，进行实际的IP地址分配和确认。</p>
+<h2 id="客户端向DHCP-服务器请求IP-地址的4-个步骤"><a href="#客户端向DHCP-服务器请求IP-地址的4-个步骤" class="headerlink" title="客户端向DHCP 服务器请求IP 地址的4 个步骤"></a>客户端向DHCP 服务器请求IP 地址的4 个步骤</h2><pre><code>发现阶段（DHCP客户端在网络中广播发送DHCP DISCOVER请求报文，发现DHCP服务器，请求IP地址租约）
+提供阶段（DHCP服务器通过DHCP OFFER报文向DHCP客户端提供IP地址预分配）
+选择阶段（DHCP客户端通过DHCP REQUEST报文确认选择第一个DHCP服务器为它提供IP地址自动分配服务）
+确认阶段（被选择的DHCP服务器通过DHCP ACK报文把在DHCP OFFER报文中准备的IP地址租约给对应DHCP客户端）
+</code></pre><h2 id="路由器dhcp可以分配多少个ip"><a href="#路由器dhcp可以分配多少个ip" class="headerlink" title="路由器dhcp可以分配多少个ip"></a>路由器dhcp可以分配多少个ip</h2><p>一个C类地址可以分配256个，其中2个不可用，一个是网关，一个是网络地址。B类地址可以分配65536个，也是两个不可用。 </p>
+<h2 id="分配ip地址的方式"><a href="#分配ip地址的方式" class="headerlink" title="分配ip地址的方式"></a>分配ip地址的方式</h2><p>DHCP服务器具有三种IP的分配方式，手动分配，自动分配和动态分配。其中动态分配功能最为强大，配置也最为烦琐。目前的DHCP服务器一般支持全部的几种分配方式或者是其中的两种。<br>手动分配：在手动分配中，网络管理员在DHCP服务器通过手工方法配置DHCP客户机的IP地址。当DHCP客户机要求网络服务时，DHCP服务器把手工配置的IP地址传递给DHCP客户机。<br>自动分配：在自动分配中，不需要进行任何的IP地址手工分配。当DHCP客户机第一次向DHCP服务器租用到IP地址后，这个地址就永久地分配给了该DHCP客户机，而不会再分配给其他客户机。<br>动态分配：当DHCP客户机向DHCP服务器租用IP地址时，DHCP服务器只是暂时分配给客户机一个IP地址。只要租约到期，这个地址就会还给DHCP服务器，以供其他客户机使用。如果DHCP客户机仍需要一个IP地址来完成工作，则可以再要求另外一个IP地址。<br>动态分配方法是惟一能够自动重复使用IP地址的方法，它对于暂时连接到网上的DHCP客户机来说尤其方便，对于永久性与网络连接的新主机来说也是分配IP地址的好方法。DHCP客户机在不再需要时才放弃IP地址，如DHCP客户机要正常关闭时，它可以把IP地址释放给DHCP服务器，然后DHCP服务器就可以把该IP地址分配给申请IP地址的DHCP客户机。</p>
+<h2 id="公司内所有电脑ip相同是为什么"><a href="#公司内所有电脑ip相同是为什么" class="headerlink" title="公司内所有电脑ip相同是为什么"></a>公司内所有电脑ip相同是为什么</h2><p>IP分为局域网和广域网，一般局域网内部为您路由器分配的DHCP服务。<br>公司内所有电脑ip相同是外网IP，它确实是同一个。<br>公司只开了一个上网帐号（宽带帐号），然后用路由器再分出来的，所以所有的电脑用的都是同一个公网IP，但是每台电脑上显示的IP是不一样的，应该是如192.168.1.103这样的一类局域网IP。</p>
+<h2 id="家里的拨号上网"><a href="#家里的拨号上网" class="headerlink" title="家里的拨号上网"></a>家里的拨号上网</h2><p>家里的拨号上网的ip是独立的ip，不与其他家庭的共享。<br>和公司的进入的一个宽带信号是平级的，在家里使用的路由器发射wifi信号，</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/07/30/WEB/DHCP的理解/" data-id="cjlosuiln004k9l2nkd2izt1h" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/协议/">协议</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/08/06/PHP/数组合并/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          数组合并
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/20/运维&工作/gitlab的自签名证书/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">gitlab配置https</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/07/30/WEB/DHCP的理解/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">Content</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类比"><span class="toc-number">1.</span> <span class="toc-text">类比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP"><span class="toc-number">2.</span> <span class="toc-text">DHCP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DHCP的简介"><span class="toc-number">3.</span> <span class="toc-text">DHCP的简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工作过程"><span class="toc-number">4.</span> <span class="toc-text">工作过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端向DHCP-服务器请求IP-地址的4-个步骤"><span class="toc-number">5.</span> <span class="toc-text">客户端向DHCP 服务器请求IP 地址的4 个步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#路由器dhcp可以分配多少个ip"><span class="toc-number">6.</span> <span class="toc-text">路由器dhcp可以分配多少个ip</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分配ip地址的方式"><span class="toc-number">7.</span> <span class="toc-text">分配ip地址的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公司内所有电脑ip相同是为什么"><span class="toc-number">8.</span> <span class="toc-text">公司内所有电脑ip相同是为什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#家里的拨号上网"><span class="toc-number">9.</span> <span class="toc-text">家里的拨号上网</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
