@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>swoole 安装 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php,swoole">
+<meta property="og:type" content="article">
+<meta property="og:title" content="swoole 安装">
+<meta property="og:url" content="http://martist.cn/2018/08/10/PHP/swoole安装和入门/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-09-05T07:10:07.524Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="swoole 安装">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-PHP/swoole安装和入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/08/10/PHP/swoole安装和入门/" class="article-date">
+  <time datetime="2018-08-09T16:00:00.000Z" itemprop="datePublished">2018-08-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      swoole 安装
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="swoole-安装"><a href="#swoole-安装" class="headerlink" title="swoole 安装"></a>swoole 安装</h2><h3 id="homestead命令回忆"><a href="#homestead命令回忆" class="headerlink" title="homestead命令回忆"></a>homestead命令回忆</h3><p>重新加载配置</p>
+<pre><code>vagrant provision 
+</code></pre><p>启动</p>
+<pre><code>vagrant up 
+</code></pre><p>重启</p>
+<pre><code>vagrant reload
+</code></pre><h3 id="平滑重启php-fpm"><a href="#平滑重启php-fpm" class="headerlink" title="平滑重启php-fpm"></a>平滑重启php-fpm</h3><p>master进程可以理解以下信号</p>
+<pre><code>INT, TERM 立刻终止
+QUIT 平滑终止
+USR1 重新打开日志文件
+USR2 平滑重载所有worker进程并重新载入配置和二进制模块
+</code></pre><p>查找fpm的pid</p>
+<pre><code># ps aux|grep php-fpm
+root     21891  0.0  0.0 112660   960 pts/3    R+   16:18   0:00 grep --color=auto php-fpm
+root     42891  0.0  0.1 182796  1220 ?        Ss   4月18   0:19 php-fpm: master process (/usr/local/php/etc/php-fpm.conf)
+nobody   42892  0.0  0.6 183000  6516 ?        S    4月18   0:07 php-fpm: pool www
+nobody   42893  0.0  0.6 183000  6508 ?        S    4月18   0:17 php-fpm: pool www
+</code></pre><p>平滑重启php-fpm</p>
+<pre><code>kill -USR2 42891
+</code></pre><h3 id="swoole下载"><a href="#swoole下载" class="headerlink" title="swoole下载"></a>swoole下载</h3><p>下载地址<br><a href="https://github.com/swoole/swoole-src/releases" target="_blank" rel="external">https://github.com/swoole/swoole-src/releases</a></p>
+<h3 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h3><p>下载源代码包后，在终端进入源码目录</p>
+<pre><code>cd swoole
+phpize
+./configure
+make 
+sudo make install
+</code></pre><h3 id="配置php-ini"><a href="#配置php-ini" class="headerlink" title="配置php.ini"></a>配置php.ini</h3><p>编译安装成功后，修改php.ini加入</p>
+<pre><code>extension=swoole.so
+</code></pre><p>homestead中有fpm的php.ini和cli的php.ini.</p>
+<p>通过php -m或phpinfo()来查看是否成功加载了swoole，如果没有可能是php.ini的路径不对，可以使用php –ini来定位到php.ini的绝对路径。</p>
+<h2 id="入门"><a href="#入门" class="headerlink" title="入门"></a>入门</h2><p>查看端口是否被占用 </p>
+<pre><code>netstat -anp | grep 9051
+</code></pre><p>websocket是基于tcp的一种新的网络协议，实现了浏览器和服务器全双工通信。</p>
+<p>websocket协议的特点是允许服务器主动发送信息给客户端，而http协议的通信只能有客户端发起。</p>
+<p>在sever配置域名的地方，‘0.0.0.0’代表了本机的所有地址，</p>
+<p>swoole和websocket的官网，都有案例，websocket的官网有很多js案例。</p>
+<h2 id="学习地址"><a href="#学习地址" class="headerlink" title="学习地址"></a>学习地址</h2><p><a href="https://wiki.swoole.com" target="_blank" rel="external">https://wiki.swoole.com</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/08/10/PHP/swoole安装和入门/" data-id="cjnb4t36v005szd2nkpt43w4d" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/swoole/">swoole</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2018/08/24/架构/feed流的技术实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          feed流的技术实现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/08/06/PHP/数组合并/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">数组合并</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/08/10/PHP/swoole安装和入门/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#swoole-安装"><span class="toc-number">1.</span> <span class="toc-text">swoole 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#homestead命令回忆"><span class="toc-number">1.1.</span> <span class="toc-text">homestead命令回忆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平滑重启php-fpm"><span class="toc-number">1.2.</span> <span class="toc-text">平滑重启php-fpm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#swoole下载"><span class="toc-number">1.3.</span> <span class="toc-text">swoole下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译和安装"><span class="toc-number">1.4.</span> <span class="toc-text">编译和安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置php-ini"><span class="toc-number">1.5.</span> <span class="toc-text">配置php.ini</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#入门"><span class="toc-number">2.</span> <span class="toc-text">入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习地址"><span class="toc-number">3.</span> <span class="toc-text">学习地址</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2018 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
