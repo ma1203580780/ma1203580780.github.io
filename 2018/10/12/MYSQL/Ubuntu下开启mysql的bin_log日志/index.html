@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ubuntu下开启mysql的bin_log日志 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="laravel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下开启mysql的bin_log日志">
+<meta property="og:url" content="http://martist.cn/2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2018-11-01T03:21:56.353Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu下开启mysql的bin_log日志">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-MYSQL/Ubuntu下开启mysql的bin_log日志" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/" class="article-date">
+  <time datetime="2018-10-11T16:00:00.000Z" itemprop="datePublished">2018-10-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/laravel/">laravel</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ubuntu下开启mysql的bin_log日志
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="mysqlbinlog工具"><a href="#mysqlbinlog工具" class="headerlink" title="mysqlbinlog工具"></a>mysqlbinlog工具</h2><p>mysqlbinlog是一个客户端程序，可以审查binlog文件及中继日志文件的内容。既可以读取本地也可以读取远程的binlog文件，输出二进制日志的内容。</p>
+<p>mysqlbinlog常用的选项：</p>
+<pre><code>—database=db_name，-d db_name
+</code></pre><p>只列出该数据库的条目(只用本地日志)。</p>
+<pre><code>–force-read，-f
+</code></pre><p>使用该选项，如果mysqlbinlog读它不能识别的二进制日志事件，它会打印警告，忽略该事件并继续。没有该选项，如果mysqlbinlog读到此类事件则停止。</p>
+<pre><code>–read-from-remote-server，-R
+</code></pre><p>从MySQL服务器读二进制日志。如果未给出该选项，任何连接参数选项将被忽略。这些选项是–host、–password、–port、–protocol、–socket和–user。</p>
+<pre><code>–host=host_name，-h host_name
+</code></pre><p>获取给定主机上的MySQL服务器的二进制日志。</p>
+<pre><code>–port=port_num，-P port_num
+</code></pre><p>用于连接远程服务器的TCP/IP端口号。</p>
+<pre><code>–user=user_name，-u user_name
+</code></pre><p>连接远程服务器时使用的MySQL用户名。</p>
+<pre><code>–password[=password]，-p[password]
+</code></pre><p>当连接服务器时使用的密码。如果使用短选项形式(-p)，选项和密码之间不能有空格。如果在命令行中–password或-p选项后面没有密码值，则提示输入一个密码。</p>
+<pre><code>–result-file=name,-r name
+</code></pre><p>将输出指向给定的文件。</p>
+<pre><code>–short-form，-s
+</code></pre><p>只显示日志中包含的语句，不显示其它信息。</p>
+<pre><code>–start-datetime=datetime
+</code></pre><p>从二进制日志中第1个日期时间等于或晚于datetime参量的事件开始读取。datetime值相对于运行mysqlbinlog的机器上的本地时区。该值格式应符合DATETIME或TIMESTAMP数据类型。例如：</p>
+<p>shell&gt; mysqlbinlog–start-datetime=”2004-12-25 11:25:56″binlog.000003该选项可以帮助点对点恢复。</p>
+<pre><code>–stop-datetime=datetime
+</code></pre><p>从二进制日志中第1个日期时间等于或晚于datetime参量的事件起停止读。关于datetime值的描述参见–start-datetime选项。该选项可以帮助及时恢复。</p>
+<pre><code>–start-position=N
+</code></pre><p>从二进制日志中第1个位置等于N参量时的事件开始读。</p>
+<pre><code>–stop-position=N
+</code></pre><p>从二进制日志中第1个位置等于和大于N参量时的事件起停止读。</p>
+<h2 id="利用mysqlbinlog-拿到你想要的原生sql"><a href="#利用mysqlbinlog-拿到你想要的原生sql" class="headerlink" title="利用mysqlbinlog 拿到你想要的原生sql"></a>利用mysqlbinlog 拿到你想要的原生sql</h2><p>执行：</p>
+<pre><code>bin ./mysqlbinlog -v --base64-output=DECODE-ROWS  ~/Downloads/tymysql2|grep  -A4  &apos;ALTER&apos; &gt;~/Downloads/alter2.text
+</code></pre><p>参数：</p>
+<pre><code>-v 是显示出一些sql的信息
+ -vv则是多一些注释性的东西
+--base64-output=DECODE-ROWS 这个是把sql解码出来
+~/mysql/data/mysql.bin.000001 这里是你的binlog文件
+grep -A4 &apos;ALTER&apos; 这个则是匹配alter语句以及后四行
+&gt; ~/Downloads/test.sql  则是把匹配出来的sql语句输出到指定文件
+</code></pre><p>参考：<br><a href="https://www.cnblogs.com/jackluo/p/3336585.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/3336585.html</a><br><a href="https://www.cnblogs.com/martinzhang/p/3454358.html" target="_blank" rel="external">https://www.cnblogs.com/martinzhang/p/3454358.html</a><br><a href="http://blog.51cto.com/suifu/1881116" target="_blank" rel="external">http://blog.51cto.com/suifu/1881116</a><br><a href="https://my.oschina.net/Laily/blog/648776" target="_blank" rel="external">https://my.oschina.net/Laily/blog/648776</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/" data-id="cjqhw5e4a001ooh6u7axtrlwo" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/laravel/">laravel</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/04/PHP/分销海报的生成/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          分销海报的生成
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/10/10/LARAVEL/laravel+elastic笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">laravel+elastic笔记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mysqlbinlog工具"><span class="toc-number">1.</span> <span class="toc-text">mysqlbinlog工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用mysqlbinlog-拿到你想要的原生sql"><span class="toc-number">2.</span> <span class="toc-text">利用mysqlbinlog 拿到你想要的原生sql</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

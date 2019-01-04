@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://martist.cn/"/>
-  <updated>2018-10-16T02:50:39.548Z</updated>
+  <updated>2019-01-04T10:22:33.145Z</updated>
   <id>http://martist.cn/</id>
   
   <author>
@@ -15,6 +15,72 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>分销海报的生成</title>
+    <link href="http://martist.cn/2019/01/04/PHP/%E5%88%86%E9%94%80%E6%B5%B7%E6%8A%A5%E7%9A%84%E7%94%9F%E6%88%90/"/>
+    <id>http://martist.cn/2019/01/04/PHP/分销海报的生成/</id>
+    <published>2019-01-03T16:00:00.000Z</published>
+    <updated>2019-01-04T10:22:33.145Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="产品需求"><a href="#产品需求" class="headerlink" title="产品需求"></a>产品需求</h2><p>最近流行用朋友圈海报图进行拉新或者一些运营活动，这个海报生成需要有一些用户的个人信息数据，怎么做到很快生成海报返回用户，并且保证清晰度呢？</p><h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><p>1.PHP的gd库，通过添加水印的方式生成海报，保存海报图到服务器，然后发给用户图片地址（服务端生成，准确率高，缺点就是慢）<br>2.js的canvas特性生成（客户端生成，速度快，缺点是不稳定，不同机型不一定都能成图）</p><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>不啰嗦了，核心代码如下</p><pre><code>&lt;div id=&quot;content&quot; &gt;    &lt;img width=&quot;100%&quot; src=&quot;&lt;{$background_img_url}&gt;&quot; alt=&quot;&quot;&gt;    &lt;p id=&quot;service_erweima&quot; class=&quot;code&quot; crossOrigin=&quot;Anonymous&quot;&gt;&lt;/p&gt;    &lt;span class=&quot;mess&quot;&gt;扫码免费领课和我一起学习&lt;/span&gt;    &lt;img src=&quot;&lt;{$head_img}&gt;&quot; alt=&quot;&quot; class=&quot;user&quot; crossOrigin=&quot;Anonymous&quot;&gt;    &lt;span class=&quot;name&quot;&gt;&lt;{$user_name}&gt;&lt;/span&gt;    &lt;input type=&quot;hidden&quot; id=&quot;m_redirect_code&quot; value=&quot;&lt;{$m_redirect_code}&gt;&quot;&gt;    &lt;input type=&quot;hidden&quot; id=&quot;code&quot; value=&quot;&lt;{$code}&gt;&quot;&gt;&lt;/div&gt;&lt;script src=&quot;https://cdn.bootcss.com/jquery/3.3.1/jquery.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;/Public/Js/qrcode.min.js&quot;&gt;&lt;/script&gt;&lt;script&gt;    sleep(1000);//生成二维码    new QRCode(document.getElementById(&quot;service_erweima&quot;), {        text: ’https://www.your_host_url.com‘,        width: 100,        height: 100,        border:1,        colorDark : &apos;#000000&apos;, //前景色        colorLight : &apos;#ffffff&apos;  //背景色    });//canvas生成海报    html2canvas($(&apos;#content&apos;),{        useCORS: true,        logging: false,        onrendered: function(canvas) {            var image = new Image();            image.crossOrigin = &apos;anonymous&apos;;            image.src = canvas.toDataURL(&quot;image/png&quot;);            $(&apos;#public-content&apos;).append(image);            $(&apos;#content&apos;).hide();        }    });//需要等待图片完全加载完了，DOM渲染完了，再生成，所以等一等    function sleep(delay) {        var start = (new Date()).getTime();        while ((new Date()).getTime() - start &lt; delay) {            continue;        }    }&lt;/script&gt;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="php" scheme="http://martist.cn/categories/php/"/>
+    
+    
+      <category term="php" scheme="http://martist.cn/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu下开启mysql的bin_log日志</title>
+    <link href="http://martist.cn/2018/10/12/MYSQL/Ubuntu%E4%B8%8B%E5%BC%80%E5%90%AFmysql%E7%9A%84bin_log%E6%97%A5%E5%BF%97/"/>
+    <id>http://martist.cn/2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/</id>
+    <published>2018-10-11T16:00:00.000Z</published>
+    <updated>2018-11-01T03:21:56.353Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="mysqlbinlog工具"><a href="#mysqlbinlog工具" class="headerlink" title="mysqlbinlog工具"></a>mysqlbinlog工具</h2><p>mysqlbinlog是一个客户端程序，可以审查binlog文件及中继日志文件的内容。既可以读取本地也可以读取远程的binlog文件，输出二进制日志的内容。</p><p>mysqlbinlog常用的选项：</p><pre><code>—database=db_name，-d db_name</code></pre><p>只列出该数据库的条目(只用本地日志)。</p><pre><code>–force-read，-f</code></pre><p>使用该选项，如果mysqlbinlog读它不能识别的二进制日志事件，它会打印警告，忽略该事件并继续。没有该选项，如果mysqlbinlog读到此类事件则停止。</p><pre><code>–read-from-remote-server，-R</code></pre><p>从MySQL服务器读二进制日志。如果未给出该选项，任何连接参数选项将被忽略。这些选项是–host、–password、–port、–protocol、–socket和–user。</p><pre><code>–host=host_name，-h host_name</code></pre><p>获取给定主机上的MySQL服务器的二进制日志。</p><pre><code>–port=port_num，-P port_num</code></pre><p>用于连接远程服务器的TCP/IP端口号。</p><pre><code>–user=user_name，-u user_name</code></pre><p>连接远程服务器时使用的MySQL用户名。</p><pre><code>–password[=password]，-p[password]</code></pre><p>当连接服务器时使用的密码。如果使用短选项形式(-p)，选项和密码之间不能有空格。如果在命令行中–password或-p选项后面没有密码值，则提示输入一个密码。</p><pre><code>–result-file=name,-r name</code></pre><p>将输出指向给定的文件。</p><pre><code>–short-form，-s</code></pre><p>只显示日志中包含的语句，不显示其它信息。</p><pre><code>–start-datetime=datetime</code></pre><p>从二进制日志中第1个日期时间等于或晚于datetime参量的事件开始读取。datetime值相对于运行mysqlbinlog的机器上的本地时区。该值格式应符合DATETIME或TIMESTAMP数据类型。例如：</p><p>shell&gt; mysqlbinlog–start-datetime=”2004-12-25 11:25:56″binlog.000003该选项可以帮助点对点恢复。</p><pre><code>–stop-datetime=datetime</code></pre><p>从二进制日志中第1个日期时间等于或晚于datetime参量的事件起停止读。关于datetime值的描述参见–start-datetime选项。该选项可以帮助及时恢复。</p><pre><code>–start-position=N</code></pre><p>从二进制日志中第1个位置等于N参量时的事件开始读。</p><pre><code>–stop-position=N</code></pre><p>从二进制日志中第1个位置等于和大于N参量时的事件起停止读。</p><h2 id="利用mysqlbinlog-拿到你想要的原生sql"><a href="#利用mysqlbinlog-拿到你想要的原生sql" class="headerlink" title="利用mysqlbinlog 拿到你想要的原生sql"></a>利用mysqlbinlog 拿到你想要的原生sql</h2><p>执行：</p><pre><code>bin ./mysqlbinlog -v --base64-output=DECODE-ROWS  ~/Downloads/tymysql2|grep  -A4  &apos;ALTER&apos; &gt;~/Downloads/alter2.text</code></pre><p>参数：</p><pre><code>-v 是显示出一些sql的信息 -vv则是多一些注释性的东西--base64-output=DECODE-ROWS 这个是把sql解码出来~/mysql/data/mysql.bin.000001 这里是你的binlog文件grep -A4 &apos;ALTER&apos; 这个则是匹配alter语句以及后四行&gt; ~/Downloads/test.sql  则是把匹配出来的sql语句输出到指定文件</code></pre><p>参考：<br><a href="https://www.cnblogs.com/jackluo/p/3336585.html" target="_blank" rel="external">https://www.cnblogs.com/jackluo/p/3336585.html</a><br><a href="https://www.cnblogs.com/martinzhang/p/3454358.html" target="_blank" rel="external">https://www.cnblogs.com/martinzhang/p/3454358.html</a><br><a href="http://blog.51cto.com/suifu/1881116" target="_blank" rel="external">http://blog.51cto.com/suifu/1881116</a><br><a href="https://my.oschina.net/Laily/blog/648776" target="_blank" rel="external">https://my.oschina.net/Laily/blog/648776</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
+    
+    
+      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>laravel+elastic笔记</title>
+    <link href="http://martist.cn/2018/10/10/LARAVEL/laravel+elastic%E7%AC%94%E8%AE%B0/"/>
+    <id>http://martist.cn/2018/10/10/LARAVEL/laravel+elastic笔记/</id>
+    <published>2018-10-09T16:00:00.000Z</published>
+    <updated>2018-11-01T03:21:25.343Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><p>版本很重要<br>由点及面，先实践起来再学细节的原理和使用</p><h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><pre><code>laravel5.5框架+scout组件+elasticsearch6.3.0搜索引擎</code></pre><h3 id="辅助"><a href="#辅助" class="headerlink" title="辅助"></a>辅助</h3><pre><code>elasticsearch-head 查看集群数据可视化中文分词插件Ik</code></pre><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>laravel是一款现代化的php框架<br>es是搜索引擎<br>es-head是管理查看使用es的图形界面工具<br>scout是laravel一款优秀的组件</p><h2 id="安装流程"><a href="#安装流程" class="headerlink" title="安装流程"></a>安装流程</h2><h3 id="laravel"><a href="#laravel" class="headerlink" title="laravel"></a>laravel</h3><p>laravel安装器安装：</p><pre><code>laravel new larasearch</code></pre><p>配置env文件：</p><pre><code>DB_CONNECTION=mysqlDB_HOST=127.0.0.1DB_PORT=3306DB_DATABASE=julyeduDB_USERNAME=rootDB_PASSWORD=123456</code></pre><p>这时php artisan命令启动，访问127.0.0.1:8000 就可以看到项目首页了。</p><h3 id="es"><a href="#es" class="headerlink" title="es"></a>es</h3><p>在es的官网挑选一个合适的版本，建议选择6.3.0，以便配套使用IK和ES-head。</p><pre><code># 下载https://www.elastic.co/downloads/past-releases</code></pre><h3 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h3><p>1.直接plugin命令安装</p><pre><code>./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip</code></pre><p>2.配置修改ik的版本适应es6.3.1,修改文件plugin-descriptor.properties，config文件夹下的配置文件主要是IK本身暂时不需要修改，这个properties文件主要是和es交互，修改其es版本和jdk版本号</p><pre><code># 修改elasticsearch-head/plugin-descriptor.properties文件description=head - A web front end for an elastic search clusterversion=6.3.1site=truename=analysis-ikclassname=org.elasticsearch.plugin.analysis.ik.AnalysisIkPluginjava.version=1.8elasticsearch.version=6.3.1 </code></pre><h3 id="es-head"><a href="#es-head" class="headerlink" title="es-head"></a>es-head</h3><p>head是基于node开发的，所以需要先安装node<br>node下载地址：<a href="http://cdn.npm.taobao.org/dis" target="_blank" rel="external">http://cdn.npm.taobao.org/dis</a>…</p><p>在电脑任意一个目录下（不要在elasticsearch目录里面），执行一下命令，</p><pre><code>git clone https://github.com/mobz/elasticsearch-head.git  cd elasticsearch-head/  npm install  </code></pre><p>为了es-head可以访问es，所以需要配置跨域：</p><p>修改两个地方：</p><pre><code>#elasticsearch-headGruntfile.jsconnect: {    server: {        options: {            port: 9100,            hostname: &apos;*&apos;,            base: &apos;.&apos;,            keepalive: true        }    }}#elasticsearch-5.6.0configelasticsearch.ymlhttp.cors.enabled: true  http.cors.allow-origin: &quot;*&quot;  </code></pre><h2 id="scout"><a href="#scout" class="headerlink" title="scout"></a>scout</h2><p>通过composer安装依赖包</p><pre><code>composer require laravel/scoutcomposer require tamayo/laravel-scout-elastic</code></pre><p>基本配置</p><p>在config/app.php文件中的providers数组中加入服务提供者</p><pre><code>// config/app.php&apos;providers&apos; =&gt; [    // ...    Laravel\Scout\ScoutServiceProvider::class,    // ...    ScoutEngines\Elasticsearch\ElasticsearchProvider::class,],</code></pre><p>使用以下命令生成scout配置文件</p><pre><code>php artisan vendor:publish --provider=&quot;Laravel\Scout\ScoutServiceProvider&quot;</code></pre><p>在config/scout.php中加入elasticsearch的配置</p><pre><code>&apos;elasticsearch&apos; =&gt; [    &apos;index&apos; =&gt; env(&apos;ELASTICSEARCH_INDEX&apos;, &apos;laravel&apos;),    &apos;hosts&apos; =&gt; [        env(&apos;ELASTICSEARCH_HOST&apos;, &apos;http://localhost:9200&apos;),    ],],</code></pre><p>然后我们打开.env文件，加入scout和elasticsearch的配置</p><pre><code># scout配置SCOUT_DRIVER=elasticsearchSCOUT_PREFIX=# elasticsearch 配置ELASTICSEARCH_INDEX=esdemo# elasticsearch 地址ELASTICSEARCH_HOST=http://172.30.6.1:9200</code></pre><h3 id="相关文档地址"><a href="#相关文档地址" class="headerlink" title="相关文档地址"></a>相关文档地址</h3><p>laravel scout中文文档地址：<a href="https://laravel-china.org/docs/laravel/5.3/scout/1205" target="_blank" rel="external">https://laravel-china.org/docs/laravel/5.3/scout/1205</a><br>es中文文档地址：<a href="https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html" target="_blank" rel="external">https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html</a><br>es6.3.0地址：<a href="https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0" target="_blank" rel="external">https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0</a><br>IK github地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik" target="_blank" rel="external">https://github.com/medcl/elasticsearch-analysis-ik</a></p><h2 id="启动并查看"><a href="#启动并查看" class="headerlink" title="启动并查看"></a>启动并查看</h2><p>启动es</p><pre><code>./bin/elasticsearch</code></pre><p>地址</p><pre><code>http://127.0.0.1:9200/</code></pre><p>启动es-head</p><pre><code>npm run start</code></pre><p>地址</p><pre><code>http://127.0.0.1:9100</code></pre><p>启动laravel项目</p><pre><code>php artisan serve</code></pre><p>地址</p><pre><code>http://127.0.0.1:8000/es/s?page=1</code></pre><h2 id="测试执行"><a href="#测试执行" class="headerlink" title="测试执行"></a>测试执行</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><h4 id="创建模型并填充数据"><a href="#创建模型并填充数据" class="headerlink" title="创建模型并填充数据"></a>创建模型并填充数据</h4><p>创建模型app/Ques.php，为方便后续测试，请先建表和填充数据，可以手动使用sql语句添加数据，也使用laravel自动的数据迁移和填充。</p><pre><code>&lt;?phpnamespace App;use Illuminate\Database\Eloquent\Model;use Laravel\Scout\Searchable;/** * 学生模型 */class Ques extends Model{     use Searchable;    //定义关联的表名，不定义的话默认此模型关联的表为 模型名s (users)    protected $table = &apos;aws_ques_tb_0&apos;;    /******字段相关*******/    #定义主键字段名，默认是id    protected $primaryKey = &apos;id&apos;;    #定义字段白名单，允许操作表中的哪些字段    // protected $fillable = [&apos;ques&apos;,&apos;name&apos;];    #定义字段黑名单，不允许操作表中哪些字段    protected $guarded = [];    //1、使用model::create([])等方法直接对orm对象操作使，必须定义$guarded或者$fillable    //2、使用$m = new model();然后$m-&gt;save()的方式不需要定义    //3、简便的方式就是定义$fillable = [];    #定义隐藏的字段    protected $hidden = [];    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;ques_index&apos;;    }    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;Quess_index&apos;;    }    /**     * 可搜索的数据索引     *     * @return array     */    public function toSearchableArray()    {        $array = $this-&gt;toArray();        // Customize array...        return $array;    }}</code></pre><h4 id="把所有现有记录导入到搜索索引里"><a href="#把所有现有记录导入到搜索索引里" class="headerlink" title="把所有现有记录导入到搜索索引里"></a>把所有现有记录导入到搜索索引里</h4><pre><code>php artisan scout:import &quot;App\Ques&quot;</code></pre><h4 id="导入过程"><a href="#导入过程" class="headerlink" title="导入过程"></a>导入过程</h4><pre><code>Imported [App\Ques] models up to ID: 500Imported [App\Ques] models up to ID: 1000Imported [App\Ques] models up to ID: 1500Imported [App\Ques] models up to ID: 2000All [App\Ques] records have been imported.</code></pre><p>我们访问es，是不是已经有了刚刚导入的Quess_index索引数据。</p><pre><code>http://172.30.6.1:9200/esdemo/Ques_index/_search</code></pre><h4 id="试试搜索"><a href="#试试搜索" class="headerlink" title="试试搜索"></a>试试搜索</h4><p>在route/web.php中写个demo，试试看；</p><pre><code>Route::get(&apos;/search/{content}&apos;, function ($content) {    //直接输出数组data，限制1000条    // $res = App\Ques::search($content)-&gt;take(1000)-&gt;get()-&gt;toArray();    // 分页请求  http://127.0.0.1:8000/es/机器学习?page=1    $res = App\Ques::search($content)-&gt;paginate(100)-&gt;toArray();    dd($res);});</code></pre><h4 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h4><p>输出：</p><pre><code>array:12 [▼  &quot;current_page&quot; =&gt; 1  &quot;data&quot; =&gt; array:9 [▼    0 =&gt; array:9 [▼      &quot;id&quot; =&gt; 922      &quot;ques&quot; =&gt; &quot;哪些机器学习算法不需要做归一化处理？&quot;      &quot;analysis&quot; =&gt; &quot;&quot;&quot;        概率模型不需要归一化，因为它们不关心变量的值，而是关心变量的分布和变量之间的条件概率，如决策树、rf。而像adaboost、svm、lr、KNN、KMeans之类的最优化问题就需要归一化。\r\n        我理解归一化和标准化主要是为了使计算更方便 比如两个变量的量纲不同 可能一个的数值远大于另一个那么他们同时作为变量的时候 可能会造成数值计算的问题，比如说求矩阵的逆可能很不精确 或者梯度下降法的收敛比较困难，还有如果需要计算欧式距离的话可能 量纲也需要调整 所以我估计lr 和 knn 保准话一下应该有好处。至于其他的算 ▶        一般我习惯说树形模型，这里说的概率模型可能是差不多的意思。引用自@寒小阳        &quot;&quot;&quot;      &quot;type_id&quot; =&gt; 3      &quot;diff&quot; =&gt; 0      &quot;isdelete&quot; =&gt; 1      &quot;created_time&quot; =&gt; &quot;2017-12-10 18:57:13&quot;      &quot;update_time&quot; =&gt; &quot;0000-00-00 00:00:00&quot;      &quot;is_show&quot; =&gt; 1    ]    1 =&gt; array:9 [▶]    2 =&gt; array:9 [▶]    3 =&gt; array:9 [▶]    4 =&gt; array:9 [▶]    5 =&gt; array:9 [▶]    6 =&gt; array:9 [▶]    7 =&gt; array:9 [▶]    8 =&gt; array:9 [▶]  ]  &quot;first_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;from&quot; =&gt; 1  &quot;last_page&quot; =&gt; 1  &quot;last_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;next_page_url&quot; =&gt; null  &quot;path&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&quot;  &quot;per_page&quot; =&gt; 100  &quot;prev_page_url&quot; =&gt; null  &quot;to&quot; =&gt; 9  &quot;total&quot; =&gt; 9]</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>PHP使用elasticsearch搜索安装及分词方法【<a href="https://segmentfault.com/a/1190000011663833】" target="_blank" rel="external">https://segmentfault.com/a/1190000011663833】</a></p><p>Laravel中利用Scout集成Elasticsearch搜索引擎【<a href="https://segmentfault.com/a/1190000014230010】" target="_blank" rel="external">https://segmentfault.com/a/1190000014230010】</a></p><p>全文搜索引擎 Elasticsearch 入门教程【<a href="http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】</a></p><p>laravel使用ElasticSearch进行搜索【<a href="https://blog.csdn.net/lingchen__/article/details/77884753】" target="_blank" rel="external">https://blog.csdn.net/lingchen__/article/details/77884753】</a></p><p>elasticsearch6.3.1+IK插件安装部署全攻略【<a href="https://blog.csdn.net/superheister/article/details/81296451】" target="_blank" rel="external">https://blog.csdn.net/superheister/article/details/81296451】</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
+    
+    
+      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
+    
+  </entry>
   
   <entry>
     <title>MacOS 重装PHP</title>
@@ -229,6 +295,28 @@
   </entry>
   
   <entry>
+    <title>web架构优化的几个点</title>
+    <link href="http://martist.cn/2018/06/18/linux%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E7%9A%84%E7%82%B9/"/>
+    <id>http://martist.cn/2018/06/18/linux性能调优/性能调优的点/</id>
+    <published>2018-06-17T16:00:00.000Z</published>
+    <updated>2018-07-19T10:33:17.917Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>举一个例子，抽奖。<br>抽奖是一个典型的高并发场景应用，平时流量不多，但遇到大促活动，流量就会暴增，今年我司的717周年庆期间的日均UV就超过百万。零点时刻一时间风起云涌，网站加载缓慢，到零点30分nginx开始报http 502错误。</p><p>此处做下笔记：</p><pre><code>wikipedia上这么解释：502 Bad GatewayThe server was acting as a gateway or proxy and received an invalid response from the upstream server.503 Service UnavailableThe server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.504 Gateway Time-outThe server was acting as a gateway or proxy and did not receive a timely response from the upstream server.</code></pre><h2 id="502-Bad-Gateway"><a href="#502-Bad-Gateway" class="headerlink" title="502 Bad Gateway"></a>502 Bad Gateway</h2><p>fpm进程挂掉或者后端程序过长时间未返回。<br>编写一个简单的php脚本gateway.php进行测试，内容很简单 &lt;?php sleep(10);echo ‘ok;’?&gt; ，开始下面的测试：</p><p>1.启动nginx，不启动fpm，直接 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway错误且nginx的error log出现错误</p><pre><code>2017/02/10 19:08:21 [error] 216#216: *84 connect() failed (111: Connection refused) while connecting to upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;</code></pre><p>2.启动fpm，修改php-fpm.conf中request_terminate_timeout的值为5s。继续 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway。nginx和php-fpm分别报错</p><pre><code>// nginx error log2017/02/10 19:10:57 [error] 246#246: *88 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;// php-fpm error log[10-Feb-2017 19:10:57] WARNING: [pool www] child 242, script &apos;/home/website/default/gateway.php&apos; (request: &quot;GET /gateway.php&quot;) execution timed out (6.205572 sec), terminating[10-Feb-2017 19:10:57] WARNING: [pool www] child 242 exited on signal 15 (SIGTERM) after 36.692467 seconds from start</code></pre><h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>当遇到这个状态码的时候表示服务临时不可用，比如nginx配置了频率限制而client端又超过了配置的限制后就会收到503的响应。</p><h2 id="504-Gateway-Time-out"><a href="#504-Gateway-Time-out" class="headerlink" title="504 Gateway Time-out"></a>504 Gateway Time-out</h2><p>nginx的fastcgi模块有一个fastcgi_read_timeout配置，它表示从FastCGI server获取数据的超时时间。如果超过这个配置客户端就是收到504的响应。还以 gateway.php 举例（修改fastcgi_read_timeout的值为5s）：</p><pre><code>// nginx error log2017/02/12 14:57:26 [error] 138#138: *1113 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;</code></pre><h2 id="整体设计"><a href="#整体设计" class="headerlink" title="整体设计"></a>整体设计</h2><p>在我看来，能提高服务器应对并发的能力的方式无非两种：</p><pre><code>限流削峰：通过降低实际抵达服务器的并发量，降低服务器处理压力；性能优化：从前台到硬件，优化系统各方面性能，提高服务器处理能力。</code></pre><h3 id="服务部署层面"><a href="#服务部署层面" class="headerlink" title="服务部署层面"></a>服务部署层面</h3><pre><code>web服务器和应用服务器集群分离应用服务器集群,做负载均衡,对话共享静态资源cdn防cc访问频率限制增加服务实时监控预计高并发前适时提升带宽</code></pre><h3 id="项目层面"><a href="#项目层面" class="headerlink" title="项目层面"></a>项目层面</h3><pre><code>减少http请求使用浏览器缓存启用gzip压缩css文件放在页面最上面javascript文件最下面增加队列，异步代码分层，增加复用性禁止for循环sql操作增加缓存，热点缓存，列表缓存</code></pre><h2 id="硬件层面"><a href="#硬件层面" class="headerlink" title="硬件层面"></a>硬件层面</h2><pre><code>提高磁盘io速率，使用ssd硬盘cpu升配，增加内存</code></pre><h2 id="数据库方面"><a href="#数据库方面" class="headerlink" title="数据库方面"></a>数据库方面</h2><h3 id="逻辑允许的情况下不访问数据库"><a href="#逻辑允许的情况下不访问数据库" class="headerlink" title="逻辑允许的情况下不访问数据库"></a>逻辑允许的情况下不访问数据库</h3><pre><code>使用缓存使用页面静态化</code></pre><h3 id="必须访问就优化"><a href="#必须访问就优化" class="headerlink" title="必须访问就优化"></a>必须访问就优化</h3><pre><code>参数配置索引优化sql优化分离数据库中活跃的数据读写分离批量读取和延迟修改使用搜索引擎搜索数据库中的数据使用NoSQL和Hadoop等技术</code></pre><h2 id="高并发和高可用"><a href="#高并发和高可用" class="headerlink" title="高并发和高可用"></a>高并发和高可用</h2><pre><code>高并发</code></pre><p>即在单位时间内的并发请求数非常高，因此对网站的吞吐能力和处理能力比较高。例如12306，淘宝等。</p><pre><code>高可用</code></pre><p>即对网站的稳定性要求比较高，比如不允许停止服务，某台机器出问题后不影响网站的正常访问等。</p><p>互联网应用中，通常面临的问题是前者——高并发。</p><p>高并发又分为cpu密集型和io密集型。前者要求网站的计算能力要高，后者要求网站的吞吐能力要高。</p><h2 id="http和tcp"><a href="#http和tcp" class="headerlink" title="http和tcp"></a>http和tcp</h2><h3 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP 2.0"></a>HTTP 2.0</h3><p>HTTP 2.0标准于2015年5月以RFC 7540正式发布，Google Chrome、Mozilla Firefox、Microsoft Edge和Opera已支持HTTP 2.0，并默认启用。Internet Explorer自IE 11开始支持HTTP 2.0，目前谷歌、Facebook、Twitter 等服务器已经采用2.0协议。</p><p>2016年4月26日 nginx-1.10.0 stable 也已经提供了对 HTTP 2.0的支持，理论上不需要对程序进行优化，仅仅更换 HTTP 2.0，就可以有效的提升50%以上的性能。</p><h3 id="客户端优化"><a href="#客户端优化" class="headerlink" title="客户端优化"></a>客户端优化</h3><pre><code>重用TCP连接至关重要，频繁的三次握手是对性能极大的浪费不能让数据传输的更快，可以让数据传输的更短压缩数据，减少不必要的比特传输再快也快不不过什么也不用发，能少发就少发消除不必要的连接和数据传输本身就是很大的优化，优化好TCP是所有应用高性能的前提和基础。</code></pre><h3 id="浏览器优化"><a href="#浏览器优化" class="headerlink" title="浏览器优化"></a>浏览器优化</h3><pre><code>减少DNS查找：每一次主机名解析都需要一次网络往返，从而增加请求的延迟时间，同时还会阻塞后续请求。重用TCP连接：尽可能使用持久连接，以消除 TCP 握手和慢启动延迟（Keep-Alive减少HTTP重定向：HTTP 重定向极费时间，特别是不同域名之间的重定向，更加费时；这里面既有额外的 DNS 查询、 * TCP握手，还有其他延迟。最佳的重定向次数为零。HTTPS优化：启用TLS的会话缓存和无状态恢复及共享（可以减少HTTPS后续验证时间）去掉不必要的资源：任何请求都不如没有请求快。在客户端缓存资源：应该缓存应用资源，从而避免每次请求都发送相同的内容。浏览器提供了 Cache-Control，Last-Modified 和 ETag 首部提供验证机制，可以让不经常变更的内容直接从本地获取避免重复访问服务器拉取同样的资源，要说最快的网络请求，那就是不用发送请求就能获取资源。传输压缩过的内容：传输前应该压缩应用资源，把要传输的字节减至最少：确保对每种要传输的资源采用最好的压缩手段。 图片一般会占到一个网页需要传输的总字节数的一半，HTML、 CSS 和 JavaScript 等文本资源的大小经过 gzip 压缩平均可以减少 60%~80。打包资源减少HTTP请求：拼接资源如图片精灵技术，合并CSS，JS等文件以减少HTTP请求。合理设置资源域名：HTTP 规定为了防止客户端同时发起的请求过多给服务器造成自我DDOS，客户端对于单个域名一次最多不可发起超过6个并行请求，因此页面中同域名下资源太多，会造成等待6个资源的返而以防造成请求阻塞，可以用多个域名来突破并行请求数量。</code></pre><h2 id="借鉴"><a href="#借鉴" class="headerlink" title="借鉴"></a>借鉴</h2><p><a href="https://my.oschina.net/u/3833719/blog/1801552" target="_blank" rel="external">https://my.oschina.net/u/3833719/blog/1801552</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>ubuntu性能查看</title>
     <link href="http://martist.cn/2018/06/18/linux%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/linux%E6%80%A7%E8%83%BD%E6%9F%A5%E7%9C%8B/"/>
     <id>http://martist.cn/2018/06/18/linux性能调优/linux性能查看/</id>
@@ -273,28 +361,6 @@
   </entry>
   
   <entry>
-    <title>web架构优化的几个点</title>
-    <link href="http://martist.cn/2018/06/18/linux%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E7%9A%84%E7%82%B9/"/>
-    <id>http://martist.cn/2018/06/18/linux性能调优/性能调优的点/</id>
-    <published>2018-06-17T16:00:00.000Z</published>
-    <updated>2018-07-19T10:33:17.917Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>举一个例子，抽奖。<br>抽奖是一个典型的高并发场景应用，平时流量不多，但遇到大促活动，流量就会暴增，今年我司的717周年庆期间的日均UV就超过百万。零点时刻一时间风起云涌，网站加载缓慢，到零点30分nginx开始报http 502错误。</p><p>此处做下笔记：</p><pre><code>wikipedia上这么解释：502 Bad GatewayThe server was acting as a gateway or proxy and received an invalid response from the upstream server.503 Service UnavailableThe server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.504 Gateway Time-outThe server was acting as a gateway or proxy and did not receive a timely response from the upstream server.</code></pre><h2 id="502-Bad-Gateway"><a href="#502-Bad-Gateway" class="headerlink" title="502 Bad Gateway"></a>502 Bad Gateway</h2><p>fpm进程挂掉或者后端程序过长时间未返回。<br>编写一个简单的php脚本gateway.php进行测试，内容很简单 &lt;?php sleep(10);echo ‘ok;’?&gt; ，开始下面的测试：</p><p>1.启动nginx，不启动fpm，直接 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway错误且nginx的error log出现错误</p><pre><code>2017/02/10 19:08:21 [error] 216#216: *84 connect() failed (111: Connection refused) while connecting to upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;</code></pre><p>2.启动fpm，修改php-fpm.conf中request_terminate_timeout的值为5s。继续 curl <a href="http://localhost/gateway.php" target="_blank" rel="external">http://localhost/gateway.php</a> ，响应502 bad gateway。nginx和php-fpm分别报错</p><pre><code>// nginx error log2017/02/10 19:10:57 [error] 246#246: *88 recv() failed (104: Connection reset by peer) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;// php-fpm error log[10-Feb-2017 19:10:57] WARNING: [pool www] child 242, script &apos;/home/website/default/gateway.php&apos; (request: &quot;GET /gateway.php&quot;) execution timed out (6.205572 sec), terminating[10-Feb-2017 19:10:57] WARNING: [pool www] child 242 exited on signal 15 (SIGTERM) after 36.692467 seconds from start</code></pre><h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>当遇到这个状态码的时候表示服务临时不可用，比如nginx配置了频率限制而client端又超过了配置的限制后就会收到503的响应。</p><h2 id="504-Gateway-Time-out"><a href="#504-Gateway-Time-out" class="headerlink" title="504 Gateway Time-out"></a>504 Gateway Time-out</h2><p>nginx的fastcgi模块有一个fastcgi_read_timeout配置，它表示从FastCGI server获取数据的超时时间。如果超过这个配置客户端就是收到504的响应。还以 gateway.php 举例（修改fastcgi_read_timeout的值为5s）：</p><pre><code>// nginx error log2017/02/12 14:57:26 [error] 138#138: *1113 upstream timed out (110: Connection timed out) while reading response header from upstream, client: 172.17.0.1, server: website80.com, request: &quot;GET /gateway.php HTTP/1.1&quot;, upstream: &quot;fastcgi://127.0.0.1:9000&quot;, host: &quot;localhost&quot;</code></pre><h2 id="整体设计"><a href="#整体设计" class="headerlink" title="整体设计"></a>整体设计</h2><p>在我看来，能提高服务器应对并发的能力的方式无非两种：</p><pre><code>限流削峰：通过降低实际抵达服务器的并发量，降低服务器处理压力；性能优化：从前台到硬件，优化系统各方面性能，提高服务器处理能力。</code></pre><h3 id="服务部署层面"><a href="#服务部署层面" class="headerlink" title="服务部署层面"></a>服务部署层面</h3><pre><code>web服务器和应用服务器集群分离应用服务器集群,做负载均衡,对话共享静态资源cdn防cc访问频率限制增加服务实时监控预计高并发前适时提升带宽</code></pre><h3 id="项目层面"><a href="#项目层面" class="headerlink" title="项目层面"></a>项目层面</h3><pre><code>减少http请求使用浏览器缓存启用gzip压缩css文件放在页面最上面javascript文件最下面增加队列，异步代码分层，增加复用性禁止for循环sql操作增加缓存，热点缓存，列表缓存</code></pre><h2 id="硬件层面"><a href="#硬件层面" class="headerlink" title="硬件层面"></a>硬件层面</h2><pre><code>提高磁盘io速率，使用ssd硬盘cpu升配，增加内存</code></pre><h2 id="数据库方面"><a href="#数据库方面" class="headerlink" title="数据库方面"></a>数据库方面</h2><h3 id="逻辑允许的情况下不访问数据库"><a href="#逻辑允许的情况下不访问数据库" class="headerlink" title="逻辑允许的情况下不访问数据库"></a>逻辑允许的情况下不访问数据库</h3><pre><code>使用缓存使用页面静态化</code></pre><h3 id="必须访问就优化"><a href="#必须访问就优化" class="headerlink" title="必须访问就优化"></a>必须访问就优化</h3><pre><code>参数配置索引优化sql优化分离数据库中活跃的数据读写分离批量读取和延迟修改使用搜索引擎搜索数据库中的数据使用NoSQL和Hadoop等技术</code></pre><h2 id="高并发和高可用"><a href="#高并发和高可用" class="headerlink" title="高并发和高可用"></a>高并发和高可用</h2><pre><code>高并发</code></pre><p>即在单位时间内的并发请求数非常高，因此对网站的吞吐能力和处理能力比较高。例如12306，淘宝等。</p><pre><code>高可用</code></pre><p>即对网站的稳定性要求比较高，比如不允许停止服务，某台机器出问题后不影响网站的正常访问等。</p><p>互联网应用中，通常面临的问题是前者——高并发。</p><p>高并发又分为cpu密集型和io密集型。前者要求网站的计算能力要高，后者要求网站的吞吐能力要高。</p><h2 id="http和tcp"><a href="#http和tcp" class="headerlink" title="http和tcp"></a>http和tcp</h2><h3 id="HTTP-2-0"><a href="#HTTP-2-0" class="headerlink" title="HTTP 2.0"></a>HTTP 2.0</h3><p>HTTP 2.0标准于2015年5月以RFC 7540正式发布，Google Chrome、Mozilla Firefox、Microsoft Edge和Opera已支持HTTP 2.0，并默认启用。Internet Explorer自IE 11开始支持HTTP 2.0，目前谷歌、Facebook、Twitter 等服务器已经采用2.0协议。</p><p>2016年4月26日 nginx-1.10.0 stable 也已经提供了对 HTTP 2.0的支持，理论上不需要对程序进行优化，仅仅更换 HTTP 2.0，就可以有效的提升50%以上的性能。</p><h3 id="客户端优化"><a href="#客户端优化" class="headerlink" title="客户端优化"></a>客户端优化</h3><pre><code>重用TCP连接至关重要，频繁的三次握手是对性能极大的浪费不能让数据传输的更快，可以让数据传输的更短压缩数据，减少不必要的比特传输再快也快不不过什么也不用发，能少发就少发消除不必要的连接和数据传输本身就是很大的优化，优化好TCP是所有应用高性能的前提和基础。</code></pre><h3 id="浏览器优化"><a href="#浏览器优化" class="headerlink" title="浏览器优化"></a>浏览器优化</h3><pre><code>减少DNS查找：每一次主机名解析都需要一次网络往返，从而增加请求的延迟时间，同时还会阻塞后续请求。重用TCP连接：尽可能使用持久连接，以消除 TCP 握手和慢启动延迟（Keep-Alive减少HTTP重定向：HTTP 重定向极费时间，特别是不同域名之间的重定向，更加费时；这里面既有额外的 DNS 查询、 * TCP握手，还有其他延迟。最佳的重定向次数为零。HTTPS优化：启用TLS的会话缓存和无状态恢复及共享（可以减少HTTPS后续验证时间）去掉不必要的资源：任何请求都不如没有请求快。在客户端缓存资源：应该缓存应用资源，从而避免每次请求都发送相同的内容。浏览器提供了 Cache-Control，Last-Modified 和 ETag 首部提供验证机制，可以让不经常变更的内容直接从本地获取避免重复访问服务器拉取同样的资源，要说最快的网络请求，那就是不用发送请求就能获取资源。传输压缩过的内容：传输前应该压缩应用资源，把要传输的字节减至最少：确保对每种要传输的资源采用最好的压缩手段。 图片一般会占到一个网页需要传输的总字节数的一半，HTML、 CSS 和 JavaScript 等文本资源的大小经过 gzip 压缩平均可以减少 60%~80。打包资源减少HTTP请求：拼接资源如图片精灵技术，合并CSS，JS等文件以减少HTTP请求。合理设置资源域名：HTTP 规定为了防止客户端同时发起的请求过多给服务器造成自我DDOS，客户端对于单个域名一次最多不可发起超过6个并行请求，因此页面中同域名下资源太多，会造成等待6个资源的返而以防造成请求阻塞，可以用多个域名来突破并行请求数量。</code></pre><h2 id="借鉴"><a href="#借鉴" class="headerlink" title="借鉴"></a>借鉴</h2><p><a href="https://my.oschina.net/u/3833719/blog/1801552" target="_blank" rel="external">https://my.oschina.net/u/3833719/blog/1801552</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
     <title>electron入门</title>
     <link href="http://martist.cn/2018/06/03/Elecctron/electron%E5%85%A5%E9%97%A8/"/>
     <id>http://martist.cn/2018/06/03/Elecctron/electron入门/</id>
@@ -317,13 +383,13 @@
   </entry>
   
   <entry>
-    <title>Innodb 锁行还是锁表</title>
-    <link href="http://martist.cn/2018/06/01/MYSQL/Innodb%20%E9%94%81%E8%A1%8C%E8%BF%98%E6%98%AF%E9%94%81%E8%A1%A8/"/>
-    <id>http://martist.cn/2018/06/01/MYSQL/Innodb 锁行还是锁表/</id>
+    <title>多列索引</title>
+    <link href="http://martist.cn/2018/06/01/MYSQL/%E5%A4%9A%E5%88%97%E7%B4%A2%E5%BC%95/"/>
+    <id>http://martist.cn/2018/06/01/MYSQL/多列索引/</id>
     <published>2018-05-31T16:00:00.000Z</published>
-    <updated>2018-06-05T08:45:57.963Z</updated>
+    <updated>2018-06-03T06:19:03.211Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h2><p>InnoDB默认行级锁。行级锁都是基于索引的。</p><p>InnoDB行锁是通过给索引上的索引项加锁来实现的，这一点MySQL与Oracle不同，后者是通过在数据块中对相应数据行加锁来实现的。InnoDB这种行锁实现特点意味着：只有通过索引条件检索数据，InnoDB才使用行级锁，否则，InnoDB将使用表锁！ </p><p>在实际应用中，要特别注意InnoDB行锁的这一特性，不然的话，可能导致大量的锁冲突，从而影响并发性能。</p><h2 id="行级锁变为表级锁情况"><a href="#行级锁变为表级锁情况" class="headerlink" title="行级锁变为表级锁情况"></a>行级锁变为表级锁情况</h2><pre><code>1、如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住。2、表字段进行变更。3、进行整表查询。(没使用索引)4、like语句查询的时候。(没使用索引)</code></pre><h2 id="行级锁与死锁"><a href="#行级锁与死锁" class="headerlink" title="行级锁与死锁"></a>行级锁与死锁</h2><p>MyISAM中是不会产生死锁的，因为MyISAM总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在InnoDB中，锁是逐步获得的，就造成了死锁的可能。</p><p>在MySQL中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。 在UPDATE、DELETE操作时，MySQL不仅锁定WHERE条件扫描过的所有索引记录，而且会锁定相邻的键值，即所谓的next-key locking。</p><p>当两个事务同时执行，一个锁住了逐渐索引在等待其他相关索引，一个锁定了非主键索引，在等待主键索引。这样就会发生死锁。</p><p>发生死锁后，InnoDB一般都可以检测到，并使一个事务释放锁回退，另一个获取锁完成事务。</p><p>有多种方法可以避免死锁，这里只介绍常见的三种，具体如下</p><p>1、如果不同程序会并发存取多个表，尽量约定以相同的顺序访问表，可以大大降低死锁机会。<br>2、在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁产生概率；<br>3、对于非常容易产生死锁的业务部分，可以尝试使用升级锁定颗粒度，通过表级锁定来减少死锁产生的概率；</p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>mysql中 myisam，innodb默认使用的是Btree索引。<br>索引那这个数据结构最后是排好序；就像新华字典他的目录就是按照a,b,c..这样排好序的；<br>所以你在找东西的时候才快，比如你找 “中” 这个字的解释，你肯定就会定位到目录的 z 开头部分；<br>组合索引可以这样理解，比如（a,b,c），abc都是排好序的，在任意一段a的下面b都是排好序的，任何一段b下面c都是排好序的；</p><h2 id="生效规则"><a href="#生效规则" class="headerlink" title="生效规则"></a>生效规则</h2><p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用，比如</p><pre><code>where a=3 and b=45 and c=5 .... 这种三个索引顺序使用中间没有断点，全部发挥作用；where a=3 and c=5... 这种情况下b就是断点，a发挥了效果，c没有效果where b=3 and c=4... 这种情况下a就是断点，在a后面的索引都没有发挥作用，这种写法联合索引没有发挥任何效果；where b=45 and a=3 and c=5 .... 这个跟第一个一样，全部发挥作用，abc只要用上了就行，跟写的顺序无关</code></pre><p>（a,b,c） 三个列上加了联合索引（是联合索引 不是在每个列上单独加索引）</p><p>还需注意，  (a,b,c)多列索引和 (a,c,b)是不一样的，看上面的图也看得出来关系顺序是不一样的；<br>分析几个实际例子来加强理解；<br>分析句子中使用的索引情况</p><pre><code>(0)    select * from mytable where a=3 and b=5 and c=4;abc三个索引都在where条件里面用到了，而且都发挥了作用(1)    select * from mytable where  c=4 and b=6 and a=3;这条语句列出来只想说明 mysql没有那么笨，where里面的条件顺序在查询之前会被mysql自动优化，效果跟上一句一样(2)    select * from mytable where a=3 and c=7;a用到索引，b没有用，所以c是没有用到索引效果的(3)    select * from mytable where a=3 and b&gt;7 and c=3;a用到了，b也用到了，c没有用到，这个地方b是范围值，也算断点，只不过自身用到了索引(4)    select * from mytable where b=3 and c=4;因为a索引没有使用，所以这里 bc都没有用上索引效果(5)    select * from mytable where a&gt;4 and b=7 and c=9;a用到了  b没有使用，c没有使用(6)    select * from mytable where a=3 order by b;a用到了索引，b在结果排序中也用到了索引的效果，前面说了，a下面任意一段的b是排好序的(7)    select * from mytable where a=3 order by c;a用到了索引，但是这个地方c没有发挥排序效果，因为中间断点了，使用 explain 可以看到 filesort(8)    select * from mytable where b=3 order by a;b没有用到索引，排序中a也没有发挥索引效果</code></pre>]]></content>
     
     <summary type="html">
     
@@ -339,13 +405,13 @@
   </entry>
   
   <entry>
-    <title>多列索引</title>
-    <link href="http://martist.cn/2018/06/01/MYSQL/%E5%A4%9A%E5%88%97%E7%B4%A2%E5%BC%95/"/>
-    <id>http://martist.cn/2018/06/01/MYSQL/多列索引/</id>
+    <title>Innodb 锁行还是锁表</title>
+    <link href="http://martist.cn/2018/06/01/MYSQL/Innodb%20%E9%94%81%E8%A1%8C%E8%BF%98%E6%98%AF%E9%94%81%E8%A1%A8/"/>
+    <id>http://martist.cn/2018/06/01/MYSQL/Innodb 锁行还是锁表/</id>
     <published>2018-05-31T16:00:00.000Z</published>
-    <updated>2018-06-03T06:19:03.211Z</updated>
+    <updated>2018-06-05T08:45:57.963Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>mysql中 myisam，innodb默认使用的是Btree索引。<br>索引那这个数据结构最后是排好序；就像新华字典他的目录就是按照a,b,c..这样排好序的；<br>所以你在找东西的时候才快，比如你找 “中” 这个字的解释，你肯定就会定位到目录的 z 开头部分；<br>组合索引可以这样理解，比如（a,b,c），abc都是排好序的，在任意一段a的下面b都是排好序的，任何一段b下面c都是排好序的；</p><h2 id="生效规则"><a href="#生效规则" class="headerlink" title="生效规则"></a>生效规则</h2><p>从前往后依次使用生效，如果中间某个索引没有使用，那么断点前面的索引部分起作用，断点后面的索引没有起作用，比如</p><pre><code>where a=3 and b=45 and c=5 .... 这种三个索引顺序使用中间没有断点，全部发挥作用；where a=3 and c=5... 这种情况下b就是断点，a发挥了效果，c没有效果where b=3 and c=4... 这种情况下a就是断点，在a后面的索引都没有发挥作用，这种写法联合索引没有发挥任何效果；where b=45 and a=3 and c=5 .... 这个跟第一个一样，全部发挥作用，abc只要用上了就行，跟写的顺序无关</code></pre><p>（a,b,c） 三个列上加了联合索引（是联合索引 不是在每个列上单独加索引）</p><p>还需注意，  (a,b,c)多列索引和 (a,c,b)是不一样的，看上面的图也看得出来关系顺序是不一样的；<br>分析几个实际例子来加强理解；<br>分析句子中使用的索引情况</p><pre><code>(0)    select * from mytable where a=3 and b=5 and c=4;abc三个索引都在where条件里面用到了，而且都发挥了作用(1)    select * from mytable where  c=4 and b=6 and a=3;这条语句列出来只想说明 mysql没有那么笨，where里面的条件顺序在查询之前会被mysql自动优化，效果跟上一句一样(2)    select * from mytable where a=3 and c=7;a用到索引，b没有用，所以c是没有用到索引效果的(3)    select * from mytable where a=3 and b&gt;7 and c=3;a用到了，b也用到了，c没有用到，这个地方b是范围值，也算断点，只不过自身用到了索引(4)    select * from mytable where b=3 and c=4;因为a索引没有使用，所以这里 bc都没有用上索引效果(5)    select * from mytable where a&gt;4 and b=7 and c=9;a用到了  b没有使用，c没有使用(6)    select * from mytable where a=3 order by b;a用到了索引，b在结果排序中也用到了索引的效果，前面说了，a下面任意一段的b是排好序的(7)    select * from mytable where a=3 order by c;a用到了索引，但是这个地方c没有发挥排序效果，因为中间断点了，使用 explain 可以看到 filesort(8)    select * from mytable where b=3 order by a;b没有用到索引，排序中a也没有发挥索引效果</code></pre>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h2><p>InnoDB默认行级锁。行级锁都是基于索引的。</p><p>InnoDB行锁是通过给索引上的索引项加锁来实现的，这一点MySQL与Oracle不同，后者是通过在数据块中对相应数据行加锁来实现的。InnoDB这种行锁实现特点意味着：只有通过索引条件检索数据，InnoDB才使用行级锁，否则，InnoDB将使用表锁！ </p><p>在实际应用中，要特别注意InnoDB行锁的这一特性，不然的话，可能导致大量的锁冲突，从而影响并发性能。</p><h2 id="行级锁变为表级锁情况"><a href="#行级锁变为表级锁情况" class="headerlink" title="行级锁变为表级锁情况"></a>行级锁变为表级锁情况</h2><pre><code>1、如果一条SQL语句用不到索引是不会使用行级锁的，会使用表级锁把整张表锁住。2、表字段进行变更。3、进行整表查询。(没使用索引)4、like语句查询的时候。(没使用索引)</code></pre><h2 id="行级锁与死锁"><a href="#行级锁与死锁" class="headerlink" title="行级锁与死锁"></a>行级锁与死锁</h2><p>MyISAM中是不会产生死锁的，因为MyISAM总是一次性获得所需的全部锁，要么全部满足，要么全部等待。而在InnoDB中，锁是逐步获得的，就造成了死锁的可能。</p><p>在MySQL中，行级锁并不是直接锁记录，而是锁索引。索引分为主键索引和非主键索引两种，如果一条sql语句操作了主键索引，MySQL就会锁定这条主键索引；如果一条语句操作了非主键索引，MySQL会先锁定该非主键索引，再锁定相关的主键索引。 在UPDATE、DELETE操作时，MySQL不仅锁定WHERE条件扫描过的所有索引记录，而且会锁定相邻的键值，即所谓的next-key locking。</p><p>当两个事务同时执行，一个锁住了逐渐索引在等待其他相关索引，一个锁定了非主键索引，在等待主键索引。这样就会发生死锁。</p><p>发生死锁后，InnoDB一般都可以检测到，并使一个事务释放锁回退，另一个获取锁完成事务。</p><p>有多种方法可以避免死锁，这里只介绍常见的三种，具体如下</p><p>1、如果不同程序会并发存取多个表，尽量约定以相同的顺序访问表，可以大大降低死锁机会。<br>2、在同一个事务中，尽可能做到一次锁定所需要的所有资源，减少死锁产生概率；<br>3、对于非常容易产生死锁的业务部分，可以尝试使用升级锁定颗粒度，通过表级锁定来减少死锁产生的概率；</p>]]></content>
     
     <summary type="html">
     
@@ -383,30 +449,6 @@
   </entry>
   
   <entry>
-    <title>nginx的502，503，504</title>
-    <link href="http://martist.cn/2018/05/29/LINUX/nginx%E7%9A%84502%EF%BC%8C503%EF%BC%8C504/"/>
-    <id>http://martist.cn/2018/05/29/LINUX/nginx的502，503，504/</id>
-    <published>2018-05-28T16:00:00.000Z</published>
-    <updated>2018-06-01T07:11:08.627Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><pre><code>502 Bad GatewayThe server was acting as a gateway or proxy and received an invalid response from the upstream server.503 Service UnavailableThe server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.504 Gateway Time-outThe server was acting as a gateway or proxy and did not receive a timely response from the upstream server.</code></pre><h2 id="502-Bad-Gateway"><a href="#502-Bad-Gateway" class="headerlink" title="502 Bad Gateway"></a>502 Bad Gateway</h2><p>fpm进程挂掉或者后端程序过长时间未返回。</p><h2 id="503-Service-Unavailable"><a href="#503-Service-Unavailable" class="headerlink" title="503 Service Unavailable"></a>503 Service Unavailable</h2><p>当遇到这个状态码的时候表示服务临时不可用，比如nginx配置了频率限制而client端又超过了配置的限制后就会收到503的响应。</p><h2 id="504-Gateway-Time-out"><a href="#504-Gateway-Time-out" class="headerlink" title="504 Gateway Time-out"></a>504 Gateway Time-out</h2><p>nginx的fastcgi模块有一个fastcgi_read_timeout配置，它表示从FastCGI server获取数据的超时时间。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="NGINX" scheme="http://martist.cn/categories/NGINX/"/>
-    
-    
-      <category term="NGINX" scheme="http://martist.cn/tags/NGINX/"/>
-    
-      <category term="LINUX" scheme="http://martist.cn/tags/LINUX/"/>
-    
-  </entry>
-  
-  <entry>
     <title>存储引擎－－MyISAM与InnoDB</title>
     <link href="http://martist.cn/2018/05/29/MYSQL/%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E/"/>
     <id>http://martist.cn/2018/05/29/MYSQL/存储引擎/</id>
@@ -425,50 +467,6 @@
     
     
       <category term="MySQL" scheme="http://martist.cn/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>索引详解与优化</title>
-    <link href="http://martist.cn/2018/05/22/MYSQL/%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3%E4%B8%8E%E4%BC%98%E5%8C%96/"/>
-    <id>http://martist.cn/2018/05/22/MYSQL/索引详解与优化/</id>
-    <published>2018-05-21T16:00:00.000Z</published>
-    <updated>2018-06-06T07:21:46.926Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p><a href="https://blog.csdn.net/zhangliangzi/article/details/51366345" target="_blank" rel="external">https://blog.csdn.net/zhangliangzi/article/details/51366345</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="MySQL" scheme="http://martist.cn/categories/MySQL/"/>
-    
-    
-      <category term="MySQL" scheme="http://martist.cn/tags/MySQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux物理内存和虚拟内存</title>
-    <link href="http://martist.cn/2018/05/20/linux%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/linux%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%92%8C%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/"/>
-    <id>http://martist.cn/2018/05/20/linux性能调优/linux物理内存和虚拟内存/</id>
-    <published>2018-05-19T16:00:00.000Z</published>
-    <updated>2018-07-08T10:42:55.250Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>直接从物理内存读写数据要比从硬盘读写数据要快的多，因此，我们希望所有数据的读取和写入都在内存完成，而内存是有限的，这样就引出了物理内存与虚拟内存的概念。</p><pre><code>物理内存就是系统硬件提供的内存大小，是真正的内存，相对于物理内存，在Linux下还有一个虚拟内存的概念，虚拟内存就是为了满足物理内存的不足而提出的策略，它是利用磁盘空间虚拟出的一块逻辑内存，用作虚拟内存的磁盘空间被称为交换空间（Swap Space）。作为物理内存的扩展，Linux会在物理内存不足时，使用交换分区的虚拟内存，更详细的说，就是内核会将暂时不用的内存块信息写到交换空间，这样以来，物理内存得到了释放，这块内存就可以用于其它目的，当需要用到原始的内容时，这些信息会被重新从交换空间读入物理内存。Linux的内存管理采取的是分页存取机制，为了保证物理内存能得到充分的利用，内核会在适当的时候将物理内存中不经常使用的数据块自动交换到虚拟内存中，而将经常使用的信息保留到物理内存。</code></pre><p>要深入了解Linux内存运行机制，需要知道下面提到的几个方面：</p><p>首先，Linux系统会不时的进行页面交换操作，以保持尽可能多的空闲物理内存，即使并没有什么事情需要内存，Linux也会交换出暂时不用的内存页面。这可以避免等待交换所需的时间。</p><p>其次，Linux进行页面交换是有条件的，不是所有页面在不用时都交换到虚拟内存，Linux内核根据”最近最经常使用“算法，仅仅将一些不经常使用的页面文件交换到虚拟内存，有时我们会看到这么一个现象：Linux物理内存还有很多，但是交换空间也使用了很多。其实，这并不奇怪，例如，一个占用很大内存的进程运行时，需要耗费很多内存资源，此时就会有一些不常用页面文件被交换到虚拟内存中，但后来这个占用很多内存资源的进程结束并释放了很多内存时，刚才被交换出去的页面文件并不会自动的交换进物理内存，除非有这个必要，那么此刻系统物理内存就会空闲很多，同时交换空间也在被使用，就出现了刚才所说的现象了。关于这点，不用担心什么，只要知道是怎么一回事就可以了。</p><p>最后，交换空间的页面在使用时会首先被交换到物理内存，如果此时没有足够的物理内存来容纳这些页面，它们又会被马上交换出去，如此以来，虚拟内存中可能没有足够空间来存储这些交换页面，最终会导致Linux出现假死机、服务异常等问题，Linux虽然可以在一段时间内自行恢复，但是恢复后的系统已经基本不可用了。<br>   因此，合理规划和设计Linux内存的使用，是非常重要的。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.cnblogs.com/dyllove98/archive/2013/06/12/3132940.html" target="_blank" rel="external">http://www.cnblogs.com/dyllove98/archive/2013/06/12/3132940.html</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
   </entry>
   
