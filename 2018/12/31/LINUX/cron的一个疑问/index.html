@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>cron的一个疑问 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="linux,cron">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cron的一个疑问">
+<meta property="og:url" content="http://martist.cn/2018/12/31/LINUX/cron的一个疑问/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-01-05T09:47:32.882Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cron的一个疑问">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-LINUX/cron的一个疑问" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/31/LINUX/cron的一个疑问/" class="article-date">
+  <time datetime="2018-12-30T16:00:00.000Z" itemprop="datePublished">2018-12-31</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cron/">cron</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      cron的一个疑问
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<blockquote>
+<p>crontab定时任务第一个周期未完成下一个周期执行就来了</p>
+</blockquote>
+<h2 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h2><p>有一个定时任务，每分钟执行一次，前一分钟还没有执行完成，下一个分钟就来了，怎么解决。</p>
+<h2 id="模拟"><a href="#模拟" class="headerlink" title="模拟"></a>模拟</h2><pre><code>#!/bin/bash
+
+echo &quot;开始 `date` &quot; &gt;&gt; /lile/shell/ll.txt
+sleep 70
+echo &quot;结束 `date` &quot; &gt;&gt; /lile/shell/ll.txt
+
+
+
+*/1 * * * * /bin/sh /lile/shell/test_cron.sh
+</code></pre><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>使用文件锁flock，使用文件锁的文件可以是任意文件 </p>
+<pre><code>*/1 * * * * flock -xn /lile/shell/test_cron.sock -c &apos;/bin/sh /lile/shell/test_cron.sh&apos;
+</code></pre><p>这样的话，当前一个任务没有执行完，后一个任务就来了的话，是不会执行的，会直到这个任务执行完成后，然后一个周期的时候再执行</p>
+<h2 id="flock常用参数（man-flock）"><a href="#flock常用参数（man-flock）" class="headerlink" title="flock常用参数（man flock）"></a>flock常用参数（man flock）</h2><pre><code>-s：获取一个共享锁
+-x ：获得一个独占锁
+-u：解除锁
+-n：如果获取锁失败立即返回而不是等待
+-w：如果获取锁失败等待的时间
+-c：在shell中允许一个命令
+</code></pre><p>你可以用队列形式设置定时任务，这样先来先执行后来后执行；或者弄个cron配置文件设置每个任务的依赖关系，比如你如果知道那个任务大概超出了间隔时间，就把它后面的任务与之设置成依赖关系，这样这个任务必须执行完后面的才执行。这样避免任务冲突！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2018/12/31/LINUX/cron的一个疑问/" data-id="cjqjach2k001d7a6uh7x4zqb5" class="article-share-link">Delen</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cron/">cron</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/04/PHP/分销海报的生成/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          分销海报的生成
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/10/12/MYSQL/Ubuntu下开启mysql的bin_log日志/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">Ubuntu下开启mysql的bin_log日志</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2018/12/31/LINUX/cron的一个疑问/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">Content</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#现象"><span class="toc-number">1.</span> <span class="toc-text">现象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模拟"><span class="toc-number">2.</span> <span class="toc-text">模拟</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决"><span class="toc-number">3.</span> <span class="toc-text">解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flock常用参数（man-flock）"><span class="toc-number">4.</span> <span class="toc-text">flock常用参数（man flock）</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2019 马闯&nbsp;|&nbsp;
+      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      Contact&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
