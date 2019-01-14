@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>having的用法 | MARTIST</title>
+  <title>一些常用命令手记 | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="：-}">
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="having的用法">
-<meta property="og:url" content="http://martist.cn/2019/01/11/MYSQL/ having的用法/index.html">
+<meta property="og:title" content="一些常用命令手记">
+<meta property="og:url" content="http://martist.cn/2019/01/02/MYSQL/命令/index.html">
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2019-01-11T07:12:41.800Z">
+<meta property="og:updated_time" content="2019-01-14T07:43:06.669Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="having的用法">
+<meta name="twitter:title" content="一些常用命令手记">
 <meta name="twitter:description" content="：-}">
   
     <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
@@ -69,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-MYSQL/ having的用法" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-MYSQL/命令" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/01/11/MYSQL/ having的用法/" class="article-date">
-  <time datetime="2019-01-11T03:18:03.844Z" itemprop="datePublished">2019-01-11</time>
+    <a href="/2019/01/02/MYSQL/命令/" class="article-date">
+  <time datetime="2019-01-01T16:00:00.000Z" itemprop="datePublished">2019-01-02</time>
 </a>
     
   <div class="article-category">
@@ -87,7 +87,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      having的用法
+      一些常用命令手记
     </h1>
   
 
@@ -98,20 +98,41 @@
         <!-- Table of Contents -->
         
         <p>：-} <a id="more"></a></p>
-<p>having子句与where子句一样，都是用于条件判断的。</p>
-<h2 id="区别1"><a href="#区别1" class="headerlink" title="区别1"></a>区别1</h2><p>where是判断数据从磁盘读入内存的时候；<br>having是判断分组统计之前的所有条件。</p>
-<h2 id="区别2"><a href="#区别2" class="headerlink" title="区别2"></a>区别2</h2><p>having子句中可以使用字段别名，而where不能使用。</p>
-<h2 id="区别3"><a href="#区别3" class="headerlink" title="区别3"></a>区别3</h2><p>having能够使用统计函数，但是where不能使用。</p>
-<h2 id="having的特点"><a href="#having的特点" class="headerlink" title="having的特点"></a>having的特点</h2><ol>
-<li>先分组，再判断；</li>
-<li>having相当于是group by汇总以后的where过滤；</li>
-<li>having 对分组进行过滤 ，不使用group by就默认表的整体为一组。</li>
-</ol>
-
+<h2 id="简单描述表结构，字段类型"><a href="#简单描述表结构，字段类型" class="headerlink" title="简单描述表结构，字段类型"></a>简单描述表结构，字段类型</h2><pre><code>desc tabl_name;
+</code></pre><p>显示表结构，字段类型，主键，是否为空等属性，但不显示外键。</p>
+<h2 id="查询表中列的注释信息"><a href="#查询表中列的注释信息" class="headerlink" title="查询表中列的注释信息"></a>查询表中列的注释信息</h2><pre><code>select * from information_schema.columns
+where table_schema = &apos;db&apos; #表所在数据库
+and table_name = &apos;tablename&apos; ; #你要查的表
+</code></pre><h2 id="只查询列名和注释"><a href="#只查询列名和注释" class="headerlink" title="只查询列名和注释"></a>只查询列名和注释</h2><pre><code>select column_name, column_comment from information_schema.columns where table_schema =&apos;db&apos; and table_name = &apos;tablename&apos; ;
+</code></pre><h2 id="查看表的注释"><a href="#查看表的注释" class="headerlink" title="查看表的注释"></a>查看表的注释</h2><pre><code>select table_name,table_comment from information_schema.tables where table_schema = &apos;db&apos; and table_name =&apos;tablename&apos;
+</code></pre><h2 id="查看表生成的DDL"><a href="#查看表生成的DDL" class="headerlink" title="查看表生成的DDL"></a>查看表生成的DDL</h2><pre><code>show create table table_name;
+</code></pre><p>补充一些可能用到的命令：</p>
+<h2 id="建表命令"><a href="#建表命令" class="headerlink" title="建表命令"></a>建表命令</h2><pre><code>CREATE TABLE `t_sold_order` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`dt` date DEFAULT NULL COMMENT &apos;日期&apos;,
+`hour` tinyint(2) DEFAULT &apos;0&apos; COMMENT &apos;小时&apos;,
+`hour_order` int(11) DEFAULT &apos;0&apos; COMMENT &apos;小时订单数&apos;,
+`total_order` int(11) DEFAULT &apos;0&apos; COMMENT &apos;总的订单数&apos;,
+`prediction` int(11) DEFAULT &apos;0&apos; COMMENT &apos;预测订单数&apos;,
+PRIMARY KEY (`id`),
+UNIQUE KEY `dt_hour` (`dt`,`hour`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT=&apos;实时订单数&apos;
+</code></pre><h2 id="表操作命令"><a href="#表操作命令" class="headerlink" title="表操作命令"></a>表操作命令</h2><p>复制表结构：</p>
+<pre><code>create table table1 like table;
+</code></pre><p>复制数据：</p>
+<pre><code>insert into table1 select * from table
+</code></pre><p>机器授权：</p>
+<pre><code>grant select on *.* to &apos;reader&apos;@&apos;%&apos; identified by &apos;123456&apos; WITH GRANT OPTION
+</code></pre><p>flush privileges</p>
+<p>查询数据直接插入</p>
+<pre><code>insert into t_visual_user_domain(`user_id`,`domain`,`group`) select id,&apos;www.baidu.com&apos; as domain,`group` from t_visual_user;
+</code></pre><p>修改表结构</p>
+<pre><code>alter table competitor_goods add sku_id bigint(20) unsigned DEFAULT NULL COMMENT &apos;商品销售码&apos;;
+</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2019/01/11/MYSQL/ having的用法/" data-id="cjqry7327003n4q6u9vpxlorv" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2019/01/02/MYSQL/命令/" data-id="cjqw0zurx004cla6uund17et6" class="article-share-link">分享</a>
       
       
       
@@ -124,10 +145,19 @@
     
 <nav id="article-nav">
   
+    <a href="/2019/01/04/PHP/分销海报的生成/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          分销海报的生成
+        
+      </div>
+    </a>
   
-    <a href="/2019/01/10/LINUX/基于web的linux管理系统【工具推荐】基于web的linux管理系统【工具推荐】/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2019/01/02/MYSQL/ having的用法/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">基于web的linux管理系统【工具推荐】</div>
+      <div class="article-nav-title">having的用法</div>
     </a>
   
 </nav>
@@ -143,7 +173,7 @@
       <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
     
        
-            <div id="SOHUCS" sid="2019/01/11/MYSQL/ having的用法/"> </div>
+            <div id="SOHUCS" sid="2019/01/02/MYSQL/命令/"> </div>
     
       
       
@@ -165,7 +195,7 @@
       
         <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#区别1"><span class="toc-number">1.</span> <span class="toc-text">区别1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#区别2"><span class="toc-number">2.</span> <span class="toc-text">区别2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#区别3"><span class="toc-number">3.</span> <span class="toc-text">区别3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#having的特点"><span class="toc-number">4.</span> <span class="toc-text">having的特点</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简单描述表结构，字段类型"><span class="toc-number">1.</span> <span class="toc-text">简单描述表结构，字段类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查询表中列的注释信息"><span class="toc-number">2.</span> <span class="toc-text">查询表中列的注释信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#只查询列名和注释"><span class="toc-number">3.</span> <span class="toc-text">只查询列名和注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看表的注释"><span class="toc-number">4.</span> <span class="toc-text">查看表的注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看表生成的DDL"><span class="toc-number">5.</span> <span class="toc-text">查看表生成的DDL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#建表命令"><span class="toc-number">6.</span> <span class="toc-text">建表命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#表操作命令"><span class="toc-number">7.</span> <span class="toc-text">表操作命令</span></a></li></ol>
           </div>
       </div>
     </div>
