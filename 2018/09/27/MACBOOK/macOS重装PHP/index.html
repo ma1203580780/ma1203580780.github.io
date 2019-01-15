@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-10-16T02:50:39.548Z">
+<meta property="og:updated_time" content="2019-01-15T13:31:51.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MacOS 重装PHP">
 <meta name="twitter:description" content="：-}">
@@ -113,10 +113,11 @@
 <p>解压并进入源码包</p>
 <p>  unzip phpredis-develop.zip<br>  cd phpredis-develop</p>
 <p>生成configure配置文件:</p>
-<p>  sudo /usr/local/Cellar/php/7.2.11/bin/phpize/usr/local/php-7.1/bin/phpize</p>
+<p>  sudo /usr/local/Cellar/php/7.2.11/bin/phpize</p>
 <p>编译安装:</p>
-<p>  sudo ./configure –with-php-config=/usr/local/Cellar/php/7.2.11/bin/php-config<br>  sudo make &amp;&amp; make install</p>
-<p>配置php.ini<br>在extension后添加</p>
+<p>  sudo ./configure –with-php-config=/usr/local/Cellar/php/7.2.11/bin/php-config </p>
+<p>  sudo make &amp;&amp; make install</p>
+<p>配置php.ini,添加扩展：</p>
 <p>  extension=redis.so</p>
 <p>重启php</p>
 <p>查看fpm是否存在</p>
@@ -131,7 +132,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/09/27/MACBOOK/macOS重装PHP/" data-id="cjqw0zur5002fla6u3wxtyo6k" class="article-share-link">分享</a>
+      <a data-url="http://martist.cn/2018/09/27/MACBOOK/macOS重装PHP/" data-id="cjqxsy3gr003bid6uz1da2phm" class="article-share-link">分享</a>
       
       
       
