@@ -247,6 +247,28 @@
   </entry>
   
   <entry>
+    <title>linux常用命令</title>
+    <link href="http://martist.cn/2018/12/30/LINUX/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"/>
+    <id>http://martist.cn/2018/12/30/LINUX/linux常用命令/</id>
+    <published>2018-12-30T13:30:50.000Z</published>
+    <updated>2019-01-17T11:52:41.827Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h1 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h1><pre><code>解包： tar xvf FileName.tar打包：tar cvf FileName.tar DirName </code></pre><h1 id="查看文件大小"><a href="#查看文件大小" class="headerlink" title="查看文件大小"></a>查看文件大小</h1><p>root@Data-01:/data/mysql# du -h –max-depth=1 *</p><h1 id="find"><a href="#find" class="headerlink" title="find"></a>find</h1><p>svn 删除所有的 .svn文件<br>find . -name .svn -type d -exec rm -fr {} \;</p><h1 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h1><p>使用权限：所有使用者</p><p>使用方式：</p><p>cp [options] source dest</p><p>cp [options] source… directory</p><p>说明：将一个档案拷贝至另一档案，或将数个档案拷贝至另一目录。</p><p>option：</p><pre><code>-a 尽可能将档案状态、权限等资料都照原状予以复制。-r 若 source 中含有目录名，则将目录下之档案亦皆依序拷贝至目的地。-f 若目的地已经有相同档名的档案存在，则在复制前先予以删除再行复制。</code></pre><p>范例：</p><p>将档案 aaa 复制(已存在)，并命名为 bbb :</p><p>cp aaa bbb</p><p>将所有的C语言程式拷贝至 Finished 子目录中 :</p><p>cp *.c Finished</p><p>命令：scp</p><p>不同的Linux之间copy文件常用有3种方法：</p><p>第一种就是ftp，也就是其中一台Linux安装ftp Server，这样可以另外一台使用ftp的client程序来进行文件的copy。</p><p>第二种方法就是采用samba服务，类似Windows文件copy 的方式来操作，比较简洁方便。</p><p>第三种就是利用scp命令来进行文件复制。</p><pre><code>scp是有Security的文件copy，基于ssh登录。操作起来比较方便，比如要把当前一个文件copy到远程另外一台主机上，可以如下命令。</code></pre><p>scp /home/daisy/full.tar.gz root@172.19.2.75:/home/root</p><p>然后会提示你输入另外那台172.19.2.75主机的root用户的登录密码，接着就开始copy了。</p><pre><code>如果想反过来操作，把文件从远程主机copy到当前系统，也很简单。</code></pre><p>linux之cp/scp命令＋scp命令详解(转) - linmaogan - 独木★不成林scp root@/full.tar.gz 172.19.2.75:/home/root/full.tar.gz home/daisy/full.tar.gz</p><p>linux 的 scp 命令 可以 在 linux 之间复制 文件 和 目录；</p><h1 id="scp"><a href="#scp" class="headerlink" title="scp"></a>scp</h1><p>scp 可以在 2个 linux 主机间复制文件；</p><p>命令基本格式：<br>       scp [可选参数] file_source file_target</p><p>======</p><h1 id="从-本地-复制到-远程"><a href="#从-本地-复制到-远程" class="headerlink" title="从 本地 复制到 远程"></a>从 本地 复制到 远程</h1><ul><li><p>复制文件：</p><pre><code>* 命令格式：        scp local_file remote_username@remote_ip:remote_folder        或者        scp local_file remote_username@remote_ip:remote_file        或者        scp local_file remote_ip:remote_folder        或者        scp local_file remote_ip:remote_file        第1,2个指定了用户名，命令执行后需要再输入密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名；        第3,4个没有指定用户名，命令执行后需要输入用户名和密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名；* 例子：        scp /home/space/music/1.mp3 root@www.cumt.edu.cn:/home/root/others/music        scp /home/space/music/1.mp3 root@www.cumt.edu.cn:/home/root/others/music/001.mp3        scp /home/space/music/1.mp3 www.cumt.edu.cn:/home/root/others/music        scp /home/space/music/1.mp3 www.cumt.edu.cn:/home/root/others/music/001.mp3</code></pre></li><li><p>复制目录：</p><pre><code>* 命令格式：        scp -r local_folder remote_username@remote_ip:remote_folder        或者        scp -r local_folder remote_ip:remote_folder        第1个指定了用户名，命令执行后需要再输入密码；        第2个没有指定用户名，命令执行后需要输入用户名和密码；* 例子：        scp -r /home/space/music/ root@www.cumt.edu.cn:/home/root/others/        scp -r /home/space/music/ www.cumt.edu.cn:/home/root/others/        上面 命令 将 本地 music 目录 复制 到 远程 others 目录下，即复制后有 远程 有 ../others/music/ 目录</code></pre></li></ul><p>======</p><h1 id="从-远程-复制到-本地"><a href="#从-远程-复制到-本地" class="headerlink" title="从 远程 复制到 本地"></a>从 远程 复制到 本地</h1><p>从 远程 复制到 本地，只要将 从 本地 复制到 远程 的命令 的 后2个参数 调换顺序 即可；</p><p>例如：</p><pre><code>scp root@www.cumt.edu.cn:/home/root/others/music /home/space/music/1.mp3scp -r www.cumt.edu.cn:/home/root/others/ /home/space/music/</code></pre><p>最简单的应用如下 :</p><p>scp 本地用户名 @IP 地址 : 文件名 1 远程用户名 @IP 地址 : 文件名 2</p><p>[ 本地用户名 @IP 地址 :] 可以不输入 , 可能需要输入远程用户名所对应的密码 .</p><p>可能有用的几个参数 :</p><p>-v 和大多数 linux 命令中的 -v 意思一样 , 用来显示进度 . 可以用来查看连接 , 认证 , 或是配置错误 .</p><p>-C 使能压缩选项 .</p><p>-P 选择端口 . 注意 -p 已经被 rcp 使用 .</p><p>-4 强行使用 IPV4 地址 .</p><p>-6 强行使用 IPV6 地址 .</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>crontab</title>
     <link href="http://martist.cn/2018/12/27/LINUX/crontab/"/>
     <id>http://martist.cn/2018/12/27/LINUX/crontab/</id>
@@ -293,30 +315,6 @@
   </entry>
   
   <entry>
-    <title>ubuntu安装bcmath模块</title>
-    <link href="http://martist.cn/2018/10/21/LINUX/ubuntu%E5%AE%89%E8%A3%85bcmath%E6%A8%A1%E5%9D%97/"/>
-    <id>http://martist.cn/2018/10/21/LINUX/ubuntu安装bcmath模块/</id>
-    <published>2018-10-20T16:00:00.000Z</published>
-    <updated>2019-01-17T10:00:25.390Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>1.安装</p><pre><code>sudo apt-get install php-bcmath</code></pre><p>2.找到php的配置文件</p><pre><code>php -i | grep &quot;php.ini&quot;</code></pre><p>php.ini中加入扩展配置，保存退出</p><pre><code>vi php.iniextension=bcmath.so # 写入# :wq 退出</code></pre><p>3.看有没有该模块</p><pre><code>php -m</code></pre><p>说明，多次加载了bcmath模块，第二个步骤不用了。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="awk" scheme="http://martist.cn/tags/awk/"/>
-    
-  </entry>
-  
-  <entry>
     <title>awk</title>
     <link href="http://martist.cn/2018/10/21/LINUX/awk/"/>
     <id>http://martist.cn/2018/10/21/LINUX/awk/</id>
@@ -334,9 +332,9 @@
       <category term="linux" scheme="http://martist.cn/categories/linux/"/>
     
     
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
       <category term="awk" scheme="http://martist.cn/tags/awk/"/>
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
   </entry>
   
@@ -358,9 +356,33 @@
       <category term="linux" scheme="http://martist.cn/categories/linux/"/>
     
     
+      <category term="awk" scheme="http://martist.cn/tags/awk/"/>
+    
       <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
+  </entry>
+  
+  <entry>
+    <title>ubuntu安装bcmath模块</title>
+    <link href="http://martist.cn/2018/10/21/LINUX/ubuntu%E5%AE%89%E8%A3%85bcmath%E6%A8%A1%E5%9D%97/"/>
+    <id>http://martist.cn/2018/10/21/LINUX/ubuntu安装bcmath模块/</id>
+    <published>2018-10-20T16:00:00.000Z</published>
+    <updated>2019-01-17T10:00:25.390Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>1.安装</p><pre><code>sudo apt-get install php-bcmath</code></pre><p>2.找到php的配置文件</p><pre><code>php -i | grep &quot;php.ini&quot;</code></pre><p>php.ini中加入扩展配置，保存退出</p><pre><code>vi php.iniextension=bcmath.so # 写入# :wq 退出</code></pre><p>3.看有没有该模块</p><pre><code>php -m</code></pre><p>说明，多次加载了bcmath模块，第二个步骤不用了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
       <category term="awk" scheme="http://martist.cn/tags/awk/"/>
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
     
   </entry>
   
@@ -451,30 +473,6 @@
       <category term="php" scheme="http://martist.cn/tags/php/"/>
     
       <category term="Mac" scheme="http://martist.cn/tags/Mac/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>feed流的技术实现</title>
-    <link href="http://martist.cn/2018/08/24/%E6%9E%B6%E6%9E%84/feed%E6%B5%81%E7%9A%84%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/"/>
-    <id>http://martist.cn/2018/08/24/架构/feed流的技术实现/</id>
-    <published>2018-08-23T16:00:00.000Z</published>
-    <updated>2018-08-27T06:21:19.072Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>我们现在好多软件都有一个类似朋友圈的功能：微博、微信、QQ…… 只要涉及到好友、粉丝这样的 app 或者是网站，一定有这样的一个功能。那这个功能是怎么样来实现的呢？</p><h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>简单来说，Feeds这块主要包括两块内容</p><pre><code>生成feeds更新feed</code></pre><h3 id="生成feeds"><a href="#生成feeds" class="headerlink" title="生成feeds"></a>生成feeds</h3><p>比如我们已经关注的人做了特定操作，我们需要把这些活动加入你的feeds，让你接收到。<br>比如某大牌明星发了个微博，这时候我们首先找到明星的所有关注者，然后给需要推送的关注者推送此微博，大家可以把每个人的feeds简单想象为一个个的有序列表，推送很简单，就是在每个人的列表末尾添加这个操作。</p><h3 id="更新feeds"><a href="#更新feeds" class="headerlink" title="更新feeds"></a>更新feeds</h3><p>你新关注了一个人，需要把他的活动加入已有feeds。这时候我们需要取出此人的活动历史，然后按照时间顺序把这些历史塞到你的feeds中。此操作的复杂度会比较高，需要使用合适的数据结构来达到最佳性能，目前是O(log(N))。</p><h3 id="取消关注"><a href="#取消关注" class="headerlink" title="取消关注"></a>取消关注</h3><p>你的关注点做了一些更新操作，比如你取消关注了一个人，那么他的动态就要在feeds中清除掉。</p><h2 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h2><p>我们可以在用常用的mysql设计个2个数据表，一个表存人和人的关注关系，一个表存发布动态的信息。这样通过链表查询就可以实现feeds流了。但是我们知道feeds流的数据量级应该会非常大，性能和可用性就会直线下降，单一依靠mysql实现feeds已经无法应对业务的增长。</p><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h3 id="推模式"><a href="#推模式" class="headerlink" title="推模式"></a>推模式</h3><p>什么是推模式？推模式就是，用户A关注了用户B，用户B每发送一个动态，后台遍历用户B的粉丝，往他们粉丝的feed里面推送一条动态。</p><h3 id="拉模式"><a href="#拉模式" class="headerlink" title="拉模式"></a>拉模式</h3><p>与推模式相反，拉模式则是，用户每次刷新feed第一页，都去遍历关注的人，把最新的动态拉取回来。</p><p>但是，不管推模式还是拉模式都存在若关注数量或者粉丝数量过多，导致遍历时间太长的问题，怎么去解决 ？这里就出现了第三种模式，推拉模式。</p><h3 id="推拉模式"><a href="#推拉模式" class="headerlink" title="推拉模式"></a>推拉模式</h3><p>这是一种折中的解决方案，就是在线推，离线拉。粉丝几百上千万， 跟你发布动态同时在线的肯定也就只有那么顶天几百几千几万，何况这类大V很少，只推给在线的粉丝，离线的粉丝上线后，再去拉取动态即可！但是，不管是什么模式，每个用户都会维护一个类似发件箱跟收件箱的东西，保存自己发过的动态以及Feed动态（具体实现看下面），来完成推与拉。</p><p>而这里讲的，肯定就是推拉模式，用户A关注了用户B ， 用户B发布动态则将动态推进用户A的feed，这里使用redis的zset实现，sort为time（记得以毫秒为时间戳，秒级在数据量达到一定程度后，会有读取不到的问题，比如以时间戳为分页页码），value为具体的动态 ID（为什么是动态ID， 其实很简单， 就是因为动态的内容可以进行缓存，在redis里面全部走ID，修改动态内容也需要修改一处，动态内容可以保存在hash结构里）， 每个用户维护一个zset保存我发布的动态，一个zset保存我的feed动态，过期时间3~7天看情况而定。为什么要设计过期时间后面会细说。</p><p>OK，全局维护一个在线用户列表，怎么设计这个就自己琢磨了，为了防止用户挂后台导致与服务端为离线状态，所以最好是1~3小时未操作或者离线时间不大于3小时的，都当做在线处理，反正这个看情况定。</p><p>那么，当用户发了一条动态后，后台会有以下这些操作：<br>在线推： 异步遍历在线的粉丝，将动态ID，添加到粉丝的Feed中。<br>离线拉： 离线用户打开APP后，我们是会请求一个公共的入口接口，主做统计以及其他初始化操作，在这里，我们也开了一个异步线程，对用户进行Feed更新操作，防止用户进入APP后等待拉取时间过长，毕竟关注成千上万的人肯定有（其实万单位以下遍历都很快）。拉取过程其实就是把自己最后一条Feed的时间戳取出，去遍历关注的人的feed，将大于该时间的ID全部拉取回来。用户进入APP后，刷新即可看到最新操作。</p><p>另：如果有Feed新消息数提示的需求，可以在推拉的同时进行增加， 刷新feed时清空即可。</p><h2 id="用户feed里面过长，占用内存怎么办？"><a href="#用户feed里面过长，占用内存怎么办？" class="headerlink" title="用户feed里面过长，占用内存怎么办？"></a>用户feed里面过长，占用内存怎么办？</h2><p>我是这么处理的，一个用户的feed第一次拉取的时候，feed长度为500条，在我们APP里，相当于50页，而后的数据，都走数据库。</p><p>大页码翻页其实就是个伪需求而且耗性能的东西，用户除了第一次用这个APP，才会翻到底，第一次使用， 能有几个动态 ？而对于二次使用以上的用户，一般来讲， 翻了几页就已经到达上一次看过的地方了，所以500条数据，在关注量一般的情况下，内容已经足够消费，甚至达到疲劳，可能有关注量很大的用户他的Feed每天可能有很多很多动态，但是，不用说，肯定是做广告的，关注一堆人等着回粉，这种人更不会去消费内容，50页的内容，翻起来都累。当然，并不是说放弃了这些人，feed找不到走数据库嘛~~~~爱走不走，想走就给我翻50页再说~</p><h2 id="每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适-？"><a href="#每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适-？" class="headerlink" title="每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适 ？"></a>每个用户都维护自己的动态跟Feed队列，当用户上百万时，内存的占有量肯定不小，要怎么释放内存才合适 ？</h2><p>这里就回到上面那个问题了，为什么要给feed的key设计过期时间？为什么是设计3~7天过期时间？</p><p>原因有以下：</p><pre><code>一、一个用户3~7天不打开APP，可能已经对APP失去兴趣了，打开几率很小，或者已经被卸载了，没有存在的意义了。二、3~7天未登陆APP，关注的人发的动态也不少了，Feed未拉取回来的数据肯定也不少，那么这时候去遍历其实拉取量很大，那么还不如直接全部重新拉一边或者拉取用户最后登陆时间后产出的数据。</code></pre><p>到这里，其实已经差不多了，大部分业务逻辑已经足够满足，并且速度也理想，目前我们线上这种模式走了半年，feed一般都是10~80ms响应完毕。</p><pre><code>&lt;?php echo &apos;求关注 求喜欢&apos;;?&gt;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      谈谈我对feed的理解
-    
-    </summary>
-    
-      <category term="php" scheme="http://martist.cn/categories/php/"/>
-    
-    
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-      <category term="web" scheme="http://martist.cn/tags/web/"/>
     
   </entry>
   
