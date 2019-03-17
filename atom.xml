@@ -315,30 +315,6 @@
   </entry>
   
   <entry>
-    <title>awk</title>
-    <link href="http://martist.cn/2018/10/21/LINUX/awk/"/>
-    <id>http://martist.cn/2018/10/21/LINUX/awk/</id>
-    <published>2018-10-20T16:00:00.000Z</published>
-    <updated>2019-01-17T09:24:51.887Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>命令示例：</p><pre><code>awk &apos;{if($0~&quot;listAuths&quot;) print}&apos; xxx.log</code></pre><p>解释说明：抽取xxx.log整个日志文件中，包含“listAuths”的行，打印输出</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
-    
-      <category term="awk" scheme="http://martist.cn/tags/awk/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Linux压缩和解压命令</title>
     <link href="http://martist.cn/2018/10/21/LINUX/Linux%E5%8E%8B%E7%BC%A9%E5%92%8C%E8%A7%A3%E5%8E%8B%E5%91%BD%E4%BB%A4/"/>
     <id>http://martist.cn/2018/10/21/LINUX/Linux压缩和解压命令/</id>
@@ -363,6 +339,30 @@
   </entry>
   
   <entry>
+    <title>godaddy购买ssl证书</title>
+    <link href="http://martist.cn/2018/10/21/LINUX/godaddy%E8%B4%AD%E4%B9%B0ssl%E8%AF%81%E4%B9%A6/"/>
+    <id>http://martist.cn/2018/10/21/LINUX/godaddy购买ssl证书/</id>
+    <published>2018-10-20T16:00:00.000Z</published>
+    <updated>2019-03-17T09:20:29.102Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="购买Godaddy-SSL证书"><a href="#购买Godaddy-SSL证书" class="headerlink" title="购买Godaddy SSL证书"></a>购买Godaddy SSL证书</h2><p>Godaddy官网 <a href="http://www.godaddy.com" target="_blank" rel="external">http://www.godaddy.com</a></p><h2 id="选择需要的证书"><a href="#选择需要的证书" class="headerlink" title="选择需要的证书"></a>选择需要的证书</h2><p>按照安全级别区分，有以下三种：</p><pre><code>域名型证书 DV SSL企业型证书 OV SSL增强型证书EV SSL</code></pre><h2 id="生成-NGINX-CSR（证书签名申请）"><a href="#生成-NGINX-CSR（证书签名申请）" class="headerlink" title="生成 NGINX CSR（证书签名申请）"></a>生成 NGINX CSR（证书签名申请）</h2><p>打开终端，输入以下命令</p><pre><code>openssl req -new -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr</code></pre><p>生成过程会询问几个常见问题，比如City、Country等等。</p><p>最后会询问challenge password，输入的时候记住就可以了。</p><p>执行完以上命令后，当前目录会多出“domain.key”和“domain.csr”文件</p><h2 id="购买证书"><a href="#购买证书" class="headerlink" title="购买证书"></a>购买证书</h2><p>购买是支持支付宝付款的，很方便。<br>购买完SSL证书之后会有一个初始化过程，将第1步中的domain.csr文件所有内容填写到“CSR”输入框中，Goddy会检测配置等操作，操作完成之后会签发证书，点击下载即可，下载时服务器类型选择“其他”。<br>Nginx配置</p><p>下载证书的时候压缩包内容会有两个crt文件</p><p>正常情况下nginx配置SSL需要key和crt文件即可。</p><p>这里有两个crt所以需要进行证书合并操作。</p><p>打开终端，执行以下命令：</p><pre><code>cat 53f58e3ac2172cd5.crt gd_bundle-g2-g1.crt &gt; domain.crt</code></pre><p>文件名请根据实际情况进行修改。</p><p>证书合并完成，接下来打开Nginx的配置文件配置ssl证书</p><pre><code>server {        listen       443;        server_name  www.xxx.com;    ssl        on;        ssl_certificate      /usr/local/ssl/domain.crt;        ssl_certificate_key  /usr/local/ssl/domain.key;}</code></pre><h2 id="平滑重启nginx服务"><a href="#平滑重启nginx服务" class="headerlink" title="平滑重启nginx服务"></a>平滑重启nginx服务</h2><pre><code>sudo nginx -s reload</code></pre><p>参考</p><p><a href="https://sg.godaddy.com/zh/help" target="_blank" rel="external">https://sg.godaddy.com/zh/help</a><br><a href="https://sg.godaddy.com/zh/help/nginx-csr-3601" target="_blank" rel="external">https://sg.godaddy.com/zh/help/nginx-csr-3601</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="https" scheme="http://martist.cn/tags/https/"/>
+    
+  </entry>
+  
+  <entry>
     <title>ubuntu安装bcmath模块</title>
     <link href="http://martist.cn/2018/10/21/LINUX/ubuntu%E5%AE%89%E8%A3%85bcmath%E6%A8%A1%E5%9D%97/"/>
     <id>http://martist.cn/2018/10/21/LINUX/ubuntu安装bcmath模块/</id>
@@ -370,6 +370,30 @@
     <updated>2019-01-17T10:00:25.390Z</updated>
     
     <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>1.安装</p><pre><code>sudo apt-get install php-bcmath</code></pre><p>2.找到php的配置文件</p><pre><code>php -i | grep &quot;php.ini&quot;</code></pre><p>php.ini中加入扩展配置，保存退出</p><pre><code>vi php.iniextension=bcmath.so # 写入# :wq 退出</code></pre><p>3.看有没有该模块</p><pre><code>php -m</code></pre><p>说明，多次加载了bcmath模块，第二个步骤不用了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;：-}
+    
+    </summary>
+    
+      <category term="linux" scheme="http://martist.cn/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://martist.cn/tags/linux/"/>
+    
+      <category term="awk" scheme="http://martist.cn/tags/awk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>awk</title>
+    <link href="http://martist.cn/2018/10/21/LINUX/awk/"/>
+    <id>http://martist.cn/2018/10/21/LINUX/awk/</id>
+    <published>2018-10-20T16:00:00.000Z</published>
+    <updated>2019-01-17T09:24:51.887Z</updated>
+    
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><p>命令示例：</p><pre><code>awk &apos;{if($0~&quot;listAuths&quot;) print}&apos; xxx.log</code></pre><p>解释说明：抽取xxx.log整个日志文件中，包含“listAuths”的行，打印输出</p>]]></content>
     
     <summary type="html">
     
@@ -409,28 +433,6 @@
   </entry>
   
   <entry>
-    <title>laravel+elastic笔记</title>
-    <link href="http://martist.cn/2018/10/10/LARAVEL/laravel+elastic%E7%AC%94%E8%AE%B0/"/>
-    <id>http://martist.cn/2018/10/10/LARAVEL/laravel+elastic笔记/</id>
-    <published>2018-10-09T16:00:00.000Z</published>
-    <updated>2018-11-01T03:21:25.343Z</updated>
-    
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><p>版本很重要<br>由点及面，先实践起来再学细节的原理和使用</p><h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><pre><code>laravel5.5框架+scout组件+elasticsearch6.3.0搜索引擎</code></pre><h3 id="辅助"><a href="#辅助" class="headerlink" title="辅助"></a>辅助</h3><pre><code>elasticsearch-head 查看集群数据可视化中文分词插件Ik</code></pre><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>laravel是一款现代化的php框架<br>es是搜索引擎<br>es-head是管理查看使用es的图形界面工具<br>scout是laravel一款优秀的组件</p><h2 id="安装流程"><a href="#安装流程" class="headerlink" title="安装流程"></a>安装流程</h2><h3 id="laravel"><a href="#laravel" class="headerlink" title="laravel"></a>laravel</h3><p>laravel安装器安装：</p><pre><code>laravel new larasearch</code></pre><p>配置env文件：</p><pre><code>DB_CONNECTION=mysqlDB_HOST=127.0.0.1DB_PORT=3306DB_DATABASE=julyeduDB_USERNAME=rootDB_PASSWORD=123456</code></pre><p>这时php artisan命令启动，访问127.0.0.1:8000 就可以看到项目首页了。</p><h3 id="es"><a href="#es" class="headerlink" title="es"></a>es</h3><p>在es的官网挑选一个合适的版本，建议选择6.3.0，以便配套使用IK和ES-head。</p><pre><code># 下载https://www.elastic.co/downloads/past-releases</code></pre><h3 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h3><p>1.直接plugin命令安装</p><pre><code>./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip</code></pre><p>2.配置修改ik的版本适应es6.3.1,修改文件plugin-descriptor.properties，config文件夹下的配置文件主要是IK本身暂时不需要修改，这个properties文件主要是和es交互，修改其es版本和jdk版本号</p><pre><code># 修改elasticsearch-head/plugin-descriptor.properties文件description=head - A web front end for an elastic search clusterversion=6.3.1site=truename=analysis-ikclassname=org.elasticsearch.plugin.analysis.ik.AnalysisIkPluginjava.version=1.8elasticsearch.version=6.3.1 </code></pre><h3 id="es-head"><a href="#es-head" class="headerlink" title="es-head"></a>es-head</h3><p>head是基于node开发的，所以需要先安装node<br>node下载地址：<a href="http://cdn.npm.taobao.org/dis" target="_blank" rel="external">http://cdn.npm.taobao.org/dis</a>…</p><p>在电脑任意一个目录下（不要在elasticsearch目录里面），执行一下命令，</p><pre><code>git clone https://github.com/mobz/elasticsearch-head.git  cd elasticsearch-head/  npm install  </code></pre><p>为了es-head可以访问es，所以需要配置跨域：</p><p>修改两个地方：</p><pre><code>#elasticsearch-headGruntfile.jsconnect: {    server: {        options: {            port: 9100,            hostname: &apos;*&apos;,            base: &apos;.&apos;,            keepalive: true        }    }}#elasticsearch-5.6.0configelasticsearch.ymlhttp.cors.enabled: true  http.cors.allow-origin: &quot;*&quot;  </code></pre><h2 id="scout"><a href="#scout" class="headerlink" title="scout"></a>scout</h2><p>通过composer安装依赖包</p><pre><code>composer require laravel/scoutcomposer require tamayo/laravel-scout-elastic</code></pre><p>基本配置</p><p>在config/app.php文件中的providers数组中加入服务提供者</p><pre><code>// config/app.php&apos;providers&apos; =&gt; [    // ...    Laravel\Scout\ScoutServiceProvider::class,    // ...    ScoutEngines\Elasticsearch\ElasticsearchProvider::class,],</code></pre><p>使用以下命令生成scout配置文件</p><pre><code>php artisan vendor:publish --provider=&quot;Laravel\Scout\ScoutServiceProvider&quot;</code></pre><p>在config/scout.php中加入elasticsearch的配置</p><pre><code>&apos;elasticsearch&apos; =&gt; [    &apos;index&apos; =&gt; env(&apos;ELASTICSEARCH_INDEX&apos;, &apos;laravel&apos;),    &apos;hosts&apos; =&gt; [        env(&apos;ELASTICSEARCH_HOST&apos;, &apos;http://localhost:9200&apos;),    ],],</code></pre><p>然后我们打开.env文件，加入scout和elasticsearch的配置</p><pre><code># scout配置SCOUT_DRIVER=elasticsearchSCOUT_PREFIX=# elasticsearch 配置ELASTICSEARCH_INDEX=esdemo# elasticsearch 地址ELASTICSEARCH_HOST=http://172.30.6.1:9200</code></pre><h3 id="相关文档地址"><a href="#相关文档地址" class="headerlink" title="相关文档地址"></a>相关文档地址</h3><p>laravel scout中文文档地址：<a href="https://laravel-china.org/docs/laravel/5.3/scout/1205" target="_blank" rel="external">https://laravel-china.org/docs/laravel/5.3/scout/1205</a><br>es中文文档地址：<a href="https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html" target="_blank" rel="external">https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html</a><br>es6.3.0地址：<a href="https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0" target="_blank" rel="external">https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0</a><br>IK github地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik" target="_blank" rel="external">https://github.com/medcl/elasticsearch-analysis-ik</a></p><h2 id="启动并查看"><a href="#启动并查看" class="headerlink" title="启动并查看"></a>启动并查看</h2><p>启动es</p><pre><code>./bin/elasticsearch</code></pre><p>地址</p><pre><code>http://127.0.0.1:9200/</code></pre><p>启动es-head</p><pre><code>npm run start</code></pre><p>地址</p><pre><code>http://127.0.0.1:9100</code></pre><p>启动laravel项目</p><pre><code>php artisan serve</code></pre><p>地址</p><pre><code>http://127.0.0.1:8000/es/s?page=1</code></pre><h2 id="测试执行"><a href="#测试执行" class="headerlink" title="测试执行"></a>测试执行</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><h4 id="创建模型并填充数据"><a href="#创建模型并填充数据" class="headerlink" title="创建模型并填充数据"></a>创建模型并填充数据</h4><p>创建模型app/Ques.php，为方便后续测试，请先建表和填充数据，可以手动使用sql语句添加数据，也使用laravel自动的数据迁移和填充。</p><pre><code>&lt;?phpnamespace App;use Illuminate\Database\Eloquent\Model;use Laravel\Scout\Searchable;/** * 学生模型 */class Ques extends Model{     use Searchable;    //定义关联的表名，不定义的话默认此模型关联的表为 模型名s (users)    protected $table = &apos;aws_ques_tb_0&apos;;    /******字段相关*******/    #定义主键字段名，默认是id    protected $primaryKey = &apos;id&apos;;    #定义字段白名单，允许操作表中的哪些字段    // protected $fillable = [&apos;ques&apos;,&apos;name&apos;];    #定义字段黑名单，不允许操作表中哪些字段    protected $guarded = [];    //1、使用model::create([])等方法直接对orm对象操作使，必须定义$guarded或者$fillable    //2、使用$m = new model();然后$m-&gt;save()的方式不需要定义    //3、简便的方式就是定义$fillable = [];    #定义隐藏的字段    protected $hidden = [];    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;ques_index&apos;;    }    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;Quess_index&apos;;    }    /**     * 可搜索的数据索引     *     * @return array     */    public function toSearchableArray()    {        $array = $this-&gt;toArray();        // Customize array...        return $array;    }}</code></pre><h4 id="把所有现有记录导入到搜索索引里"><a href="#把所有现有记录导入到搜索索引里" class="headerlink" title="把所有现有记录导入到搜索索引里"></a>把所有现有记录导入到搜索索引里</h4><pre><code>php artisan scout:import &quot;App\Ques&quot;</code></pre><h4 id="导入过程"><a href="#导入过程" class="headerlink" title="导入过程"></a>导入过程</h4><pre><code>Imported [App\Ques] models up to ID: 500Imported [App\Ques] models up to ID: 1000Imported [App\Ques] models up to ID: 1500Imported [App\Ques] models up to ID: 2000All [App\Ques] records have been imported.</code></pre><p>我们访问es，是不是已经有了刚刚导入的Quess_index索引数据。</p><pre><code>http://172.30.6.1:9200/esdemo/Ques_index/_search</code></pre><h4 id="试试搜索"><a href="#试试搜索" class="headerlink" title="试试搜索"></a>试试搜索</h4><p>在route/web.php中写个demo，试试看；</p><pre><code>Route::get(&apos;/search/{content}&apos;, function ($content) {    //直接输出数组data，限制1000条    // $res = App\Ques::search($content)-&gt;take(1000)-&gt;get()-&gt;toArray();    // 分页请求  http://127.0.0.1:8000/es/机器学习?page=1    $res = App\Ques::search($content)-&gt;paginate(100)-&gt;toArray();    dd($res);});</code></pre><h4 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h4><p>输出：</p><pre><code>array:12 [▼  &quot;current_page&quot; =&gt; 1  &quot;data&quot; =&gt; array:9 [▼    0 =&gt; array:9 [▼      &quot;id&quot; =&gt; 922      &quot;ques&quot; =&gt; &quot;哪些机器学习算法不需要做归一化处理？&quot;      &quot;analysis&quot; =&gt; &quot;&quot;&quot;        概率模型不需要归一化，因为它们不关心变量的值，而是关心变量的分布和变量之间的条件概率，如决策树、rf。而像adaboost、svm、lr、KNN、KMeans之类的最优化问题就需要归一化。\r\n        我理解归一化和标准化主要是为了使计算更方便 比如两个变量的量纲不同 可能一个的数值远大于另一个那么他们同时作为变量的时候 可能会造成数值计算的问题，比如说求矩阵的逆可能很不精确 或者梯度下降法的收敛比较困难，还有如果需要计算欧式距离的话可能 量纲也需要调整 所以我估计lr 和 knn 保准话一下应该有好处。至于其他的算 ▶        一般我习惯说树形模型，这里说的概率模型可能是差不多的意思。引用自@寒小阳        &quot;&quot;&quot;      &quot;type_id&quot; =&gt; 3      &quot;diff&quot; =&gt; 0      &quot;isdelete&quot; =&gt; 1      &quot;created_time&quot; =&gt; &quot;2017-12-10 18:57:13&quot;      &quot;update_time&quot; =&gt; &quot;0000-00-00 00:00:00&quot;      &quot;is_show&quot; =&gt; 1    ]    1 =&gt; array:9 [▶]    2 =&gt; array:9 [▶]    3 =&gt; array:9 [▶]    4 =&gt; array:9 [▶]    5 =&gt; array:9 [▶]    6 =&gt; array:9 [▶]    7 =&gt; array:9 [▶]    8 =&gt; array:9 [▶]  ]  &quot;first_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;from&quot; =&gt; 1  &quot;last_page&quot; =&gt; 1  &quot;last_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;next_page_url&quot; =&gt; null  &quot;path&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&quot;  &quot;per_page&quot; =&gt; 100  &quot;prev_page_url&quot; =&gt; null  &quot;to&quot; =&gt; 9  &quot;total&quot; =&gt; 9]</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>PHP使用elasticsearch搜索安装及分词方法【<a href="https://segmentfault.com/a/1190000011663833】" target="_blank" rel="external">https://segmentfault.com/a/1190000011663833】</a></p><p>Laravel中利用Scout集成Elasticsearch搜索引擎【<a href="https://segmentfault.com/a/1190000014230010】" target="_blank" rel="external">https://segmentfault.com/a/1190000014230010】</a></p><p>全文搜索引擎 Elasticsearch 入门教程【<a href="http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】</a></p><p>laravel使用ElasticSearch进行搜索【<a href="https://blog.csdn.net/lingchen__/article/details/77884753】" target="_blank" rel="external">https://blog.csdn.net/lingchen__/article/details/77884753】</a></p><p>elasticsearch6.3.1+IK插件安装部署全攻略【<a href="https://blog.csdn.net/superheister/article/details/81296451】" target="_blank" rel="external">https://blog.csdn.net/superheister/article/details/81296451】</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;：-}
-    
-    </summary>
-    
-      <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
-    
-    
-      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
-    
-  </entry>
-  
-  <entry>
     <title>laravel安装</title>
     <link href="http://martist.cn/2018/10/10/LARAVEL/%E5%AE%89%E8%A3%85laravel/"/>
     <id>http://martist.cn/2018/10/10/LARAVEL/安装laravel/</id>
@@ -453,13 +455,13 @@
   </entry>
   
   <entry>
-    <title>MacOS 重装PHP</title>
-    <link href="http://martist.cn/2018/09/27/MACBOOK/macOS%E9%87%8D%E8%A3%85PHP/"/>
-    <id>http://martist.cn/2018/09/27/MACBOOK/macOS重装PHP/</id>
-    <published>2018-09-26T16:00:00.000Z</published>
-    <updated>2019-01-15T13:31:51.279Z</updated>
+    <title>laravel+elastic笔记</title>
+    <link href="http://martist.cn/2018/10/10/LARAVEL/laravel+elastic%E7%AC%94%E8%AE%B0/"/>
+    <id>http://martist.cn/2018/10/10/LARAVEL/laravel+elastic笔记/</id>
+    <published>2018-10-09T16:00:00.000Z</published>
+    <updated>2018-11-01T03:21:25.343Z</updated>
     
-    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="安装Homebrew"><a href="#安装Homebrew" class="headerlink" title="安装Homebrew"></a>安装Homebrew</h2><p>/usr/bin/ruby -e “$(curl -fsSL <a href="https://raw.githubusercontent.com/Homebrew/install/master/install" target="_blank" rel="external">https://raw.githubusercontent.com/Homebrew/install/master/install</a>)”</p><pre><code>该方式会创建 /usr/local/* 等一系列文件夹, 熟悉Linux的用户一看就明白这个文件夹是做什么</code></pre><h2 id="安装php"><a href="#安装php" class="headerlink" title="安装php"></a>安装php</h2><p>由于Homebrew仓库的更新, 将homebrew/homebrew-php合并到homebrew/core中, 同时也去掉了php各种扩展包. 甚至php安装包的名称也做了统一修改</p><p>以php7.1为例, 以前的安装方式是</p><p>  brew install php71</p><p>而现在需要按照brew的统一包名称规范</p><p>  brew install php@7.1</p><h2 id="不能用brew傻瓜安装redis扩展"><a href="#不能用brew傻瓜安装redis扩展" class="headerlink" title="不能用brew傻瓜安装redis扩展"></a>不能用brew傻瓜安装redis扩展</h2><p>2018年homebrew-php已经弃用了</p><h2 id="失效命令"><a href="#失效命令" class="headerlink" title="失效命令"></a>失效命令</h2><p>  brew tap homebrew/homebrew-php<br>  brew install php71-redis</p><p>选择pecl安装或者源码安装</p><h2 id="源码安装php-redis"><a href="#源码安装php-redis" class="headerlink" title="源码安装php-redis"></a>源码安装php-redis</h2><p>phpredis下载地址</p><p>  <a href="https://github.com/phpredis/phpredis" target="_blank" rel="external">https://github.com/phpredis/phpredis</a></p><p>解压并进入源码包</p><p>  unzip phpredis-develop.zip<br>  cd phpredis-develop</p><p>生成configure配置文件:</p><p>  sudo /usr/local/Cellar/php/7.2.11/bin/phpize</p><p>编译安装:</p><p>  sudo ./configure –with-php-config=/usr/local/Cellar/php/7.2.11/bin/php-config </p><p>  sudo make &amp;&amp; make install</p><p>配置php.ini,添加扩展：</p><p>  extension=redis.so</p><p>重启php</p><p>查看fpm是否存在</p><p>  ps aux|grep fpm</p><p>关闭</p><p>  sudo pkill php-fpm</p><p>启动</p><p>  sudo /usr/local/opt/php@7.2/sbin/php-fpm -D</p><h1 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h1><p>  php -m|grep redis</p><h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p>  redis</p>]]></content>
+    <content type="html"><![CDATA[<p>：-} <a id="more"></a></p><h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><p>版本很重要<br>由点及面，先实践起来再学细节的原理和使用</p><h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><pre><code>laravel5.5框架+scout组件+elasticsearch6.3.0搜索引擎</code></pre><h3 id="辅助"><a href="#辅助" class="headerlink" title="辅助"></a>辅助</h3><pre><code>elasticsearch-head 查看集群数据可视化中文分词插件Ik</code></pre><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>laravel是一款现代化的php框架<br>es是搜索引擎<br>es-head是管理查看使用es的图形界面工具<br>scout是laravel一款优秀的组件</p><h2 id="安装流程"><a href="#安装流程" class="headerlink" title="安装流程"></a>安装流程</h2><h3 id="laravel"><a href="#laravel" class="headerlink" title="laravel"></a>laravel</h3><p>laravel安装器安装：</p><pre><code>laravel new larasearch</code></pre><p>配置env文件：</p><pre><code>DB_CONNECTION=mysqlDB_HOST=127.0.0.1DB_PORT=3306DB_DATABASE=julyeduDB_USERNAME=rootDB_PASSWORD=123456</code></pre><p>这时php artisan命令启动，访问127.0.0.1:8000 就可以看到项目首页了。</p><h3 id="es"><a href="#es" class="headerlink" title="es"></a>es</h3><p>在es的官网挑选一个合适的版本，建议选择6.3.0，以便配套使用IK和ES-head。</p><pre><code># 下载https://www.elastic.co/downloads/past-releases</code></pre><h3 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h3><p>1.直接plugin命令安装</p><pre><code>./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip</code></pre><p>2.配置修改ik的版本适应es6.3.1,修改文件plugin-descriptor.properties，config文件夹下的配置文件主要是IK本身暂时不需要修改，这个properties文件主要是和es交互，修改其es版本和jdk版本号</p><pre><code># 修改elasticsearch-head/plugin-descriptor.properties文件description=head - A web front end for an elastic search clusterversion=6.3.1site=truename=analysis-ikclassname=org.elasticsearch.plugin.analysis.ik.AnalysisIkPluginjava.version=1.8elasticsearch.version=6.3.1 </code></pre><h3 id="es-head"><a href="#es-head" class="headerlink" title="es-head"></a>es-head</h3><p>head是基于node开发的，所以需要先安装node<br>node下载地址：<a href="http://cdn.npm.taobao.org/dis" target="_blank" rel="external">http://cdn.npm.taobao.org/dis</a>…</p><p>在电脑任意一个目录下（不要在elasticsearch目录里面），执行一下命令，</p><pre><code>git clone https://github.com/mobz/elasticsearch-head.git  cd elasticsearch-head/  npm install  </code></pre><p>为了es-head可以访问es，所以需要配置跨域：</p><p>修改两个地方：</p><pre><code>#elasticsearch-headGruntfile.jsconnect: {    server: {        options: {            port: 9100,            hostname: &apos;*&apos;,            base: &apos;.&apos;,            keepalive: true        }    }}#elasticsearch-5.6.0configelasticsearch.ymlhttp.cors.enabled: true  http.cors.allow-origin: &quot;*&quot;  </code></pre><h2 id="scout"><a href="#scout" class="headerlink" title="scout"></a>scout</h2><p>通过composer安装依赖包</p><pre><code>composer require laravel/scoutcomposer require tamayo/laravel-scout-elastic</code></pre><p>基本配置</p><p>在config/app.php文件中的providers数组中加入服务提供者</p><pre><code>// config/app.php&apos;providers&apos; =&gt; [    // ...    Laravel\Scout\ScoutServiceProvider::class,    // ...    ScoutEngines\Elasticsearch\ElasticsearchProvider::class,],</code></pre><p>使用以下命令生成scout配置文件</p><pre><code>php artisan vendor:publish --provider=&quot;Laravel\Scout\ScoutServiceProvider&quot;</code></pre><p>在config/scout.php中加入elasticsearch的配置</p><pre><code>&apos;elasticsearch&apos; =&gt; [    &apos;index&apos; =&gt; env(&apos;ELASTICSEARCH_INDEX&apos;, &apos;laravel&apos;),    &apos;hosts&apos; =&gt; [        env(&apos;ELASTICSEARCH_HOST&apos;, &apos;http://localhost:9200&apos;),    ],],</code></pre><p>然后我们打开.env文件，加入scout和elasticsearch的配置</p><pre><code># scout配置SCOUT_DRIVER=elasticsearchSCOUT_PREFIX=# elasticsearch 配置ELASTICSEARCH_INDEX=esdemo# elasticsearch 地址ELASTICSEARCH_HOST=http://172.30.6.1:9200</code></pre><h3 id="相关文档地址"><a href="#相关文档地址" class="headerlink" title="相关文档地址"></a>相关文档地址</h3><p>laravel scout中文文档地址：<a href="https://laravel-china.org/docs/laravel/5.3/scout/1205" target="_blank" rel="external">https://laravel-china.org/docs/laravel/5.3/scout/1205</a><br>es中文文档地址：<a href="https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html" target="_blank" rel="external">https://www.elastic.co/guide/cn/elasticsearch/php/current/_configuration.html</a><br>es6.3.0地址：<a href="https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0" target="_blank" rel="external">https://www.elastic.co/downloads/past-releases/elasticsearch-6-3-0</a><br>IK github地址：<a href="https://github.com/medcl/elasticsearch-analysis-ik" target="_blank" rel="external">https://github.com/medcl/elasticsearch-analysis-ik</a></p><h2 id="启动并查看"><a href="#启动并查看" class="headerlink" title="启动并查看"></a>启动并查看</h2><p>启动es</p><pre><code>./bin/elasticsearch</code></pre><p>地址</p><pre><code>http://127.0.0.1:9200/</code></pre><p>启动es-head</p><pre><code>npm run start</code></pre><p>地址</p><pre><code>http://127.0.0.1:9100</code></pre><p>启动laravel项目</p><pre><code>php artisan serve</code></pre><p>地址</p><pre><code>http://127.0.0.1:8000/es/s?page=1</code></pre><h2 id="测试执行"><a href="#测试执行" class="headerlink" title="测试执行"></a>测试执行</h2><h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><h4 id="创建模型并填充数据"><a href="#创建模型并填充数据" class="headerlink" title="创建模型并填充数据"></a>创建模型并填充数据</h4><p>创建模型app/Ques.php，为方便后续测试，请先建表和填充数据，可以手动使用sql语句添加数据，也使用laravel自动的数据迁移和填充。</p><pre><code>&lt;?phpnamespace App;use Illuminate\Database\Eloquent\Model;use Laravel\Scout\Searchable;/** * 学生模型 */class Ques extends Model{     use Searchable;    //定义关联的表名，不定义的话默认此模型关联的表为 模型名s (users)    protected $table = &apos;aws_ques_tb_0&apos;;    /******字段相关*******/    #定义主键字段名，默认是id    protected $primaryKey = &apos;id&apos;;    #定义字段白名单，允许操作表中的哪些字段    // protected $fillable = [&apos;ques&apos;,&apos;name&apos;];    #定义字段黑名单，不允许操作表中哪些字段    protected $guarded = [];    //1、使用model::create([])等方法直接对orm对象操作使，必须定义$guarded或者$fillable    //2、使用$m = new model();然后$m-&gt;save()的方式不需要定义    //3、简便的方式就是定义$fillable = [];    #定义隐藏的字段    protected $hidden = [];    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;ques_index&apos;;    }    /**     * 索引名称     *     * @return string     */    public function searchableAs()    {        return &apos;Quess_index&apos;;    }    /**     * 可搜索的数据索引     *     * @return array     */    public function toSearchableArray()    {        $array = $this-&gt;toArray();        // Customize array...        return $array;    }}</code></pre><h4 id="把所有现有记录导入到搜索索引里"><a href="#把所有现有记录导入到搜索索引里" class="headerlink" title="把所有现有记录导入到搜索索引里"></a>把所有现有记录导入到搜索索引里</h4><pre><code>php artisan scout:import &quot;App\Ques&quot;</code></pre><h4 id="导入过程"><a href="#导入过程" class="headerlink" title="导入过程"></a>导入过程</h4><pre><code>Imported [App\Ques] models up to ID: 500Imported [App\Ques] models up to ID: 1000Imported [App\Ques] models up to ID: 1500Imported [App\Ques] models up to ID: 2000All [App\Ques] records have been imported.</code></pre><p>我们访问es，是不是已经有了刚刚导入的Quess_index索引数据。</p><pre><code>http://172.30.6.1:9200/esdemo/Ques_index/_search</code></pre><h4 id="试试搜索"><a href="#试试搜索" class="headerlink" title="试试搜索"></a>试试搜索</h4><p>在route/web.php中写个demo，试试看；</p><pre><code>Route::get(&apos;/search/{content}&apos;, function ($content) {    //直接输出数组data，限制1000条    // $res = App\Ques::search($content)-&gt;take(1000)-&gt;get()-&gt;toArray();    // 分页请求  http://127.0.0.1:8000/es/机器学习?page=1    $res = App\Ques::search($content)-&gt;paginate(100)-&gt;toArray();    dd($res);});</code></pre><h4 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h4><p>输出：</p><pre><code>array:12 [▼  &quot;current_page&quot; =&gt; 1  &quot;data&quot; =&gt; array:9 [▼    0 =&gt; array:9 [▼      &quot;id&quot; =&gt; 922      &quot;ques&quot; =&gt; &quot;哪些机器学习算法不需要做归一化处理？&quot;      &quot;analysis&quot; =&gt; &quot;&quot;&quot;        概率模型不需要归一化，因为它们不关心变量的值，而是关心变量的分布和变量之间的条件概率，如决策树、rf。而像adaboost、svm、lr、KNN、KMeans之类的最优化问题就需要归一化。\r\n        我理解归一化和标准化主要是为了使计算更方便 比如两个变量的量纲不同 可能一个的数值远大于另一个那么他们同时作为变量的时候 可能会造成数值计算的问题，比如说求矩阵的逆可能很不精确 或者梯度下降法的收敛比较困难，还有如果需要计算欧式距离的话可能 量纲也需要调整 所以我估计lr 和 knn 保准话一下应该有好处。至于其他的算 ▶        一般我习惯说树形模型，这里说的概率模型可能是差不多的意思。引用自@寒小阳        &quot;&quot;&quot;      &quot;type_id&quot; =&gt; 3      &quot;diff&quot; =&gt; 0      &quot;isdelete&quot; =&gt; 1      &quot;created_time&quot; =&gt; &quot;2017-12-10 18:57:13&quot;      &quot;update_time&quot; =&gt; &quot;0000-00-00 00:00:00&quot;      &quot;is_show&quot; =&gt; 1    ]    1 =&gt; array:9 [▶]    2 =&gt; array:9 [▶]    3 =&gt; array:9 [▶]    4 =&gt; array:9 [▶]    5 =&gt; array:9 [▶]    6 =&gt; array:9 [▶]    7 =&gt; array:9 [▶]    8 =&gt; array:9 [▶]  ]  &quot;first_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;from&quot; =&gt; 1  &quot;last_page&quot; =&gt; 1  &quot;last_page_url&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?query=%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&amp;page=1&quot;  &quot;next_page_url&quot; =&gt; null  &quot;path&quot; =&gt; &quot;http://127.0.0.1:8000/search/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0&quot;  &quot;per_page&quot; =&gt; 100  &quot;prev_page_url&quot; =&gt; null  &quot;to&quot; =&gt; 9  &quot;total&quot; =&gt; 9]</code></pre><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>PHP使用elasticsearch搜索安装及分词方法【<a href="https://segmentfault.com/a/1190000011663833】" target="_blank" rel="external">https://segmentfault.com/a/1190000011663833】</a></p><p>Laravel中利用Scout集成Elasticsearch搜索引擎【<a href="https://segmentfault.com/a/1190000014230010】" target="_blank" rel="external">https://segmentfault.com/a/1190000014230010】</a></p><p>全文搜索引擎 Elasticsearch 入门教程【<a href="http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2017/08/elasticsearch.html】</a></p><p>laravel使用ElasticSearch进行搜索【<a href="https://blog.csdn.net/lingchen__/article/details/77884753】" target="_blank" rel="external">https://blog.csdn.net/lingchen__/article/details/77884753】</a></p><p>elasticsearch6.3.1+IK插件安装部署全攻略【<a href="https://blog.csdn.net/superheister/article/details/81296451】" target="_blank" rel="external">https://blog.csdn.net/superheister/article/details/81296451】</a></p>]]></content>
     
     <summary type="html">
     
@@ -467,12 +469,10 @@
     
     </summary>
     
-      <category term="Mac" scheme="http://martist.cn/categories/Mac/"/>
+      <category term="laravel" scheme="http://martist.cn/categories/laravel/"/>
     
     
-      <category term="php" scheme="http://martist.cn/tags/php/"/>
-    
-      <category term="Mac" scheme="http://martist.cn/tags/Mac/"/>
+      <category term="laravel" scheme="http://martist.cn/tags/laravel/"/>
     
   </entry>
   
