@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -122,7 +122,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2017/12/21/LINUX/webhook/" data-id="cjtcpn6d6003ey16u0zldxwgt" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2017/12/21/LINUX/webhook/" data-id="ckc0jnal7002whc6utl8epcb2" class="article-share-link">分享</a>
       
       
       
@@ -136,7 +136,7 @@
 <nav id="article-nav">
   
     <a href="/2017/12/21/架构/长轮询/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
           长轮询
@@ -146,7 +146,7 @@
   
   
     <a href="/2017/12/07/框架/php的自动加载/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">php框架自动加载的实现</div>
     </a>
   
@@ -183,7 +183,7 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前期准备"><span class="toc-number">1.</span> <span class="toc-text">前期准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gitlab"><span class="toc-number">1.1.</span> <span class="toc-text">gitlab</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器"><span class="toc-number">1.2.</span> <span class="toc-text">服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#域名"><span class="toc-number">1.3.</span> <span class="toc-text">域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务端执行脚本（php，shell）"><span class="toc-number">1.4.</span> <span class="toc-text">服务端执行脚本（php，shell）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本文目的"><span class="toc-number">2.</span> <span class="toc-text">本文目的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理"><span class="toc-number">3.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php脚本"><span class="toc-number">4.</span> <span class="toc-text">php脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#shell脚本"><span class="toc-number">4.1.</span> <span class="toc-text">shell脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#权限问题"><span class="toc-number">5.</span> <span class="toc-text">权限问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置服务器git的用户和邮箱需要和gitlab的一致"><span class="toc-number">5.1.</span> <span class="toc-text">配置服务器git的用户和邮箱需要和gitlab的一致</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看nginx或者apache的执行用户"><span class="toc-number">5.2.</span> <span class="toc-text">查看nginx或者apache的执行用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建立用户目录"><span class="toc-number">5.3.</span> <span class="toc-text">建立用户目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署公钥"><span class="toc-number">5.4.</span> <span class="toc-text">部署公钥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#将此公钥加入gitlab中的SSH-KEYS中"><span class="toc-number">5.5.</span> <span class="toc-text">将此公钥加入gitlab中的SSH KEYS中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置项目的文件夹用户与用户组为www"><span class="toc-number">5.6.</span> <span class="toc-text">设置项目的文件夹用户与用户组为www</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-number">6.</span> <span class="toc-text">测试</span></a></li></ol>
           </div>
@@ -214,11 +214,11 @@
   
   <div class="outer">
     <div id="footer-left">
-      &copy; 2014 - 2019 马闯&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>

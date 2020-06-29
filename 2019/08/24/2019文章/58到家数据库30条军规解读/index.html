@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>58到家数据库30条军规解读 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="58到家数据库30条军规解读">
+<meta property="og:url" content="http://martist.cn/2019/08/24/2019文章/58到家数据库30条军规解读/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-08-26T06:32:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="58到家数据库30条军规解读">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019文章/58到家数据库30条军规解读" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/24/2019文章/58到家数据库30条军规解读/" class="article-date">
+  <time datetime="2019-08-23T16:00:00.000Z" itemprop="datePublished">2019-08-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/mysql/">mysql</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      58到家数据库30条军规解读
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<p>军规适用场景：并发量大、数据量大的互联网业务</p>
+<p>军规：介绍内容</p>
+<p>解读：讲解原因，解读比军规更重要</p>
+<hr>
+<h2 id="一、基础规范"><a href="#一、基础规范" class="headerlink" title="一、基础规范"></a>一、基础规范</h2><h3 id="（1）必须使用InnoDB存储引擎"><a href="#（1）必须使用InnoDB存储引擎" class="headerlink" title="（1）必须使用InnoDB存储引擎"></a>（1）必须使用InnoDB存储引擎</h3><p>解读：支持事务、行级锁、并发性能更好、CPU及内存缓存页优化使得资源利用率更高</p>
+<h3 id="（2）必须使用UTF8字符集"><a href="#（2）必须使用UTF8字符集" class="headerlink" title="（2）必须使用UTF8字符集"></a>（2）必须使用UTF8字符集</h3><p>解读：万国码，无需转码，无乱码风险，节省空间</p>
+<h3 id="（3）数据表、数据字段必须加入中文注释"><a href="#（3）数据表、数据字段必须加入中文注释" class="headerlink" title="（3）数据表、数据字段必须加入中文注释"></a>（3）数据表、数据字段必须加入中文注释</h3><p>解读：N年后谁tm知道这个r1,r2,r3字段是干嘛的</p>
+<h3 id="（4）禁止使用存储过程、视图、触发器、Event"><a href="#（4）禁止使用存储过程、视图、触发器、Event" class="headerlink" title="（4）禁止使用存储过程、视图、触发器、Event"></a>（4）禁止使用存储过程、视图、触发器、Event</h3><p>解读：高并发大数据的互联网业务，架构设计思路是“解放数据库CPU，将计算转移到服务层”，并发量大的情况下，这些功能很可能将数据库拖死，业务逻辑放到服务层具备更好的扩展性，能够轻易实现“增机器就加性能”。数据库擅长存储与索引，CPU计算还是上移吧</p>
+<h3 id="（5）禁止存储大文件或者大照片"><a href="#（5）禁止存储大文件或者大照片" class="headerlink" title="（5）禁止存储大文件或者大照片"></a>（5）禁止存储大文件或者大照片</h3><p>解读：为何要让数据库做它不擅长的事情？大文件和照片存储在文件系统，数据库里存URI多好</p>
+<h2 id="二、命名规范"><a href="#二、命名规范" class="headerlink" title="二、命名规范"></a>二、命名规范</h2><h3 id="（6）只允许使用内网域名，而不是ip连接数据库"><a href="#（6）只允许使用内网域名，而不是ip连接数据库" class="headerlink" title="（6）只允许使用内网域名，而不是ip连接数据库"></a>（6）只允许使用内网域名，而不是ip连接数据库</h3><h3 id="（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范"><a href="#（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范" class="headerlink" title="（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范"></a>（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范</h3><p>业务名称：xxx</p>
+<p>线上环境：dj.xxx.db</p>
+<p>开发环境：dj.xxx.rdb</p>
+<p>测试环境：dj.xxx.tdb</p>
+<p>从库在名称后加-s标识，备库在名称后加-ss标识</p>
+<p>线上从库：dj.xxx-s.db</p>
+<p>线上备库：dj.xxx-sss.db</p>
+<h3 id="（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用"><a href="#（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用" class="headerlink" title="（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用"></a>（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用</h3><h3 id="（9）表名t-xxx，非唯一索引名idx-xxx，唯一索引名uniq-xxx"><a href="#（9）表名t-xxx，非唯一索引名idx-xxx，唯一索引名uniq-xxx" class="headerlink" title="（9）表名t_xxx，非唯一索引名idx_xxx，唯一索引名uniq_xxx"></a>（9）表名t_xxx，非唯一索引名idx_xxx，唯一索引名uniq_xxx</h3><h2 id="三、表设计规范"><a href="#三、表设计规范" class="headerlink" title="三、表设计规范"></a>三、表设计规范</h2><h3 id="（10）单实例表数目必须小于500"><a href="#（10）单实例表数目必须小于500" class="headerlink" title="（10）单实例表数目必须小于500"></a>（10）单实例表数目必须小于500</h3><h3 id="（11）单表列数目必须小于30"><a href="#（11）单表列数目必须小于30" class="headerlink" title="（11）单表列数目必须小于30"></a>（11）单表列数目必须小于30</h3><h3 id="（12）表必须有主键，例如自增主键"><a href="#（12）表必须有主键，例如自增主键" class="headerlink" title="（12）表必须有主键，例如自增主键"></a>（12）表必须有主键，例如自增主键</h3><p>解读：</p>
+<p>a）主键递增，数据行写入可以提高插入性能，可以避免page分裂，减少表碎片提升空间和内存的使用</p>
+<p>b）主键要选择较短的数据类型， Innodb引擎普通索引都会保存主键的值，较短的数据类型可以有效的减少索引的磁盘空间，提高索引的缓存效率</p>
+<p>c） 无主键的表删除，在row模式的主从架构，会导致备库夯住</p>
+<h3 id="（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制"><a href="#（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制" class="headerlink" title="（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制"></a>（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制</h3><p>解读：外键会导致表与表之间耦合，update与delete操作都会涉及相关联的表，十分影响sql 的性能，甚至会造成死锁。高并发情况下容易造成数据库性能，大数据高并发业务场景数据库使用以性能优先</p>
+<h2 id="四、字段设计规范"><a href="#四、字段设计规范" class="headerlink" title="四、字段设计规范"></a>四、字段设计规范</h2><h3 id="（14）必须把字段定义为NOT-NULL并且提供默认值"><a href="#（14）必须把字段定义为NOT-NULL并且提供默认值" class="headerlink" title="（14）必须把字段定义为NOT NULL并且提供默认值"></a>（14）必须把字段定义为NOT NULL并且提供默认值</h3><p>解读：</p>
+<p>a）null的列使索引/索引统计/值比较都更加复杂，对MySQL来说更难优化</p>
+<p>b）null 这种类型MySQL内部需要进行特殊处理，增加数据库处理记录的复杂性；同等条件下，表中有较多空字段的时候，数据库的处理性能会降低很多</p>
+<p>c）null值需要更多的存储空，无论是表还是索引中每行中的null的列都需要额外的空间来标识</p>
+<p>d）对null 的处理时候，只能采用is null或is not null，而不能采用=、in、&lt;、&lt;&gt;、!=、not in这些操作符号。如：where name!=’shenjian’，如果存在name为null值的记录，查询结果就不会包含name为null值的记录</p>
+<h3 id="（15）禁止使用TEXT、BLOB类型"><a href="#（15）禁止使用TEXT、BLOB类型" class="headerlink" title="（15）禁止使用TEXT、BLOB类型"></a>（15）禁止使用TEXT、BLOB类型</h3><p>解读：会浪费更多的磁盘和内存空间，非必要的大量的大字段查询会淘汰掉热数据，导致内存命中率急剧降低，影响数据库性能</p>
+<h3 id="（16）禁止使用小数存储货币"><a href="#（16）禁止使用小数存储货币" class="headerlink" title="（16）禁止使用小数存储货币"></a>（16）禁止使用小数存储货币</h3><p>解读：使用整数吧，小数容易导致钱对不上</p>
+<h3 id="（17）必须使用varchar-20-存储手机号"><a href="#（17）必须使用varchar-20-存储手机号" class="headerlink" title="（17）必须使用varchar(20)存储手机号"></a>（17）必须使用varchar(20)存储手机号</h3><p>解读：</p>
+<p>a）涉及到区号或者国家代号，可能出现+-()</p>
+<p>b）手机号会去做数学运算么？</p>
+<p>c）varchar可以支持模糊查询，例如：like“138%”</p>
+<h3 id="（18）禁止使用ENUM，可使用TINYINT代替"><a href="#（18）禁止使用ENUM，可使用TINYINT代替" class="headerlink" title="（18）禁止使用ENUM，可使用TINYINT代替"></a>（18）禁止使用ENUM，可使用TINYINT代替</h3><p>解读：</p>
+<p>a）增加新的ENUM值要做DDL操作</p>
+<p>b）ENUM的内部实际存储就是整数，你以为自己定义的是字符串？</p>
+<h2 id="五、索引设计规范"><a href="#五、索引设计规范" class="headerlink" title="五、索引设计规范"></a>五、索引设计规范</h2><h3 id="（19）单表索引建议控制在5个以内"><a href="#（19）单表索引建议控制在5个以内" class="headerlink" title="（19）单表索引建议控制在5个以内"></a>（19）单表索引建议控制在5个以内</h3><h3 id="（20）单索引字段数不允许超过5个"><a href="#（20）单索引字段数不允许超过5个" class="headerlink" title="（20）单索引字段数不允许超过5个"></a>（20）单索引字段数不允许超过5个</h3><p>解读：字段超过5个时，实际已经起不到有效过滤数据的作用了</p>
+<h3 id="（21）禁止在更新十分频繁、区分度不高的属性上建立索引"><a href="#（21）禁止在更新十分频繁、区分度不高的属性上建立索引" class="headerlink" title="（21）禁止在更新十分频繁、区分度不高的属性上建立索引"></a>（21）禁止在更新十分频繁、区分度不高的属性上建立索引</h3><p>解读：</p>
+<p>a）更新会变更B+树，更新频繁的字段建立索引会大大降低数据库性能</p>
+<p>b）“性别”这种区分度不大的属性，建立索引是没有什么意义的，不能有效过滤数据，性能与全表扫描类似</p>
+<h3 id="（22）建立组合索引，必须把区分度高的字段放在前面"><a href="#（22）建立组合索引，必须把区分度高的字段放在前面" class="headerlink" title="（22）建立组合索引，必须把区分度高的字段放在前面"></a>（22）建立组合索引，必须把区分度高的字段放在前面</h3><p>解读：能够更加有效的过滤数据</p>
+<h2 id="六、SQL使用规范"><a href="#六、SQL使用规范" class="headerlink" title="六、SQL使用规范"></a>六、SQL使用规范</h2><h3 id="（23）禁止使用SELECT-，只获取必要的字段，需要显示说明列属性"><a href="#（23）禁止使用SELECT-，只获取必要的字段，需要显示说明列属性" class="headerlink" title="（23）禁止使用SELECT *，只获取必要的字段，需要显示说明列属性"></a>（23）禁止使用SELECT *，只获取必要的字段，需要显示说明列属性</h3><p>解读：</p>
+<p>a）读取不需要的列会增加CPU、IO、NET消耗</p>
+<p>b）不能有效的利用覆盖索引</p>
+<p>c）使用SELECT * 容易在增加或者删除字段后出现程序BUG</p>
+<h3 id="（24）禁止使用INSERT-INTO-t-xxx-VALUES-xxx-，必须显示指定插入的列属性"><a href="#（24）禁止使用INSERT-INTO-t-xxx-VALUES-xxx-，必须显示指定插入的列属性" class="headerlink" title="（24）禁止使用INSERT INTO t_xxx VALUES(xxx)，必须显示指定插入的列属性"></a>（24）禁止使用INSERT INTO t_xxx VALUES(xxx)，必须显示指定插入的列属性</h3><p>解读：容易在增加或者删除字段后出现程序BUG</p>
+<h3 id="（25）禁止使用属性隐式转换"><a href="#（25）禁止使用属性隐式转换" class="headerlink" title="（25）禁止使用属性隐式转换"></a>（25）禁止使用属性隐式转换</h3><p>解读：SELECT uid FROM t_user WHERE phone=13812345678 会导致全表扫描，而不能命中phone索引，猜猜为什么？（这个线上问题不止出现过一次）</p>
+<h3 id="（26）禁止在WHERE条件的属性上使用函数或者表达式"><a href="#（26）禁止在WHERE条件的属性上使用函数或者表达式" class="headerlink" title="（26）禁止在WHERE条件的属性上使用函数或者表达式"></a>（26）禁止在WHERE条件的属性上使用函数或者表达式</h3><p>解读：SELECT uid FROM t_user WHERE from_unixtime(day)&gt;=’2017-02-15’ 会导致全表扫描</p>
+<p>正确的写法是：SELECT uid FROM t_user WHERE day&gt;= unix_timestamp(‘2017-02-15 00:00:00’)</p>
+<h3 id="（27）禁止负向查询，以及-开头的模糊查询"><a href="#（27）禁止负向查询，以及-开头的模糊查询" class="headerlink" title="（27）禁止负向查询，以及%开头的模糊查询"></a>（27）禁止负向查询，以及%开头的模糊查询</h3><p>解读：</p>
+<p>a）负向查询条件：NOT、!=、&lt;&gt;、!&lt;、!&gt;、NOT IN、NOT LIKE等，会导致全表扫描</p>
+<p>b）%开头的模糊查询，会导致全表扫描</p>
+<h3 id="（28）禁止大表使用JOIN查询，禁止大表使用子查询"><a href="#（28）禁止大表使用JOIN查询，禁止大表使用子查询" class="headerlink" title="（28）禁止大表使用JOIN查询，禁止大表使用子查询"></a>（28）禁止大表使用JOIN查询，禁止大表使用子查询</h3><p>解读：会产生临时表，消耗较多内存与CPU，极大影响数据库性能</p>
+<h3 id="（29）禁止使用OR条件，必须改为IN查询"><a href="#（29）禁止使用OR条件，必须改为IN查询" class="headerlink" title="（29）禁止使用OR条件，必须改为IN查询"></a>（29）禁止使用OR条件，必须改为IN查询</h3><p>解读：旧版本Mysql的OR查询是不能命中索引的，即使能命中索引，为何要让数据库耗费更多的CPU帮助实施查询优化呢？</p>
+<h3 id="（30）应用程序必须捕获SQL异常，并有相应处理"><a href="#（30）应用程序必须捕获SQL异常，并有相应处理" class="headerlink" title="（30）应用程序必须捕获SQL异常，并有相应处理"></a>（30）应用程序必须捕获SQL异常，并有相应处理</h3><p>总结：大数据量高并发的互联网业务，极大影响数据库性能的都不让用，不让用哟。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2019/08/24/2019文章/58到家数据库30条军规解读/" data-id="ckc0jnanf009dhc6uqn6gfut9" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/08/24/2019文章/nginx的常用运维知识点/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          nginx的常用运维知识点
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/08/24/2019文章/如何设计好的接口/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">如何设计好的接口（Google分享）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2019/08/24/2019文章/58到家数据库30条军规解读/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、基础规范"><span class="toc-number">1.</span> <span class="toc-text">一、基础规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（1）必须使用InnoDB存储引擎"><span class="toc-number">1.1.</span> <span class="toc-text">（1）必须使用InnoDB存储引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（2）必须使用UTF8字符集"><span class="toc-number">1.2.</span> <span class="toc-text">（2）必须使用UTF8字符集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（3）数据表、数据字段必须加入中文注释"><span class="toc-number">1.3.</span> <span class="toc-text">（3）数据表、数据字段必须加入中文注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（4）禁止使用存储过程、视图、触发器、Event"><span class="toc-number">1.4.</span> <span class="toc-text">（4）禁止使用存储过程、视图、触发器、Event</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（5）禁止存储大文件或者大照片"><span class="toc-number">1.5.</span> <span class="toc-text">（5）禁止存储大文件或者大照片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、命名规范"><span class="toc-number">2.</span> <span class="toc-text">二、命名规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（6）只允许使用内网域名，而不是ip连接数据库"><span class="toc-number">2.1.</span> <span class="toc-text">（6）只允许使用内网域名，而不是ip连接数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范"><span class="toc-number">2.2.</span> <span class="toc-text">（7）线上环境、开发环境、测试环境数据库内网域名遵循命名规范</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用"><span class="toc-number">2.3.</span> <span class="toc-text">（8）库名、表名、字段名：小写，下划线风格，不超过32个字符，必须见名知意，禁止拼音英文混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（9）表名t-xxx，非唯一索引名idx-xxx，唯一索引名uniq-xxx"><span class="toc-number">2.4.</span> <span class="toc-text">（9）表名t_xxx，非唯一索引名idx_xxx，唯一索引名uniq_xxx</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、表设计规范"><span class="toc-number">3.</span> <span class="toc-text">三、表设计规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（10）单实例表数目必须小于500"><span class="toc-number">3.1.</span> <span class="toc-text">（10）单实例表数目必须小于500</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（11）单表列数目必须小于30"><span class="toc-number">3.2.</span> <span class="toc-text">（11）单表列数目必须小于30</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（12）表必须有主键，例如自增主键"><span class="toc-number">3.3.</span> <span class="toc-text">（12）表必须有主键，例如自增主键</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制"><span class="toc-number">3.4.</span> <span class="toc-text">（13）禁止使用外键，如果有外键完整性约束，需要应用程序控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、字段设计规范"><span class="toc-number">4.</span> <span class="toc-text">四、字段设计规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（14）必须把字段定义为NOT-NULL并且提供默认值"><span class="toc-number">4.1.</span> <span class="toc-text">（14）必须把字段定义为NOT NULL并且提供默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（15）禁止使用TEXT、BLOB类型"><span class="toc-number">4.2.</span> <span class="toc-text">（15）禁止使用TEXT、BLOB类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（16）禁止使用小数存储货币"><span class="toc-number">4.3.</span> <span class="toc-text">（16）禁止使用小数存储货币</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（17）必须使用varchar-20-存储手机号"><span class="toc-number">4.4.</span> <span class="toc-text">（17）必须使用varchar(20)存储手机号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（18）禁止使用ENUM，可使用TINYINT代替"><span class="toc-number">4.5.</span> <span class="toc-text">（18）禁止使用ENUM，可使用TINYINT代替</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、索引设计规范"><span class="toc-number">5.</span> <span class="toc-text">五、索引设计规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（19）单表索引建议控制在5个以内"><span class="toc-number">5.1.</span> <span class="toc-text">（19）单表索引建议控制在5个以内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（20）单索引字段数不允许超过5个"><span class="toc-number">5.2.</span> <span class="toc-text">（20）单索引字段数不允许超过5个</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（21）禁止在更新十分频繁、区分度不高的属性上建立索引"><span class="toc-number">5.3.</span> <span class="toc-text">（21）禁止在更新十分频繁、区分度不高的属性上建立索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（22）建立组合索引，必须把区分度高的字段放在前面"><span class="toc-number">5.4.</span> <span class="toc-text">（22）建立组合索引，必须把区分度高的字段放在前面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、SQL使用规范"><span class="toc-number">6.</span> <span class="toc-text">六、SQL使用规范</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#（23）禁止使用SELECT-，只获取必要的字段，需要显示说明列属性"><span class="toc-number">6.1.</span> <span class="toc-text">（23）禁止使用SELECT *，只获取必要的字段，需要显示说明列属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（24）禁止使用INSERT-INTO-t-xxx-VALUES-xxx-，必须显示指定插入的列属性"><span class="toc-number">6.2.</span> <span class="toc-text">（24）禁止使用INSERT INTO t_xxx VALUES(xxx)，必须显示指定插入的列属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（25）禁止使用属性隐式转换"><span class="toc-number">6.3.</span> <span class="toc-text">（25）禁止使用属性隐式转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（26）禁止在WHERE条件的属性上使用函数或者表达式"><span class="toc-number">6.4.</span> <span class="toc-text">（26）禁止在WHERE条件的属性上使用函数或者表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（27）禁止负向查询，以及-开头的模糊查询"><span class="toc-number">6.5.</span> <span class="toc-text">（27）禁止负向查询，以及%开头的模糊查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（28）禁止大表使用JOIN查询，禁止大表使用子查询"><span class="toc-number">6.6.</span> <span class="toc-text">（28）禁止大表使用JOIN查询，禁止大表使用子查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（29）禁止使用OR条件，必须改为IN查询"><span class="toc-number">6.7.</span> <span class="toc-text">（29）禁止使用OR条件，必须改为IN查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（30）应用程序必须捕获SQL异常，并有相应处理"><span class="toc-number">6.8.</span> <span class="toc-text">（30）应用程序必须捕获SQL异常，并有相应处理</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>《和面试官抬杠系列》单机等于没有高可用么 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《和面试官抬杠系列》单机等于没有高可用么">
+<meta property="og:url" content="http://martist.cn/2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:image" content="https://cdn.learnku.com/uploads/images/202004/23/6600/id1wgYBf2m.png!large">
+<meta property="og:image" content="https://cdn.learnku.com/uploads/images/202004/23/6600/zZ41tBsiSs.png!large">
+<meta property="og:image" content="https://cdn.learnku.com/uploads/images/202004/23/6600/udOYCrsCJu.png!large">
+<meta property="og:updated_time" content="2020-05-09T04:09:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《和面试官抬杠系列》单机等于没有高可用么">
+<meta name="twitter:description" content="：-}">
+<meta name="twitter:image" content="https://cdn.learnku.com/uploads/images/202004/23/6600/id1wgYBf2m.png!large">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020文章/《和面试官抬杠系列》单机等于没有高可用么" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/" class="article-date">
+  <time datetime="2020-04-21T16:00:00.000Z" itemprop="datePublished">2020-04-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      《和面试官抬杠系列》单机等于没有高可用么
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="什么是高可用"><a href="#什么是高可用" class="headerlink" title="什么是高可用"></a>什么是高可用</h2><p>高可用，指系统的可用程度。没有100%的可用性。打个夸张的比方说，你的web服务部署的所有机房都停电了，那么系统就不能再提供服务。一般我们只需要做到4个9就已经很不错了，如下图:</p>
+<p><img src="https://cdn.learnku.com/uploads/images/202004/23/6600/id1wgYBf2m.png!large" alt="《和面试官抬杠系列》单机等于没有高可用么"></p>
+<h2 id="高可用的实现套路"><a href="#高可用的实现套路" class="headerlink" title="高可用的实现套路"></a>高可用的实现套路</h2><p>高可用性集群中的节点一般是一主一备，或者一主多备，通过备份提高整个系统可用性。<br>负载均衡集群一般是多主，每个节点都分担流量。</p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>单机对应的就是负载均衡下的多台机器。</p>
+<p>多台机器可以对服务进来的流量分摊，解决的问题是不让一台机器不可用，导致web服务终断或不可用，多台机器经常组成一个集群，来处理所有的负载。<br>相关软件：haproxy,lvs，nginx，这些软件提供对集群的管理，是集群的大门.</p>
+<h3 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h3><p>高可用 指整个系统高可用，也指主机的冗余接管。尽可能采取措施减少系统服务中断时间，进而提高业务程序持续对外提供服务的能力。</p>
+<h3 id="负载均衡和高可用的关系"><a href="#负载均衡和高可用的关系" class="headerlink" title="负载均衡和高可用的关系"></a>负载均衡和高可用的关系</h3><p>单台负载均衡器位于网络的最前端，它起着分流客户请求的作用，相当于整个网站或系统的入口，如果它出现故障，这个网站也会出现故障。所以，这时有一种方案，它能在短时间内将崩溃的负载均衡器接管过去，这也可称高可用。至于负载均衡器后端的Web集群、数据库集群、因为有负载均衡器的内部机制，即使其中的某一台或两台发生问题，也不会影响真个系统的使用。</p>
+<p>用得较多的负载均衡器硬件有F5 BIG-IP，软件有LVS,Nginx及HA-Proxy。高可用软件有Hearbeat和keepalived。成熟的Linux集群架构有LVX+Keepalived、Nginx+keepalived及DRBD+Hearbeat。</p>
+<h3 id="常见的高可用架构"><a href="#常见的高可用架构" class="headerlink" title="常见的高可用架构"></a>常见的高可用架构</h3><p><img src="https://cdn.learnku.com/uploads/images/202004/23/6600/zZ41tBsiSs.png!large" alt="《和面试官抬杠系列》单机等于没有高可用么"></p>
+<p>大多人理解的高可用就是单台机器挂掉了整个服务不会挂掉，所以写代码的时候使用集群的思想去写代码，比如做成无状态的服务，保证在集群使用的时候无状态，单机故障不影响服务，从而达到高可用的效果。</p>
+<p>首先，这种架构模式本身并没什么问题，而且也确实很好，有服务发现，有集群，单台机器挂掉了还有其他机器可使用，在搜索系统，推荐系统，广告系统，网站后台系统中都在大量使用。</p>
+<p>很多人接收到的信息是有了上图的那种架构，那么这个系统就变成了一个高可用的系统了。</p>
+<h2 id="所以，单机就不存在高可用？"><a href="#所以，单机就不存在高可用？" class="headerlink" title="所以，单机就不存在高可用？"></a>所以，单机就不存在高可用？</h2><blockquote>
+<p>一味追求集群架构，脱离了业务场景和团队配置的实际，进行的架构设计就是过度设计</p>
+</blockquote>
+<p>但实际上，上图的系统解决的主要是下面的问题。</p>
+<ul>
+<li>数据同步，公共配置这种少量被忽略的数据的在各个机器间的同步。</li>
+<li>服务发现，新增或者减少机器以后，让其他机器能感知得到有新节点加入或者有老节点下线了。</li>
+</ul>
+<p>高可用这种东西不是一个架构的模式能解决的，一个高可用的系统是代码级别解决的，不是靠几个开源模块能解决的。</p>
+<p>有些人总认为高可用系统有银弹，在各种论坛，会议上看到各种架构，而且基本上都用到了一些成熟的开源软件，所以觉得有了这些以后就可以是一个高可用的系统了，我有zookeeper，那么服务单机挂了，服务照常跑，但实际上然并卵，zookeeper解决的是外部不可控因素导致的机器挂了，比如机器硬盘坏了，网络断了，这种因素导致的服务挂了，zookeeper能解决，你代码出问题导致机器挂了，zookeeper下挂1000台机器也解决不了啊，一般情况下还是一挂全挂。</p>
+<p>比如一个分布式的搜索系统，索引分片了，所以有个集群，有50台机器，每个分片大概10台机器，并且机器可以动态增加减少，集群用zookeeper管理，这算高可用系统吗？这可是一个标准的搜索系统的高可用架构，也只能说，在代码优秀的前提下，这个系统高可用了，网络问题和机器硬件问题已经比较难搞挂整个集群了。但一旦代码有个小bug，或者索引数据生成的时候出现了点问题，一般情况下，集群就全挂了，谈何高可用。</p>
+<p>高可用没有银弹，你在各处看到的，听到的，学习到的各种高可用架构，他们只会告诉你这个系统架构多么牛逼，用几个框框框住某几个模块，然后告诉你，这个框框里的服务各种突发情况都能自适应，流量洪峰来了线性加机器就能解决，对你来说却是然并卵，他们没有告诉你他们的代码有多牛逼，并且只有在这个前提下才高可用的，想纯粹靠几个框框来架构出一个高可用的系统，那是PPT架构师。</p>
+<p>真正的高可用不用纠结架构设计，只需要代码的健壮，健壮的代码加上主备系统设计，不需要其他的，基本上就是一个高可用的系统了，银行的核心数据处理中心加上异地灾备就是这样子的，你敢说他不是高可用的？</p>
+<p>所以，写好代码吧，才能高可用，学习架构，更多的只是对提高系统全局性认识的一种补充，高可用的架构不存在，存在的只有高可用的代码。</p>
+<h2 id="高可用的根本在哪"><a href="#高可用的根本在哪" class="headerlink" title="高可用的根本在哪"></a>高可用的根本在哪</h2><p>优秀的代码就是一切高可用架构的基石，优秀的代码加上合理的架构就是高可用的架构，一个高可用的架构不是靠开源软件搭积木来得到的，成熟的开源软件解决的是把一部分本应该你写的代码变得更优秀。</p>
+<p>资金层面，与其做多服务器的所谓的高可用架构，不如把买多余的集群服务器的钱，花在购买读写更快的硬盘，更大内存和核心的cpu，服务器带宽，cdn加速服务，辅以一定的运维工具，即可保证服务的高可用。</p>
+<p>代码层面，不要出现一些低级的空指针问题，框架使用不当导致内存溢出的问题，以及接口响应超时等等问题，代码交付前，有针对性的做性能测试（并发，压力，执行效率测试），优秀的代码才是高可用的根本。</p>
+<p>架构层面，动静分离，消息队列异步去消化耗时耗内存的任务，redis缓存防止请求直接打到DB，同时处理好缓存穿透，击穿，雪崩的防御方案，如果觉得redis单机内存不够大，可以用redis2.0，开启VM功能，突破物理内存的限制，redis还能自己在内存保持热点数据。</p>
+<p>运维层面，用supervisor守护php-fpm，mysql等进程，对服务器和数据库服务做好cpu，硬盘空间等多个指标的预警，再者，单机的安全防御方面也相对好做一些。</p>
+<h2 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h2><p>一本写给phper的架构入门书，也可以通过微信扫码阅读。<br><a href="https://www.kancloud.cn/martist/micro_service" target="_blank" rel="external">https://www.kancloud.cn/martist/micro_service</a></p>
+<p><img src="https://cdn.learnku.com/uploads/images/202004/23/6600/udOYCrsCJu.png!large" alt="《和面试官抬杠系列》单机等于没有高可用么"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/" data-id="ckc0jnak10001hc6ucd0i43xo" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/23/2020文章/帮助 phper 理解 RPC 是怎么回事儿/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          帮助 phper 理解 RPC 是怎么回事儿
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/05/2020文章/git/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">总结git的一些高级用法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是高可用"><span class="toc-number">1.</span> <span class="toc-text">什么是高可用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高可用的实现套路"><span class="toc-number">2.</span> <span class="toc-text">高可用的实现套路</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡"><span class="toc-number">2.1.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#高可用"><span class="toc-number">2.2.</span> <span class="toc-text">高可用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡和高可用的关系"><span class="toc-number">2.3.</span> <span class="toc-text">负载均衡和高可用的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见的高可用架构"><span class="toc-number">2.4.</span> <span class="toc-text">常见的高可用架构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#所以，单机就不存在高可用？"><span class="toc-number">3.</span> <span class="toc-text">所以，单机就不存在高可用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高可用的根本在哪"><span class="toc-number">4.</span> <span class="toc-text">高可用的根本在哪</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分享"><span class="toc-number">5.</span> <span class="toc-text">分享</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

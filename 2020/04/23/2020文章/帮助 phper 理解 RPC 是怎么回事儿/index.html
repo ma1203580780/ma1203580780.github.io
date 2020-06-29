@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>帮助 phper 理解 RPC 是怎么回事儿 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="帮助 phper 理解 RPC 是怎么回事儿">
+<meta property="og:url" content="http://martist.cn/2020/04/23/2020文章/帮助 phper 理解 RPC 是怎么回事儿/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:image" content="http://martist.cn/2020/04/23/2020文章/帮助%20phper%20理解%20RPC%20是怎么回事儿/images/screenshot_1586854421991.png">
+<meta property="og:image" content="http://martist.cn/2020/04/23/2020文章/帮助%20phper%20理解%20RPC%20是怎么回事儿/images/screenshot_1586854499834.png">
+<meta property="og:updated_time" content="2020-05-09T04:09:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="帮助 phper 理解 RPC 是怎么回事儿">
+<meta name="twitter:description" content="：-}">
+<meta name="twitter:image" content="http://martist.cn/2020/04/23/2020文章/帮助%20phper%20理解%20RPC%20是怎么回事儿/images/screenshot_1586854421991.png">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020文章/帮助 phper 理解 RPC 是怎么回事儿" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/04/23/2020文章/帮助 phper 理解 RPC 是怎么回事儿/" class="article-date">
+  <time datetime="2020-04-22T16:00:00.000Z" itemprop="datePublished">2020-04-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      帮助 phper 理解 RPC 是怎么回事儿
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="1-什么是rpc"><a href="#1-什么是rpc" class="headerlink" title="1.什么是rpc"></a>1.什么是rpc</h2><p>RPC全称为Remote Procedure Call，翻译过来为“远程过程调用”。</p>
+<p>目前，主流的平台中都支持各种远程调用技术，以满足分布式系统架构中不同的系统之间的远程通信和相互调用。远程调用的应用场景极其广泛，实现的方式也各式各样。</p>
+<h2 id="2-从通信协议的层面"><a href="#2-从通信协议的层面" class="headerlink" title="2.从通信协议的层面"></a>2.从通信协议的层面</h2><p>基于HTTP协议的（例如基于文本的SOAP（XML）、Rest（JSON），基于二进制Hessian（Binary））</p>
+<p>基于TCP协议的（通常会借助Mina、Netty等高性能网络框架）</p>
+<h1 id="RPC-远程过程调用-是什么"><a href="#RPC-远程过程调用-是什么" class="headerlink" title="RPC(远程过程调用)是什么"></a>RPC(远程过程调用)是什么</h1><ul>
+<li><p>简单的说，RPC就是从一台机器（客户端）上通过参数传递的方式调用另一台机器（服务器）上的一个函数或方法（可以统称为服务）并得到返回的结果。</p>
+</li>
+<li><p>RPC 会隐藏底层的通讯细节（不需要直接处理Socket通讯或Http通讯）</p>
+</li>
+<li><p>RPC 是一个请求响应模型。客户端发起请求，服务器返回响应（类似于Http的工作方式）</p>
+</li>
+<li><p>RPC 在使用形式上像调用本地函数（或方法）一样去调用远程的函数（或方法）。</p>
+</li>
+</ul>
+<h2 id="远程过程调用发展历程"><a href="#远程过程调用发展历程" class="headerlink" title="远程过程调用发展历程"></a>远程过程调用发展历程</h2><ul>
+<li><p>ONC RPC （开放网络计算的远程过程调用），OSF RPC（开放软件基金会的远程过程调用）</p>
+</li>
+<li><p>CORBA（Common Object Request Broker Architecture公共对象请求代理体系结构）</p>
+</li>
+<li><p>DCOM（分布式组件对象模型），COM+</p>
+</li>
+<li><p>Java RMI</p>
+</li>
+<li><p>.NET Remoting</p>
+</li>
+<li><p>XML-RPC，SOAP，Web Service</p>
+</li>
+<li><p>PHPRPC，Hessian，JSON-RPC</p>
+</li>
+<li><p>Microsoft WCF，WebAPI</p>
+</li>
+<li><p>ZeroC Ice，Thrift，GRPC</p>
+</li>
+<li><p>Hprose</p>
+</li>
+</ul>
+<h2 id="早期的-RPC"><a href="#早期的-RPC" class="headerlink" title="早期的 RPC"></a>早期的 RPC</h2><ul>
+<li><p>第一代 RPC（ONC RPC，OSF RPC）不支持对象的传递。</p>
+</li>
+<li><p>CORBA 太复杂，各种不同实现不兼容，一般程序员也玩不转。</p>
+</li>
+<li><p>DCOM，COM+ 逃不出 Windows 的手掌心。</p>
+</li>
+<li><p>RMI 只能在 Java 里面玩。</p>
+</li>
+<li><p>.NET Remoting 只能在 .NET 平台上玩。</p>
+</li>
+</ul>
+<h2 id="XML-RPC，SOAP，WebService"><a href="#XML-RPC，SOAP，WebService" class="headerlink" title="XML-RPC，SOAP，WebService"></a>XML-RPC，SOAP，WebService</h2><ul>
+<li><p>冗余数据太多，处理速度太慢。</p>
+</li>
+<li><p>RPC 风格的 Web Service 跨语言性不佳，而 Document 风格的 Web Service 又太过难用。</p>
+</li>
+<li><p>Web Service 没有解决用户的真正问题，只是把一个问题变成了另一个问题。</p>
+</li>
+<li><p>Web Service 的规范太过复杂，以至于在 .NET 和 Java 平台以外没有真正好用的实现，甚至没有可用的实现。</p>
+</li>
+<li><p>跨语言跨平台只是 Web Service 的一个口号，虽然很多人迷信这一点，但事实上它并没有真正实现。</p>
+</li>
+</ul>
+<h2 id="PHPRPC"><a href="#PHPRPC" class="headerlink" title="PHPRPC"></a>PHPRPC</h2><ul>
+<li><p>基于 PHP 内置的序列化格式，在跨语言的类型映射上存在硬伤。</p>
+</li>
+<li><p>通讯上依赖于 HTTP 协议，没有其它底层通讯方式的选择。</p>
+</li>
+<li><p>内置的加密传输既是特点，也是缺点。</p>
+</li>
+<li><p>虽然比基于 XML 的 RPC 速度快，但还不是足够快。</p>
+</li>
+</ul>
+<h2 id="Hessian"><a href="#Hessian" class="headerlink" title="Hessian"></a>Hessian</h2><ul>
+<li><p>二进制的数据格式完全不具有可读性。</p>
+</li>
+<li><p>官方只提供了两个半语言的实现（Java，ActionScript 和不怎么完美的 Python 实现），其它语言的第三方实现良莠不齐。</p>
+</li>
+<li><p>支持的语言不够多，对 Web 前端的 JavaScript 完全无视。</p>
+</li>
+<li><p>虽然是动态 RPC，但动态性仍然欠佳。</p>
+</li>
+<li><p>虽然比基于 XML 的 RPC 速度快，但还不是足够快。</p>
+</li>
+</ul>
+<h2 id="JSON-RPC"><a href="#JSON-RPC" class="headerlink" title="JSON-RPC"></a>JSON-RPC</h2><ul>
+<li><p>JSON 具有文本可读性，且比 XML 更简洁。</p>
+</li>
+<li><p>JSON 受 JavaScript 语言子集的限制，可表示的数据类型不够多。</p>
+</li>
+<li><p>JSON 格式无法表示数据内的自引用，互引用和循环引用。</p>
+</li>
+<li><p>某些语言具有多种版本的实现，但在类型影射上没有统一标准，存在兼容性问题。</p>
+</li>
+<li><p>JSON-RPC 虽然有规范，但是却没有统一的实现。在不同语言中的各自实现存在兼容性问题，无法真正互通。</p>
+</li>
+</ul>
+<h2 id="Microsoft-WCF，WebAPI"><a href="#Microsoft-WCF，WebAPI" class="headerlink" title="Microsoft WCF，WebAPI"></a>Microsoft WCF，WebAPI</h2><ul>
+<li><p>它们是微软对已有技术的一个 .NET 平台上的统一封装，是对 .NET Remoting、WebService 和基于 JSON 、XML 等数据格式的 REST 风格的服务等技术的一个整合。</p>
+</li>
+<li><p>虽然号称可以在 .NET 平台以外来调用它的这些服务，但实际上跟在 .NET 平台内调用完全是两码事。它没有提供任何在其他平台的语言中可以使用的任何工具。</p>
+</li>
+</ul>
+<h2 id="ZeroC-Ice，Thrift，GRPC"><a href="#ZeroC-Ice，Thrift，GRPC" class="headerlink" title="ZeroC Ice，Thrift，GRPC"></a>ZeroC Ice，Thrift，GRPC</h2><ul>
+<li><p>初代 RPC 技术的跨语言面向对象的回归。</p>
+</li>
+<li><p>仍然需要通过中间语言来编写类型和接口定义。</p>
+</li>
+<li><p>仍然需要用代码生成器来将中间语言编写的类型和接口定义翻译成你所使用的编程语言的客户端和服务器端的占位程序（stub）。</p>
+</li>
+<li><p>你必须要基于生成的服务器代码来单独编写服务，而不能将已有代码直接作为服务发布。</p>
+</li>
+<li><p>你必须要用生成的客户端代码来调用服务，而没有其它更灵活的方式。</p>
+</li>
+<li><p>如果你的中间代码做了修改，以上所有步骤你都要至少重复一遍。</p>
+</li>
+</ul>
+<h2 id="Hprose"><a href="#Hprose" class="headerlink" title="Hprose"></a>Hprose</h2><ul>
+<li><p>无侵入式设计，不需要单独定义类型，不需要单独编写服务，已有代码可以直接发布为服务。</p>
+</li>
+<li><p>具有丰富的数据类型和完美的跨语言类型映射，支持自引用，互引用和循环引用数据。</p>
+</li>
+<li><p>支持众多传输方式，如 HTTP、TCP、Websocket 等。</p>
+</li>
+<li><p>客户端具有更灵活的调用方式，支持同步调用，异步调用，动态参数，可变参数，引用参数传递，多结果返回（Golang）等语言特征，Hprose 2.0 甚至支持推送。</p>
+</li>
+<li><p>具有良好的可扩展性，可以通过过滤器和中间件实现加密、压缩、缓存、代理等各种功能性扩展。</p>
+</li>
+<li><p>兼容的无差别跨语言调用</p>
+</li>
+<li><p>支持更多的常用语言和平台</p>
+</li>
+<li><p>支持浏览器端的跨域调用</p>
+</li>
+<li><p>没有中间语言，无需学习成本</p>
+</li>
+<li><p>性能卓越，使用简单</p>
+</li>
+</ul>
+<h2 id="RPC与Socket有什么区别？"><a href="#RPC与Socket有什么区别？" class="headerlink" title="RPC与Socket有什么区别？"></a>RPC与Socket有什么区别？</h2><p>两者都是调用远程的方法，都是client/server模式。</p>
+<p>RPC（远程过程调用）采用客户机/服务器模式实现两个进程之间相互通信。socket是RPC经常采用的通信手段之一，RPC是在Socket的基础上实现的，它比socket需要更多的网络和系统资源。除了Socket，RPC还有其他的通信方法，比如：http、操作系统自带的管道等技术来实现对于远程程序的调用。微软的Windows系统中，RPC就是采用命名管道进行通信。</p>
+<h2 id="RPC与REST有什么区别？"><a href="#RPC与REST有什么区别？" class="headerlink" title="RPC与REST有什么区别？"></a>RPC与REST有什么区别？</h2><p>通过了解RPC后，我们知道是RPC是client/server模式的，调用远程的方法，REST也是我们熟悉的一套API调用协议方法，它也是基于client/server模式的，调用远程的方法的，那他俩又有啥区别呢？</p>
+<p>REST API 和 RPC 都是在 Server端 把一个个函数封装成接口暴露出去，以供 Client端 调用，不过 REST API 是基于HTTP协议的，REST致力于通过http协议中的POST/GET/PUT/DELETE等方法和一个可读性强的URL来提供一个http请求。而 RPC 则可以不基于 HTTP协议</p>
+<p>因此，如果是后端两种语言互相调用，用 RPC 可以获得更好的性能（省去了 HTTP 报头等一系列东西），应该也更容易配置。如果是前端通过 AJAX 调用后端，那么用 REST API 的形式比较好（因为无论如何也避不开 HTTP 这道坎）。</p>
+<p>1、<strong>HTTP和RPC同一级别，还是被RPC包含？</strong></p>
+<p>2、<strong>Restful也属于RPC么？</strong></p>
+<p><img src="images/screenshot_1586854421991.png" alt=""></p>
+<p>上图是一个比较完整的关系图，这时我们发现HTTP（图中蓝色框）出现了两次。其中一个是和RPC并列的，都是跨应用调用方法的解决方案；另一个则是被RPC包含的，是RPC通信过程的可选协议之一。</p>
+<p>因此，<strong>第一个问题的答案是都对。看指的是哪一个蓝色框。</strong>从题主的提问看，既然题主在纠结这两者，应该是指与RPC并列的蓝色框。</p>
+<p>第二个问题是在问远程过程调用（红色框）是不是包含了Restful（黄色框），这种理解的关键在于对RPC的理解。</p>
+<p>RPC字面理解是远程过程调用，即在一个应用中调用另一个应用的方法。那Restful是满足的，通过它可以实现在一个应用中调用另一个应用的方法。</p>
+<p>但是，上述理解使得RPC的定义过于宽泛。RPC通常特指在一个应用中调用另一个应用的接口而实现的远程调用，即红色框所指的范围。这样，RPC是不包含Restful的。</p>
+<p>因此，<strong>第二个问题的答案是Restful不属于RPC，除非对RPC有着非常规的宽泛理解。</strong></p>
+<p>RPC的英文全称是Remote Procedure Call，翻译为中文叫“远程过程调用”。其中稍显晦涩的其实就是“过程”，过程其实就是方法。所以，可以把RPC理解为“远程方法调用”。</p>
+<p>要了解远程过程调用，那先理解过程调用。非常简单，如下图，就是调用一个方法。这太常见了，不多解释。</p>
+<p><img src="images/screenshot_1586854499834.png" alt=""></p>
+<p>而在分布式系统中，因为每个服务的边界都很小，很有可能调用别的服务提供的方法。这就出现了服务A调用服务B中方法的需求，即远程过程调用。</p>
+<p>要想让服务A调用服务B中的方法，最先想到的就是通过HTTP请求实现。是的，这是很常见的，例如服务B暴露Restful接口，然后让服务A调用它的接口。基于Restful的调用方式因为可读性好（服务B暴露出的是Restful接口，可读性当然好）而且HTTP请求可以通过各种防火墙，因此非常不错。</p>
+<p>然而，如前面所述，基于Restful的远程过程调用有着明显的缺点，主要是效率低、封装调用复杂。当存在大量的服务间调用时，这些缺点变得更为突出。</p>
+<p>服务A调用服务B的过程是应用间的内部过程，<strong>牺牲可读性提升效率、易用性是可取的</strong>。基于这种思路，RPC产生了。</p>
+<h2 id="通过hprose实现rpc"><a href="#通过hprose实现rpc" class="headerlink" title="通过hprose实现rpc"></a>通过hprose实现rpc</h2><p><strong>HPROSE</strong> 是 <em>High Performance Remote Object Service Engine</em> 的缩写，翻译成中文就是“高性能远程对象服务引擎”。</p>
+<p>它是一个先进的轻量级的跨语言跨平台面向对象的高性能远程动态通讯中间件。它不仅简单易用，而且功能强大。你只需要稍许的时间去学习，就能用它轻松构建跨语言跨平台的分布式应用系统了。</p>
+<p>Hprose 支持众多流行的编程语言，例如：</p>
+<ul>
+<li><p>AAuto Quicker</p>
+</li>
+<li><p>ActionScript</p>
+</li>
+<li><p>ASP</p>
+</li>
+<li><p>C++</p>
+</li>
+<li><p>Delphi/Free Pascal</p>
+</li>
+<li><p>dotNET(C#, Visual Basic…)</p>
+</li>
+<li><p>Golang</p>
+</li>
+<li><p>Java</p>
+</li>
+<li><p>JavaScript</p>
+</li>
+<li><p>Node.js</p>
+</li>
+<li><p>Objective-C</p>
+</li>
+<li><p>Perl</p>
+</li>
+<li><p>PHP</p>
+</li>
+<li><p>Python</p>
+</li>
+<li><p>Ruby</p>
+</li>
+</ul>
+<p>通过 Hprose，你就可以在这些语言之间方便高效的实现互通了。</p>
+<h2 id="基础实现"><a href="#基础实现" class="headerlink" title="基础实现"></a>基础实现</h2><p>在同一个文件夹下，执行一下操作，分别是拉取组建的命令，创建两个文件和执行php文件。</p>
+<p>拉取hprose组件</p>
+<p>composer require hprose/hprose</p>
+<p>建立server.php</p>
+<p>&lt;?php</p>
+<p>require_once “./vendor/autoload.php”;</p>
+<p>use Hprose\Socket\Server;</p>
+<p>function hello($name) {</p>
+<p>return “Hello $name!”;</p>
+<p>}</p>
+<p>$server = new Server(“tcp://0.0.0.0:1314”);</p>
+<p>$server-&gt;setErrorTypes(E_ALL);</p>
+<p>$server-&gt;setDebugEnabled();</p>
+<p>$server-&gt;addFunction(‘hello’);</p>
+<p>$server-&gt;start();</p>
+<p>建立client.php</p>
+<p>&lt;?php</p>
+<p>require_once “./vendor/autoload.php”;</p>
+<p>use \Hprose\Future;</p>
+<p>use \Hprose\Socket\Client;</p>
+<p>$test = new Client(“tcp://127.0.0.1:1314”);</p>
+<p>$test-&gt;fullDuplex = true;</p>
+<p>Future\co(function() use ($test) {</p>
+<p>try {</p>
+<p>var_dump((yield $test-&gt;hello(“yield world1”)));</p>
+<p>var_dump((yield $test-&gt;hello(“yield world2”)));</p>
+<p>var_dump((yield $test-&gt;hello(“yield world3”)));</p>
+<p>var_dump((yield $test-&gt;hello(“yield world4”)));</p>
+<p>var_dump((yield $test-&gt;hello(“yield world5”)));</p>
+<p>var_dump((yield $test-&gt;hello(“yield world6”)));</p>
+<p>}</p>
+<p>catch (\Exception $e) {</p>
+<p>echo ($e);</p>
+<p>}</p>
+<p>});</p>
+<p>执行</p>
+<p>php server.php</p>
+<p>php client.php</p>
+<p>结果</p>
+<p>string(19) “Hello yield world1!”</p>
+<p>string(19) “Hello yield world2!”</p>
+<p>string(19) “Hello yield world3!”</p>
+<p>string(19) “Hello yield world4!”</p>
+<p>string(19) “Hello yield world5!”</p>
+<p>string(19) “Hello yield world6!”</p>
+<p>可继续学习：</p>
+<p><a href="https://github.com/hprose/hprose-php/wiki" target="_blank" rel="external">Hprose for PHP 用户手册</a></p>
+<p>本文摘自：<br><a href="https://www.kancloud.cn/martist/micro_service" target="_blank" rel="external">https://www.kancloud.cn/martist/micro_service</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2020/04/23/2020文章/帮助 phper 理解 RPC 是怎么回事儿/" data-id="ckc0jnak50004hc6ulg77xptm" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">《和面试官抬杠系列》单机等于没有高可用么</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2020/04/23/2020文章/帮助 phper 理解 RPC 是怎么回事儿/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-什么是rpc"><span class="toc-number">1.</span> <span class="toc-text">1.什么是rpc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-从通信协议的层面"><span class="toc-number">2.</span> <span class="toc-text">2.从通信协议的层面</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RPC-远程过程调用-是什么"><span class="toc-number"></span> <span class="toc-text">RPC(远程过程调用)是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#远程过程调用发展历程"><span class="toc-number">1.</span> <span class="toc-text">远程过程调用发展历程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#早期的-RPC"><span class="toc-number">2.</span> <span class="toc-text">早期的 RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XML-RPC，SOAP，WebService"><span class="toc-number">3.</span> <span class="toc-text">XML-RPC，SOAP，WebService</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHPRPC"><span class="toc-number">4.</span> <span class="toc-text">PHPRPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hessian"><span class="toc-number">5.</span> <span class="toc-text">Hessian</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JSON-RPC"><span class="toc-number">6.</span> <span class="toc-text">JSON-RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-WCF，WebAPI"><span class="toc-number">7.</span> <span class="toc-text">Microsoft WCF，WebAPI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZeroC-Ice，Thrift，GRPC"><span class="toc-number">8.</span> <span class="toc-text">ZeroC Ice，Thrift，GRPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hprose"><span class="toc-number">9.</span> <span class="toc-text">Hprose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC与Socket有什么区别？"><span class="toc-number">10.</span> <span class="toc-text">RPC与Socket有什么区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC与REST有什么区别？"><span class="toc-number">11.</span> <span class="toc-text">RPC与REST有什么区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过hprose实现rpc"><span class="toc-number">12.</span> <span class="toc-text">通过hprose实现rpc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基础实现"><span class="toc-number">13.</span> <span class="toc-text">基础实现</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

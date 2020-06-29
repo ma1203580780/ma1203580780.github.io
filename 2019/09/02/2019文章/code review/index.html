@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Code Review | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="web,http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Code Review">
+<meta property="og:url" content="http://martist.cn/2019/09/02/2019文章/code review/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-09-17T01:33:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Code Review">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019文章/code review" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/02/2019文章/code review/" class="article-date">
+  <time datetime="2019-09-01T16:00:00.000Z" itemprop="datePublished">2019-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Code Review
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h2><p>Code Review做得好的是一些比较偏技术的团队，而偏业务的技术团队基本上没有看到Code Review的记录。在业务团队不仅没有Code Review，而且认为Code Review没用，因为：</p>
+<pre><code>1）工期压得太紧，业务应用开发忙的跟狗一样，时间连coding都不够，以上线为目的，
+2）需求老变，代码的生命周期太短。所以，写好的代码没有任何意义，烂就烂吧，反正与绩效无关。
+3），而且业务逻辑变化快，通用性差，code review的成本要比底层高。
+4）Code Review是一种教条，意义不大，有测试，只要不出错，就可以了。
+5）现在的主要矛盾是倒排出来的工期和不靠谱的程序员之间的矛盾，我认为cr不是解决这个问题的银弹。不从实际情况出发光打正义的嘴炮实在太过于自慰了 。
+</code></pre><h2 id="工程师文化"><a href="#工程师文化" class="headerlink" title="工程师文化"></a>工程师文化</h2><p>Code Review没用? 我心里非常不认同这样的观点，我觉得我是程序员，我是工程师，就像医生一样，不是把病人医好就好了，还要对病人的长期健康负责。对于常见病，要很快地医好病人很简单，下猛药，大量使用抗生素，好得飞快。但大家都知道，这明显是“饮鸩止渴”、“竭泽而渔”的做法。医生需要有责任心和医德，我也觉得程序员工程师也要有相应的责任心和相应的修养。东西交给我我必须要负责，我觉得这种负责和修养不是”做出来“就了事了，而是要到“做漂亮”这个级别，这就是“山寨”和“工业”的差别。而只以“做出来”为目的标准，我只能以为，这样的做法只不过是“按部就班”的堆砌代码罢了，和劳动密集型的“装配生产线”和“砌砖头”没有什么差别，在这种环境里呆着还不如离开。</p>
+<h2 id="技术团队和业务团队的矛盾"><a href="#技术团队和业务团队的矛盾" class="headerlink" title="技术团队和业务团队的矛盾"></a>技术团队和业务团队的矛盾</h2><p>我们可以看到，上面观点其实和Code Review没有太多关系，其实是在抱怨另外的问题。这些观点其实是技术团队和业务团队的矛盾，但不知道为什么强加给了我的“Code Review很重要”的这个观点，然后这些观点反过来冲击“Code Reivew”，并说“Code Review无用”。这种讨论问题的方式在很常见，你说A，我说B，本来A、B是两件事，但就是要混为一谈，然后似是而非的用B来证明你的A观点是错的。（也许，这些工程师/架构师心存怨气，需要一个发泄的通道）</p>
+<p>我觉得，很多时候，人思考问题思考不清楚，很大一部分原因是因为把很多问题混为一谈，连我自己有些时候都会这样。引以为戒。</p>
+<p>即然被混为一谈，那我就来拆分一下，也是下面这三个问题：</p>
+<pre><code>Code Review有没有用的问题。
+
+Code Review做不起来的问题。
+
+业务变化快，速度快的问题，技术疲于跟命。
+</code></pre><h2 id="大师点评Code-Review"><a href="#大师点评Code-Review" class="headerlink" title="大师点评Code Review"></a>大师点评Code Review</h2><p>你Google一下Code Reivew这个关键词，你就会发现Code Review的好处基本上是不存在争议的，有很多很多的文章和博文都在说Code Review的重要性，怎么做会更好，而且很多公司在面试过程中会加入“Code Review”的问题。打开Wikipedia的词条你会看到这样的描述——</p>
+<pre><code>卡珀斯·琼斯（Capers Jones）分析了超过12,000个软件开发项目，其中使用正式代码审查的项目，发现潜在缺陷率约在60-65%之间，若是非正式的代码审查，发现潜在缺陷率不到50%。大部分的测试，发现的潜在缺陷率会在30%左右。
+
+对于一些关键的软件（例如安全关键系统的嵌入式软件），一般的代码审查速度约是一小时150行程序码，一小时审查数百行程序码的审查速度太快，可能无法找到程序中的问题。代码审查一般可以找到及移除约65%的错误，最高可以到85%。
+
+也有研究针对代码审查找到的缺陷类型进行分析。代码审查找到的缺陷中，有75%是和计算机安全隐患有关。对于产品生命周期很长的软件公司而言，代码审查是很有效的工具。
+</code></pre><p>Code Review的好处我觉得不用多说了，主要是让你的代码可以更好的组织起来，有更易读，有更高的维护性，同时可以达到知识共享，找到bug只是其中的副产品。这个东西已经不新鲜了，你上网可以找到很多文章，我就不多说了。就像你写程序要判断错误一样，Code Review也是最基本的常识性的东西。<br>我从2002年开始就浸泡在严格的Code Review中，我的个人成长和Code Review有很大的关系，如果我的成长过程中没有经历过Code Review这个事，我完全不敢想像。<br>我个人认为代码有这几种级别：1）可编译，2）可运行，3）可测试，4）可读，5）可维护，6）可重用。通过自动化测试的代码只能达到第3）级，而通过Code Review的代码少会在第4）级甚至更高。关于Code Review，你可以参看本站的《Code Review中的几个提示》<br>可见，Code Review直接关系到了你的工程能力！</p>
+<h2 id="Code-Review-的问题"><a href="#Code-Review-的问题" class="headerlink" title="Code Review 的问题"></a>Code Review 的问题</h2><p>有下面几个情况会让你的Code Review没有效果。</p>
+<h3 id="人员能力不足"><a href="#人员能力不足" class="headerlink" title="人员能力不足"></a>人员能力不足</h3><p>Code Review的过程中，大家大眼瞪小眼，没有什么好的想法，不知道什么是好的代码，什么是不好的代码。导致Code Review大多数都在代码风格上。今天，我告诉你，代码风格这种事，是每个程序员自查的事情，不应该浪费大家的时间。对此，我有两个建议：</p>
+<pre><code>1）你团队的人招错了，该换血了。
+2）让你团队的人花时候阅读一下《代码大全》这本书（当然，还要读很多基础知识的书）。
+</code></pre><h3 id="结果更重要"><a href="#结果更重要" class="headerlink" title="结果更重要"></a>结果更重要</h3><p>做出来更重要，做漂亮不重要。因为我的KPI和年终奖based on how many works I’ve done！而不是How perfect they are ! 这让我想到那些天天在用Spring MVC 做CRUD网页的工程师，我承认，他们很熟练。大量的重复劳动。其实，仔细想一下好多东西是可以框架化，模板化，或是自动生成的。所以，为了堆出这么多网页就停地去堆，做的东西是很多，但是没有任何成长。急功近利，也许，你做得多，拿到了不错的年终奖，但是你失去的也多，失去了成为一个卓越工程师的机会。你本来可以让你的月薪在1-2年后翻1-2倍的，但一年后你只拿到了为数不多的年终奖。</p>
+<h3 id="人员的态度问题"><a href="#人员的态度问题" class="headerlink" title="人员的态度问题"></a>人员的态度问题</h3><p>一方面就是懒，不想精益求精，只要干完活交差了事。对此，你更要大力开展Code Review了，让这种人写出来的代码曝光在更多人面前，让他为质量不好的代码蒙羞。另一方面，有人会觉得那是别人的模块，我不懂，也没时间 去懂，不懂他的业务怎么做Code Review? 我只想说，如果你的团队里这样的“各个自扫门前雪”的事越多，那么这个团队也就越没主动性，没有主动性也就越不可能是个好团队，做的东西也不可能好。而对于个人来说，也就越不可能有成长。</p>
+<h3 id="需求变化的问题"><a href="#需求变化的问题" class="headerlink" title="需求变化的问题"></a>需求变化的问题</h3><p>有人认识，需求变得快，代码的生存周期比较短，不需要好的代码，反正过两天这些代码就会被废弃了。如果是一次性的东西，的确质量不需要太高，反正用了就扔。但是，我觉得多多少少要Review一下这个一次性的烂代码不会影响那些长期在用的代码吧，如果你的项目全部都是临时代码，那么你团队是不是也是一个临时团队？</p>
+<h3 id="时间不够问题"><a href="#时间不够问题" class="headerlink" title="时间不够问题"></a>时间不够问题</h3><p>如果是业务逼得紧，让你疲于奔命，那么这不是Code Review好不好问题，这是需求管理和项目管理的问题以及别的非技术的问题。下面我会说。</p>
+<h2 id="被业务逼得太紧"><a href="#被业务逼得太紧" class="headerlink" title="被业务逼得太紧"></a>被业务逼得太紧</h2><p>被业务逼得太紧，需求乱变，如果你有足够的权限，再者提供一些解决思路。</p>
+<p>1）重新定义产品主要目标和范围，确定哪些该做，哪些不该做。<br>2）制定标准 ，API都长得基本一样，并制订接入标准。<br>3）推动重构，不再重复造轮子。</p>
+<p>这些事情推动起来并不容易，如果被业务方逼得紧，首先不要抱怨，你没有时间被逼得像牲口一样工作，这个时候，你需要的是暂停一下想一想，为什么会像牲口一样？而这正是让你变得聪明的机会。</p>
+<h2 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h2><h3 id="你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的"><a href="#你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的" class="headerlink" title="你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的"></a>你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的</h3><p>在Amazon，开发工程师都会被教育拿到需求后一定要问——“为什么要做？业务影响度有多大？有多少用户受益？”，回答不清这个问题，没有数据的支持，就不做。所以，产品经理要做很多数据挖拙和用户调研的工作，而不是拍拍脑袋，听极少数的用户抱怨就要开需求了。</p>
+<h3 id="产品经理也要管理和教育的"><a href="#产品经理也要管理和教育的" class="headerlink" title="产品经理也要管理和教育的"></a>产品经理也要管理和教育的</h3><p>你要告诉你的产品经理：“你是一个好的产品经理，因为你不但对用户把握得很好，也会对软件工艺把握得很好。你不但会开出外在的功能性需求，也同样会开出内在的让软件系统更完善的非功能性需求。你不是在迁就用户，而是引导用户。你不会无限制地加功能，而是把握产品灵魂控制并简化功能。你会为自己要做的和不做东西的感到同样的自豪。”你要告诉你的产品经理：“做一个半成品不如做好半年产品”（更多这样的观点请参看《Rework摘录和感想》）</p>
+<h3 id="做事情是要讲效率的"><a href="#做事情是要讲效率的" class="headerlink" title="做事情是要讲效率的"></a>做事情是要讲效率的</h3><p>Amazon里喜欢使用一种叫T-Shirt Size Estimation的评估方法来优先做投入小产出大的“Happy Case”。关于什么是效率，什么是T-Shirt Size Estimation，你可以看看《加班与效率》一文 。</p>
+<h3 id="需求总是会变化的，不要抱怨需求变化太快"><a href="#需求总是会变化的，不要抱怨需求变化太快" class="headerlink" title="需求总是会变化的，不要抱怨需求变化太快"></a>需求总是会变化的，不要抱怨需求变化太快</h3><p>你应该抱怨的是为什么我们没有把握好方向？老变？这个事就像踢足球一样，你要去的地方是球将要去的地方，而不是球现在的地方。你要知道球要去哪里，你就知道球之前是怎么动的，找到了运动轨迹后，你才知道球要去像何方。如果你都不知道球要去向何方，那你就是一只无头苍蝇一样，东一下西一下。</p>
+<blockquote>
+<p>当你忙得跟牲口一样，你应该停下来，问一下自己，自己成为牲口的原因，是不是就是因为自己做事时候像就牲口一样思考？</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2019/09/02/2019文章/code review/" data-id="ckc0jnanj009phc6urim56kdz" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/http/">http</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/09/14/2019文章/性能分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          xhprof+Graphviz性能分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/08/24/2019文章/nginx的常用运维知识点/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">nginx的常用运维知识点</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2019/09/02/2019文章/code review/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#现状"><span class="toc-number">1.</span> <span class="toc-text">现状</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工程师文化"><span class="toc-number">2.</span> <span class="toc-text">工程师文化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#技术团队和业务团队的矛盾"><span class="toc-number">3.</span> <span class="toc-text">技术团队和业务团队的矛盾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大师点评Code-Review"><span class="toc-number">4.</span> <span class="toc-text">大师点评Code Review</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code-Review-的问题"><span class="toc-number">5.</span> <span class="toc-text">Code Review 的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#人员能力不足"><span class="toc-number">5.1.</span> <span class="toc-text">人员能力不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结果更重要"><span class="toc-number">5.2.</span> <span class="toc-text">结果更重要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#人员的态度问题"><span class="toc-number">5.3.</span> <span class="toc-text">人员的态度问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需求变化的问题"><span class="toc-number">5.4.</span> <span class="toc-text">需求变化的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间不够问题"><span class="toc-number">5.5.</span> <span class="toc-text">时间不够问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#被业务逼得太紧"><span class="toc-number">6.</span> <span class="toc-text">被业务逼得太紧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结一下"><span class="toc-number">7.</span> <span class="toc-text">总结一下</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的"><span class="toc-number">7.1.</span> <span class="toc-text">你有没有去Review业务部门给你的这么多的需求，哪些是合理的，哪些是不合理的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#产品经理也要管理和教育的"><span class="toc-number">7.2.</span> <span class="toc-text">产品经理也要管理和教育的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#做事情是要讲效率的"><span class="toc-number">7.3.</span> <span class="toc-text">做事情是要讲效率的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#需求总是会变化的，不要抱怨需求变化太快"><span class="toc-number">7.4.</span> <span class="toc-text">需求总是会变化的，不要抱怨需求变化太快</span></a></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

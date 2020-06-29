@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>xhprof+Graphviz性能分析 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="php,性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xhprof+Graphviz性能分析">
+<meta property="og:url" content="http://martist.cn/2019/09/14/2019文章/性能分析/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-09-18T02:49:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xhprof+Graphviz性能分析">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019文章/性能分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/14/2019文章/性能分析/" class="article-date">
+  <time datetime="2019-09-13T16:00:00.000Z" itemprop="datePublished">2019-09-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php/">php</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      xhprof+Graphviz性能分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="下载扩展"><a href="#下载扩展" class="headerlink" title="下载扩展"></a>下载扩展</h2><p>该 xhprof扩展版本是从 <a href="https://github.com/longxinH/xhprof" target="_blank" rel="external">https://github.com/longxinH/xhprof</a> 获取的（第三方的一个库，官方版本不支持php7）</p>
+<pre><code>git clone https://github.com/longxinH/xhprof
+</code></pre><h2 id="安装扩展"><a href="#安装扩展" class="headerlink" title="安装扩展"></a>安装扩展</h2><p>php的扩展安装都是这三步</p>
+<pre><code>cd xhprof/extension/
+phpize
+./configure 
+make
+make install
+</code></pre><h2 id="修改php-ini配置"><a href="#修改php-ini配置" class="headerlink" title="修改php.ini配置"></a>修改php.ini配置</h2><p>其中 xhprof.output_dir 是 xhprof 的输出目录，每次执行 xhprof 的 save_run 方法时都会生成一个 run_id.project_name.xhprof 文件。这个目录在哪里并不重要。注意此路径的权限要可读写！！否则文件无法生成成功</p>
+<pre><code>[xhprof]
+extension=xhprof.so;
+xhprof.output_dir=/tmp/xhprof
+</code></pre><h2 id="重启-php-fpm"><a href="#重启-php-fpm" class="headerlink" title="重启 php-fpm"></a>重启 php-fpm</h2><pre><code>sudo service php7.1-fpm restart
+</code></pre><h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>在需要测试的代码开头和结尾处添加统计代码</p>
+<pre><code>&lt;?php
+xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+
+// 要检查性能的代码
+
+$xhprof_data = xhprof_disable();
+include_once &apos;/var/www/html/xhprof/xhprof_lib/utils/xhprof_lib.php&apos;;
+include_once &apos;/var/www/html/xhprof/xhprof_lib/utils/xhprof_runs.php&apos;;
+$xhprof_runs = new \XHProfRuns_Default();
+$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &apos;your_project&apos;);
+</code></pre><h2 id="查看生成报告"><a href="#查看生成报告" class="headerlink" title="查看生成报告"></a>查看生成报告</h2><p>需要访问：xhprof/xhprof_html/index.php文件查看：</p>
+<pre><code>http://localhost/xhprof/xhprof_html/index.php?run=5b35d3dfa8c29&amp;source=your_project
+//run后的参数为$run_id，source参数为your_project配置的名字
+</code></pre><h2 id="安装graphviz插件"><a href="#安装graphviz插件" class="headerlink" title="安装graphviz插件"></a>安装graphviz插件</h2><p>安装Graphviz的目的是为了xhprof图形化web工具查看profiling log文件</p>
+<p>方式一：</p>
+<pre><code>sudo apt-get install graphviz
+</code></pre><p>方式二：</p>
+<pre><code>sudo wget http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.28.0.tar.gz
+sudo tar -zxvf graphviz-2.28.0.tar.gz
+sudo cd graphviz-2.28.0
+sudo ./configure
+sudo make
+sudo make install
+</code></pre><p>方式三： </p>
+<pre><code>brew install graphviz //macbook
+</code></pre><p>安装完成后，会生成/usr/local/bin/dot文件，确保路径在PATH环境变量里，以便XHProf能找到它，graphviz处于/usr/local/lib/graphviz。</p>
+<pre><code>sudo vi ~/.bash_profile
+sudo source ~/.bash_profile
+echo $PATH
+</code></pre><p>看看输出里面是不是已经有了/usr/local/bin/dot这个路径了。</p>
+<h2 id="报错处理"><a href="#报错处理" class="headerlink" title="报错处理"></a>报错处理</h2><pre><code> Notice: Undefined variable: pipes in /home/www/phpsite/pt/xhprof_lib/utils/callgraph_utils.php on line 112 Warning:proc_open() has been disabled for security reasons in /home/www/phpsite/pt/xhprof_lib/utils/callgraph_utils.php on line 112 failed to execute cmd &quot; dot -Tpng&quot;
+
+
+vi /usr/local/php/etc/php.ini
+//找到disable_functions，把proc_open()从disable_functions列表中去掉。
+</code></pre><h2 id="看懂XHProf分析报告"><a href="#看懂XHProf分析报告" class="headerlink" title="看懂XHProf分析报告"></a>看懂XHProf分析报告</h2><div class="table-box"><table><tbody><tr><td style="background:rgb(153,204,255);"><br><p>列名</p><br></td><br><td style="background:rgb(153,204,255);"><br><p>描述</p><br></td><br></tr><tr><td><br><p>Function&nbsp;Name</p><br></td><br><td><br><p>方法名称。</p><br></td><br></tr><tr><td><br><p>Calls</p><br></td><br><td><br><p>方法被调用的次数。</p><br></td><br></tr><tr><td><br><p>Calls%</p><br></td><br><td><br><p>方法调用次数在同级方法总数调用次数中所占的百分比。</p><br></td><br></tr><tr><td><br><p>Incl.Wall&nbsp;Time</p><br><p>(microsec)</p><br></td><br><td><br><p>方法执行花费的时间，包括子方法的执行时间。（单位：微秒）</p><br></td><br></tr><tr><td><br><p>IWall%</p><br></td><br><td><br><p>方法执行花费的时间百分比。</p><br></td><br></tr><tr><td><br><p>Excl.&nbsp;Wall&nbsp;Time</p><br><p>(microsec)</p><br></td><br><td><br><p>方法本身执行花费的时间，不包括子方法的执行时间。（单位：微秒）</p><br></td><br></tr><tr><td><br><p>EWall%</p><br></td><br><td><br><p>方法本身执行花费的时间百分比。</p><br></td><br></tr><tr><td><br><p>Incl.&nbsp;CPU</p><br><p>(microsecs)</p><br></td><br><td><br><p>方法执行花费的<span style="font-family:Arial;">CPU</span><span style="font-family:'宋体';">时间，包括子方法的执行时间。（单位：微秒）</span></p><br></td><br></tr><tr><td><br><p>ICpu%</p><br></td><br><td><br><p>方法执行花费的<span style="font-family:Arial;">CPU</span><span style="font-family:'宋体';">时间百分比。</span></p><br></td><br></tr><tr><td><br><p>Excl.&nbsp;CPU</p><br><p>(microsec)</p><br></td><br><td><br><p>方法本身执行花费的<span style="font-family:Arial;">CPU</span><span style="font-family:'宋体';">时间，不包括子方法的执行时间。（单位：微秒）</span></p><br></td><br></tr><tr><td><br><p>ECPU%</p><br></td><br><td><br><p>方法本身执行花费的<span style="font-family:Arial;">CPU</span><span style="font-family:'宋体';">时间百分比。</span></p><br></td><br></tr><tr><td><br><p>Incl.MemUse</p><br><p>(bytes)</p><br></td><br><td><br><p>方法执行占用的内存，包括子方法执行占用的内存。（单位：字节）</p><br></td><br></tr><tr><td><br><p>IMemUse%</p><br></td><br><td><br><p>方法执行占用的内存百分比。</p><br></td><br></tr><tr><td><br><p>Excl.MemUse</p><br><p>(bytes)</p><br></td><br><td><br><p>方法本身执行占用的内存，不包括子方法执行占用的内存。（单位：字节）</p><br></td><br></tr><tr><td><br><p>EMemUse%</p><br></td><br><td><br><p>方法本身执行占用的内存百分比。</p><br></td><br></tr><tr><td><br><p>Incl.PeakMemUse</p><br><p>(bytes)</p><br></td><br><td><br><p>Incl.MemUse<span style="font-family:'宋体';">峰值。（单位：字节）</span></p><br></td><br></tr><tr><td><br><p>IPeakMemUse%</p><br></td><br><td><br><p>Incl.MemUse<span style="font-family:'宋体';">峰值百分比。</span></p><br></td><br></tr><tr><td><br><p>Excl.PeakMemUse</p><br><p>(bytes)</p><br></td><br><td><br><p>Excl.MemUse<span style="font-family:'宋体';">峰值。单位：（字节）</span></p><br></td><br></tr><tr><td><br><p>EPeakMemUse%</p><br></td><br><td><br><p>Excl.MemUse<span style="font-family:'宋体';">峰值百分比。</span></p><br></td><br></tr></tbody></table></div>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2019/09/14/2019文章/性能分析/" data-id="ckc0jnao200b9hc6uez9n0030" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能/">性能</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/09/16/2019文章/研发效能/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          研发效能合理提升之道
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/02/2019文章/code review/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Code Review</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2019/09/14/2019文章/性能分析/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载扩展"><span class="toc-number">1.</span> <span class="toc-text">下载扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装扩展"><span class="toc-number">2.</span> <span class="toc-text">安装扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改php-ini配置"><span class="toc-number">3.</span> <span class="toc-text">修改php.ini配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重启-php-fpm"><span class="toc-number">4.</span> <span class="toc-text">重启 php-fpm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#性能测试"><span class="toc-number">5.</span> <span class="toc-text">性能测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看生成报告"><span class="toc-number">6.</span> <span class="toc-text">查看生成报告</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装graphviz插件"><span class="toc-number">7.</span> <span class="toc-text">安装graphviz插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#报错处理"><span class="toc-number">8.</span> <span class="toc-text">报错处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#看懂XHProf分析报告"><span class="toc-number">9.</span> <span class="toc-text">看懂XHProf分析报告</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

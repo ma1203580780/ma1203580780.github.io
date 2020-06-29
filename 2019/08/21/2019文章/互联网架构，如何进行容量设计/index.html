@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>互联网架构，如何进行容量设计？ | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="互联网架构，如何进行容量设计？">
+<meta property="og:url" content="http://martist.cn/2019/08/21/2019文章/互联网架构，如何进行容量设计/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-08-20T17:07:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="互联网架构，如何进行容量设计？">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019文章/互联网架构，如何进行容量设计" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/21/2019文章/互联网架构，如何进行容量设计/" class="article-date">
+  <time datetime="2019-08-20T16:00:00.000Z" itemprop="datePublished">2019-08-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      互联网架构，如何进行容量设计？
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="一，需求缘起"><a href="#一，需求缘起" class="headerlink" title="一，需求缘起"></a>一，需求缘起</h2><p>互联网公司，这样的场景是否似曾相识：</p>
+<p>场景一：pm要做一个很大的运营活动，技术老大杀过来，问了两个问题：<br>（1）机器能抗住么？</p>
+<p>（2）如果扛不住，需要加多少台机器？</p>
+<p>场景二：系统设计阶段，技术老大杀过来，又问了两个问题：<br>（1）数据库需要分库么？</p>
+<p>（2）如果需要分库，需要分几个库？</p>
+<p>技术上来说，这些都是系统容量预估的问题，容量设计是架构师必备的技能之一。常见的容量评估包括数据量、并发量、带宽、CPU/MEM/DISK等，今天分享的内容，就以【并发量】为例，看看如何回答好这两个问题。</p>
+<h2 id="二，容量评估的步骤与方法"><a href="#二，容量评估的步骤与方法" class="headerlink" title="二，容量评估的步骤与方法"></a>二，容量评估的步骤与方法</h2><h3 id="【步骤一：评估总访问量】"><a href="#【步骤一：评估总访问量】" class="headerlink" title="【步骤一：评估总访问量】"></a>【步骤一：评估总访问量】</h3><p>如何知道总访问量？对于一个运营活动的访问量评估，或者一个系统上线后PV的评估，有什么好的方法？</p>
+<p>答案是：询问业务方，询问运营同学，询问产品同学，看对运营活动或者产品上线后的预期是什么。</p>
+<p>举例：58要做一个APP-push的运营活动，计划在30分钟内完成5000w用户的push推送，预计push消息点击率10%，求push落地页系统的总访问量？</p>
+<p>回答：5000w*10% = 500w</p>
+<h3 id="【步骤二：评估平均访问量QPS】"><a href="#【步骤二：评估平均访问量QPS】" class="headerlink" title="【步骤二：评估平均访问量QPS】"></a>【步骤二：评估平均访问量QPS】</h3><p>如何知道平均访问量QPS？</p>
+<p>答案是：有了总量，除以总时间即可，如果按照天评估，一天按照4w秒计算。</p>
+<p>举例1：push落地页系统30分钟的总访问量是500w，求平均访问量QPS</p>
+<p>回答：500w/(30*60) = 2778，大概3000QPS</p>
+<p>举例2：主站首页估计日均pv 8000w，求平均访问QPS</p>
+<p>回答：一天按照4w秒算，8000w/4w=2000，大概2000QPS</p>
+<p>提问：为什么一天按照4w秒计算？</p>
+<p>回答：一天共24小时60分钟60秒=8w秒，一般假设所有请求都发生在白天，所以一般来说一天只按照4w秒评估</p>
+<h3 id="【步骤三：评估高峰QPS】"><a href="#【步骤三：评估高峰QPS】" class="headerlink" title="【步骤三：评估高峰QPS】"></a>【步骤三：评估高峰QPS】</h3><p>系统容量规划时，不能只考虑平均QPS，而是要抗住高峰的QPS，如何知道高峰QPS呢？</p>
+<p>答案是：根据业务特性，通过业务访问曲线评估</p>
+<p>举例：日均QPS为2000，业务访问趋势图如下图，求峰值QPS预估？</p>
+<p>回答：峰值QPS大概是均值QPS的2.5倍，日均QPS为2000，于是评估出峰值QPS为5000。</p>
+<p>说明：有一些业务例如“秒杀业务”比较难画出业务访问趋势图，这类业务的容量评估不在此列。</p>
+<h3 id="【步骤四：评估系统、单机极限QPS】"><a href="#【步骤四：评估系统、单机极限QPS】" class="headerlink" title="【步骤四：评估系统、单机极限QPS】"></a>【步骤四：评估系统、单机极限QPS】</h3><p>如何评估一个业务，一个服务单机能的极限QPS呢？</p>
+<p>答案是：压力测试</p>
+<p>在一个服务上线前，一般来说是需要进行压力测试的（很多创业型公司，业务迭代很快的系统可能没有这一步，那就悲剧了），以APP-push运营活动落地页为例（日均QPS2000，峰值QPS5000），这个系统的架构可能是这样的：</p>
+<p>1）访问端是APP</p>
+<p>2）运营活动H5落地页是一个web站点</p>
+<p>3）H5落地页由缓存cache、数据库db中的数据拼装而成</p>
+<p>通过压力测试发现，web层是瓶颈，tomcat压测单机只能抗住1200的QPS（一般来说，1%的流量到数据库，数据库500QPS还是能轻松抗住的，cache的话QPS能抗住，需要评估cache的带宽，假设不是瓶颈），我们就得到了web单机极限的QPS是1200。一般来说，线上系统是不会跑满到极限的，打个8折，单机线上允许跑到QPS1000。</p>
+<h3 id="【步骤五：根据线上冗余度回答两个问题】"><a href="#【步骤五：根据线上冗余度回答两个问题】" class="headerlink" title="【步骤五：根据线上冗余度回答两个问题】"></a>【步骤五：根据线上冗余度回答两个问题】</h3><p>好了，上述步骤1-4已经得到了峰值QPS是5000，单机QPS是1000，假设线上部署了2台服务，就能自信自如的回答技术老大提出的问题了：</p>
+<p>（1）机器能抗住么？ -&gt; 峰值5000，单机1000，线上2台，扛不住</p>
+<p>（2）如果扛不住，需要加多少台机器？ -&gt; 需要额外3台，提前预留1台更好，给4台更稳</p>
+<p>除了并发量的容量预估，数据量、带宽、CPU/MEM/DISK等评估亦可遵循类似的步骤。</p>
+<h2 id="三，总结"><a href="#三，总结" class="headerlink" title="三，总结"></a>三，总结</h2><p>互联网架构设计如何进行容量评估：</p>
+<p>【步骤一：评估总访问量】 -&gt; 询问业务、产品、运营</p>
+<p>【步骤二：评估平均访问量QPS】-&gt; 除以时间，一天算4w秒</p>
+<p>【步骤三：评估高峰QPS】 -&gt; 根据业务曲线图来</p>
+<p>【步骤四：评估系统、单机极限QPS】 -&gt; 压测很重要</p>
+<p>【步骤五：根据线上冗余度回答两个问题】 -&gt; 估计冗余度与线上冗余度差值</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2019/08/21/2019文章/互联网架构，如何进行容量设计/" data-id="ckc0jnany00avhc6urd1xkq0b" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/08/24/2019文章/如何设计好的接口/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          如何设计好的接口（Google分享）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/08/20/2019文章/php72安装扩展/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">安装php7.2扩展fileinfo</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2019/08/21/2019文章/互联网架构，如何进行容量设计/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一，需求缘起"><span class="toc-number">1.</span> <span class="toc-text">一，需求缘起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二，容量评估的步骤与方法"><span class="toc-number">2.</span> <span class="toc-text">二，容量评估的步骤与方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#【步骤一：评估总访问量】"><span class="toc-number">2.1.</span> <span class="toc-text">【步骤一：评估总访问量】</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#【步骤二：评估平均访问量QPS】"><span class="toc-number">2.2.</span> <span class="toc-text">【步骤二：评估平均访问量QPS】</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#【步骤三：评估高峰QPS】"><span class="toc-number">2.3.</span> <span class="toc-text">【步骤三：评估高峰QPS】</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#【步骤四：评估系统、单机极限QPS】"><span class="toc-number">2.4.</span> <span class="toc-text">【步骤四：评估系统、单机极限QPS】</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#【步骤五：根据线上冗余度回答两个问题】"><span class="toc-number">2.5.</span> <span class="toc-text">【步骤五：根据线上冗余度回答两个问题】</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三，总结"><span class="toc-number">3.</span> <span class="toc-text">三，总结</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

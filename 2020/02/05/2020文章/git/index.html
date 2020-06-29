@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>总结git的一些高级用法 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结git的一些高级用法">
+<meta property="og:url" content="http://martist.cn/2020/02/05/2020文章/git/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2020-02-10T08:54:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="总结git的一些高级用法">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020文章/git" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/02/05/2020文章/git/" class="article-date">
+  <time datetime="2020-02-04T16:00:00.000Z" itemprop="datePublished">2020-02-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/git/">git</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      总结git的一些高级用法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h2><p>（1）git stash save “save message”  : 执行存储时，添加备注，方便查找，只有git stash 也要可以的，但查找时不方便识别。</p>
+<p>（2）git stash list  ：查看stash了哪些存储</p>
+<p>（3）git stash show ：显示做了哪些改动，默认show第一个存储,如果要显示其他存贮，后面加stash@{$num}，比如第二个 git stash show stash@{1}</p>
+<p>（4）git stash show -p : 显示第一个存储的改动，如果想显示其他存存储，命令：git stash show  stash@{$num}  -p ，比如第二个：git stash show  stash@{1}  -p</p>
+<p>（5）git stash apply :应用某个存储,但不会把存储从存储列表中删除，默认使用第一个存储,即stash@{0}，如果要使用其他个，git stash apply stash@{$num} ， 比如第二个：git stash apply stash@{1} </p>
+<p>（6）git stash pop ：命令恢复之前缓存的工作目录，将缓存堆栈中的对应stash删除，并将对应修改应用到当前的工作目录下,默认为第一个stash,即stash@{0}，如果要应用并删除其他stash，命令：git stash pop stash@{$num} ，比如应用并删除第二个：git stash pop stash@{1}</p>
+<p>（7）git stash drop stash@{$num} ：丢弃stash@{$num}存储，从列表中删除这个存储</p>
+<p>（8）git stash clear ：删除所有缓存的stash</p>
+<p>需要注意：没有在git 版本控制中的文件，是不能被git stash 存起来的。<br>那要怎么办呢，这个文件我也想存起来，很明显，先执行下git add 加到git版本控制中，然后再git stash就可以了</p>
+<p>##导航 —— 跳到之前的分支</p>
+<pre><code>git checkout -
+</code></pre><h2 id="查看历史"><a href="#查看历史" class="headerlink" title="查看历史"></a>查看历史</h2><pre><code># 每个提交在一行内显示
+git log --oneline
+
+# 在所有提交日志中搜索包含「homepage」的提交
+git log --all --grep=&apos;homepage&apos;
+
+# 获取某人的提交日志 
+git log --author=&quot;Maxence&quot;
+</code></pre><h2 id="查看操作历史"><a href="#查看操作历史" class="headerlink" title="查看操作历史"></a>查看操作历史</h2><pre><code># 获取所有操作历史
+git reflog
+</code></pre><h2 id="精准回滚"><a href="#精准回滚" class="headerlink" title="精准回滚"></a>精准回滚</h2><pre><code># 重置到相应提交
+git reset HEAD@{4}
+# ……或者……
+git reset --hard &lt;提交的哈希值&gt;
+</code></pre><h2 id="分支本地版本和仓库一致"><a href="#分支本地版本和仓库一致" class="headerlink" title="分支本地版本和仓库一致"></a>分支本地版本和仓库一致</h2><pre><code>git fetch origin
+git checkout master
+git reset --hard origin/master
+</code></pre><h2 id="定制提交"><a href="#定制提交" class="headerlink" title="定制提交"></a>定制提交</h2><pre><code># 编辑上次提交
+git commit --amend -m &quot;更好的提交日志&quot;
+
+# 在上次提交中附加一些内容，保持提交日志不变git add . &amp;&amp; git commit --amend --no-edit
+
+# 空提交 —— 可以用来重新触发 CI 构建
+git commit --allow-empty -m &quot;chore: re-trigger build&quot;
+</code></pre><h2 id="清理"><a href="#清理" class="headerlink" title="清理"></a>清理</h2><pre><code># 移除远程仓库上不存在的分支
+git fetch -p
+
+# 移除所有包含 `greenkeeper` 的分支
+git fetch -p &amp;&amp; git branch --remote | fgrep greenkeeper | sed &apos;s/^.\{9\}//&apos; | xargs git push origin --delete
+</code></pre><h2 id="合并代码"><a href="#合并代码" class="headerlink" title="合并代码"></a>合并代码</h2><p>可以学习这篇<br><a href="https://www.jianshu.com/p/684a8ae9dcf1" target="_blank" rel="external">https://www.jianshu.com/p/684a8ae9dcf1</a></p>
+<h2 id="git-别名"><a href="#git-别名" class="headerlink" title="git 别名"></a>git 别名</h2><pre><code>alias g=&apos;git&apos;
+alias glog=&apos;git log --oneline --decorate --graph&apos;
+alias gst=&apos;git status&apos;
+alias gp=&apos;git push&apos;
+alias ga=&apos;git add&apos;alias gc=&apos;git commit -v&apos;
+
+# 🤘
+alias yolo=&apos;git push --force&apos;
+
+# 每周站会汇报工作时用
+git-standup() {
+    AUTHOR=${AUTHOR:=&quot;`git config user.name`&quot;}
+
+    since=yesterday
+    if [[ $(date +%u) == 1 ]] ; then
+        since=&quot;2 days ago&quot;
+    fi
+
+    git log --all --since &quot;$since&quot; --oneline --author=&quot;$AUTHOR&quot;
+}
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2020/02/05/2020文章/git/" data-id="ckc0jnaju0000hc6u7hn4ftpx" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/22/2020文章/《和面试官抬杠系列》单机等于没有高可用么/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          《和面试官抬杠系列》单机等于没有高可用么
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/30/2019文章/supervisor的应用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">supervisor的应用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2020/02/05/2020文章/git/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#git-stash"><span class="toc-number">1.</span> <span class="toc-text">git stash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看历史"><span class="toc-number">2.</span> <span class="toc-text">查看历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查看操作历史"><span class="toc-number">3.</span> <span class="toc-text">查看操作历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#精准回滚"><span class="toc-number">4.</span> <span class="toc-text">精准回滚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分支本地版本和仓库一致"><span class="toc-number">5.</span> <span class="toc-text">分支本地版本和仓库一致</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#定制提交"><span class="toc-number">6.</span> <span class="toc-text">定制提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#清理"><span class="toc-number">7.</span> <span class="toc-text">清理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#合并代码"><span class="toc-number">8.</span> <span class="toc-text">合并代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-别名"><span class="toc-number">9.</span> <span class="toc-text">git 别名</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <title>php7性能分析-xhprof【laravel】 | MARTIST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="：-}">
-<meta name="keywords" content="php,web,性能测试">
+<meta name="keywords" content="web,php,性能测试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php7性能分析-xhprof【laravel】">
 <meta property="og:url" content="http://martist.cn/2018/04/20/PHP/php性能分析入门/index.html">
@@ -45,7 +45,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -315,7 +315,7 @@ register_shutdown_function(function() {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2018/04/20/PHP/php性能分析入门/" data-id="cjtcpn6ex008by16u2n2qn2xi" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2018/04/20/PHP/php性能分析入门/" data-id="ckc0jnamq0073hc6u468urqzj" class="article-share-link">分享</a>
       
       
       
@@ -329,7 +329,7 @@ register_shutdown_function(function() {
 <nav id="article-nav">
   
     <a href="/2018/05/01/PHP/深入PHP源码/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
           PHP源码【学习笔记】
@@ -339,7 +339,7 @@ register_shutdown_function(function() {
   
   
     <a href="/2018/04/20/服务部署/nginx中的PHP_VALUE/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">nginx中的PHP_VALUE</div>
     </a>
   
@@ -376,7 +376,7 @@ register_shutdown_function(function() {
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
               <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof"><span class="toc-number">1.</span> <span class="toc-text">xhprof</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xhprof-for-PHP7"><span class="toc-number">2.</span> <span class="toc-text">xhprof for PHP7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#适配PHP版本"><span class="toc-number">2.1.</span> <span class="toc-text">适配PHP版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">2.2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#编译过程问题"><span class="toc-number">2.2.1.</span> <span class="toc-text">编译过程问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置"><span class="toc-number">2.3.</span> <span class="toc-text">配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#添加配置项到php-ini"><span class="toc-number">2.3.1.</span> <span class="toc-text">添加配置项到php.ini</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建目录"><span class="toc-number">2.3.2.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重启php-fpm-php-ini就生效了"><span class="toc-number">2.3.3.</span> <span class="toc-text">重启php-fpm, php.ini就生效了</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目地址"><span class="toc-number">2.4.</span> <span class="toc-text">项目地址</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用"><span class="toc-number">3.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#植入xhprof"><span class="toc-number">3.1.</span> <span class="toc-text">植入xhprof</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用php内置部署工具"><span class="toc-number">3.2.</span> <span class="toc-text">使用php内置部署工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在浏览器运行脚本"><span class="toc-number">3.3.</span> <span class="toc-text">在浏览器运行脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看结果"><span class="toc-number">3.4.</span> <span class="toc-text">查看结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xhprof-enable的参数控制"><span class="toc-number">3.5.</span> <span class="toc-text">xhprof_enable的参数控制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结果分析"><span class="toc-number">3.6.</span> <span class="toc-text">结果分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化读取测试数据"><span class="toc-number">4.</span> <span class="toc-text">优化读取测试数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XHProf报告含义"><span class="toc-number">5.</span> <span class="toc-text">XHProf报告含义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php框架中使用"><span class="toc-number">6.</span> <span class="toc-text">php框架中使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据如下"><span class="toc-number">6.1.</span> <span class="toc-text">数据如下</span></a></li></ol></li></ol>
           </div>
@@ -407,11 +407,11 @@ register_shutdown_function(function() {
   
   <div class="outer">
     <div id="footer-left">
-      &copy; 2014 - 2019 马闯&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>

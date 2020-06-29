@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RPC和HTTP | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="web,http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RPC和HTTP">
+<meta property="og:url" content="http://martist.cn/2019/07/02/2019文章/rpc和http/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2019-07-09T07:45:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RPC和HTTP">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2019文章/rpc和http" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/02/2019文章/rpc和http/" class="article-date">
+  <time datetime="2019-07-01T16:00:00.000Z" itemprop="datePublished">2019-07-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RPC和HTTP
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="为什么要用RPC"><a href="#为什么要用RPC" class="headerlink" title="为什么要用RPC"></a>为什么要用RPC</h2><p>可以做到分布式，现代化的微服务</p>
+<p>部署灵活</p>
+<p>解耦服务</p>
+<p>扩展性强</p>
+<p>RPC的目的是让你在本地调用远程的方法，而对你来说这个调用是透明的，你并不知道这个调用的方法是部署哪里。通过RPC能解耦服务，这才是使用RPC的真正目的。</p>
+<h2 id="OSI网络七层模型"><a href="#OSI网络七层模型" class="headerlink" title="OSI网络七层模型"></a>OSI网络七层模型</h2><p>在说RPC和HTTP的区别之前，我觉的有必要了解一下OSI的七层网络结构模型（虽然实际应用中基本上都是五层），它可以分为以下几层： （从上到下）</p>
+<p>第一层：应用层。定义了用于在网络中进行通信和传输数据的接口；<br>第二层：表示层。定义不同的系统中数据的传输格式，编码和解码规范等；<br>第三层：会话层。管理用户的会话，控制用户间逻辑连接的建立和中断；<br>第四层：传输层。管理着网络中的端到端的数据传输；<br>第五层：网络层。定义网络设备间如何传输数据；<br>第六层：链路层。将上面的网络层的数据包封装成数据帧，便于物理层传输；<br>第七层：物理层。这一层主要就是传输这些二进制数据。<br>实际应用过程中，五层协议结构里面是没有表示层和会话层的。应该说它们和应用层合并了。我们应该将重点放在应用层和传输层这两个层面。因为HTTP是应用层协议，而TCP是传输层协议。好，知道了网络的分层模型以后我们可以更好地理解为什么RPC服务相比HTTP服务要Nice一些！</p>
+<h2 id="流行的RPC框架"><a href="#流行的RPC框架" class="headerlink" title="流行的RPC框架"></a>流行的RPC框架</h2><ol>
+<li>Netty - Netty框架不局限于RPC，更多的是作为一种网络协议的实现框架，比如HTTP，由于RPC需要高效的网络通信，就可能选择以Netty作为基础。</li>
+<li>brpc是一个基于protobuf接口的RPC框架，在百度内部称为“baidu-rpc”，它囊括了百度内部所有RPC协议，并支持多种第三方协议，从目前的性能测试数据来看，brpc的性能领跑于其他同类RPC产品。</li>
+<li>Dubbo是Alibaba开发的一个RPC框架，远程接口基于Java Interface, 依托于Spring框架。</li>
+<li>gRPC的Java实现的底层网络库是基于Netty开发而来，其Go实现是基于net库。</li>
+<li>Thrift是Apache的一个项目(<a href="http://thrift.apache.org)，前身是Facebook开发的一个RPC框架，采用thrift作为IDL" target="_blank" rel="external">http://thrift.apache.org)，前身是Facebook开发的一个RPC框架，采用thrift作为IDL</a> (Interface description language)。</li>
+<li>jsonrpc</li>
+</ol>
+<h2 id="RPC-HTTP"><a href="#RPC-HTTP" class="headerlink" title="RPC-HTTP"></a>RPC-HTTP</h2><p>HTTP 本质来讲是RPC调用的一种实现方式。换种方式说，RPC客户端可以通过HTTP连接到RPC服务端程序执行RPC(远程过程调用)。</p>
+<p>把RPC比作交通工具，那么HTTP就是相当于汽车</p>
+<h3 id="HTTP-调用优点"><a href="#HTTP-调用优点" class="headerlink" title="HTTP 调用优点"></a>HTTP 调用优点</h3><p>协议统一，各个平台几乎都原生支持HTTP</p>
+<p>调用简单,直接</p>
+<p>开发方便</p>
+<h3 id="RPC-框架的优点"><a href="#RPC-框架的优点" class="headerlink" title="RPC 框架的优点"></a>RPC 框架的优点</h3><p>RPC框架一般使用长链接，不必每次通信都要3次握手，减少网络开销</p>
+<p>RPC框架一般都有注册中心，有丰富的监控管理</p>
+<p>发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作</p>
+<p>协议私密，安全性较高</p>
+<p>rpc 协议更简单内容更小，效率更高</p>
+<p>服务化架构、服务化治理，RPC框架是一个强力的支撑</p>
+<h2 id="相较于HTTP服务"><a href="#相较于HTTP服务" class="headerlink" title="相较于HTTP服务"></a>相较于HTTP服务</h2><p>其实在很久以前，我对于企业开发的模式一直定性为HTTP接口开发，也就是我们常说的RESTful风格的服务接口。的确，对于在接口不多、系统与系统交互较少的情况下，解决信息孤岛初期常使用的一种通信手段；优点就是简单、直接、开发方便。利用现成的http协议进行传输。我们记得之前本科实习在公司做后台开发的时候，主要就是进行接口的开发，还要写一大份接口文档，严格地标明输入输出是什么？说清楚每一个接口的请求方法，以及请求参数需要注意的事项等。</p>
+<p>接口可能返回一个JSON字符串或者是XML文档。然后客户端再去处理这个返回的信息，从而可以比较快速地进行开发。但是对于大型企业来说，内部子系统较多、接口非常多的情况下，RPC框架的好处就显示出来了，首先就是长链接，不必每次通信都要像http一样去3次握手什么的，减少了网络开销；其次就是RPC框架一般都有注册中心，有丰富的监控管理；发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.jianshu.com/p/b0343bfd216e" target="_blank" rel="external">https://www.jianshu.com/p/b0343bfd216e</a><br><a href="https://blog.csdn.net/hxcaifly/article/details/87159554" target="_blank" rel="external">https://blog.csdn.net/hxcaifly/article/details/87159554</a><br><a href="https://segmentfault.com/a/1190000004978353" target="_blank" rel="external">https://segmentfault.com/a/1190000004978353</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2019/07/02/2019文章/rpc和http/" data-id="ckc0jnant00aghc6uqs43hpy6" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/http/">http</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2019/07/15/2019文章/第一次在生产环境应用swoole/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          第一次在生产环境应用swoole
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/24/2019文章/ laravel migrate的应用/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">laravel migrate的应用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2019/07/02/2019文章/rpc和http/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要用RPC"><span class="toc-number">1.</span> <span class="toc-text">为什么要用RPC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSI网络七层模型"><span class="toc-number">2.</span> <span class="toc-text">OSI网络七层模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#流行的RPC框架"><span class="toc-number">3.</span> <span class="toc-text">流行的RPC框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RPC-HTTP"><span class="toc-number">4.</span> <span class="toc-text">RPC-HTTP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-调用优点"><span class="toc-number">4.1.</span> <span class="toc-text">HTTP 调用优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RPC-框架的优点"><span class="toc-number">4.2.</span> <span class="toc-text">RPC 框架的优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相较于HTTP服务"><span class="toc-number">5.</span> <span class="toc-text">相较于HTTP服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>

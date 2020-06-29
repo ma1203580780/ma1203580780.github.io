@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="MARTIST">
 <meta property="og:description" content="：-}">
 <meta property="og:locale" content="简体中文">
-<meta property="og:updated_time" content="2018-07-31T08:01:16.724Z">
+<meta property="og:updated_time" content="2020-06-28T12:05:30.546Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP状态码">
 <meta name="twitter:description" content="：-}">
@@ -43,7 +43,7 @@
         
           <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
@@ -151,12 +151,11 @@
 <h2 id="php-nginx的实例"><a href="#php-nginx的实例" class="headerlink" title="php+nginx的实例"></a>php+nginx的实例</h2><pre><code>以nginx作为web server
 以php为后台语言
 </code></pre><p>500：大多是代码问题，或者sql报错。<br>501：服务器不具备完成请求的功能。例如，服务器无法识别请求方法时可能会返回此代码。<br>502：nginx在这里充当的是反向代理服务器的角色，是把http协议请求转成fastcgi协议的请求，通过fastcgi_pass指令传递给php-fpm进程，当php-fpm进程响应的内容是nginx无法理解的响应，就会返回502 bad gateway<br>503：服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。（服务不可用）。一个http请求占用一个php-fpm进程，瞬时请求量过大时，没有足够的php-fpm进程去处理请求，就会返回503 service unavailable<br>504:单个php-fpm进程阻塞超过nginx的时间阈值返回504 gateway timeout<br>505：服务器不支持请求中所用的 HTTP 协议版本。（HTTP 版本不受支持）</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mp.weixin.qq.com/s?__biz=MzA4MjkxMzMyNg==&amp;mid=2654068952&amp;idx=1&amp;sn=1bd63a71610d73fcd563888d6f93398d&amp;scene=24&amp;srcid=0804843QrwLCsKWGYxfPum2H#wechat_redirect" target="_blank" rel="external">https://mp.weixin.qq.com/s?__biz=MzA4MjkxMzMyNg==&amp;mid=2654068952&amp;idx=1&amp;sn=1bd63a71610d73fcd563888d6f93398d&amp;scene=24&amp;srcid=0804843QrwLCsKWGYxfPum2H#wechat_redirect</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://martist.cn/2016/04/10/WEB/HTTP状态301、404、200、304等的意思/" data-id="cjtcpn6e80069y16uc59jrfqb" class="article-share-link">Share</a>
+      <a data-url="http://martist.cn/2016/04/10/WEB/HTTP状态301、404、200、304等的意思/" data-id="ckc0jnama005ohc6uth0hw6qx" class="article-share-link">分享</a>
       
       
       
@@ -170,7 +169,7 @@
 <nav id="article-nav">
   
     <a href="/2016/05/19/PHP/七牛云jssdk应用总结/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
+      <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
           七牛云js-sdk应用总结
@@ -180,7 +179,7 @@
   
   
     <a href="/2016/03/27/GIT/git教程5/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
+      <strong class="article-nav-caption">下一篇</strong>
       <div class="article-nav-title">git教程(五)</div>
     </a>
   
@@ -217,9 +216,9 @@
     
       <div class="widget" id="toc-widget-fixed">
       
-        <strong class="toc-title">Content</strong>
+        <strong class="toc-title">文章目录</strong>
         <div class="toc-widget-list">
-              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一些常见的状态码"><span class="toc-number">1.</span> <span class="toc-text">一些常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-状态码的完整列表"><span class="toc-number">2.</span> <span class="toc-text">HTTP 状态码的完整列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#304的正确理解"><span class="toc-number">3.</span> <span class="toc-text">304的正确理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#500，502，503，504代表什么意思"><span class="toc-number">4.</span> <span class="toc-text">500，502，503，504代表什么意思</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#500错误"><span class="toc-number">4.1.</span> <span class="toc-text">500错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#502、504错误"><span class="toc-number">4.2.</span> <span class="toc-text">502、504错误　</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-nginx的实例"><span class="toc-number">5.</span> <span class="toc-text">php+nginx的实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一些常见的状态码"><span class="toc-number">1.</span> <span class="toc-text">一些常见的状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-状态码的完整列表"><span class="toc-number">2.</span> <span class="toc-text">HTTP 状态码的完整列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#304的正确理解"><span class="toc-number">3.</span> <span class="toc-text">304的正确理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#500，502，503，504代表什么意思"><span class="toc-number">4.</span> <span class="toc-text">500，502，503，504代表什么意思</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#500错误"><span class="toc-number">4.1.</span> <span class="toc-text">500错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#502、504错误"><span class="toc-number">4.2.</span> <span class="toc-text">502、504错误　</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php-nginx的实例"><span class="toc-number">5.</span> <span class="toc-text">php+nginx的实例</span></a></li></ol>
           </div>
       </div>
     </div>
@@ -248,11 +247,11 @@
   
   <div class="outer">
     <div id="footer-left">
-      &copy; 2014 - 2019 马闯&nbsp;|&nbsp;
-      Theme by <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
     </div>
      <div id="footer-right">
-      Contact&nbsp;|&nbsp;marteeet@gmail.com
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
     </div>
   </div>
 </footer>
