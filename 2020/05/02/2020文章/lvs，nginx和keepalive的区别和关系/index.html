@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>lvs，nginx和keepalived的区别和关系 | MARTIST</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="：-}">
+<meta name="keywords" content="nginx,lvs,keepalive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lvs，nginx和keepalived的区别和关系">
+<meta property="og:url" content="http://martist.cn/2020/05/02/2020文章/lvs，nginx和keepalive的区别和关系/index.html">
+<meta property="og:site_name" content="MARTIST">
+<meta property="og:description" content="：-}">
+<meta property="og:locale" content="简体中文">
+<meta property="og:updated_time" content="2020-05-13T06:40:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="lvs，nginx和keepalived的区别和关系">
+<meta name="twitter:description" content="：-}">
+  
+    <link rel="alternate" href="/atom.xml" title="MARTIST" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://martist.cn"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/2012/01/01/About Me/">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">MARTIST</a>
+      </h1>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-2020文章/lvs，nginx和keepalive的区别和关系" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/02/2020文章/lvs，nginx和keepalive的区别和关系/" class="article-date">
+  <time datetime="2020-05-01T16:00:00.000Z" itemprop="datePublished">2020-05-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nginx/">nginx</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      lvs，nginx和keepalived的区别和关系
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <p>：-} <a id="more"></a></p>
+<h2 id="keepalived"><a href="#keepalived" class="headerlink" title="keepalived"></a>keepalived</h2><p>keepalived是一个类似于layer3, 4 &amp; 5交换机制的软件，也就是我们平时说的第3层、第4层和第5层交换。Keepalived是自动完成，不需人工干涉。</p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>自动完成，不需人工干涉</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>Keepalived的作用是检测服务器的状态，如果有一台web服务器宕机，或工作出现故障，Keepalived将检测到，并将有故障的服务器从系统中剔除，同时使用其他服务器代替该服务器的工作，当服务器工作正常后Keepalived自动将服务器加入到服务器群中，这些工作全部自动完成，不需要人工干涉，需要人工做的只是修复故障的服务器。</p>
+<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p>Layer3,4,5工作在IP/TCP协议栈的IP层，TCP层，及应用层,原理分别如下：</p>
+<p>Layer3：Keepalived使用Layer3的方式工作式时，Keepalived会定期向服务器群中的服务器发送一个ICMP的数据包（既我们平时用的Ping程序）,如果发现某台服务的IP地址没有激活，Keepalived便报告这台服务器失效，并将它从服务器群中剔除，这种情况的典型例子是某台服务器被非法关机。Layer3的方式是以服务器的IP地址是否有效作为服务器工作正常与否的标准。</p>
+<p>Layer4:如果您理解了Layer3的方式，Layer4就容易了。Layer4主要以TCP端口的状态来决定服务器工作正常与否。如web server的服务端口一般是80，如果Keepalived检测到80端口没有启动，则Keepalived将把这台服务器从服务器群中剔除。</p>
+<p>Layer5：Layer5对指定的URL执行HTTP GET。然后使用MD5算法对HTTP GET结果进行求和。如果这个总数与预期值不符，那么测试是错误的，服务器将从服务器池中移除。该模块对同一服务实施多URL获取检查。如果您使用承载多个应用程序服务器的服务器，则此功能很有用。此功能使您能够检查应用程序服务器是否正常工作。MD5摘要是使用genhash实用程序（包含在keepalived软件包中）生成的。</p>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><p>Keepalived软件起初是专为LVS负载均衡软件设计的，用来管理并监控LVS集群系统中各个服务节点的状态，后来又加入了可以实现高可用的VRRP功能。因此，Keepalived除了能够管理LVS软件外，还可以作为其他服务（例如：Nginx、Haproxy、MySQL等）的高可用解决方案软件。</p>
+<p>Keepalived软件主要是通过VRRP协议实现高可用功能的。VRRP是Virtual Router RedundancyProtocol(虚拟路由器冗余协议）的缩写，VRRP出现的目的就是为了解决静态路由单点故障问题的，它能够保证当个别节点宕机时，整个网络可以不间断地运行。</p>
+<p>所以，Keepalived 一方面具有配置管理LVS的功能，同时还具有对LVS下面节点进行健康检查的功能，另一方面也可实现系统网络服务的高可用功能。</p>
+<h3 id="keepalived官网"><a href="#keepalived官网" class="headerlink" title="keepalived官网"></a>keepalived官网</h3><p><a href="http://www.keepalived.org" target="_blank" rel="external">http://www.keepalived.org</a></p>
+<h2 id="lvs"><a href="#lvs" class="headerlink" title="lvs"></a>lvs</h2><h3 id="负载均衡的类型"><a href="#负载均衡的类型" class="headerlink" title="负载均衡的类型"></a>负载均衡的类型</h3><p>负载均衡可以采用硬件设备（例如常常听见的 F5），也可以采用软件负载<br>商用硬件负载设备成本通常较高（一台几十万甚至上百万），所以一般 情况下会采用软件负载<br>软件负载解决的两个核心问题是：选谁、转发，其中最著名的是 lvs </p>
+<h3 id="lvs-是什么？"><a href="#lvs-是什么？" class="headerlink" title="lvs 是什么？"></a>lvs 是什么？</h3><p>英文全称是 Linux Virtual Server，即 Linux 虚拟服务器<br>由 章 文 嵩 博 士 发 起 的 自 由 软 件 项 目 ， 它 的 官 方 站 点 是 www.linuxvirtualserver.org<br>Linux2.4 内核以后，LVS 已经是 Linux 标准内核的一部分<br>可以将请求分发给后端真实服务器处理<br>有许多比较著名网站和组织都在使用 LVS 架设的集群系统，例如：Linux 的门户网站（www.linux.com）、向 RealPlayer 提供音频视频服务而闻 名的 Real 公司（www.real.com ）、全球最大的开源网站 （sourceforge.net）等。</p>
+<h3 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h3><p>1.轮询调度</p>
+<p>轮询调度（Round Robin 简称’RR’）算法就是按依次循环的方式将请求调度到不同的服务器上，该算法最大的特点就是实现简单。轮询算法假设所有的服务器处理请求的能力都一样的，调度器会将所有的请求平均分配给每个真实服务器。</p>
+<p>2.加权轮询调度</p>
+<p>加权轮询（Weight Round Robin 简称’WRR’）算法主要是对轮询算法的一种优化与补充，LVS会考虑每台服务器的性能，并给每台服务器添加一个权值，如果服务器A的权值为1，服务器B的权值为2，则调度器调度到服务器B的请求会是服务器A的两倍。权值越高的服务器，处理的请求越多。</p>
+<p>3.最小连接调度</p>
+<p>最小连接调度（Least Connections 简称’LC’）算法是把新的连接请求分配到当前连接数最小的服务器。最小连接调度是一种动态的调度算法，它通过服务器当前活跃的连接数来估计服务器的情况。调度器需要记录各个服务器已建立连接的数目，当一个请求被调度到某台服务器，其连接数加1；当连接中断或者超时，其连接数减1。</p>
+<p>（集群系统的真实服务器具有相近的系统性能，采用最小连接调度算法可以比较好地均衡负载。)</p>
+<p>4.加权最小连接调度</p>
+<p>加权最少连接（Weight Least Connections 简称’WLC’）算法是最小连接调度的超集，各个服务器相应的权值表示其处理性能。服务器的缺省权值为1，系统管理员可以动态地设置服务器的权值。加权最小连接调度在调度新连接时尽可能使服务器的已建立连接数和其权值成比例。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。</p>
+<p>5.基于局部的最少连接</p>
+<p>基于局部的最少连接调度（Locality-Based Least Connections 简称’LBLC’）算法是针对请求报文的目标IP地址的 负载均衡调度，目前主要用于Cache集群系统，因为在Cache集群客户请求报文的目标IP地址是变化的。这里假设任何后端服务器都可以处理任一请求，算法的设计目标是在服务器的负载基本平衡情况下，将相同目标IP地址的请求调度到同一台服务器，来提高各台服务器的访问局部性和Cache命中率，从而提升整个集群系统的处理能力。LBLC调度算法先根据请求的目标IP地址找出该目标IP地址最近使用的服务器，若该服务器是可用的且没有超载，将请求发送到该服务器；若服务器不存在，或者该服务器超载且有服务器处于一半的工作负载，则使用’最少连接’的原则选出一个可用的服务器，将请求发送到服务器。</p>
+<p>6.带复制的基于局部性的最少连接</p>
+<p>带复制的基于局部性的最少连接（Locality-Based Least Connections with Replication  简称’LBLCR’）算法也是针对目标IP地址的负载均衡，目前主要用于Cache集群系统，它与LBLC算法不同之处是它要维护从一个目标IP地址到一组服务器的映射，而LBLC算法维护从一个目标IP地址到一台服务器的映射。按’最小连接’原则从该服务器组中选出一一台服务器，若服务器没有超载，将请求发送到该服务器；若服务器超载，则按’最小连接’原则从整个集群中选出一台服务器，将该服务器加入到这个服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改，将最忙的服务器从服务器组中删除，以降低复制的程度。</p>
+<p>7.目标地址散列调度</p>
+<p>目标地址散列调度（Destination Hashing 简称’DH’）算法先根据请求的目标IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且并未超载，将请求发送到该服务器，否则返回空。</p>
+<p>8.源地址散列调度U</p>
+<p>源地址散列调度（Source Hashing  简称’SH’）算法先根据请求的源IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且并未超载，将请求发送到该服务器，否则返回空。它采用的散列函数与目标地址散列调度算法的相同，它的算法流程与目标地址散列调度算法的基本相似。</p>
+<p>9.最短的期望的延迟</p>
+<p>最短的期望的延迟调度（Shortest Expected Delay 简称’SED’）算法基于WLC算法。举个例子吧，ABC三台服务器的权重分别为1、2、3 。那么如果使用WLC算法的话一个新请求进入时它可能会分给ABC中的任意一个。使用SED算法后会进行一个运算</p>
+<p>A：（1+1）/1=2   B：（1+2）/2=3/2   C：（1+3）/3=4/3   就把请求交给得出运算结果最小的服务器。</p>
+<p>10.最少队列调度</p>
+<p>最少队列调度（Never Queue 简称’NQ’）算法，无需队列。如果有realserver的连接数等于0就直接分配过去，不需要在进行SED运算。</p>
+<h3 id="三种转发规则"><a href="#三种转发规则" class="headerlink" title="三种转发规则"></a>三种转发规则</h3><p>NAT：简单理解，就是数据进出都通过 LVS，性能不是很好。<br>TUNL：简单理解：隧道 。<br>DR:最高效的负载均衡规则 。</p>
+<h4 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h4><p>NAT（Network Address Translation）即网络地址转换，其作用是通过数据报头的修改，使得位于企业内部的私有IP地址可以访问外网，以及外部用用户可以访问位于公司内部的私有IP主机。VS/NAT工作模式拓扑结构如图2所示，LVS负载调度器可以使用两块网卡配置不同的IP地址，eth0设置为私钥IP与内部网络通过交换设备相互连接，eth1设备为外网IP与外部网络联通。</p>
+<p>第一步，用户通过互联网DNS服务器解析到公司负载均衡设备上面的外网地址，相对于真实服务器而言，LVS外网IP又称VIP（Virtual IP Address），用户通过访问VIP，即可连接后端的真实服务器（Real Server），而这一切对用户而言都是透明的，用户以为自己访问的就是真实服务器，但他并不知道自己访问的VIP仅仅是一个调度器，也不清楚后端的真实服务器到底在哪里、有多少真实服务器。</p>
+<p>第二步，用户将请求发送至124.126.147.168，此时LVS将根据预设的算法选择后端的一台真实服务器（192.168.0.1~192.168.0.3），将数据请求包转发给真实服务器，并且在转发之前LVS会修改数据包中的目标地址以及目标端口，目标地址与目标端口将被修改为选出的真实服务器IP地址以及相应的端口。</p>
+<p>第三步，真实的服务器将响应数据包返回给LVS调度器，调度器在得到响应的数据包后会将源地址和源端口修改为VIP及调度器相应的端口，修改完成后，由调度器将响应数据包发送回终端用户，另外，由于LVS调度器有一个连接Hash表，该表中会记录连接请求及转发信息，当同一个连接的下一个数据包发送给调度器时，从该Hash表中可以直接找到之前的连接记录，并根据记录信息选出相同的真实服务器及端口信息。</p>
+<h4 id="TUN"><a href="#TUN" class="headerlink" title="TUN"></a>TUN</h4><p>在LVS（NAT）模式的集群环境中，由于所有的数据请求及响应的数据包都需要经过LVS调度器转发，如果后端服务器的数量大于10台，则调度器就会成为整个集群环境的瓶颈。我们知道，数据请求包往往远小于响应数据包的大小。因为响应数据包中包含有客户需要的具体数据，所以LVS（TUN）的思路就是将请求与响应数据分离，让调度器仅处理数据请求，而让真实服务器响应数据包直接返回给客户端。VS/TUN工作模式拓扑结构如图3所示。其中，IP隧道（IP tunning）是一种数据包封装技术，它可以将原始数据包封装并添加新的包头（内容包括新的源地址及端口、目标地址及端口），从而实现将一个目标为调度器的VIP地址的数据包封装，通过隧道转发给后端的真实服务器（Real Server），通过将客户端发往调度器的原始数据包封装，并在其基础上添加新的数据包头（修改目标地址为调度器选择出来的真实服务器的IP地址及对应端口），LVS（TUN）模式要求真实服务器可以直接与外部网络连接，真实服务器在收到请求数据包后直接给客户端主机响应数据。</p>
+<h4 id="DR"><a href="#DR" class="headerlink" title="DR"></a>DR</h4><p>在LVS（TUN）模式下，由于需要在LVS调度器与真实服务器之间创建隧道连接，这同样会增加服务器的负担。与LVS（TUN）类似，DR模式也叫直接路由模式，其体系结构如图4所示，该模式中LVS依然仅承担数据的入站请求以及根据算法选出合理的真实服务器，最终由后端真实服务器负责将响应数据包发送返回给客户端。与隧道模式不同的是，直接路由模式（DR模式）要求调度器与后端服务器必须在同一个局域网内，VIP地址需要在调度器与后端所有的服务器间共享，因为最终的真实服务器给客户端回应数据包时需要设置源IP为VIP地址，目标IP为客户端IP，这样客户端访问的是调度器的VIP地址，回应的源地址也依然是该VIP地址（真实服务器上的VIP），客户端是感觉不到后端服务器存在的。由于多台计算机都设置了同样一个VIP地址，所以在直接路由模式中要求调度器的VIP地址是对外可见的，客户端需要将请求数据包发送到调度器主机，而所有的真实服务器的VIP地址必须配置在Non-ARP的网络设备上，也就是该网络设备并不会向外广播自己的MAC及对应的IP地址，真实服务器的VIP对外界是不可见的，但真实服务器却可以接受目标地址VIP的网络请求，并在回应数据包时将源地址设置为该VIP地址。调度器根据算法在选出真实服务器后，在不修改数据报文的情况下，将数据帧的MAC地址修改为选出的真实服务器的MAC地址，通过交换机将该数据帧发给真实服务器。整个过程中，真实服务器的VIP不需要对外界可见。</p>
+<h3 id="lvs-的体系结构"><a href="#lvs-的体系结构" class="headerlink" title="lvs 的体系结构"></a>lvs 的体系结构</h3><p>最前端的负载均衡层，用 Load Balancer 表示<br>中间的服务器集群层，用 Server Array 表示<br>最底端的数据共享存储层，用 Shared Storage 表示<br>在用户看来，所有的内部应用都是透明的，用户只是在使用一个虚拟服 务器提供的高性能服务 </p>
+<h3 id="和keepAlived-组合使用"><a href="#和keepAlived-组合使用" class="headerlink" title="和keepAlived 组合使用"></a>和keepAlived 组合使用</h3><p>因为所有的请求都要经过负载均衡，所以负载均衡必然是非常重要，不 能挂掉，说白了就是要 keep the lvs alived。<br>提供的功能就是可以配置 2 台 LVS，一台主机，一台备机。并且检测任 何一个节点是否还活着。 </p>
+<h3 id="lvs-的优点"><a href="#lvs-的优点" class="headerlink" title="lvs 的优点"></a>lvs 的优点</h3><p>抗负载能力强，因为 lvs 工作方式的逻辑是非常之简单，而且工作在网络 4 层仅做请求分发之用，没有流量，所以在效率上基本不需要太过考虑。<br>有完整的双机热备方案，当节点出现故障时，lvs 会自动判别，所以系统整体是非常稳定的。<br>基本上能支持所有应用，因为 lvs 工作在 4 层，所以它可以对几乎所有应用做负载均衡，包括 http、数据库、聊天室等等。 </p>
+<h3 id="lvs-负载均衡机制"><a href="#lvs-负载均衡机制" class="headerlink" title="lvs 负载均衡机制"></a>lvs 负载均衡机制</h3><p>lvs 是四层负载均衡，也就是说建立在 OSI 模型的第四层——传输层之 上<br>传输层上有 TCP/UDP，lvs 支持 TCP/UDP 的负载均衡<br>因为 LVS 是四层负载均衡，因此它相对于其它高层负载均衡的解决办法， 比如 DNS 域名轮流解析、应用层负载的调度、客户端的调度等，它的效 率是非常高的<br>lvs 的转发可以通过修改 IP 地址实现（NAT 模式）<br>lvs 的转发还可以通过修改直接路由实现（DR 模式） </p>
+<h3 id="lvs-keepAlived-的应用场景"><a href="#lvs-keepAlived-的应用场景" class="headerlink" title="lvs+keepAlived 的应用场景"></a>lvs+keepAlived 的应用场景</h3><p>大型网站负载均衡。</p>
+<h3 id="lvs-与-nginx-对比（简单）"><a href="#lvs-与-nginx-对比（简单）" class="headerlink" title="lvs 与 nginx 对比（简单）"></a>lvs 与 nginx 对比（简单）</h3><p>负载度：    lvs 优于 nginx<br>稳定度：    lvs 优于 nginx<br>服务器性能要求： lvs 优于 nginx<br>网络层数的效率： lvs 优于 nginx（网络七层：应用层、会话层、表示层、传输层、网络层、链路层、 物理层）<br>功能多少 ：  nginx 优于 lvs </p>
+<h3 id="lvs与nginx区别（深度）"><a href="#lvs与nginx区别（深度）" class="headerlink" title="lvs与nginx区别（深度）"></a>lvs与nginx区别（深度）</h3><p>lvs和nginx都可以用作多机负载方案，他们各有优缺点，在生产环境中需要好好分析实际情况并加以利用。</p>
+<h4 id="一、lvs的优势"><a href="#一、lvs的优势" class="headerlink" title="一、lvs的优势"></a>一、lvs的优势</h4><p>1.抗负载能力强，因为lvs工作方式的逻辑是非常简单的，而且工作再网络层第4层，仅作请求分发用，没有流量，所以在效率上基本不需要太过考虑。lvs一般很少出现故障，即使出现故障一般也是其他地方（如内存、CPU等）出现问题导致lvs出现问题。</p>
+<p>2.配置性地，这通常是一大劣势同时也是一大优势，因为没有太多的可配置的选项，所以除了增减服务器，并不需要经常去触碰它，大大减少了人为出错的几率。</p>
+<p>3.工作稳定，因为其本省抗负载能力很强，所以稳定性高也是顺理成章的事，另外各种lvs都有完整的双机热备方案，所以一点不用担心均衡器本身会出什么问题，节点出现故障的话，lvs会自动判别，所以系统整体式非常稳定的。</p>
+<p>4.无流量，lvs仅仅分发请求，而流量并不从它本身出去，所以可以利用它这点来做一些线路分流之用。没有流量同时也保住了均衡器的IO性能不会受到大流量的影响。</p>
+<p>5.lvs基本上能支持所有应用，因为绿色工作在第4层，所以它可以对几乎所有应用做负载均衡，包括http、数据库、聊天室等。</p>
+<p>另外：lvs也不是完全能判别节点故障的，比如在wlc分配方式下，集群里有一个节点没有配置vip，会使整个集群不能使用，这时使用wrr分配方式则会丢掉一台机器。目前这个问题还在进一步测试中。所以用lvs也得多多当心为妙。</p>
+<h4 id="二、nginx和lvs作对比的结果"><a href="#二、nginx和lvs作对比的结果" class="headerlink" title="二、nginx和lvs作对比的结果"></a>二、nginx和lvs作对比的结果</h4><p>1.nginx工作在网络的第7层，所以它可以针对http应用本身来做分流策略，比如针对域名、目录结构等，相比之下lvs并不具备这样的功能，所以nginx单凭这点可以利用的场合就远多于lvs了；但nginx有用的这些功能使其可调整度要高于lvs，所以经常要去触碰触碰，由lvs的第2条优点来看，触碰多了，人为出现问题的几率也就会大。</p>
+<p>2.nginx对网络的依赖较小，理论上只要ping得通，网页访问正常，nginx就能连得通，nginx同时还能区分内外网，如果是同时拥有内外网的节点，就相当于单机拥有了备份线路；lvs就比较依赖于网络环境，目前来看服务器在同一网段内并且lvs使用direct方式分流，效果较能得到保证。另外注意，lvs需要向托管商至少申请多于一个ip来做visual ip，貌似是不能用本省的ip来做VIP的。要做好lvs管理员，确实得跟进学习很多有关网络通信方面的知识，就不再是一个http那么简单了。</p>
+<p>3.nginx安装和配置比较简单，测试起来也很方便，因为它基本能把错误用日志打印出来。lvs的安装和配置、测试就要花比较长的时间，因为同上所述，lvs对网络依赖性比较大，很多时候不能配置成功都是因为网络问题而不是配置问题，出了问题要解决也相应的会麻烦的多。</p>
+<p>4.nginx也同样能承受很高负载且稳定，但负载度很稳定度差lvs还有几个等级：nginx处理所有流量所以受限于机器IO和配置；本身的bug也还是难以避免的；nginx没有现成的双机热备方案，所以跑在单机上还是风险比较大，单机上的事情全都很难说。</p>
+<p>5.nginx可以检测到服务器内部的故障，比如根据服务器处理网页返回的状态码、超时等等，并且会把返回错误的请求重新提交到另一个节点。目前lvs中ldirectd也能支持针对服务器内部的情况来监控，但lvs的原理使其不能重发请求。重发请求这点，比如用户正在上传一个文件，而处理该上传的节点刚好在上传过程中出现故障，nginx会把上传切到另一台服务器重新处理，而lvs就直接断掉了，如果是上传一个很大的文件或者很重要的文件的话，用户可能会因此而恼火。</p>
+<p>6.nginx对请求的异步处理可以帮助节点服务器减轻负载，键入使用Apache直接对外服务，那么出现很多的窄带链接时Apache服务器将会占用大量内存而不能释放，使用多于一个nginx做Apache代理的话，这些窄带链接会被nginx挡住，Apache上就不会堆积过多的请求，这样就减少了相当多的内存占用。这点使用squid也有相同的作用，即使squid本身配置为不缓存，对Apache还是有很大帮助你的。lvs没有这些功能，也就无法能比较。</p>
+<p>7.nginx能支持http和Email（Email的功能估计比较少人用），lvs所支持的应用在这点上会比nginx更过。</p>
+<p>在使用上，一般最前端所采取的的策略应是lvs，也就是dns的指向应为lvs均衡器，lvs的优点另它非常适合做这个任务。</p>
+<p>重要的ip地址，最好交由lvs托管，比如数据库的ip、webservice服务器的ip等等，这些ip地址随着时间推移，使用面会越来越大，如果更换ip则故障会接踵而来。所以将这些重要ip交给lvs托管式最为稳妥的，这样做的唯一缺点是需要VIP数量会比较多。</p>
+<p>nginx可以作为lvs节点机器使用，一是可以利用nginx的功能，二是可以利用nginx的性能。当然这一层面也可以直接使用squid，squid的功能方面就比nginx弱不少，性能上也有所逊色于nginx。</p>
+<p>nginx也可以作为中层代理使用，这一层面nginx基本上无对手，唯一可以撼动nginx的就只有lighttpd了，不过lighttpd目前还没有能做到nginx完全的功能，配置也不那么清晰易读。另外，中层代理的ip也是重要的，所以中层代理业拥有一个VIP和lvs是最完美的方案了。</p>
+<p>nginx也可以作为网页静态服务器。</p>
+<p>具体的应用还得具体分析，如果是比较小的网站（日pv&lt;1000万），用nginx就完全可以了，如果机器也不少，可以用dns轮询，lvs所耗费的机器还是比较多的；大型网站或者重要的服务，机器不发愁的时候要多多考虑利用lvs。</p>
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>使用nginx+keepalived实现负载均衡，解决单点与高流量并发问题。为什么要用nginx而不用lvs？</p>
+<p>7个理由：</p>
+<p>1.高并发连接：官方测试能够支撑5万并发连接，在实际生产环境中跑到2——3万并发连接数。</p>
+<p>2.内存消耗少：在3万并发连接数下，开启的10个nginx进程才消耗150M内存（150*10=150M）。</p>
+<p>3.配置文件非常简单：风格跟程序一样通俗易懂。</p>
+<p>4.成本低廉：nginx为开源软件，可以免费使用。而购买F5 big-ip、netscaler等硬件负载均衡交换机则需要十多万至几十万人民币。</p>
+<p>（使用nginx做七层负载均衡的理由？）</p>
+<p>5.支持rewrite重写规则：能够根据域名、url的不同，将http请求分到不同的后端服务器群组。</p>
+<p>6.内置的健康检查功能：如果nginx proxy后端的某台web服务器宕机了，不会影响前端访问。</p>
+<p>7.节省带宽：支持gzip压缩，可以添加浏览器本地缓存的header头。</p>
+<h4 id="进一步说明"><a href="#进一步说明" class="headerlink" title="进一步说明"></a>进一步说明</h4><p>keepalived是linux下面实现vrrp备份路由的高可靠性运行件。基于keepalived设计的服务模式能够真正做到主服务器和备份服务器故障时ip瞬间无缝交接。</p>
+<p>nginx是基于linux2.6内核中epoll模型http服务器，与Apache进程派生模式不同的是nginx进程基于master+slave多进程模型，自身具有非常稳定的子进程管理功能。在master进程分配模式下，master进程永远不进行业务处理，只是进行任务分发，从而达到master进程的存活高可靠性，slave进程所有的业务信号都由主进程发出，slave进城所有的超时任务都会被master终止，属于阻塞式人物模型。</p>
+<p>服务器ip存活检测是由keepalived自己本身完成的，将2台服务器配置成keepalived互为主辅关系，任意一方机器故障对方都能够将ip接管过去。</p>
+<p>keepalived的服务器ip通过其配置文件进行管理，依靠其自身的进程去确定服务器的存活状态，如果在需要对服务器进程在线维护的情况下，只需要停掉被维护机器的keepalived服务进程，另外一台服务器就能够接管该台服务器的所有应用。</p>
+<h4 id="现实意义"><a href="#现实意义" class="headerlink" title="现实意义"></a>现实意义</h4><p>nginx实现了web服务器的高可用，如果流量入口的nginx服务器挂了，那么就web服务不可用了。<br>所以在nginx做负载均衡之前，用lvs做osi网络协议的四层负载均衡，实现nginx的高可用。lvs主要解决的是这个问题。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://martist.cn/2020/05/02/2020文章/lvs，nginx和keepalive的区别和关系/" data-id="ckc0key2d0037916uz1eo43aw" class="article-share-link">分享</a>
+      
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/keepalive/">keepalive</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lvs/">lvs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nginx/">nginx</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/02/2020文章/nginx优化策略/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          nginx优化策略
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/01/2020文章/PHP高性能缓存扩展-APCu/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">PHP高性能缓存扩展-APCu</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+ 
+     
+  <div class="comments" id="comments">
+    
+     
+       
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+       
+            <div id="SOHUCS" sid="2020/05/02/2020文章/lvs，nginx和keepalive的区别和关系/"> </div>
+    
+      
+      
+  </div>
+ 
+  
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#keepalived"><span class="toc-number">1.</span> <span class="toc-text">keepalived</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特点"><span class="toc-number">1.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-number">1.2.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作原理"><span class="toc-number">1.3.</span> <span class="toc-text">工作原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#作用"><span class="toc-number">1.4.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#keepalived官网"><span class="toc-number">1.5.</span> <span class="toc-text">keepalived官网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lvs"><span class="toc-number">2.</span> <span class="toc-text">lvs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡的类型"><span class="toc-number">2.1.</span> <span class="toc-text">负载均衡的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-是什么？"><span class="toc-number">2.2.</span> <span class="toc-text">lvs 是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度算法"><span class="toc-number">2.3.</span> <span class="toc-text">调度算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三种转发规则"><span class="toc-number">2.4.</span> <span class="toc-text">三种转发规则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#NAT"><span class="toc-number">2.4.1.</span> <span class="toc-text">NAT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TUN"><span class="toc-number">2.4.2.</span> <span class="toc-text">TUN</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DR"><span class="toc-number">2.4.3.</span> <span class="toc-text">DR</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-的体系结构"><span class="toc-number">2.5.</span> <span class="toc-text">lvs 的体系结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#和keepAlived-组合使用"><span class="toc-number">2.6.</span> <span class="toc-text">和keepAlived 组合使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-的优点"><span class="toc-number">2.7.</span> <span class="toc-text">lvs 的优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-负载均衡机制"><span class="toc-number">2.8.</span> <span class="toc-text">lvs 负载均衡机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-keepAlived-的应用场景"><span class="toc-number">2.9.</span> <span class="toc-text">lvs+keepAlived 的应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs-与-nginx-对比（简单）"><span class="toc-number">2.10.</span> <span class="toc-text">lvs 与 nginx 对比（简单）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lvs与nginx区别（深度）"><span class="toc-number">2.11.</span> <span class="toc-text">lvs与nginx区别（深度）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、lvs的优势"><span class="toc-number">2.11.1.</span> <span class="toc-text">一、lvs的优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、nginx和lvs作对比的结果"><span class="toc-number">2.11.2.</span> <span class="toc-text">二、nginx和lvs作对比的结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#说明"><span class="toc-number">2.11.3.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#进一步说明"><span class="toc-number">2.11.4.</span> <span class="toc-text">进一步说明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#现实意义"><span class="toc-number">2.11.5.</span> <span class="toc-text">现实意义</span></a></li></ol></li></ol></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+    
+  
+    <!--微信公众号二维码-->
+
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2020 马闯&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;marteeet@gmail.com
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/2012/01/01/About Me/" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+      
+
+
+
+<script type="text/javascript ">
+    (function () {
+        var appid = 'cytf1deXv';
+        var conf = '6867419241543404b6c287f39f49f3ca';
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        if (width < 960) {
+            window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>');
+        } else {
+            var loadJs = function (d, a) {
+                var c = document.getElementsByTagName("head")[0] || document.head || document.documentElement;
+                var b = document.createElement("script");
+                b.setAttribute("type", "text/javascript");
+                b.setAttribute("charset", "UTF-8");
+                b.setAttribute("src", d);
+                if (typeof a === "function") {
+                    if (window.attachEvent) {
+                        b.onreadystatechange = function () {
+                            var e = b.readyState;
+                            if (e === "loaded" || e === "complete") {
+                                b.onreadystatechange = null;
+                                a()
+                            }
+                        }
+                    } else {
+                        b.onload = a
+                    }
+                }
+                c.appendChild(b)
+            };
+            loadJs("http://changyan.sohu.com/upload/changyan.js", function () {
+                window.changyan.api.config({
+                    appid: appid,
+                    conf: conf
+                })
+            });
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<!-- author:forvoid begin -->
+<!-- author:forvoid begin -->
+
+<!-- author:forvoid end -->
+
+<!-- author:forvoid end -->
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      })
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      })
+    </script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/mathjax/MathJax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+</body>
+</html>
