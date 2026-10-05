@@ -3,16 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>海波东</title>
+  <title>海波东 · 资讯、工程与长期创造</title>
+  <meta name="description" content="海波东的站点：AI 工程、交互设计与长期创造的记录。">
   <link rel="canonical" href="https://ma1203580780.github.io/mind/">
-  <script>
-    location.replace('/mind/' + location.search + location.hash);
-  </script>
-  <noscript>
-    <meta http-equiv="refresh" content="0;url=/mind/">
-  </noscript>
+  <link rel="icon" href="/mind/favicon.svg">
+  <!--
+    跳转只用标准 meta refresh，不用 JavaScript。
+    原因：主机根 ma1203580780.github.io/ 曾被 Google Safe Browsing 标为钓鱼，
+    而这一页此前整页只有一个 location.replace() 脚本跳转——那是本主机上唯一
+    位于「被标位置」的反常行为。meta refresh 是搜索引擎明确支持的跳转方式，
+    JS 跳转不是。详见 ../docs/SAFE-BROWSING.md。
+  -->
+  <meta http-equiv="refresh" content="0; url=/mind/">
+  <style>
+    :root{font:16px/1.8 system-ui,-apple-system,"PingFang SC",sans-serif;color-scheme:light dark}
+    body{min-height:100dvh;display:grid;place-items:center;margin:0;background:#f7f7f5;color:#1c1c1e}
+    main{max-width:34rem;padding:32px}
+    h1{font-size:20px;font-weight:600;margin:0 0 12px}
+    p{font-size:14px;color:#6e6e73;margin:0 0 8px}
+    a{color:inherit;text-underline-offset:5px}
+    @media(prefers-color-scheme:dark){body{background:#191a19;color:#e8e8e3}p{color:#a4a59d}}
+  </style>
 </head>
 <body>
-  <p><a href="/mind/">进入海波东的站点 →</a></p>
+  <main>
+    <h1>海波东</h1>
+    <p>AI 工程、交互设计与长期创造的记录。正在前往站点首页。</p>
+    <p><a href="/mind/">如果没有自动跳转，点这里进入 →</a></p>
+  </main>
 </body>
 </html>
